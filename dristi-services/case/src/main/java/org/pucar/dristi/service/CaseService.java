@@ -395,7 +395,7 @@ public class CaseService {
                 CourtCase courtCase = null;
                 if (!criteria.getDefaultFields() && criteria.getCaseId() != null) {
                     log.info("Searching in redis :: {}", criteria.getCaseId());
-                    courtCase = searchRedisCache(caseSearchRequests.getRequestInfo(), criteria.getCaseId());
+                   // courtCase = searchRedisCache(caseSearchRequests.getRequestInfo(), criteria.getCaseId());
                 }
                 if (courtCase != null) {
                     log.info("CourtCase found in Redis cache for caseId: {}", criteria.getCaseId());
@@ -411,7 +411,7 @@ public class CaseService {
                 caseCriteriaList.removeAll(caseCriteriaInRedis);
             }
             List<CaseCriteria> casesList = caseRepository.getCases(caseSearchRequests.getCriteria(), caseSearchRequests.getRequestInfo());
-            saveInRedisCache(casesList, caseSearchRequests.getRequestInfo());
+           // saveInRedisCache(casesList, caseSearchRequests.getRequestInfo());
 
             casesList.addAll(caseCriteriaInRedis);
 

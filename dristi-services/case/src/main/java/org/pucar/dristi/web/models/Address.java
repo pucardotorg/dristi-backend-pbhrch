@@ -1,12 +1,15 @@
 package org.pucar.dristi.web.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.pucar.dristi.web.models.v2.AddressType;
 import org.pucar.dristi.web.models.v2.Coordinates;
+
+import java.util.Map;
 
 @Data
 @AllArgsConstructor
@@ -49,4 +52,9 @@ public class Address {
 
     @JsonProperty("coordinates")
     private Coordinates coordinates;
+
+    @JsonProperty("isCurrAddrSame")
+    @Valid
+    private AddressFlag isCurrAddrSame;
+
 }

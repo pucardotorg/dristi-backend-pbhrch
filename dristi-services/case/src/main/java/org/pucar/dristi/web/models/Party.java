@@ -64,6 +64,54 @@ public class Party {
     @JsonProperty("isPartyInPerson")
     private boolean isPartyInPerson;
 
+    @JsonProperty("firstName")
+    private String firstName = null;
+
+    @JsonProperty("middleName")
+    private String middleName = null;
+
+    @JsonProperty("lastName")
+    private String lastName = null;
+
+    @JsonProperty("fullName")
+    private String fullName = null;
+
+    @JsonProperty("mobileNumber")
+    private String mobileNumber = null;
+
+    @JsonProperty("age")
+    private String age = null;
+
+    @JsonProperty("complainantType")
+    @Valid
+    private ComplainantTypeInfo complainantType = null;
+
+    @JsonProperty("complainantTypeOfEntity")
+    @Valid
+    private ComplainantTypeOfEntity complainantTypeOfEntity = null;
+
+    @JsonProperty("companyName")
+    private String companyName = null;
+
+    @JsonProperty("designation")
+    private String designation = null;
+
+    @JsonProperty("transferredPOA")
+    @Valid
+    private TransferredPOAInfo transferredPOA = null;
+
+    @JsonProperty("permanentAddress")
+    @Valid
+    private Address permanentAddress = null;
+
+    @JsonProperty("currentAddress")
+    @Valid
+    private Address currentAddress = null;
+
+    @JsonProperty("companyAddress")
+    @Valid
+    private Address companyAddress = null;
+
     @JsonProperty("documents")
     @Valid
     private List<Document> documents = null;

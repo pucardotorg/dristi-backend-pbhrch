@@ -29,7 +29,9 @@ public class PoaRowMapperV2 implements ResultSetExtractor<Map<UUID, List<POAHold
             while (rs.next()) {
                 UUID id = UUID.fromString(rs.getString("case_id"));
                 POAHolderV2 poaHolder = POAHolderV2.builder()
+                        .id(rs.getString("id"))
                         .individualId(rs.getString("individual_id"))
+                        .additionalDetails(getObjectFromJson(rs.getObject("additional_details")))
                         .representingLitigants(getObjectListFromJson(rs.getString("representing_litigants")))
                         .build();
 
@@ -65,6 +67,20 @@ public class PoaRowMapperV2 implements ResultSetExtractor<Map<UUID, List<POAHold
             return poaPartyV2List;
         } catch (Exception e) {
             throw new CustomException("Failed to convert JSON to ", e.getMessage());
+        }
+    }
+
+    private Object getObjectFromJson(Object value) {
+        if (value == null) {
+            return null;
+        }
+        try {
+            if (value instanceof PGobject pgObject && pgObject.getValue() != null) {
+                return objectMapper.readTree(pgObject.getValue());
+            }
+            return objectMapper.valueToTree(value);
+        } catch (Exception e) {
+            throw new CustomException("ROW_MAPPER_EXCEPTION", "Failed to convert POA additional_details: " + e.getMessage());
         }
     }
 }
