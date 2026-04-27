@@ -1,7 +1,7 @@
 // AUTO-EXTRACTED INTO dristi-common BY scripts/migration/dristi_common/03_build_canonical.py
 // Source: dristi-services/hearing/src/main/java/org/pucar/dristi/util/UserUtil.java
 // NOTE: imports referencing service-internal classes (ServiceConstants,
-// Configuration, web.models.*) may need follow-up — see Phase 4.
+// CommonConfiguration, web.models.*) may need follow-up — see Phase 4.
 package org.pucar.dristi.common.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -12,8 +12,8 @@ import org.egov.common.contract.user.UserDetailResponse;
 import org.egov.common.contract.user.UserSearchRequest;
 import org.egov.common.contract.user.enums.UserType;
 import org.egov.tracer.model.CustomException;
-import org.pucar.dristi.config.Configuration;
-import org.pucar.dristi.repository.ServiceRequestRepository;
+import org.pucar.dristi.common.config.CommonConfiguration;
+import org.pucar.dristi.common.repository.ServiceRequestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -22,20 +22,20 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static org.pucar.dristi.config.ServiceConstants.CITIZEN_LOWER;
-import static org.pucar.dristi.config.ServiceConstants.CITIZEN_UPPER;
-import static org.pucar.dristi.config.ServiceConstants.CREATED_DATE;
-import static org.pucar.dristi.config.ServiceConstants.DOB;
-import static org.pucar.dristi.config.ServiceConstants.DOB_FORMAT_D_M_Y;
-import static org.pucar.dristi.config.ServiceConstants.DOB_FORMAT_D_M_Y_H_M_S;
-import static org.pucar.dristi.config.ServiceConstants.DOB_FORMAT_Y_M_D;
-import static org.pucar.dristi.config.ServiceConstants.ILLEGAL_ARGUMENT_EXCEPTION_CODE;
-import static org.pucar.dristi.config.ServiceConstants.INVALID_DATE_FORMAT_CODE;
-import static org.pucar.dristi.config.ServiceConstants.INVALID_DATE_FORMAT_MESSAGE;
-import static org.pucar.dristi.config.ServiceConstants.LAST_MODIFIED_DATE;
-import static org.pucar.dristi.config.ServiceConstants.OBJECTMAPPER_UNABLE_TO_CONVERT;
-import static org.pucar.dristi.config.ServiceConstants.PWD_EXPIRY_DATE;
-import static org.pucar.dristi.config.ServiceConstants.USER;
+import static org.pucar.dristi.common.config.CommonConstants.CITIZEN_LOWER;
+import static org.pucar.dristi.common.config.CommonConstants.CITIZEN_UPPER;
+import static org.pucar.dristi.common.config.CommonConstants.CREATED_DATE;
+import static org.pucar.dristi.common.config.CommonConstants.DOB;
+import static org.pucar.dristi.common.config.CommonConstants.DOB_FORMAT_D_M_Y;
+import static org.pucar.dristi.common.config.CommonConstants.DOB_FORMAT_D_M_Y_H_M_S;
+import static org.pucar.dristi.common.config.CommonConstants.DOB_FORMAT_Y_M_D;
+import static org.pucar.dristi.common.config.CommonConstants.ILLEGAL_ARGUMENT_EXCEPTION_CODE;
+import static org.pucar.dristi.common.config.CommonConstants.INVALID_DATE_FORMAT_CODE;
+import static org.pucar.dristi.common.config.CommonConstants.INVALID_DATE_FORMAT_MESSAGE;
+import static org.pucar.dristi.common.config.CommonConstants.LAST_MODIFIED_DATE;
+import static org.pucar.dristi.common.config.CommonConstants.OBJECTMAPPER_UNABLE_TO_CONVERT;
+import static org.pucar.dristi.common.config.CommonConstants.PWD_EXPIRY_DATE;
+import static org.pucar.dristi.common.config.CommonConstants.USER;
 
 @Component
 public class UserUtil {
@@ -47,7 +47,7 @@ public class UserUtil {
     private ServiceRequestRepository serviceRequestRepository;
 
     @Autowired
-    private Configuration configs;
+    private CommonConfiguration configs;
 
 
     @Autowired

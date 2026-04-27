@@ -1,17 +1,17 @@
 // AUTO-EXTRACTED INTO dristi-common BY scripts/migration/dristi_common/03_build_canonical.py
 // Source: dristi-services/ab-diary/src/main/java/digit/util/WorkflowUtil.java
 // NOTE: imports referencing service-internal classes (ServiceConstants,
-// Configuration, web.models.*) may need follow-up — see Phase 4.
+// CommonConfiguration, web.models.*) may need follow-up — see Phase 4.
 package org.pucar.dristi.common.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import digit.config.Configuration;
-import static digit.config.ServiceConstants.*;
+import org.pucar.dristi.common.config.CommonConfiguration;
+import static org.pucar.dristi.common.config.CommonConstants.*;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
 import org.egov.common.contract.workflow.*;
 import org.egov.common.contract.models.*;
-import digit.repository.ServiceRequestRepository;
+import org.pucar.dristi.common.repository.ServiceRequestRepository;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,7 +30,7 @@ public class WorkflowUtil {
     private ObjectMapper mapper;
 
     @Autowired
-    private Configuration configs;
+    private CommonConfiguration configs;
 
 
 

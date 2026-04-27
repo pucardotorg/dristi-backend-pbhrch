@@ -1,11 +1,11 @@
 // AUTO-EXTRACTED INTO dristi-common BY scripts/migration/dristi_common/03_build_canonical.py
 // Source: dristi-services/ab-diary/src/main/java/digit/util/MdmsUtil.java
 // NOTE: imports referencing service-internal classes (ServiceConstants,
-// Configuration, web.models.*) may need follow-up — see Phase 4.
+// CommonConfiguration, web.models.*) may need follow-up — see Phase 4.
 package org.pucar.dristi.common.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import digit.config.Configuration;
+import org.pucar.dristi.common.config.CommonConfiguration;
 import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONArray;
 import org.egov.common.contract.request.RequestInfo;
@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static digit.config.ServiceConstants.*;
+import static org.pucar.dristi.common.config.CommonConstants.*;
 
 @Slf4j
 @Component
@@ -33,7 +33,7 @@ public class MdmsUtil {
     private ObjectMapper mapper;
 
     @Autowired
-    private Configuration configs;
+    private CommonConfiguration configs;
 
 
 

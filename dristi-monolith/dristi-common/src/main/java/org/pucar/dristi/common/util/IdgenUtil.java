@@ -1,12 +1,12 @@
 // AUTO-EXTRACTED INTO dristi-common BY scripts/migration/dristi_common/03_build_canonical.py
 // Source: dristi-services/ab-diary/src/main/java/digit/util/IdgenUtil.java
 // NOTE: imports referencing service-internal classes (ServiceConstants,
-// Configuration, web.models.*) may need follow-up — see Phase 4.
+// CommonConfiguration, web.models.*) may need follow-up — see Phase 4.
 package org.pucar.dristi.common.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import digit.repository.ServiceRequestRepository;
-import digit.config.Configuration;
+import org.pucar.dristi.common.repository.ServiceRequestRepository;
+import org.pucar.dristi.common.config.CommonConfiguration;
 import org.egov.common.contract.idgen.IdGenerationRequest;
 import org.egov.common.contract.idgen.IdGenerationResponse;
 import org.egov.common.contract.idgen.IdRequest;
@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static digit.config.ServiceConstants.*;
+import static org.pucar.dristi.common.config.CommonConstants.*;
 
 @Component
 public class IdgenUtil {
@@ -33,7 +33,7 @@ public class IdgenUtil {
     private ServiceRequestRepository restRepo;
 
     @Autowired
-    private Configuration configs;
+    private CommonConfiguration configs;
 
     public List<String> getIdList(RequestInfo requestInfo, String tenantId, String idName, String idformat, Integer count) {
         List<IdRequest> reqList = new ArrayList<>();

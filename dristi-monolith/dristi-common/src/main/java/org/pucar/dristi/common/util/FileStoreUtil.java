@@ -1,12 +1,12 @@
 // AUTO-EXTRACTED INTO dristi-common BY scripts/migration/dristi_common/03_build_canonical.py
 // Source: dristi-services/hearing/src/main/java/org/pucar/dristi/util/FileStoreUtil.java
 // NOTE: imports referencing service-internal classes (ServiceConstants,
-// Configuration, web.models.*) may need follow-up — see Phase 4.
+// CommonConfiguration, web.models.*) may need follow-up — see Phase 4.
 package org.pucar.dristi.common.util;
 
 import lombok.extern.slf4j.Slf4j;
 import org.egov.tracer.model.CustomException;
-import org.pucar.dristi.config.Configuration;
+import org.pucar.dristi.common.config.CommonConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -24,12 +24,12 @@ import java.util.List;
 @Slf4j
 public class FileStoreUtil {
 
-    private Configuration configs;
+    private CommonConfiguration configs;
 
     private RestTemplate restTemplate;
 
     @Autowired
-    public FileStoreUtil(RestTemplate restTemplate, Configuration configs) {
+    public FileStoreUtil(RestTemplate restTemplate, CommonConfiguration configs) {
         this.restTemplate = restTemplate;
         this.configs = configs;
     }

@@ -47,6 +47,17 @@ HARDCODED_DM = {
     ("io.opentelemetry.instrumentation", "opentelemetry-instrumentation-bom-alpha"),
 }
 
+# Dependencies whose pinned version in legacy services would break the
+# Spring Boot 3.2.2 BOM. Skipping the union pin lets Spring Boot manage them
+# at the version compatible with Boot 3.2.x (e.g. spring-kafka 3.1.1 over
+# the legacy 2.7.8 that some services declared).
+VERSION_PIN_BLOCKLIST = {
+    ("org.springframework.kafka", "spring-kafka"),
+    ("org.springframework", "spring-context"),
+    ("org.springframework", "spring-core"),
+    ("org.springframework", "spring-web"),
+}
+
 
 def q(tag: str) -> str:
     return f"{{{NS}}}{tag}"
@@ -199,6 +210,8 @@ def fmt_dependencies(deps_union: dict[tuple[str, str], dict]) -> str:
     for (group, artifact), info in sorted(deps_union.items()):
         if (group, artifact) in HARDCODED_DM:
             continue
+        if (group, artifact) in VERSION_PIN_BLOCKLIST:
+            continue  # let Spring Boot's BOM manage the version
         if not info["version"]:
             continue  # let upstream BOM manage the version
         lines.append(f"{INDENT*3}<dependency>")

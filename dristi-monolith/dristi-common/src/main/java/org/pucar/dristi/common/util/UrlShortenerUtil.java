@@ -1,7 +1,7 @@
 // AUTO-EXTRACTED INTO dristi-common BY scripts/migration/dristi_common/03_build_canonical.py
 // Source: dristi-services/ab-diary/src/main/java/digit/util/UrlShortenerUtil.java
 // NOTE: imports referencing service-internal classes (ServiceConstants,
-// Configuration, web.models.*) may need follow-up — see Phase 4.
+// CommonConfiguration, web.models.*) may need follow-up — see Phase 4.
 package org.pucar.dristi.common.util;
 
 import lombok.extern.slf4j.Slf4j;
@@ -10,8 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import java.util.HashMap;
-import digit.config.Configuration;
-import static digit.config.ServiceConstants.*;
+import org.pucar.dristi.common.config.CommonConfiguration;
+import static org.pucar.dristi.common.config.CommonConstants.*;
 
 @Slf4j
 @Component
@@ -21,7 +21,7 @@ public class UrlShortenerUtil {
     private RestTemplate restTemplate;
 
     @Autowired
-    private Configuration configs;
+    private CommonConfiguration configs;
 
 
     public String getShortenedUrl(String url){

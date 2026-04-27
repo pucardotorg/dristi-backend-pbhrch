@@ -16,7 +16,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
 
-import static org.pucar.dristi.config.ServiceConstants.*;
+import static org.pucar.dristi.common.config.CommonConstants.*;
 
 @Repository
 @Slf4j
