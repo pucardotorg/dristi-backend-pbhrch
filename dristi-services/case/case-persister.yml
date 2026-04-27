@@ -76,12 +76,14 @@ serviceMaps:
             - jsonPath: $.cases.statutesAndSections.*.strSubsections
             - jsonPath: $.cases.id
             - jsonPath: $.cases.statutesAndSections.*.additionalDetails
+              type: JSON
+              dbType: JSONB
             - jsonPath: $.cases.statutesAndSections.*.auditDetails.createdBy
             - jsonPath: $.cases.statutesAndSections.*.auditDetails.lastModifiedBy
             - jsonPath: $.cases.statutesAndSections.*.auditDetails.createdTime
             - jsonPath: $.cases.statutesAndSections.*.auditDetails.lastModifiedTime
 
-        - query: INSERT INTO public.dristi_case_litigants(id, tenantid, partycategory, individualid, organisationid, partytype, isactive, case_id, additionaldetails, createdby, lastmodifiedby, createdtime, lastmodifiedtime, hassigned, isresponserequired) VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+        - query: INSERT INTO public.dristi_case_litigants(id, tenantid, partycategory, individualid, organisationid, partytype, isactive, case_id, additionaldetails, createdby, lastmodifiedby, createdtime, lastmodifiedtime, hassigned, isresponserequired, first_name, middle_name, last_name, full_name, mobile_number, age, company_name, designation, complainant_type, complainant_type_of_entity, transferred_poa, permanent_address, current_address, company_address) VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
           basePath: cases.litigants.*
           jsonMaps:
             - jsonPath: $.cases.litigants.*.id
@@ -101,6 +103,32 @@ serviceMaps:
             - jsonPath: $.cases.litigants.*.auditDetails.lastModifiedTime
             - jsonPath: $.cases.litigants.*.hasSigned
             - jsonPath: $.cases.litigants.*.isResponseRequired
+            - jsonPath: $.cases.litigants.*.firstName
+            - jsonPath: $.cases.litigants.*.middleName
+            - jsonPath: $.cases.litigants.*.lastName
+            - jsonPath: $.cases.litigants.*.fullName
+            - jsonPath: $.cases.litigants.*.mobileNumber
+            - jsonPath: $.cases.litigants.*.age
+            - jsonPath: $.cases.litigants.*.companyName
+            - jsonPath: $.cases.litigants.*.designation
+            - jsonPath: $.cases.litigants.*.complainantType
+              type: JSON
+              dbType: JSONB
+            - jsonPath: $.cases.litigants.*.complainantTypeOfEntity
+              type: JSON
+              dbType: JSONB
+            - jsonPath: $.cases.litigants.*.transferredPOA
+              type: JSON
+              dbType: JSONB
+            - jsonPath: $.cases.litigants.*.permanentAddress
+              type: JSON
+              dbType: JSONB
+            - jsonPath: $.cases.litigants.*.currentAddress
+              type: JSON
+              dbType: JSONB
+            - jsonPath: $.cases.litigants.*.companyAddress
+              type: JSON
+              dbType: JSONB
 
         - query: INSERT INTO public.dristi_case_representatives(id, tenantid, advocateid, isactive, case_id, additionaldetails, createdby, lastmodifiedby, createdtime, lastmodifiedtime, hassigned) VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
           basePath: cases.representatives.*
@@ -127,7 +155,7 @@ serviceMaps:
             - jsonPath: $.cases.representatives.*.representing.*.partyCategory
             - jsonPath: $.cases.representatives.*.representing.*.individualId
             - jsonPath: $.cases.representatives.*.representing.*.organisationID
-            - jsonPath: $.cases.id
+            - jsonPath: $.cases.representatives.*.representing.*.caseId
             - jsonPath: $.cases.representatives.*.representing.*.partyType
             - jsonPath: $.cases.representatives.*.representing.*.isActive
             - jsonPath: $.cases.representatives[*][?({id} in @.representing[*].id)].id
@@ -226,7 +254,6 @@ serviceMaps:
               type: JSON
               dbType: JSONB
 
-
     - version: 1.0
       description: Update case details in tables
       fromTopic: update-case-application
@@ -307,7 +334,7 @@ serviceMaps:
             - jsonPath: $.cases.statutesAndSections.*.auditDetails.createdTime
             - jsonPath: $.cases.statutesAndSections.*.auditDetails.lastModifiedTime
 
-        - query: INSERT INTO public.dristi_case_litigants (id, tenantid, partycategory, individualid, organisationid, partytype, isactive, case_id, additionaldetails, createdby, lastmodifiedby, createdtime, lastmodifiedtime, hassigned, isresponserequired) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id) DO UPDATE SET partycategory = EXCLUDED.partycategory, individualid = EXCLUDED.individualid, organisationid = EXCLUDED.organisationid, case_id = EXCLUDED.case_id, partytype = EXCLUDED.partytype, isactive = EXCLUDED.isactive, additionaldetails = EXCLUDED.additionaldetails, lastmodifiedby = EXCLUDED.lastmodifiedby, lastmodifiedtime = EXCLUDED.lastmodifiedtime, hassigned = EXCLUDED.hassigned, isresponserequired=EXCLUDED.isresponserequired;
+        - query: INSERT INTO public.dristi_case_litigants (id, tenantid, partycategory, individualid, organisationid, partytype, isactive, case_id, additionaldetails, createdby, lastmodifiedby, createdtime, lastmodifiedtime, hassigned, isresponserequired, first_name, middle_name, last_name, full_name, mobile_number, age, company_name, designation, complainant_type, complainant_type_of_entity, transferred_poa, permanent_address, current_address, company_address) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id) DO UPDATE SET partycategory = EXCLUDED.partycategory, individualid = EXCLUDED.individualid, organisationid = EXCLUDED.organisationid, case_id = EXCLUDED.case_id, partytype = EXCLUDED.partytype, isactive = EXCLUDED.isactive, additionaldetails = EXCLUDED.additionaldetails, lastmodifiedby = EXCLUDED.lastmodifiedby, lastmodifiedtime = EXCLUDED.lastmodifiedtime, hassigned = EXCLUDED.hassigned, isresponserequired=EXCLUDED.isresponserequired, first_name = EXCLUDED.first_name, middle_name = EXCLUDED.middle_name, last_name = EXCLUDED.last_name, full_name = EXCLUDED.full_name, mobile_number = EXCLUDED.mobile_number, age = EXCLUDED.age, company_name = EXCLUDED.company_name, designation = EXCLUDED.designation, complainant_type = EXCLUDED.complainant_type, complainant_type_of_entity = EXCLUDED.complainant_type_of_entity, transferred_poa = EXCLUDED.transferred_poa, permanent_address = EXCLUDED.permanent_address, current_address = EXCLUDED.current_address, company_address = EXCLUDED.company_address;
           basePath: cases.litigants.*
           jsonMaps:
             - jsonPath: $.cases.litigants.*.id
@@ -327,6 +354,32 @@ serviceMaps:
             - jsonPath: $.cases.litigants.*.auditDetails.lastModifiedTime
             - jsonPath: $.cases.litigants.*.hasSigned
             - jsonPath: $.cases.litigants.*.isResponseRequired
+            - jsonPath: $.cases.litigants.*.firstName
+            - jsonPath: $.cases.litigants.*.middleName
+            - jsonPath: $.cases.litigants.*.lastName
+            - jsonPath: $.cases.litigants.*.fullName
+            - jsonPath: $.cases.litigants.*.mobileNumber
+            - jsonPath: $.cases.litigants.*.age
+            - jsonPath: $.cases.litigants.*.companyName
+            - jsonPath: $.cases.litigants.*.designation
+            - jsonPath: $.cases.litigants.*.complainantType
+              type: JSON
+              dbType: JSONB
+            - jsonPath: $.cases.litigants.*.complainantTypeOfEntity
+              type: JSON
+              dbType: JSONB
+            - jsonPath: $.cases.litigants.*.transferredPOA
+              type: JSON
+              dbType: JSONB
+            - jsonPath: $.cases.litigants.*.permanentAddress
+              type: JSON
+              dbType: JSONB
+            - jsonPath: $.cases.litigants.*.currentAddress
+              type: JSON
+              dbType: JSONB
+            - jsonPath: $.cases.litigants.*.companyAddress
+              type: JSON
+              dbType: JSONB
 
         - query: INSERT INTO dristi_case_representatives (id, tenantid, advocateid, isactive, case_id, additionaldetails, createdby, lastmodifiedby, createdtime, lastmodifiedtime, hassigned) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id) DO UPDATE SET tenantid = EXCLUDED.tenantid, advocateid = EXCLUDED.advocateid, isactive = EXCLUDED.isactive, case_id = EXCLUDED.case_id, additionaldetails = EXCLUDED.additionaldetails, lastmodifiedby = EXCLUDED.lastmodifiedby, lastmodifiedtime = EXCLUDED.lastmodifiedtime, hassigned = EXCLUDED.hassigned;
           basePath: cases.representatives.*
@@ -502,7 +555,7 @@ serviceMaps:
       tenantIdJsonPath: $.tenantId
       auditAttributeBasePath: litigants
       queryMaps:
-        - query: INSERT INTO public.dristi_case_litigants(id, tenantid, partycategory, individualid, organisationid, partytype, isactive, case_id, additionaldetails, createdby, lastmodifiedby, createdtime, lastmodifiedtime, hassigned, isresponserequired) VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id) DO UPDATE SET tenantid = EXCLUDED.tenantid, isactive = EXCLUDED.isactive, case_id = EXCLUDED.case_id, additionaldetails = EXCLUDED.additionaldetails, lastmodifiedby = EXCLUDED.lastmodifiedby, lastmodifiedtime = EXCLUDED.lastmodifiedtime, isresponserequired=EXCLUDED.isresponserequired;
+        - query: INSERT INTO public.dristi_case_litigants(id, tenantid, partycategory, individualid, organisationid, partytype, isactive, case_id, additionaldetails, createdby, lastmodifiedby, createdtime, lastmodifiedtime, hassigned, isresponserequired, first_name, middle_name, last_name, full_name, mobile_number, age, company_name, designation, complainant_type, complainant_type_of_entity, transferred_poa, permanent_address, current_address, company_address) VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id) DO UPDATE SET tenantid = EXCLUDED.tenantid, isactive = EXCLUDED.isactive, case_id = EXCLUDED.case_id, additionaldetails = EXCLUDED.additionaldetails, lastmodifiedby = EXCLUDED.lastmodifiedby, lastmodifiedtime = EXCLUDED.lastmodifiedtime, isresponserequired=EXCLUDED.isresponserequired, partycategory = EXCLUDED.partycategory, individualid = EXCLUDED.individualid, organisationid = EXCLUDED.organisationid, partytype = EXCLUDED.partytype, hassigned = EXCLUDED.hassigned, first_name = EXCLUDED.first_name, middle_name = EXCLUDED.middle_name, last_name = EXCLUDED.last_name, full_name = EXCLUDED.full_name, mobile_number = EXCLUDED.mobile_number, age = EXCLUDED.age, company_name = EXCLUDED.company_name, designation = EXCLUDED.designation, complainant_type = EXCLUDED.complainant_type, complainant_type_of_entity = EXCLUDED.complainant_type_of_entity, transferred_poa = EXCLUDED.transferred_poa, permanent_address = EXCLUDED.permanent_address, current_address = EXCLUDED.current_address, company_address = EXCLUDED.company_address;
           basePath: litigants.*
           jsonMaps:
             - jsonPath: $.litigants.*.id
@@ -522,6 +575,32 @@ serviceMaps:
             - jsonPath: $.litigants.*.auditDetails.lastModifiedTime
             - jsonPath: $.litigants.*.hasSigned
             - jsonPath: $.litigants.*.isResponseRequired
+            - jsonPath: $.litigants.*.firstName
+            - jsonPath: $.litigants.*.middleName
+            - jsonPath: $.litigants.*.lastName
+            - jsonPath: $.litigants.*.fullName
+            - jsonPath: $.litigants.*.mobileNumber
+            - jsonPath: $.litigants.*.age
+            - jsonPath: $.litigants.*.companyName
+            - jsonPath: $.litigants.*.designation
+            - jsonPath: $.litigants.*.complainantType
+              type: JSON
+              dbType: JSONB
+            - jsonPath: $.litigants.*.complainantTypeOfEntity
+              type: JSON
+              dbType: JSONB
+            - jsonPath: $.litigants.*.transferredPOA
+              type: JSON
+              dbType: JSONB
+            - jsonPath: $.litigants.*.permanentAddress
+              type: JSON
+              dbType: JSONB
+            - jsonPath: $.litigants.*.currentAddress
+              type: JSON
+              dbType: JSONB
+            - jsonPath: $.litigants.*.companyAddress
+              type: JSON
+              dbType: JSONB
         - query: INSERT INTO dristi_case_document(id,fileStore,documentUid,documentType, isActive, litigant_id, additionalDetails) VALUES (?, ?, ?, ?, ?, ?, ?);
           basePath: litigants.*.documents.*
           jsonMaps:
