@@ -384,50 +384,64 @@ def phase_4_deduplicate(manifest: dict, target_dir: Path) -> tuple[int, int, int
         for fu in followups:
             print(f"  KEEP-WITH-FOLLOWUP: {fu}")
 
-    for f in target_dir.rglob("*.java"):
-        text = f.read_text(encoding="utf-8")
-        new = text
-        for cls, sub in PROTECTED_CLASSES.items():
-            common_fqcn = f"{COMMON_PKG}.{sub}.{cls}"
-            new = re.sub(
-                rf"^(\s*import\s+){re.escape(cur_pkg)}\.\w+(?:\.\w+)*\.{re.escape(cls)}\s*;",
-                rf"\1{common_fqcn};",
-                new,
-                flags=re.MULTILINE,
-            )
-            new = re.sub(
-                rf"^(\s*import\s+){re.escape(new_pkg)}\.\w+(?:\.\w+)*\.{re.escape(cls)}\s*;",
-                rf"\1{common_fqcn};",
-                new,
-                flags=re.MULTILINE,
-            )
-            new = re.sub(
-                rf"^(\s*import\s+static\s+){re.escape(cur_pkg)}\.\w+(?:\.\w+)*\.{re.escape(cls)}\.",
-                rf"\1{common_fqcn}.",
-                new,
-                flags=re.MULTILINE,
-            )
-        if new != text:
-            rewritten += 1
+    # Apply rewrites to BOTH the target main tree and the migrated test tree.
+    # Tests live next to the production code's package — same protected-class
+    # imports need the same redirection.
+    test_target_dir = (
+        MONOLITH_ROOT
+        / f"domain-{manifest['target_module']}"
+        / "src"
+        / "test"
+        / "java"
+        / new_pkg.replace(".", "/")
+    )
+    sweep_roots = [target_dir]
+    if test_target_dir.exists():
+        sweep_roots.append(test_target_dir)
 
-        # Find this file's own package
-        m = PACKAGE_RE.search(new)
-        own_pkg = m.group(1) if m else ""
+    for root in sweep_roots:
+        for f in root.rglob("*.java"):
+            text = f.read_text(encoding="utf-8")
+            new = text
+            for cls, sub in PROTECTED_CLASSES.items():
+                common_fqcn = f"{COMMON_PKG}.{sub}.{cls}"
+                new = re.sub(
+                    rf"^(\s*import\s+){re.escape(cur_pkg)}\.\w+(?:\.\w+)*\.{re.escape(cls)}\s*;",
+                    rf"\1{common_fqcn};",
+                    new,
+                    flags=re.MULTILINE,
+                )
+                new = re.sub(
+                    rf"^(\s*import\s+){re.escape(new_pkg)}\.\w+(?:\.\w+)*\.{re.escape(cls)}\s*;",
+                    rf"\1{common_fqcn};",
+                    new,
+                    flags=re.MULTILINE,
+                )
+                new = re.sub(
+                    rf"^(\s*import\s+static\s+){re.escape(cur_pkg)}\.\w+(?:\.\w+)*\.{re.escape(cls)}\.",
+                    rf"\1{common_fqcn}.",
+                    new,
+                    flags=re.MULTILINE,
+                )
+            if new != text:
+                rewritten += 1
 
-        # If this file uses any deleted-from-its-own-package protected class
-        # WITHOUT importing it from anywhere, inject the dristi-common import.
-        deleted_in_own_pkg = deleted_classes_by_pkg.get(own_pkg, set())
-        for cls in deleted_in_own_pkg:
-            if re.search(rf"\b{cls}\b", new) and not re.search(
-                rf"^\s*import\s+\S+\.{cls}\s*;", new, re.MULTILINE
-            ):
-                sub = PROTECTED_CLASSES[cls]
-                fqcn = f"{COMMON_PKG}.{sub}.{cls}"
-                new = _add_import_if_missing(new, fqcn)
-                auto_imported += 1
+            # Same-package auto-import insertion (only matters for main tree
+            # where deleted_classes_by_pkg has entries).
+            m = PACKAGE_RE.search(new)
+            own_pkg = m.group(1) if m else ""
+            deleted_in_own_pkg = deleted_classes_by_pkg.get(own_pkg, set())
+            for cls in deleted_in_own_pkg:
+                if re.search(rf"\b{cls}\b", new) and not re.search(
+                    rf"^\s*import\s+\S+\.{cls}\s*;", new, re.MULTILINE
+                ):
+                    sub = PROTECTED_CLASSES[cls]
+                    fqcn = f"{COMMON_PKG}.{sub}.{cls}"
+                    new = _add_import_if_missing(new, fqcn)
+                    auto_imported += 1
 
-        if new != text:
-            f.write_text(new, encoding="utf-8")
+            if new != text:
+                f.write_text(new, encoding="utf-8")
     print(
         f"Phase 4 (deduplicate): deleted={deleted} protected-class copies, "
         f"rewrote={rewritten} imports, auto-imported={auto_imported}"
@@ -500,8 +514,33 @@ def phase_6_test_migration(manifest: dict) -> int:
         if dest.exists() and CURATED_MARKER in dest.read_text(encoding="utf-8"):
             skipped_curated += 1
             continue
+
+        # Apply the same package + protected-class import rewrites Phase 4
+        # does for the main tree.
+        rewritten = rewrite_text(text, cur, new)
+        for cls, sub in PROTECTED_CLASSES.items():
+            common_fqcn = f"{COMMON_PKG}.{sub}.{cls}"
+            rewritten = re.sub(
+                rf"^(\s*import\s+){re.escape(cur)}\.\w+(?:\.\w+)*\.{re.escape(cls)}\s*;",
+                rf"\1{common_fqcn};",
+                rewritten,
+                flags=re.MULTILINE,
+            )
+            rewritten = re.sub(
+                rf"^(\s*import\s+){re.escape(new)}\.\w+(?:\.\w+)*\.{re.escape(cls)}\s*;",
+                rf"\1{common_fqcn};",
+                rewritten,
+                flags=re.MULTILINE,
+            )
+            rewritten = re.sub(
+                rf"^(\s*import\s+static\s+){re.escape(cur)}\.\w+(?:\.\w+)*\.{re.escape(cls)}\.",
+                rf"\1{common_fqcn}.",
+                rewritten,
+                flags=re.MULTILINE,
+            )
+
         dest.parent.mkdir(parents=True, exist_ok=True)
-        dest.write_text(rewrite_text(text, cur, new), encoding="utf-8")
+        dest.write_text(rewritten, encoding="utf-8")
         copied += 1
     print(
         f"Phase 6 (test migration): copied {copied} test files"

@@ -11,9 +11,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.pucar.dristi.caselifecycle.locksvc.internal.config.Configuration;
 import org.pucar.dristi.caselifecycle.locksvc.internal.repository.LockRepository;
-import org.pucar.dristi.caselifecycle.locksvc.internal.util.IndividualUtil;
+import org.pucar.dristi.common.util.IndividualUtil;
 import org.pucar.dristi.caselifecycle.locksvc.internal.web.models.Lock;
-import org.pucar.dristi.caselifecycle.locksvc.internal.web.models.AuditDetails;
+import org.pucar.dristi.common.models.AuditDetails;
 
 import java.util.Optional;
 import java.util.UUID;

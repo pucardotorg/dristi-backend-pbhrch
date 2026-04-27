@@ -1,0 +1,27 @@
+{
+  "RequestInfo": {
+    "apiId": "Mihy",
+    "ver": ".01",
+    "ts": null,
+    "action": "_set",
+    "did": "1",
+    "key": "",
+    "msgId": "20170310130900",
+    "authToken": "test-auth-token",
+    "userInfo": {
+      "id": 1,
+      "uuid": "00000000-0000-0000-0000-000000000001",
+      "tenantId": "kl",
+      "userName": "tester",
+      "type": "EMPLOYEE"
+    }
+  },
+  "lock": {
+    "tenantId": "kl",
+    "uniqueId": "case-LOCAL-TEST-1",
+    "isLocked": true,
+    "entity": "case",
+    "userId": "1",
+    "lockType": "EDIT_LOCK"
+  }
+}
