@@ -83,7 +83,7 @@ serviceMaps:
             - jsonPath: $.cases.statutesAndSections.*.auditDetails.createdTime
             - jsonPath: $.cases.statutesAndSections.*.auditDetails.lastModifiedTime
 
-        - query: INSERT INTO public.dristi_case_litigants(id, tenantid, partycategory, individualid, organisationid, partytype, isactive, case_id, additionaldetails, createdby, lastmodifiedby, createdtime, lastmodifiedtime, hassigned, isresponserequired, first_name, middle_name, last_name, full_name, mobile_number, age, company_name, designation, complainant_type, complainant_type_of_entity, transferred_poa, permanent_address, current_address, company_address) VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+        - query: INSERT INTO public.dristi_case_litigants(id, tenantid, partycategory, individualid, organisationid, partytype, isactive, case_id, additionaldetails, createdby, lastmodifiedby, createdtime, lastmodifiedtime, hassigned, isresponserequired, first_name, middle_name, last_name, full_name, mobile_number, age, company_name, designation, complainant_type, complainant_type_of_entity, transferred_poa, permanent_address, current_address, is_same_address, is_joined, address_details, party_type_detail) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
           basePath: cases.litigants.*
           jsonMaps:
             - jsonPath: $.cases.litigants.*.id
@@ -108,6 +108,8 @@ serviceMaps:
             - jsonPath: $.cases.litigants.*.lastName
             - jsonPath: $.cases.litigants.*.fullName
             - jsonPath: $.cases.litigants.*.mobileNumber
+              type: JSON
+              dbType: JSONB
             - jsonPath: $.cases.litigants.*.age
             - jsonPath: $.cases.litigants.*.companyName
             - jsonPath: $.cases.litigants.*.designation
@@ -126,11 +128,16 @@ serviceMaps:
             - jsonPath: $.cases.litigants.*.currentAddress
               type: JSON
               dbType: JSONB
-            - jsonPath: $.cases.litigants.*.companyAddress
+            - jsonPath: $.cases.litigants.*.isSameAddress
+            - jsonPath: $.cases.litigants.*.isJoined
+            - jsonPath: $.cases.litigants.*.addressDetails
+              type: JSON
+              dbType: JSONB
+            - jsonPath: $.cases.litigants.*.partyTypeDetail
               type: JSON
               dbType: JSONB
 
-        - query: INSERT INTO public.dristi_case_representatives(id, tenantid, advocateid, isactive, case_id, additionaldetails, createdby, lastmodifiedby, createdtime, lastmodifiedtime, hassigned) VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+        - query: INSERT INTO dristi_case_representatives(id, tenantid, advocateid, isactive, case_id, additionaldetails, createdby, lastmodifiedby, createdtime, lastmodifiedtime, hassigned) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
           basePath: cases.representatives.*
           jsonMaps:
             - jsonPath: $.cases.representatives.*.id
@@ -147,7 +154,7 @@ serviceMaps:
             - jsonPath: $.cases.representatives.*.auditDetails.lastModifiedTime
             - jsonPath: $.cases.representatives.*.hasSigned
 
-        - query: INSERT INTO public.dristi_case_representing(id, tenantid, partycategory, individualid, organisationid, case_id, partytype, isactive, representative_id, additionaldetails, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+        - query: INSERT INTO dristi_case_representing(id, tenantid, partycategory, individualid, organisationid, case_id, partytype, isactive, representative_id, additionaldetails, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
           basePath: cases.representatives.*.representing.*
           jsonMaps:
             - jsonPath: $.cases.representatives.*.representing.*.id
@@ -167,7 +174,7 @@ serviceMaps:
             - jsonPath: $.cases.representatives.*.representing.*.auditDetails.createdTime
             - jsonPath: $.cases.representatives.*.representing.*.auditDetails.lastModifiedTime
 
-        - query: INSERT INTO dristi_case_document(id,fileStore,documentUid,documentType,isActive,case_id, additionalDetails) VALUES (?, ?, ?, ?, ?, ?, ?);
+        - query: INSERT INTO dristi_case_document(id,fileStore,documentUid,documentType, isActive, case_id, additionalDetails) VALUES (?, ?, ?, ?, ?, ?, ?);
           basePath: cases.documents.*
           jsonMaps:
             - jsonPath: $.cases.documents.*.id
@@ -206,7 +213,7 @@ serviceMaps:
               type: JSON
               dbType: JSONB
 
-        - query: INSERT INTO dristi_case_document(id,fileStore,documentUid,documentType, isActive,representing_id, additionalDetails) VALUES (?, ?, ?, ?, ?, ?, ?);
+        - query: INSERT INTO dristi_case_document(id,fileStore,documentUid,documentType, isActive, representing_id, additionalDetails) VALUES (?, ?, ?, ?, ?, ?, ?);
           basePath: cases.representatives.*.representing.*.documents.*
           jsonMaps:
             - jsonPath: $.cases.representatives.*.representing.*.documents.*.id
@@ -334,7 +341,8 @@ serviceMaps:
             - jsonPath: $.cases.statutesAndSections.*.auditDetails.createdTime
             - jsonPath: $.cases.statutesAndSections.*.auditDetails.lastModifiedTime
 
-        - query: INSERT INTO public.dristi_case_litigants (id, tenantid, partycategory, individualid, organisationid, partytype, isactive, case_id, additionaldetails, createdby, lastmodifiedby, createdtime, lastmodifiedtime, hassigned, isresponserequired, first_name, middle_name, last_name, full_name, mobile_number, age, company_name, designation, complainant_type, complainant_type_of_entity, transferred_poa, permanent_address, current_address, company_address) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id) DO UPDATE SET partycategory = EXCLUDED.partycategory, individualid = EXCLUDED.individualid, organisationid = EXCLUDED.organisationid, case_id = EXCLUDED.case_id, partytype = EXCLUDED.partytype, isactive = EXCLUDED.isactive, additionaldetails = EXCLUDED.additionaldetails, lastmodifiedby = EXCLUDED.lastmodifiedby, lastmodifiedtime = EXCLUDED.lastmodifiedtime, hassigned = EXCLUDED.hassigned, isresponserequired=EXCLUDED.isresponserequired, first_name = EXCLUDED.first_name, middle_name = EXCLUDED.middle_name, last_name = EXCLUDED.last_name, full_name = EXCLUDED.full_name, mobile_number = EXCLUDED.mobile_number, age = EXCLUDED.age, company_name = EXCLUDED.company_name, designation = EXCLUDED.designation, complainant_type = EXCLUDED.complainant_type, complainant_type_of_entity = EXCLUDED.complainant_type_of_entity, transferred_poa = EXCLUDED.transferred_poa, permanent_address = EXCLUDED.permanent_address, current_address = EXCLUDED.current_address, company_address = EXCLUDED.company_address;
+        - query: INSERT INTO public.dristi_case_litigants (id, tenantid, partycategory, individualid, organisationid, partytype, isactive, case_id, additionaldetails, createdby, lastmodifiedby, createdtime, lastmodifiedtime, hassigned, isresponserequired, first_name, middle_name, last_name, full_name, mobile_number, age, company_name, designation, complainant_type, complainant_type_of_entity, transferred_poa, permanent_address, current_address, is_same_address, is_joined, address_details, party_type_detail) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id) DO UPDATE SET partycategory = EXCLUDED.partycategory, individualid = EXCLUDED.individualid, organisationid = EXCLUDED.organisationid, case_id = EXCLUDED.case_id, partytype = EXCLUDED.partytype, isactive = EXCLUDED.isactive, additionaldetails = EXCLUDED.additionaldetails, lastmodifiedby = EXCLUDED.lastmodifiedby, lastmodifiedtime = EXCLUDED.lastmodifiedtime, hassigned = EXCLUDED.hassigned, isresponserequired=EXCLUDED.isresponserequired, first_name = EXCLUDED.first_name, middle_name = EXCLUDED.middle_name, last_name = EXCLUDED.last_name, full_name = EXCLUDED.full_name, mobile_number = EXCLUDED.mobile_number, age = EXCLUDED.age, company_name = EXCLUDED.company_name, designation = EXCLUDED.designation, complainant_type = EXCLUDED.complainant_type, complainant_type_of_entity = EXCLUDED.complainant_type_of_entity, transferred_poa = EXCLUDED.transferred_poa, permanent_address = EXCLUDED.permanent_address, current_address = EXCLUDED.current_address, is_same_address = EXCLUDED.is_same_address, is_joined = EXCLUDED.is_joined, address_details = EXCLUDED.address_details, party_type_detail = EXCLUDED.party_type_detail;
+
           basePath: cases.litigants.*
           jsonMaps:
             - jsonPath: $.cases.litigants.*.id
@@ -359,6 +367,8 @@ serviceMaps:
             - jsonPath: $.cases.litigants.*.lastName
             - jsonPath: $.cases.litigants.*.fullName
             - jsonPath: $.cases.litigants.*.mobileNumber
+              type: JSON
+              dbType: JSONB
             - jsonPath: $.cases.litigants.*.age
             - jsonPath: $.cases.litigants.*.companyName
             - jsonPath: $.cases.litigants.*.designation
@@ -377,7 +387,12 @@ serviceMaps:
             - jsonPath: $.cases.litigants.*.currentAddress
               type: JSON
               dbType: JSONB
-            - jsonPath: $.cases.litigants.*.companyAddress
+            - jsonPath: $.cases.litigants.*.isSameAddress
+            - jsonPath: $.cases.litigants.*.isJoined
+            - jsonPath: $.cases.litigants.*.addressDetails
+              type: JSON
+              dbType: JSONB
+            - jsonPath: $.cases.litigants.*.partyTypeDetail
               type: JSON
               dbType: JSONB
 
@@ -418,7 +433,7 @@ serviceMaps:
             - jsonPath: $.cases.representatives.*.representing.*.auditDetails.createdTime
             - jsonPath: $.cases.representatives.*.representing.*.auditDetails.lastModifiedTime
 
-        - query: INSERT INTO dristi_case_document(id,fileStore,documentUid,documentType,isActive,case_id, additionalDetails) VALUES (?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id) DO UPDATE SET fileStore = EXCLUDED.fileStore, documentUid = EXCLUDED.documentUid, documentType = EXCLUDED.documentType, isActive=EXCLUDED.isActive, case_id = EXCLUDED.case_id, additionalDetails = EXCLUDED.additionalDetails;
+        - query: INSERT INTO dristi_case_document(id,fileStore,documentUid,documentType, isActive, case_id, additionalDetails) VALUES (?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id) DO UPDATE SET fileStore = EXCLUDED.fileStore, documentUid = EXCLUDED.documentUid, documentType = EXCLUDED.documentType, isActive=EXCLUDED.isActive, case_id = EXCLUDED.case_id, additionalDetails = EXCLUDED.additionalDetails;
           basePath: cases.documents.*
           jsonMaps:
             - jsonPath: $.cases.documents.*.id
@@ -431,7 +446,7 @@ serviceMaps:
               type: JSON
               dbType: JSONB
 
-        - query: INSERT INTO dristi_case_document(id,fileStore,documentUid,documentType,isActive, litigant_id, additionalDetails) VALUES (?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id) DO UPDATE SET fileStore = EXCLUDED.fileStore, documentUid = EXCLUDED.documentUid, documentType = EXCLUDED.documentType, isActive=EXCLUDED.isActive, litigant_id = EXCLUDED.litigant_id, additionalDetails = EXCLUDED.additionalDetails;
+        - query: INSERT INTO dristi_case_document(id,fileStore,documentUid,documentType, isActive, litigant_id, additionalDetails) VALUES (?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id) DO UPDATE SET fileStore = EXCLUDED.fileStore, documentUid = EXCLUDED.documentUid, documentType = EXCLUDED.documentType, isActive=EXCLUDED.isActive, litigant_id = EXCLUDED.litigant_id, additionalDetails = EXCLUDED.additionalDetails;
           basePath: cases.litigants.*.documents.*
           jsonMaps:
             - jsonPath: $.cases.litigants.*.documents.*.id
@@ -444,7 +459,7 @@ serviceMaps:
               type: JSON
               dbType: JSONB
 
-        - query: INSERT INTO dristi_case_document(id,fileStore,documentUid,documentType,isActive, representative_id, additionalDetails) VALUES (?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id) DO UPDATE SET fileStore = EXCLUDED.fileStore, documentUid = EXCLUDED.documentUid, documentType = EXCLUDED.documentType, isActive=EXCLUDED.isActive, representative_id = EXCLUDED.representative_id, additionalDetails = EXCLUDED.additionalDetails;
+        - query: INSERT INTO dristi_case_document(id,fileStore,documentUid,documentType, isActive, representative_id, additionalDetails) VALUES (?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id) DO UPDATE SET fileStore = EXCLUDED.fileStore, documentUid = EXCLUDED.documentUid, documentType = EXCLUDED.documentType, isActive=EXCLUDED.isActive, representative_id = EXCLUDED.representative_id, additionalDetails = EXCLUDED.additionalDetails;
           basePath: cases.representatives.*.documents.*
           jsonMaps:
             - jsonPath: $.cases.representatives.*.documents.*.id
@@ -457,7 +472,7 @@ serviceMaps:
               type: JSON
               dbType: JSONB
 
-        - query: INSERT INTO dristi_case_document(id,fileStore,documentUid,documentType,isActive, representing_id, additionalDetails) VALUES (?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id) DO UPDATE SET fileStore = EXCLUDED.fileStore, documentUid = EXCLUDED.documentUid, documentType = EXCLUDED.documentType, isActive=EXCLUDED.isActive, representing_id = EXCLUDED.representing_id, additionalDetails = EXCLUDED.additionalDetails;
+        - query: INSERT INTO dristi_case_document(id,fileStore,documentUid,documentType, isActive, representing_id, additionalDetails) VALUES (?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id) DO UPDATE SET fileStore = EXCLUDED.fileStore, documentUid = EXCLUDED.documentUid, documentType = EXCLUDED.documentType, isActive=EXCLUDED.isActive, representing_id = EXCLUDED.representing_id, additionalDetails = EXCLUDED.additionalDetails;
           basePath: cases.representatives.*.representing.*.documents.*
           jsonMaps:
             - jsonPath: $.cases.representatives.*.representing.*.documents.*.id
@@ -470,20 +485,7 @@ serviceMaps:
               type: JSON
               dbType: JSONB
 
-        - query: INSERT INTO dristi_case_poaholders(id,tenant_id,case_id,individual_id,poa_type,name,is_active,additional_details,hasSigned,representing_litigants,created_by,last_modified_by,created_time,last_modified_time) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT (id) do update set 
-            tenant_id = EXCLUDED.tenant_id,
-            case_id = EXCLUDED.case_id,
-            individual_id = EXCLUDED.individual_id,
-            poa_type = EXCLUDED.poa_type,
-            name = EXCLUDED.name,
-            is_active = EXCLUDED.is_active,
-            additional_details = EXCLUDED.additional_details,
-            hasSigned = EXCLUDED.hasSigned,
-            representing_litigants = EXCLUDED.representing_litigants,
-            created_by = EXCLUDED.created_by,
-            last_modified_by = EXCLUDED.last_modified_by,
-            created_time = EXCLUDED.created_time,
-            last_modified_time = EXCLUDED.last_modified_time;
+        - query: INSERT INTO dristi_case_poaholders(id,tenant_id,case_id,individual_id,poa_type,name,is_active,additional_details,hasSigned,representing_litigants,created_by,last_modified_by,created_time,last_modified_time) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)
           basePath: cases.poaHolders.*
           jsonMaps:
             - jsonPath: $.cases.poaHolders.*.id
@@ -505,13 +507,7 @@ serviceMaps:
             - jsonPath: $.cases.poaHolders.*.auditDetails.createdTime
             - jsonPath: $.cases.poaHolders.*.auditDetails.lastModifiedTime
 
-        - query: INSERT INTO dristi_case_document(id,fileStore,documentUid,documentType,isActive, poaholder_id, additionalDetails) VALUES (?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id) do update set
-            fileStore = EXCLUDED.fileStore,
-            documentUid = EXCLUDED.documentUid,
-            documentType = EXCLUDED.documentType,
-            isActive=EXCLUDED.isActive,
-            poaholder_id = EXCLUDED.poaholder_id,
-            additionalDetails = EXCLUDED.additionalDetails;
+        - query: INSERT INTO dristi_case_document(id,fileStore,documentUid,documentType, isActive,poaholder_id, additionalDetails) VALUES (?, ?, ?, ?, ?, ?, ?);
           basePath: cases.poaHolders.*.documents.*
           jsonMaps:
             - jsonPath: $.cases.poaHolders.*.documents.*.id
@@ -519,7 +515,7 @@ serviceMaps:
             - jsonPath: $.cases.poaHolders.*.documents.*.documentUid
             - jsonPath: $.cases.poaHolders.*.documents.*.documentType
             - jsonPath: $.cases.poaHolders.*.documents.*.isActive
-            - jsonPath: $.cases.poaHolders.*.documents[*][?({id} in @.documents[*].id)].id
+            - jsonPath: $.cases.poaHolders[*][?({id} in @.documents[*].id)].id
             - jsonPath: $.cases.poaHolders.*.documents.*.additionalDetails
               type: JSON
               dbType: JSONB
@@ -555,7 +551,7 @@ serviceMaps:
       tenantIdJsonPath: $.tenantId
       auditAttributeBasePath: litigants
       queryMaps:
-        - query: INSERT INTO public.dristi_case_litigants(id, tenantid, partycategory, individualid, organisationid, partytype, isactive, case_id, additionaldetails, createdby, lastmodifiedby, createdtime, lastmodifiedtime, hassigned, isresponserequired, first_name, middle_name, last_name, full_name, mobile_number, age, company_name, designation, complainant_type, complainant_type_of_entity, transferred_poa, permanent_address, current_address, company_address) VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id) DO UPDATE SET tenantid = EXCLUDED.tenantid, isactive = EXCLUDED.isactive, case_id = EXCLUDED.case_id, additionaldetails = EXCLUDED.additionaldetails, lastmodifiedby = EXCLUDED.lastmodifiedby, lastmodifiedtime = EXCLUDED.lastmodifiedtime, isresponserequired=EXCLUDED.isresponserequired, partycategory = EXCLUDED.partycategory, individualid = EXCLUDED.individualid, organisationid = EXCLUDED.organisationid, partytype = EXCLUDED.partytype, hassigned = EXCLUDED.hassigned, first_name = EXCLUDED.first_name, middle_name = EXCLUDED.middle_name, last_name = EXCLUDED.last_name, full_name = EXCLUDED.full_name, mobile_number = EXCLUDED.mobile_number, age = EXCLUDED.age, company_name = EXCLUDED.company_name, designation = EXCLUDED.designation, complainant_type = EXCLUDED.complainant_type, complainant_type_of_entity = EXCLUDED.complainant_type_of_entity, transferred_poa = EXCLUDED.transferred_poa, permanent_address = EXCLUDED.permanent_address, current_address = EXCLUDED.current_address, company_address = EXCLUDED.company_address;
+        - query: INSERT INTO public.dristi_case_litigants(id, tenantid, partycategory, individualid, organisationid, partytype, isactive, case_id, additionaldetails, createdby, lastmodifiedby, createdtime, lastmodifiedtime, hassigned, isresponserequired, first_name, middle_name, last_name, full_name, mobile_number, age, company_name, designation, complainant_type, complainant_type_of_entity, transferred_poa, permanent_address, current_address, is_same_address, is_joined, address_details, party_type_detail) VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id) DO UPDATE SET tenantid = EXCLUDED.tenantid, isactive = EXCLUDED.isactive, case_id = EXCLUDED.case_id, additionaldetails = EXCLUDED.additionaldetails, lastmodifiedby = EXCLUDED.lastmodifiedby, lastmodifiedtime = EXCLUDED.lastmodifiedtime, isresponserequired=EXCLUDED.isresponserequired, partycategory = EXCLUDED.partycategory, individualid = EXCLUDED.individualid, organisationid = EXCLUDED.organisationid, partytype = EXCLUDED.partytype, hassigned = EXCLUDED.hassigned, first_name = EXCLUDED.first_name, middle_name = EXCLUDED.middle_name, last_name = EXCLUDED.last_name, full_name = EXCLUDED.full_name, mobile_number = EXCLUDED.mobile_number, age = EXCLUDED.age, company_name = EXCLUDED.company_name, designation = EXCLUDED.designation, complainant_type = EXCLUDED.complainant_type, complainant_type_of_entity = EXCLUDED.complainant_type_of_entity, transferred_poa = EXCLUDED.transferred_poa, permanent_address = EXCLUDED.permanent_address, current_address = EXCLUDED.current_address, is_same_address = EXCLUDED.is_same_address, is_joined = EXCLUDED.is_joined, address_details = EXCLUDED.address_details, party_type_detail = EXCLUDED.party_type_detail;
           basePath: litigants.*
           jsonMaps:
             - jsonPath: $.litigants.*.id
@@ -580,6 +576,8 @@ serviceMaps:
             - jsonPath: $.litigants.*.lastName
             - jsonPath: $.litigants.*.fullName
             - jsonPath: $.litigants.*.mobileNumber
+              type: JSON
+              dbType: JSONB
             - jsonPath: $.litigants.*.age
             - jsonPath: $.litigants.*.companyName
             - jsonPath: $.litigants.*.designation
@@ -598,7 +596,12 @@ serviceMaps:
             - jsonPath: $.litigants.*.currentAddress
               type: JSON
               dbType: JSONB
-            - jsonPath: $.litigants.*.companyAddress
+            - jsonPath: $.litigants.*.isSameAddress
+            - jsonPath: $.litigants.*.isJoined
+            - jsonPath: $.litigants.*.addressDetails
+              type: JSON
+              dbType: JSONB
+            - jsonPath: $.litigants.*.partyTypeDetail
               type: JSON
               dbType: JSONB
         - query: INSERT INTO dristi_case_document(id,fileStore,documentUid,documentType, isActive, litigant_id, additionalDetails) VALUES (?, ?, ?, ?, ?, ?, ?);

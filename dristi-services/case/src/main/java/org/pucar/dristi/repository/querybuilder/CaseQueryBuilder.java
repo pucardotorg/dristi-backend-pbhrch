@@ -56,7 +56,8 @@ public class CaseQueryBuilder {
             " ltg.first_name as first_name, ltg.middle_name as middle_name, ltg.last_name as last_name, ltg.full_name as full_name," +
             " ltg.mobile_number as mobile_number, ltg.age as age, ltg.company_name as company_name, ltg.designation as designation," +
             " ltg.complainant_type as complainant_type, ltg.complainant_type_of_entity as complainant_type_of_entity, ltg.transferred_poa as transferred_poa," +
-            " ltg.permanent_address as permanent_address, ltg.current_address as current_address, ltg.company_address as company_address ";
+            " ltg.permanent_address as permanent_address, ltg.current_address as current_address, ltg.is_same_address as is_same_address, ltg.is_joined as is_joined," +
+            " ltg.address_details as address_details, ltg.party_type_detail as party_type_detail ";
 
     private static final String BASE_LITIGANT_SUMMARY_QUERY = " SELECT ltg.case_id as case_id, ltg.id as id, ltg.individualid as individualid, ltg.partytype as partytype";
 

@@ -146,6 +146,10 @@ public class CaseRegistrationEnrichment {
             party.setId((UUID.randomUUID()));
             party.setCaseId(courtCaseId);
             party.setAuditDetails(auditDetails);
+            if (party.getIsJoined() == null) {
+                boolean isRespondentLitigant = party.getPartyType() != null && party.getPartyType().toLowerCase().contains("respondent");
+                party.setIsJoined(!isRespondentLitigant);
+            }
             if (party.getDocuments() != null) {
                 party.getDocuments().forEach(CaseRegistrationEnrichment::enrichDocumentsOnCreate);
             }
@@ -153,6 +157,10 @@ public class CaseRegistrationEnrichment {
         List<Party> litigantsListToUpdate = courtCase.getLitigants().stream().filter(litigant -> litigant.getId() != null).toList();
         litigantsListToUpdate.forEach(party -> {
             party.setAuditDetails(auditDetails);
+            if (party.getIsJoined() == null) {
+                boolean isRespondentLitigant = party.getPartyType() != null && party.getPartyType().toLowerCase().contains("respondent");
+                party.setIsJoined(!isRespondentLitigant);
+            }
             if (party.getDocuments() != null) {
                 party.getDocuments().forEach(CaseRegistrationEnrichment::enrichDocumentsOnCreate);
             }

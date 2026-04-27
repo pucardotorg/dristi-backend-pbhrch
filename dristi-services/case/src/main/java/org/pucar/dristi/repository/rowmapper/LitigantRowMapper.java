@@ -18,6 +18,7 @@ import org.pucar.dristi.web.models.TransferredPOAInfo;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
@@ -58,7 +59,7 @@ public class LitigantRowMapper implements ResultSetExtractor<Map<UUID, List<Part
                         .middleName(rs.getString("middle_name"))
                         .lastName(rs.getString("last_name"))
                         .fullName(rs.getString("full_name"))
-                        .mobileNumber(rs.getString("mobile_number"))
+                        .mobileNumber(getJsonNodeFromJson(rs.getString("mobile_number")))
                         .age(rs.getString("age"))
                         .companyName(rs.getString("company_name"))
                         .designation(rs.getString("designation"))
@@ -67,7 +68,10 @@ public class LitigantRowMapper implements ResultSetExtractor<Map<UUID, List<Part
                         .transferredPOA(getObjectFromJson(rs.getString("transferred_poa"), TransferredPOAInfo.class))
                         .permanentAddress(getObjectFromJson(rs.getString("permanent_address"), Address.class))
                         .currentAddress(getObjectFromJson(rs.getString("current_address"), Address.class))
-                        .companyAddress(getObjectFromJson(rs.getString("company_address"), Address.class))
+                        .isSameAddress(rs.getBoolean("is_same_address"))
+                        .isJoined(rs.getBoolean("is_joined"))
+                        .addressDetails(getJsonNodeFromJson(rs.getString("address_details")))
+                        .partyTypeDetail(getJsonNodeFromJson(rs.getString("party_type_detail")))
                         .auditDetails(auditdetails)
                         .build();
 
@@ -91,6 +95,17 @@ public class LitigantRowMapper implements ResultSetExtractor<Map<UUID, List<Part
             throw new CustomException("ROW_MAPPER_EXCEPTION", "Exception occurred while processing Case ResultSet: " + e.getMessage());
         }
         return partyMap;
+    }
+
+    private JsonNode getJsonNodeFromJson(String json) {
+        if (json == null || json.trim().isEmpty()) {
+            return null;
+        }
+        try {
+            return objectMapper.readTree(json);
+        } catch (Exception e) {
+            throw new CustomException("ROW_MAPPER_EXCEPTION", "Failed to convert JSON to JsonNode: " + e.getMessage());
+        }
     }
 
     private <T> T getObjectFromJson(String json, Class<T> clazz) {

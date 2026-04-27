@@ -1,6 +1,7 @@
 package org.pucar.dristi.web.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -77,7 +78,8 @@ public class Party {
     private String fullName = null;
 
     @JsonProperty("mobileNumber")
-    private String mobileNumber = null;
+    @Valid
+    private JsonNode mobileNumber = null;
 
     @JsonProperty("age")
     private String age = null;
@@ -108,9 +110,19 @@ public class Party {
     @Valid
     private Address currentAddress = null;
 
-    @JsonProperty("companyAddress")
+    @JsonProperty("isSameAddress")
+    private Boolean isSameAddress = true;
+
+    @JsonProperty("isJoined")
+    private Boolean isJoined = true;
+
+    @JsonProperty("addressDetails")
     @Valid
-    private Address companyAddress = null;
+    private JsonNode addressDetails = null;
+
+    @JsonProperty("partyTypeDetail")
+    @Valid
+    private JsonNode partyTypeDetail = null;
 
     @JsonProperty("documents")
     @Valid
