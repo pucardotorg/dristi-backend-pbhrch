@@ -13,7 +13,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import pucar.config.Configuration;
-import pucar.kafka.Producer;
+import org.pucar.dristi.common.kafka.Producer;
 import pucar.repository.ServiceRequestRepository;
 import pucar.web.models.Order;
 import pucar.web.models.WorkflowObject;

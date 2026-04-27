@@ -3,7 +3,7 @@ package notification.service;
 import lombok.extern.slf4j.Slf4j;
 import notification.config.Configuration;
 import notification.enrichment.NotificationEnrichment;
-import notification.kafka.Producer;
+import org.pucar.dristi.common.kafka.Producer;
 import notification.repository.NotificationRepository;
 import notification.util.FileStoreUtil;
 import notification.validator.NotificationValidator;

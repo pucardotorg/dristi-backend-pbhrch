@@ -3,7 +3,7 @@ package digit.service;
 import digit.config.Configuration;
 import digit.config.ServiceConstants;
 import digit.enrichment.JudgeCalendarEnrichment;
-import digit.kafka.producer.Producer;
+import org.pucar.dristi.common.kafka.Producer;
 import digit.repository.CalendarRepository;
 import digit.util.DateUtil;
 import digit.util.MasterDataUtil;

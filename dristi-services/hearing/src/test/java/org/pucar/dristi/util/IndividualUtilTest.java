@@ -10,7 +10,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.pucar.dristi.config.Configuration;
-import org.pucar.dristi.repository.ServiceRequestRepository;
+import org.pucar.dristi.common.repository.ServiceRequestRepository;
 import org.pucar.dristi.web.models.IndividualSearchRequest;
 
 import java.util.HashMap;

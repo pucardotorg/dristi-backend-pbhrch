@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import digit.config.Configuration;
 import digit.enrichment.DigitalizedDocumentEnrichment;
 import digit.enrichment.PleaEnrichment;
-import digit.kafka.Producer;
+import org.pucar.dristi.common.kafka.Producer;
 import digit.util.CaseUtil;
 import digit.util.FileStoreUtil;
 import digit.util.UrlShortenerUtil;

@@ -2,7 +2,7 @@ package digit.service;
 
 import digit.config.Configuration;
 import digit.enrichment.InPortalSurveyEnrichment;
-import digit.kafka.Producer;
+import org.pucar.dristi.common.kafka.Producer;
 import digit.repository.InPortalSurveyRepository;
 import digit.validators.InportalSurveyValidations;
 import digit.web.models.*;

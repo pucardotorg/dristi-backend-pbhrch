@@ -11,7 +11,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.pucar.dristi.config.Configuration;
 import org.pucar.dristi.enrichment.EvidenceEnrichment;
-import org.pucar.dristi.kafka.Producer;
+import org.pucar.dristi.common.kafka.Producer;
 import org.pucar.dristi.web.models.Artifact;
 import org.pucar.dristi.web.models.EvidenceRequest;
 import org.pucar.dristi.web.models.EvidenceSearchCriteria;

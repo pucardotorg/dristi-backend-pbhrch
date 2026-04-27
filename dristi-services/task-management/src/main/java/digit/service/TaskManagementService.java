@@ -2,7 +2,7 @@ package digit.service;
 
 import digit.config.Configuration;
 import digit.enrichment.TaskManagementEnrichment;
-import digit.kafka.Producer;
+import org.pucar.dristi.common.kafka.Producer;
 import digit.repository.TaskManagementRepository;
 import digit.validator.TaskManagementValidator;
 import digit.web.models.TaskManagement;

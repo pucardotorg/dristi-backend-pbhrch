@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.egov.tracer.model.CustomException;
 import org.pucar.dristi.config.Configuration;
 import org.pucar.dristi.enrichment.TemplateConfigurationEnrichment;
-import org.pucar.dristi.kafka.Producer;
+import org.pucar.dristi.common.kafka.Producer;
 import org.pucar.dristi.repository.TemplateConfigurationRepository;
 import org.pucar.dristi.web.models.*;
 import org.springframework.stereotype.Service;

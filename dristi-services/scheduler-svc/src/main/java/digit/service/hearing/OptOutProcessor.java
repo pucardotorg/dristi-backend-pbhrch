@@ -2,7 +2,7 @@ package digit.service.hearing;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import digit.config.Configuration;
-import digit.kafka.producer.Producer;
+import org.pucar.dristi.common.kafka.Producer;
 import digit.repository.ReScheduleRequestRepository;
 import digit.service.HearingService;
 import digit.service.RescheduleRequestOptOutService;

@@ -10,7 +10,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.pucar.dristi.config.Configuration;
-import org.pucar.dristi.repository.ServiceRequestRepository;
+import org.pucar.dristi.common.repository.ServiceRequestRepository;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.workflow.BusinessService;
 import org.egov.common.contract.workflow.BusinessServiceResponse;

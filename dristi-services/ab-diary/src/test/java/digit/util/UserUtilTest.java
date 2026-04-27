@@ -2,7 +2,7 @@ package digit.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import digit.config.Configuration;
-import digit.repository.ServiceRequestRepository;
+import org.pucar.dristi.common.repository.ServiceRequestRepository;
 import org.egov.common.contract.request.Role;
 import org.egov.common.contract.request.User;
 import org.egov.common.contract.user.UserDetailResponse;

@@ -8,7 +8,7 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
 import org.egov.common.contract.workflow.*;
 import org.egov.common.contract.models.*;
-import org.pucar.dristi.repository.ServiceRequestRepository;
+import org.pucar.dristi.common.repository.ServiceRequestRepository;
 import org.egov.tracer.model.CustomException;
 import org.pucar.dristi.web.models.ProcessInstanceObject;
 import org.pucar.dristi.web.models.WorkflowObject;

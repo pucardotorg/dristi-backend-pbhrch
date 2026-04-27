@@ -2,7 +2,7 @@ package digit.enrichment;
 
 import digit.config.Configuration;
 import digit.models.coremodels.AuditDetails;
-import digit.util.IdgenUtil;
+import org.pucar.dristi.common.util.IdgenUtil;
 import digit.web.models.ReScheduleHearing;
 import digit.web.models.ReScheduleHearingRequest;
 import digit.web.models.Workflow;

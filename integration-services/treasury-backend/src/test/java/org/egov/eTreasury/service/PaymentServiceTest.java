@@ -7,7 +7,7 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
 import org.egov.eTreasury.config.PaymentConfiguration;
 import org.egov.eTreasury.enrichment.TreasuryEnrichment;
-import org.egov.eTreasury.kafka.Producer;
+import org.pucar.dristi.common.kafka.Producer;
 import org.egov.eTreasury.model.*;
 import org.egov.eTreasury.repository.AuthSekRepository;
 import org.egov.eTreasury.repository.TreasuryPaymentRepository;

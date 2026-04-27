@@ -2,7 +2,7 @@ package notification.service;
 
 import notification.config.Configuration;
 import notification.enrichment.NotificationEnrichment;
-import notification.kafka.Producer;
+import org.pucar.dristi.common.kafka.Producer;
 import notification.repository.NotificationRepository;
 import notification.service.NotificationService;
 import notification.validator.NotificationValidator;

@@ -1,6 +1,6 @@
 package digit.channel;
 
-import digit.kafka.Producer;
+import org.pucar.dristi.common.kafka.Producer;
 import digit.web.models.ChannelMessage;
 import digit.web.models.TaskRequest;
 import lombok.extern.slf4j.Slf4j;

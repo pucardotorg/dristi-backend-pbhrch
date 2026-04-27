@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.egov.tracer.model.CustomException;
 import org.egov.tracer.model.ServiceCallException;
 import org.pucar.dristi.config.Configuration;
-import org.pucar.dristi.kafka.Producer;
+import org.pucar.dristi.common.kafka.Producer;
 import org.pucar.dristi.repository.ServiceRequestRepository;
 import org.pucar.dristi.web.models.taskManagement.TaskManagement;
 import org.pucar.dristi.web.models.taskManagement.TaskManagementSearchResponse;

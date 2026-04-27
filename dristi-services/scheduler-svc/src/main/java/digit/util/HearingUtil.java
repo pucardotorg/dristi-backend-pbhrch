@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import digit.config.Configuration;
-import digit.kafka.producer.Producer;
+import org.pucar.dristi.common.kafka.Producer;
 import digit.repository.ServiceRequestRepository;
 import digit.web.models.hearing.*;
 import lombok.extern.slf4j.Slf4j;

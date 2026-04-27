@@ -3,7 +3,7 @@ package digit.service;
 import digit.config.Configuration;
 import digit.config.ServiceConstants;
 import digit.enrichment.HearingEnrichment;
-import digit.kafka.producer.Producer;
+import org.pucar.dristi.common.kafka.Producer;
 import digit.repository.HearingRepository;
 import digit.util.HearingUtil;
 import digit.util.MasterDataUtil;

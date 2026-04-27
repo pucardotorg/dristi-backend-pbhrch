@@ -2,7 +2,7 @@ package digit.service;
 
 import digit.config.Configuration;
 import digit.enrichment.ADiaryEnrichment;
-import digit.kafka.Producer;
+import org.pucar.dristi.common.kafka.Producer;
 import digit.repository.DiaryRepository;
 import digit.util.CaseUtil;
 import digit.util.FileStoreUtil;

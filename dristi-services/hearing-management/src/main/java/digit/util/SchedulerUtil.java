@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import digit.config.Configuration;
-import digit.repository.ServiceRequestRepository;
+import org.pucar.dristi.common.repository.ServiceRequestRepository;
 import digit.web.models.scheduler.JudgeCalenderSearchRequest;
 import digit.web.models.scheduler.JudgeRuleResponse;
 import lombok.extern.slf4j.Slf4j;

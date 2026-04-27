@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import digit.config.Configuration;
 import digit.config.ServiceConstants;
-import digit.kafka.producer.Producer;
+import org.pucar.dristi.common.kafka.Producer;
 import digit.repository.CauseListRepository;
 import digit.repository.HearingRepository;
 import digit.util.*;

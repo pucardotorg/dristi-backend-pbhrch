@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.model.CustomException;
 import org.pucar.dristi.config.Configuration;
-import org.pucar.dristi.util.IndividualUtil;
+import org.pucar.dristi.common.util.IndividualUtil;
 import org.pucar.dristi.web.models.Individual;
 import org.pucar.dristi.web.models.IndividualSearch;
 import org.pucar.dristi.web.models.IndividualSearchRequest;

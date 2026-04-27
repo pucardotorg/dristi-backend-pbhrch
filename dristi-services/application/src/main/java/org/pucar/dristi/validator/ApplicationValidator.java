@@ -5,7 +5,7 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.model.CustomException;
 import org.pucar.dristi.repository.ApplicationRepository;
 import org.pucar.dristi.util.CaseUtil;
-import org.pucar.dristi.util.FileStoreUtil;
+import org.pucar.dristi.common.util.FileStoreUtil;
 import org.pucar.dristi.util.OrderUtil;
 import org.pucar.dristi.web.models.*;
 import org.springframework.beans.factory.annotation.Autowired;

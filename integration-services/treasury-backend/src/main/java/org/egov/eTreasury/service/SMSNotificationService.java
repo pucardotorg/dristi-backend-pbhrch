@@ -6,7 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.models.RequestInfoWrapper;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.eTreasury.config.PaymentConfiguration;
-import org.egov.eTreasury.kafka.Producer;
+import org.pucar.dristi.common.kafka.Producer;
 import org.egov.eTreasury.model.SMSRequest;
 import org.egov.eTreasury.model.SMSTemplateData;
 import org.egov.eTreasury.repository.ServiceRequestRepository;

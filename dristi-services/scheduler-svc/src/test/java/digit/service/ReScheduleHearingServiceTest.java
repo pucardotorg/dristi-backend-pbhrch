@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import digit.config.Configuration;
 import digit.config.ServiceConstants;
 import digit.enrichment.ReScheduleRequestEnrichment;
-import digit.kafka.producer.Producer;
+import org.pucar.dristi.common.kafka.Producer;
 import digit.repository.ReScheduleRequestRepository;
 import digit.util.CaseUtil;
 import digit.util.DateUtil;

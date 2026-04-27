@@ -7,7 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.pucar.dristi.config.Configuration;
-import org.pucar.dristi.repository.ServiceRequestRepository;
+import org.pucar.dristi.common.repository.ServiceRequestRepository;
 import org.pucar.dristi.web.models.IdGenerationRequest;
 import org.pucar.dristi.web.models.IdGenerationResponse;
 import org.pucar.dristi.web.models.IdRequest;

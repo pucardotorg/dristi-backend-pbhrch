@@ -4,7 +4,7 @@ import digit.models.coremodels.PaymentDetail;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.sbi.config.PaymentConfiguration;
 import org.egov.sbi.enrichemnt.PaymentEnrichment;
-import org.egov.sbi.kafka.Producer;
+import org.pucar.dristi.common.kafka.Producer;
 import org.egov.sbi.model.*;
 import org.egov.sbi.repository.TransactionDetailsRepository;
 import org.egov.sbi.util.AES256Util;

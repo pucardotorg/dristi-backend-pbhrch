@@ -8,7 +8,7 @@ import org.egov.common.contract.request.RequestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pucar.config.Configuration;
-import pucar.kafka.Producer;
+import org.pucar.dristi.common.kafka.Producer;
 import pucar.repository.ServiceRequestRepository;
 import pucar.web.models.SMSRequest;
 import pucar.web.models.SMSTemplateData;

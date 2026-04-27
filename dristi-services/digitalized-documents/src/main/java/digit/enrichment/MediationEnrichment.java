@@ -1,7 +1,7 @@
 package digit.enrichment;
 
 import digit.util.DigitalizedDocumentUtil;
-import digit.web.models.AuditDetails;
+import org.pucar.dristi.common.models.AuditDetails;
 import digit.web.models.DigitalizedDocumentRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;

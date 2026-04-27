@@ -2,7 +2,7 @@ package digit.service;
 
 import digit.config.Configuration;
 import digit.enrichment.ADiaryEntryEnrichment;
-import digit.kafka.Producer;
+import org.pucar.dristi.common.kafka.Producer;
 import digit.repository.DiaryEntryRepository;
 import digit.validators.ADiaryValidator;
 import digit.web.models.*;

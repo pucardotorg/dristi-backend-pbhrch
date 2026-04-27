@@ -1,7 +1,7 @@
 package org.pucar.dristi.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.pucar.dristi.repository.ServiceRequestRepository;
+import org.pucar.dristi.common.repository.ServiceRequestRepository;
 import org.pucar.dristi.config.Configuration;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.model.CustomException;

@@ -3,7 +3,7 @@ package digit.service;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import digit.config.Configuration;
-import digit.util.MdmsUtil;
+import org.pucar.dristi.common.util.MdmsUtil;
 import digit.web.models.CaseDiary;
 import digit.web.models.CaseDiaryGenerateRequest;
 import digit.web.models.CourtRoom;

@@ -12,7 +12,7 @@ import java.util.Collections;
 import java.util.List;
 
 import digit.config.Configuration;
-import digit.repository.ServiceRequestRepository;
+import org.pucar.dristi.common.repository.ServiceRequestRepository;
 import org.egov.common.contract.idgen.IdGenerationRequest;
 import org.egov.common.contract.idgen.IdGenerationResponse;
 import org.egov.common.contract.idgen.IdResponse;

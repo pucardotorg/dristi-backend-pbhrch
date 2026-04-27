@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.model.ServiceCallException;
 import org.pucar.dristi.config.Configuration;
-import org.pucar.dristi.repository.ServiceRequestRepository;
+import org.pucar.dristi.common.repository.ServiceRequestRepository;
 import org.pucar.dristi.web.models.pendingtask.PendingTask;
 import org.pucar.dristi.web.models.pendingtask.PendingTaskRequest;
 import org.pucar.dristi.web.models.pendingtask.PendingTaskResponse;

@@ -2,7 +2,7 @@ package digit.service;
 
 import digit.config.Configuration;
 import digit.enrichment.AdvocateOfficeEnrichment;
-import digit.kafka.Producer;
+import org.pucar.dristi.common.kafka.Producer;
 import digit.repository.AdvocateOfficeRepository;
 import digit.util.CacheUtil;
 import digit.util.CaseUtil;

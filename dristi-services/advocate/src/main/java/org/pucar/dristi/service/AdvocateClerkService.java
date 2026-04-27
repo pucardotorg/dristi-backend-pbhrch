@@ -5,7 +5,7 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.model.CustomException;
 import org.pucar.dristi.config.Configuration;
 import org.pucar.dristi.enrichment.AdvocateClerkRegistrationEnrichment;
-import org.pucar.dristi.kafka.Producer;
+import org.pucar.dristi.common.kafka.Producer;
 import org.pucar.dristi.repository.AdvocateClerkRepository;
 import org.pucar.dristi.validators.AdvocateClerkRegistrationValidator;
 import org.pucar.dristi.web.models.AdvocateClerk;

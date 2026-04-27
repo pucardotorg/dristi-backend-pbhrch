@@ -2,7 +2,7 @@ package drishti.payment.calculator.service;
 
 import drishti.payment.calculator.config.Configuration;
 import drishti.payment.calculator.enrichment.PostalHubEnrichment;
-import drishti.payment.calculator.kafka.Producer;
+import org.pucar.dristi.common.kafka.Producer;
 import drishti.payment.calculator.repository.PostalHubRepository;
 import drishti.payment.calculator.validator.PostalHubValidator;
 import drishti.payment.calculator.web.models.HubSearchRequest;

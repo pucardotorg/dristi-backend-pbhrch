@@ -2,7 +2,7 @@ package digit.service;
 
 import digit.config.Configuration;
 import digit.config.ServiceConstants;
-import digit.kafka.producer.Producer;
+import org.pucar.dristi.common.kafka.Producer;
 import digit.repository.CauseListRepository;
 import digit.repository.HearingRepository;
 import digit.util.FileStoreUtil;

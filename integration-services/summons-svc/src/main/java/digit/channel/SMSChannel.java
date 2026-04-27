@@ -1,7 +1,7 @@
 package digit.channel;
 
 import digit.config.Configuration;
-import digit.kafka.Producer;
+import org.pucar.dristi.common.kafka.Producer;
 import digit.web.models.ChannelMessage;
 import digit.web.models.ChannelResponse;
 import digit.web.models.TaskRequest;

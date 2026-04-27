@@ -3,7 +3,7 @@ package digit.service.hearing;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import digit.config.Configuration;
-import digit.kafka.producer.Producer;
+import org.pucar.dristi.common.kafka.Producer;
 import digit.mapper.CustomMapper;
 import digit.service.HearingService;
 import digit.util.CaseUtil;

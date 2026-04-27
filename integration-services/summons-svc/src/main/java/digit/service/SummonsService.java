@@ -3,7 +3,7 @@ package digit.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import digit.config.Configuration;
 import digit.enrichment.SummonsDeliveryEnrichment;
-import digit.kafka.Producer;
+import org.pucar.dristi.common.kafka.Producer;
 import digit.repository.SummonsRepository;
 import digit.util.*;
 import digit.web.models.*;

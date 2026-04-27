@@ -2,7 +2,7 @@ package digit.task;
 
 import digit.config.Configuration;
 import digit.config.ServiceConstants;
-import digit.kafka.producer.Producer;
+import org.pucar.dristi.common.kafka.Producer;
 import digit.repository.ReScheduleRequestRepository;
 import digit.repository.RescheduleRequestOptOutRepository;
 import digit.service.UserService;

@@ -9,7 +9,7 @@ import org.egov.common.contract.request.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import pucar.config.Configuration;
-import pucar.kafka.Producer;
+import org.pucar.dristi.common.kafka.Producer;
 import pucar.service.SmsNotificationService;
 import pucar.strategy.OrderUpdateStrategy;
 import pucar.util.*;

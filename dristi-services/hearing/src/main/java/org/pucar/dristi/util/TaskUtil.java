@@ -8,7 +8,7 @@ import org.egov.common.models.project.TaskResponse;
 import org.egov.tracer.model.CustomException;
 import org.egov.tracer.model.ServiceCallException;
 import org.pucar.dristi.config.Configuration;
-import org.pucar.dristi.repository.ServiceRequestRepository;
+import org.pucar.dristi.common.repository.ServiceRequestRepository;
 import org.pucar.dristi.web.models.tasks.TaskListResponse;
 import org.pucar.dristi.web.models.tasks.TaskRequest;
 import org.pucar.dristi.web.models.tasks.TaskSearchRequest;

@@ -2,7 +2,7 @@ package digit.repository.rowmapper;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import digit.web.models.AuditDetails;
+import org.pucar.dristi.common.models.AuditDetails;
 import digit.web.models.TypeEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.tracer.model.CustomException;

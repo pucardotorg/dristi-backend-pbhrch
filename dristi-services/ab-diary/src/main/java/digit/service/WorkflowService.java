@@ -2,7 +2,7 @@ package digit.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import digit.config.Configuration;
-import digit.repository.ServiceRequestRepository;
+import org.pucar.dristi.common.repository.ServiceRequestRepository;
 import digit.web.models.CaseDiary;
 import digit.web.models.CaseDiaryRequest;
 import lombok.extern.slf4j.Slf4j;

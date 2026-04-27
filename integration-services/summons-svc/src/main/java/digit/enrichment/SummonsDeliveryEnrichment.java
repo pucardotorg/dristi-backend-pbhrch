@@ -1,7 +1,7 @@
 package digit.enrichment;
 
 import digit.config.Configuration;
-import digit.util.IdgenUtil;
+import org.pucar.dristi.common.util.IdgenUtil;
 import digit.web.models.*;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.models.AuditDetails;

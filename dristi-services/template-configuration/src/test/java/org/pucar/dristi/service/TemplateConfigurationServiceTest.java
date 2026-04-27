@@ -7,7 +7,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.pucar.dristi.config.Configuration;
 import org.pucar.dristi.enrichment.TemplateConfigurationEnrichment;
-import org.pucar.dristi.kafka.Producer;
+import org.pucar.dristi.common.kafka.Producer;
 import org.pucar.dristi.repository.TemplateConfigurationRepository;
 import org.pucar.dristi.web.models.*;
 

@@ -3,7 +3,7 @@ package digit.service;
 
 import digit.config.Configuration;
 import digit.enrichment.RescheduleRequestOptOutEnrichment;
-import digit.kafka.producer.Producer;
+import org.pucar.dristi.common.kafka.Producer;
 import digit.repository.RescheduleRequestOptOutRepository;
 import digit.validator.RescheduleRequestOptOutValidator;
 import digit.web.models.OptOut;

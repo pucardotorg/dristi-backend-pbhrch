@@ -3,7 +3,7 @@ package org.pucar.dristi.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.egov.tracer.model.CustomException;
 import org.pucar.dristi.config.Configuration;
-import org.pucar.dristi.kafka.Producer;
+import org.pucar.dristi.common.kafka.Producer;
 import org.pucar.dristi.util.MdmsV2Util;
 import org.pucar.dristi.web.models.CredentialRequest;
 import org.pucar.dristi.web.models.Mdms;

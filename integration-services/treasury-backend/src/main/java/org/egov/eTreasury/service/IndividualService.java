@@ -6,7 +6,7 @@ import org.egov.eTreasury.config.PaymentConfiguration;
 import org.egov.eTreasury.model.IndividualSearch;
 import org.egov.eTreasury.model.IndividualSearchRequest;
 import org.egov.eTreasury.model.Individual;
-import org.egov.eTreasury.util.IndividualUtil;
+import org.pucar.dristi.common.util.IndividualUtil;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

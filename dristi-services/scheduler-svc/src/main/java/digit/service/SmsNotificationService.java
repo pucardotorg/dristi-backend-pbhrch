@@ -2,7 +2,7 @@ package digit.service;
 
 import com.jayway.jsonpath.JsonPath;
 import digit.config.Configuration;
-import digit.kafka.producer.Producer;
+import org.pucar.dristi.common.kafka.Producer;
 import digit.repository.ServiceRequestRepository;
 import digit.web.models.SMSRequest;
 import digit.web.models.SmsTemplateData;
