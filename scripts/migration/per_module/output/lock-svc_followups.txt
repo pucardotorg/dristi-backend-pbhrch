@@ -1,0 +1,1 @@
+dristi-monolith/domain-case-lifecycle/src/main/java/org/pucar/dristi/caselifecycle/locksvc/internal/util/IndividualUtil.java has 2 method(s) absent from canonical: ['getIndividual', 'getIndividualId']
