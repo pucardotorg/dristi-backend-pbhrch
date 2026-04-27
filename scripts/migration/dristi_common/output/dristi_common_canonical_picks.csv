@@ -1,0 +1,12 @@
+class,category,canonical_path,canonical_service,canonical_package
+AuditDetails,B,dristi-services/casemanagement/src/main/java/org/pucar/dristi/web/models/digitalizeddocument/AuditDetails.java,casemanagement,org.pucar.dristi.web.models.digitalizeddocument
+FileStoreUtil,B,dristi-services/hearing/src/main/java/org/pucar/dristi/util/FileStoreUtil.java,hearing,org.pucar.dristi.util
+IdgenUtil,B,dristi-services/ab-diary/src/main/java/digit/util/IdgenUtil.java,ab-diary,digit.util
+IndividualUtil,B,dristi-services/application/src/main/java/org/pucar/dristi/util/IndividualUtil.java,application,org.pucar.dristi.util
+MdmsUtil,B,dristi-services/ab-diary/src/main/java/digit/util/MdmsUtil.java,ab-diary,digit.util
+Producer,B,dristi-services/hearing/src/main/java/org/pucar/dristi/kafka/Producer.java,hearing,org.pucar.dristi.kafka
+ResponseInfo,A,integration-services/esign-interceptor/src/main/java/com/pucar/drishti/web/models/ResponseInfo.java,esign-interceptor,com.pucar.drishti.web.models
+ServiceRequestRepository,B,dristi-services/hearing/src/main/java/org/pucar/dristi/repository/ServiceRequestRepository.java,hearing,org.pucar.dristi.repository
+UrlShortenerUtil,B,dristi-services/ab-diary/src/main/java/digit/util/UrlShortenerUtil.java,ab-diary,digit.util
+UserUtil,B,dristi-services/hearing/src/main/java/org/pucar/dristi/util/UserUtil.java,hearing,org.pucar.dristi.util
+WorkflowUtil,B,dristi-services/ab-diary/src/main/java/digit/util/WorkflowUtil.java,ab-diary,digit.util

@@ -1,0 +1,12 @@
+class,copies,unique_variants,category,majority_pct
+AuditDetails,8,6,B,38
+FileStoreUtil,17,14,B,18
+IdgenUtil,23,11,B,30
+IndividualUtil,16,10,B,25
+MdmsUtil,25,17,B,20
+Producer,31,5,B,81
+ResponseInfo,1,1,A,100
+ServiceRequestRepository,33,16,B,24
+UrlShortenerUtil,12,8,B,42
+UserUtil,11,8,B,27
+WorkflowUtil,16,12,B,19

@@ -1,0 +1,40 @@
+// AUTO-EXTRACTED INTO dristi-common BY scripts/migration/dristi_common/03_build_canonical.py
+// Source: dristi-services/casemanagement/src/main/java/org/pucar/dristi/web/models/digitalizeddocument/AuditDetails.java
+// NOTE: imports referencing service-internal classes (ServiceConstants,
+// Configuration, web.models.*) may need follow-up — see Phase 4.
+package org.pucar.dristi.common.models;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.validation.annotation.Validated;
+
+/**
+ * Collection of audit related fields used by most models
+ */
+@Schema(description = "Collection of audit related fields used by most models")
+@Validated
+@jakarta.annotation.Generated(value = "org.egov.codegen.SpringBootCodegen", date = "2025-11-25T18:36:45.881826585+05:30[Asia/Kolkata]")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+public class AuditDetails {
+
+    @JsonProperty("createdBy")
+    private String createdBy = null;
+
+    @JsonProperty("lastModifiedBy")
+    private String lastModifiedBy = null;
+
+    @JsonProperty("createdTime")
+    private Long createdTime = null;
+
+    @JsonProperty("lastModifiedTime")
+    private Long lastModifiedTime = null;
+
+
+}

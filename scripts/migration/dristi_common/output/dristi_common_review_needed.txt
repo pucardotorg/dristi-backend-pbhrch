@@ -1,0 +1,283 @@
+=== AuditDetails (B, 6 variants, 8 copies) ===
+  CANONICAL PICK: dristi-services/casemanagement/src/main/java/org/pucar/dristi/web/models/digitalizeddocument/AuditDetails.java
+    (matches 3/8 copies = 38%)
+
+  Other variants (review before deletion):
+    variant ca62ff3e (1 copies):
+      - dristi-services/bail-bond/src/main/java/digit/web/models/AuditDetails.java
+    variant 7a885a01 (1 copies):
+      - dristi-services/case/src/main/java/org/pucar/dristi/web/models/AuditDetails.java
+    variant 91dd27a0 (1 copies):
+      - dristi-services/lock-svc/src/main/java/pucar/web/models/AuditDetails.java
+    variant 502d5f24 (1 copies):
+      - dristi-services/openapi/src/main/java/org/pucar/dristi/web/models/AuditDetails.java
+    variant a67d7e7a (1 copies):
+      - dristi-services/transformer/src/main/java/org/egov/transformer/models/digitalized_document/AuditDetails.java
+
+=== FileStoreUtil (B, 14 variants, 17 copies) ===
+  CANONICAL PICK: dristi-services/hearing/src/main/java/org/pucar/dristi/util/FileStoreUtil.java
+    (matches 3/17 copies = 18%)
+
+  Other variants (review before deletion):
+    variant a92830e7 (2 copies):
+      - dristi-services/digitalized-documents/src/main/java/digit/util/FileStoreUtil.java
+      - dristi-services/task/src/main/java/org/pucar/dristi/util/FileStoreUtil.java
+    variant 0b5e3f9d (1 copies):
+      - dristi-services/Notification/src/main/java/notification/util/FileStoreUtil.java
+    variant 324389d4 (1 copies):
+      - dristi-services/ab-diary/src/main/java/digit/util/FileStoreUtil.java
+    variant 7d254db2 (1 copies):
+      - dristi-services/bail-bond/src/main/java/digit/util/FileStoreUtil.java
+    variant 9484c28b (1 copies):
+      - dristi-services/case/src/main/java/org/pucar/dristi/util/FileStoreUtil.java
+    variant 91bd04da (1 copies):
+      - dristi-services/casemanagement/src/main/java/org/pucar/dristi/util/FileStoreUtil.java
+    variant ba88d7c4 (1 copies):
+      - dristi-services/ctc/src/main/java/org/pucar/dristi/util/FileStoreUtil.java
+    variant 5cfe8328 (1 copies):
+      - integration-services/e-sign-svc/src/main/java/org/drishti/esign/util/FileStoreUtil.java
+    variant 95e59135 (1 copies):
+      - dristi-services/evidence/src/main/java/org/pucar/dristi/util/FileStoreUtil.java
+    variant bf0863e6 (1 copies):
+      - integration-services/njdg-transformer/src/main/java/com/dristi/njdg_transformer/utils/FileStoreUtil.java
+    variant 42fd1c8f (1 copies):
+      - dristi-services/openapi/src/main/java/org/pucar/dristi/util/FileStoreUtil.java
+    variant eb5c7cd1 (1 copies):
+      - dristi-services/order-management/src/main/java/pucar/util/FileStoreUtil.java
+    variant 4c6f6809 (1 copies):
+      - dristi-services/scheduler-svc/src/main/java/digit/util/FileStoreUtil.java
+
+=== IdgenUtil (B, 11 variants, 23 copies) ===
+  CANONICAL PICK: dristi-services/ab-diary/src/main/java/digit/util/IdgenUtil.java
+    (matches 7/23 copies = 30%)
+
+  Other variants (review before deletion):
+    variant ed8143d6 (4 copies):
+      - dristi-services/advocate/src/main/java/org/pucar/dristi/util/IdgenUtil.java
+      - dristi-services/evidence/src/main/java/org/pucar/dristi/util/IdgenUtil.java
+      - dristi-services/hearing/src/main/java/org/pucar/dristi/util/IdgenUtil.java
+      - dristi-services/task/src/main/java/org/pucar/dristi/util/IdgenUtil.java
+    variant 636a1054 (2 copies):
+      - dristi-services/bail-bond/src/main/java/digit/util/IdgenUtil.java
+      - dristi-services/digitalized-documents/src/main/java/digit/util/IdgenUtil.java
+    variant 18fe212c (2 copies):
+      - dristi-services/ctc/src/main/java/org/pucar/dristi/util/IdgenUtil.java
+      - dristi-services/order/src/main/java/org/pucar/dristi/util/IdgenUtil.java
+    variant 7a65c863 (2 copies):
+      - integration-services/sbi-backend/src/main/java/org/egov/sbi/util/IdgenUtil.java
+      - integration-services/treasury-backend/src/main/java/org/egov/eTreasury/util/IdgenUtil.java
+    variant b5a72897 (1 copies):
+      - dristi-services/Notification/src/main/java/notification/util/IdgenUtil.java
+    variant c9f81fd0 (1 copies):
+      - dristi-services/application/src/main/java/org/pucar/dristi/util/IdgenUtil.java
+    variant 5cd98ce8 (1 copies):
+      - dristi-services/case/src/main/java/org/pucar/dristi/util/IdgenUtil.java
+    variant b32bd4e0 (1 copies):
+      - dristi-services/epost-tracker/src/main/java/org/pucar/dristi/util/IdgenUtil.java
+    variant a71f39a2 (1 copies):
+      - integration-services/icops_integration-kerala/src/main/java/com/egov/icops_integrationkerala/util/IdgenUtil.java
+    variant 5e893264 (1 copies):
+      - dristi-services/task-management/src/main/java/digit/util/IdgenUtil.java
+
+=== IndividualUtil (B, 10 variants, 16 copies) ===
+  CANONICAL PICK: dristi-services/application/src/main/java/org/pucar/dristi/util/IndividualUtil.java
+    (matches 4/16 copies = 25%)
+
+  Other variants (review before deletion):
+    variant e19bcf66 (3 copies):
+      - dristi-services/case/src/main/java/org/pucar/dristi/util/IndividualUtil.java
+      - dristi-services/ctc/src/main/java/org/pucar/dristi/util/IndividualUtil.java
+      - dristi-services/order/src/main/java/org/pucar/dristi/util/IndividualUtil.java
+    variant 1d112dfa (2 copies):
+      - dristi-services/hearing/src/main/java/org/pucar/dristi/util/IndividualUtil.java
+      - dristi-services/scheduler-svc/src/main/java/digit/util/IndividualUtil.java
+    variant 3538335c (1 copies):
+      - dristi-services/advocate/src/main/java/org/pucar/dristi/util/IndividualUtil.java
+    variant a47aab39 (1 copies):
+      - dristi-services/advocate-office-management/src/main/java/digit/util/IndividualUtil.java
+    variant b185ee49 (1 copies):
+      - dristi-services/analytics/src/main/java/org/pucar/dristi/util/IndividualUtil.java
+    variant 8eae1eca (1 copies):
+      - dristi-services/lock-svc/src/main/java/pucar/util/IndividualUtil.java
+    variant 25bc8853 (1 copies):
+      - integration-services/njdg-transformer/src/main/java/com/dristi/njdg_transformer/utils/IndividualUtil.java
+    variant 51fa1de0 (1 copies):
+      - dristi-services/openapi/src/main/java/org/pucar/dristi/util/IndividualUtil.java
+    variant 79f542e9 (1 copies):
+      - dristi-services/order-management/src/main/java/pucar/util/IndividualUtil.java
+
+=== MdmsUtil (B, 17 variants, 25 copies) ===
+  CANONICAL PICK: dristi-services/ab-diary/src/main/java/digit/util/MdmsUtil.java
+    (matches 5/25 copies = 20%)
+
+  Other variants (review before deletion):
+    variant 27c5d0a2 (4 copies):
+      - dristi-services/advocate-office-management/src/main/java/digit/util/MdmsUtil.java
+      - dristi-services/lock-svc/src/main/java/pucar/util/MdmsUtil.java
+      - dristi-services/scheduler-svc/src/main/java/digit/util/MdmsUtil.java
+      - integration-services/summons-svc/src/main/java/digit/util/MdmsUtil.java
+    variant 82abfe11 (2 copies):
+      - dristi-services/evidence/src/main/java/org/pucar/dristi/util/MdmsUtil.java
+      - dristi-services/payment-calculator-svc/src/main/java/drishti/payment/calculator/util/MdmsUtil.java
+    variant 4ebfbaf3 (1 copies):
+      - dristi-services/advocate/src/main/java/org/pucar/dristi/util/MdmsUtil.java
+    variant f4c7779a (1 copies):
+      - dristi-services/analytics/src/main/java/org/pucar/dristi/util/MdmsUtil.java
+    variant ea0573d3 (1 copies):
+      - dristi-services/application/src/main/java/org/pucar/dristi/util/MdmsUtil.java
+    variant 34ab2a56 (1 copies):
+      - dristi-services/case/src/main/java/org/pucar/dristi/util/MdmsUtil.java
+    variant 85e16a58 (1 copies):
+      - dristi-services/epost-tracker/src/main/java/org/pucar/dristi/util/MdmsUtil.java
+    variant 473ce489 (1 copies):
+      - dristi-services/hearing/src/main/java/org/pucar/dristi/util/MdmsUtil.java
+    variant 7ea2d377 (1 copies):
+      - dristi-services/hearing-management/src/main/java/digit/util/MdmsUtil.java
+    variant 00de4025 (1 copies):
+      - integration-services/icops_integration-kerala/src/main/java/com/egov/icops_integrationkerala/util/MdmsUtil.java
+    variant ec11f1de (1 copies):
+      - dristi-services/inportal-survey/src/main/java/digit/util/MdmsUtil.java
+    variant 44857b23 (1 copies):
+      - integration-services/njdg-transformer/src/main/java/com/dristi/njdg_transformer/utils/MdmsUtil.java
+    variant e9b32ee7 (1 copies):
+      - dristi-services/order/src/main/java/org/pucar/dristi/util/MdmsUtil.java
+    variant beef339f (1 copies):
+      - dristi-services/task/src/main/java/org/pucar/dristi/util/MdmsUtil.java
+    variant 2b41a160 (1 copies):
+      - dristi-services/transformer/src/main/java/org/egov/transformer/util/MdmsUtil.java
+    variant bec6ae8c (1 copies):
+      - integration-services/treasury-backend/src/main/java/org/egov/eTreasury/util/MdmsUtil.java
+
+=== Producer (B, 5 variants, 31 copies) ===
+  CANONICAL PICK: dristi-services/hearing/src/main/java/org/pucar/dristi/kafka/Producer.java
+    (matches 25/31 copies = 81%)
+
+  Other variants (review before deletion):
+    variant 64697965 (3 copies):
+      - dristi-services/bail-bond/src/main/java/digit/kafka/Producer.java
+      - dristi-services/case/src/main/java/org/pucar/dristi/kafka/Producer.java
+      - integration-services/e-sign-svc/src/main/java/org/drishti/esign/kafka/Producer.java
+    variant 8ad32637 (1 copies):
+      - dristi-services/ctc/src/main/java/org/pucar/dristi/kafka/Producer.java
+    variant b76defbe (1 copies):
+      - integration-services/kerala-sms/src/main/java/org/egov/web/notification/sms/config/Producer.java
+    variant a5957d09 (1 copies):
+      - integration-services/njdg-transformer/src/main/java/com/dristi/njdg_transformer/producer/Producer.java
+
+=== ServiceRequestRepository (B, 16 variants, 33 copies) ===
+  CANONICAL PICK: dristi-services/hearing/src/main/java/org/pucar/dristi/repository/ServiceRequestRepository.java
+    (matches 8/33 copies = 24%)
+
+  Other variants (review before deletion):
+    variant bbfab7df (4 copies):
+      - dristi-services/Notification/src/main/java/notification/repository/ServiceRequestRepository.java
+      - integration-services/e-sign-svc/src/main/java/org/drishti/esign/repository/ServiceRequestRepository.java
+      - dristi-services/lock-svc/src/main/java/pucar/repository/ServiceRequestRepository.java
+      - dristi-services/payment-calculator-svc/src/main/java/drishti/payment/calculator/repository/ServiceRequestRepository.java
+    variant fccec6c8 (3 copies):
+      - dristi-services/bail-bond/src/main/java/digit/repository/ServiceRequestRepository.java
+      - dristi-services/casemanagement/src/main/java/org/pucar/dristi/repository/ServiceRequestRepository.java
+      - dristi-services/task/src/main/java/org/pucar/dristi/repository/ServiceRequestRepository.java
+    variant ab5bcacc (2 copies):
+      - dristi-services/advocate-office-management/src/main/java/digit/repository/ServiceRequestRepository.java
+      - dristi-services/task-management/src/main/java/digit/repository/ServiceRequestRepository.java
+    variant 44d956bd (2 copies):
+      - dristi-services/digitalized-documents/src/main/java/digit/repository/ServiceRequestRepository.java
+      - dristi-services/evidence/src/main/java/org/pucar/dristi/repository/ServiceRequestRepository.java
+    variant e441f077 (2 copies):
+      - dristi-services/epost-tracker/src/main/java/org/pucar/dristi/repository/ServiceRequestRepository.java
+      - integration-services/icops_integration-kerala/src/main/java/com/egov/icops_integrationkerala/repository/ServiceRequestRepository.java
+    variant 969d7d3a (2 copies):
+      - integration-services/njdg-transformer/src/main/java/com/dristi/njdg_transformer/repository/ServiceRequestRepository.java
+      - dristi-services/transformer/src/main/java/org/egov/transformer/repository/ServiceRequestRepository.java
+    variant e44db927 (2 copies):
+      - integration-services/sbi-backend/src/main/java/org/egov/sbi/repository/ServiceRequestRepository.java
+      - integration-services/treasury-backend/src/main/java/org/egov/eTreasury/repository/ServiceRequestRepository.java
+    variant 6c1f76a0 (1 copies):
+      - dristi-services/advocate/src/main/java/org/pucar/dristi/repository/ServiceRequestRepository.java
+    variant 79549fef (1 copies):
+      - dristi-services/analytics/src/main/java/org/pucar/dristi/repository/ServiceRequestRepository.java
+    variant 2736b0c5 (1 copies):
+      - dristi-services/case/src/main/java/org/pucar/dristi/repository/ServiceRequestRepository.java
+    variant 9492dc47 (1 copies):
+      - dristi-services/ctc/src/main/java/org/pucar/dristi/repository/ServiceRequestRepository.java
+    variant 9cd2e554 (1 copies):
+      - integration-services/esign-interceptor/src/main/java/com/pucar/drishti/repository/ServiceRequestRepository.java
+    variant 84e4f542 (1 copies):
+      - dristi-services/openapi/src/main/java/org/pucar/dristi/repository/ServiceRequestRepository.java
+    variant 53367f55 (1 copies):
+      - dristi-services/order-management/src/main/java/pucar/repository/ServiceRequestRepository.java
+    variant dcb7b720 (1 copies):
+      - dristi-services/scheduler-svc/src/main/java/digit/repository/ServiceRequestRepository.java
+
+=== UrlShortenerUtil (B, 8 variants, 12 copies) ===
+  CANONICAL PICK: dristi-services/ab-diary/src/main/java/digit/util/UrlShortenerUtil.java
+    (matches 5/12 copies = 42%)
+
+  Other variants (review before deletion):
+    variant a80c882b (1 copies):
+      - dristi-services/advocate/src/main/java/org/pucar/dristi/util/UrlShortenerUtil.java
+    variant 63b1e57b (1 copies):
+      - dristi-services/advocate-office-management/src/main/java/digit/util/UrlShortenerUtil.java
+    variant 375a1bfe (1 copies):
+      - dristi-services/application/src/main/java/org/pucar/dristi/util/UrlShortenerUtil.java
+    variant 6be9b972 (1 copies):
+      - dristi-services/bail-bond/src/main/java/digit/util/UrlShortenerUtil.java
+    variant ea66153e (1 copies):
+      - dristi-services/digitalized-documents/src/main/java/digit/util/UrlShortenerUtil.java
+    variant 68e780c5 (1 copies):
+      - dristi-services/evidence/src/main/java/org/pucar/dristi/util/UrlShortenerUtil.java
+    variant ae40266b (1 copies):
+      - dristi-services/order-management/src/main/java/pucar/util/UrlShortenerUtil.java
+
+=== UserUtil (B, 8 variants, 11 copies) ===
+  CANONICAL PICK: dristi-services/hearing/src/main/java/org/pucar/dristi/util/UserUtil.java
+    (matches 3/11 copies = 27%)
+
+  Other variants (review before deletion):
+    variant 66be837a (2 copies):
+      - dristi-services/order-management/src/main/java/pucar/util/UserUtil.java
+      - dristi-services/task-management/src/main/java/digit/util/UserUtil.java
+    variant e6cedc0a (1 copies):
+      - dristi-services/ab-diary/src/main/java/digit/util/UserUtil.java
+    variant f500acef (1 copies):
+      - dristi-services/advocate/src/main/java/org/pucar/dristi/util/UserUtil.java
+    variant c7d109b0 (1 copies):
+      - dristi-services/application/src/main/java/org/pucar/dristi/util/UserUtil.java
+    variant c571e81f (1 copies):
+      - dristi-services/casemanagement/src/main/java/org/pucar/dristi/util/UserUtil.java
+    variant 7181ebef (1 copies):
+      - dristi-services/evidence/src/main/java/org/pucar/dristi/util/UserUtil.java
+    variant ac29525f (1 copies):
+      - dristi-services/openapi/src/main/java/org/pucar/dristi/util/UserUtil.java
+
+=== WorkflowUtil (B, 12 variants, 16 copies) ===
+  CANONICAL PICK: dristi-services/ab-diary/src/main/java/digit/util/WorkflowUtil.java
+    (matches 3/16 copies = 19%)
+
+  Other variants (review before deletion):
+    variant e3d9d016 (3 copies):
+      - dristi-services/advocate-office-management/src/main/java/digit/util/WorkflowUtil.java
+      - dristi-services/digitalized-documents/src/main/java/digit/util/WorkflowUtil.java
+      - dristi-services/scheduler-svc/src/main/java/digit/util/WorkflowUtil.java
+    variant f4065894 (1 copies):
+      - dristi-services/advocate/src/main/java/org/pucar/dristi/util/WorkflowUtil.java
+    variant db853be7 (1 copies):
+      - dristi-services/analytics/src/main/java/org/pucar/dristi/util/WorkflowUtil.java
+    variant 8ef8d667 (1 copies):
+      - dristi-services/application/src/main/java/org/pucar/dristi/util/WorkflowUtil.java
+    variant f92d0840 (1 copies):
+      - dristi-services/case/src/main/java/org/pucar/dristi/util/WorkflowUtil.java
+    variant fe90cccc (1 copies):
+      - dristi-services/casemanagement/src/main/java/org/pucar/dristi/util/WorkflowUtil.java
+    variant a605688b (1 copies):
+      - dristi-services/evidence/src/main/java/org/pucar/dristi/util/WorkflowUtil.java
+    variant ca709cdd (1 copies):
+      - dristi-services/hearing/src/main/java/org/pucar/dristi/util/WorkflowUtil.java
+    variant f7f552d5 (1 copies):
+      - dristi-services/openapi/src/main/java/org/pucar/dristi/util/WorkflowUtil.java
+    variant fd9963cd (1 copies):
+      - dristi-services/order/src/main/java/org/pucar/dristi/util/WorkflowUtil.java
+    variant fcd335e4 (1 copies):
+      - dristi-services/task/src/main/java/org/pucar/dristi/util/WorkflowUtil.java
+
