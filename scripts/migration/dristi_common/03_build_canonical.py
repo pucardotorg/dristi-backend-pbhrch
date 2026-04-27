@@ -48,6 +48,9 @@ SUBPKG_BY_CLASS = {
 PACKAGE_RE = re.compile(r"^\s*package\s+([\w.]+)\s*;", re.MULTILINE)
 
 
+CURATED_MARKER = "// HAND-CURATED — do not regenerate"
+
+
 def write_canonical(class_name: str, source_path: Path, target_pkg: str) -> Path:
     text = source_path.read_text(encoding="utf-8")
 
@@ -89,6 +92,12 @@ def main() -> int:
         source = REPO_ROOT / row["canonical_path"]
         if not source.exists():
             print(f"WARN: canonical source missing: {source}", file=sys.stderr)
+            continue
+
+        # Skip overwriting any canonical that has been hand-curated.
+        existing = COMMON_ROOT / target_pkg.replace(".", "/") / f"{cls}.java"
+        if existing.exists() and CURATED_MARKER in existing.read_text(encoding="utf-8"):
+            print(f"SKIP {cls} — hand-curated, leaving in place")
             continue
 
         dest = write_canonical(cls, source, target_pkg)

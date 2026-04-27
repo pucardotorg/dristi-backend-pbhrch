@@ -1,3 +1,4 @@
+// HAND-CURATED — imports rewired to dristi-common; do not regenerate
 // AUTO-EXTRACTED INTO dristi-common BY scripts/migration/dristi_common/03_build_canonical.py
 // Source: dristi-services/ab-diary/src/main/java/digit/util/UrlShortenerUtil.java
 // NOTE: imports referencing service-internal classes (ServiceConstants,

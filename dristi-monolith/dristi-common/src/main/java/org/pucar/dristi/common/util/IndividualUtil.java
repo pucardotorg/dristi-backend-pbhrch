@@ -1,3 +1,4 @@
+// HAND-CURATED — do not regenerate
 package org.pucar.dristi.common.util;
 
 import com.fasterxml.jackson.databind.JsonNode;

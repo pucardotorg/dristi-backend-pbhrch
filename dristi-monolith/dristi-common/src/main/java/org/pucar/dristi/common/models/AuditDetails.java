@@ -1,3 +1,4 @@
+// HAND-CURATED — imports rewired to dristi-common; do not regenerate
 // AUTO-EXTRACTED INTO dristi-common BY scripts/migration/dristi_common/03_build_canonical.py
 // Source: dristi-services/casemanagement/src/main/java/org/pucar/dristi/web/models/digitalizeddocument/AuditDetails.java
 // NOTE: imports referencing service-internal classes (ServiceConstants,

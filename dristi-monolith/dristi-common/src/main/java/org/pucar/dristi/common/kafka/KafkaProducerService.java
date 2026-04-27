@@ -1,3 +1,4 @@
+// HAND-CURATED — do not regenerate
 package org.pucar.dristi.common.kafka;
 
 import org.apache.kafka.common.errors.SerializationException;

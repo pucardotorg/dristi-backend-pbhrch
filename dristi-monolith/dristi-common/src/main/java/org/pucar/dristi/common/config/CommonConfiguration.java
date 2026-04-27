@@ -1,3 +1,4 @@
+// HAND-CURATED — do not regenerate
 package org.pucar.dristi.common.config;
 
 import org.springframework.beans.factory.annotation.Value;
