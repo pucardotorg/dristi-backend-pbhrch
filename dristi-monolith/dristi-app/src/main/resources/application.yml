@@ -1,0 +1,15 @@
+# Auto-generated bootstrap config — extended by Pipeline 5 (Config Consolidation).
+server:
+  port: 8080
+
+spring:
+  application:
+    name: dristi-monolith
+  main:
+    allow-bean-definition-overriding: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
