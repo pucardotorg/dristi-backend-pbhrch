@@ -375,10 +375,36 @@ public class CaseRegistrationEnrichment {
         return stB.toString();
     }
 
+    private void mergeExistingLitigantsOnUpdate(CourtCase updatedCourtCase, CourtCase existingCourtCase) {
+        if (updatedCourtCase.getLitigants() == null || existingCourtCase.getLitigants() == null) {
+            return;
+        }
+
+        updatedCourtCase.getLitigants().forEach(updatedLitigant -> {
+            if (updatedLitigant.getId() != null || updatedLitigant.getIndividualId() == null) {
+                return;
+            }
+
+            existingCourtCase.getLitigants().stream()
+                    .filter(existingLitigant -> updatedLitigant.getIndividualId().equalsIgnoreCase(existingLitigant.getIndividualId()))
+                    .filter(existingLitigant -> Objects.equals(updatedLitigant.getPartyType(), existingLitigant.getPartyType()))
+                    .findFirst()
+                    .ifPresent(existingLitigant -> {
+                        updatedLitigant.setId(existingLitigant.getId());
+                        updatedLitigant.setCaseId(existingLitigant.getCaseId());
+                        if (updatedLitigant.getIsActive() == null) {
+                            updatedLitigant.setIsActive(existingLitigant.getIsActive());
+                        }
+                    });
+        });
+    }
+
     public void enrichCaseApplicationUponUpdate(CaseRequest caseRequest, List<CourtCase> existingCourtCaseList) {
         try {
             // Enrich lastModifiedTime and lastModifiedBy in case of update
             CourtCase courtCase = caseRequest.getCases();
+            CourtCase existingCourtCase = existingCourtCaseList.get(0);
+            mergeExistingLitigantsOnUpdate(courtCase, existingCourtCase);
             AuditDetails auditDetails = courtCase.getAuditdetails();
             auditDetails.setLastModifiedTime(caseUtil.getCurrentTimeMil());
             auditDetails.setLastModifiedBy(caseRequest.getRequestInfo().getUserInfo().getUuid());
