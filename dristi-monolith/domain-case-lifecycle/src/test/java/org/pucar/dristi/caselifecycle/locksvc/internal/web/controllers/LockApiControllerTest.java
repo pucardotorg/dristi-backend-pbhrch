@@ -17,9 +17,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.pucar.dristi.caselifecycle.locksvc.internal.service.LockService;
+import org.pucar.dristi.common.util.ResponseInfoFactory;
 import org.pucar.dristi.caselifecycle.locksvc.internal.web.models.Lock;
 import org.pucar.dristi.caselifecycle.locksvc.internal.web.models.LockRequest;
 import org.pucar.dristi.caselifecycle.locksvc.internal.web.models.LockResponse;
+import org.egov.common.contract.response.ResponseInfo;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -31,6 +33,9 @@ class LockApiControllerTest {
 
     @Mock
     private LockService lockService;
+
+    @Mock
+    private ResponseInfoFactory responseInfoFactory;
 
     @InjectMocks
     private LockApiController lockApiController;

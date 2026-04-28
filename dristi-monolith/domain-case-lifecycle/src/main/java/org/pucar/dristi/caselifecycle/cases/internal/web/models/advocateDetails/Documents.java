@@ -1,7 +1,7 @@
 package org.pucar.dristi.caselifecycle.cases.internal.web.models.advocateDetails;
 
 import lombok.*;
-import org.pucar.dristi.caselifecycle.cases.internal.web.models.Document;
+import org.pucar.dristi.common.models.Document;
 
 import java.util.List;
 

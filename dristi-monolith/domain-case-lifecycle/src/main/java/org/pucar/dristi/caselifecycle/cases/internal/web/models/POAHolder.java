@@ -13,6 +13,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
 
+import org.pucar.dristi.common.models.Document;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

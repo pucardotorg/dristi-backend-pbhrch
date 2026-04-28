@@ -47,6 +47,8 @@ import org.pucar.dristi.caselifecycle.cases.internal.web.models.v2.WitnessDetail
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.v2.WitnessDetailsResponse;
 import org.springframework.web.client.RestTemplate;
 
+import org.pucar.dristi.common.models.individual.Individual;
+import org.pucar.dristi.common.util.FileStoreUtil;
 @ExtendWith(MockitoExtension.class)
 public class CaseServiceTest {
 

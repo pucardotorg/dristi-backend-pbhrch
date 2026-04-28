@@ -12,7 +12,7 @@ import org.pucar.dristi.caselifecycle.cases.internal.repository.CaseRepository;
 import org.pucar.dristi.caselifecycle.cases.internal.service.IndividualService;
 import org.pucar.dristi.caselifecycle.cases.internal.util.AdvocateOfficeUtil;
 import org.pucar.dristi.caselifecycle.cases.internal.util.AdvocateUtil;
-import org.pucar.dristi.caselifecycle.cases.internal.util.FileStoreUtil;
+import org.pucar.dristi.common.util.FileStoreUtil;
 import org.pucar.dristi.caselifecycle.cases.internal.util.LockUtil;
 import org.pucar.dristi.common.util.MdmsUtil;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.*;
@@ -31,6 +31,7 @@ import java.util.stream.Collectors;
 
 import static org.pucar.dristi.caselifecycle.cases.internal.config.ServiceConstants.*;
 
+import org.pucar.dristi.common.models.individual.Individual;
 /**
  * @author Sathvik
  */

@@ -5,6 +5,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
+import org.pucar.dristi.common.models.Document;
 @Data
 public class POAIndividualDetails {
 

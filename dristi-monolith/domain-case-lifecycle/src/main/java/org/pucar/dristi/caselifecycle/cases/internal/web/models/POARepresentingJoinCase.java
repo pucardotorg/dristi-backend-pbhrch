@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.Valid;
 import lombok.Data;
 
+import org.pucar.dristi.common.models.Document;
 @Data
 public class POARepresentingJoinCase {
 

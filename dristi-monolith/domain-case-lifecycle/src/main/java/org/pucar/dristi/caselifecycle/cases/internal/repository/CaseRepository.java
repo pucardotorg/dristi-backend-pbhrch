@@ -1,7 +1,7 @@
 package org.pucar.dristi.caselifecycle.cases.internal.repository;
 
 import lombok.extern.slf4j.Slf4j;
-import org.pucar.dristi.caselifecycle.cases.internal.web.models.Document;
+import org.pucar.dristi.common.models.Document;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.model.CustomException;
 import org.pucar.dristi.caselifecycle.cases.internal.repository.querybuilder.CaseQueryBuilder;

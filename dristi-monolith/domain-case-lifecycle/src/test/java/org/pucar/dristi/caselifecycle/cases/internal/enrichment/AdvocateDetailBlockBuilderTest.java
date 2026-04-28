@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.AdvocateMapping;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.CourtCase;
-import org.pucar.dristi.caselifecycle.cases.internal.web.models.Document;
+import org.pucar.dristi.common.models.Document;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.Party;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.advocateDetails.AdvocateDetailBlock;
 

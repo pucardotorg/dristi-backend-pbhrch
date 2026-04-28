@@ -8,7 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.egov.common.contract.models.AuditDetails;
-import org.pucar.dristi.caselifecycle.cases.internal.web.models.Document;
+import org.pucar.dristi.common.models.Document;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.List;

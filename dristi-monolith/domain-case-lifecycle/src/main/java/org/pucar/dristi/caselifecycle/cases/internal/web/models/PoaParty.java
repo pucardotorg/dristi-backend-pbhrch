@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.pucar.dristi.common.models.Document;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

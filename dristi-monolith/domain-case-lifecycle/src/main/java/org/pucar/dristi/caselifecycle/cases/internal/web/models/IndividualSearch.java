@@ -26,6 +26,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import org.pucar.dristi.common.models.individual.Individual;
 /**
  * A representation of an Individual.
  */

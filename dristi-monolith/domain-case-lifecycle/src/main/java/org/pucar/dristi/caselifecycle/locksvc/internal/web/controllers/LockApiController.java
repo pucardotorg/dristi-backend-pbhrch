@@ -22,10 +22,12 @@ import org.pucar.dristi.caselifecycle.locksvc.internal.web.models.LockResponse;
 public class LockApiController {
 
     private final LockService lockService;
+    private final ResponseInfoFactory responseInfoFactory;
 
     @Autowired
-    public LockApiController(LockService lockService) {
+    public LockApiController(LockService lockService, ResponseInfoFactory responseInfoFactory) {
         this.lockService = lockService;
+        this.responseInfoFactory = responseInfoFactory;
     }
 
 
@@ -37,7 +39,7 @@ public class LockApiController {
         Boolean isLocked = lockService.isLocked(requestInfo.getRequestInfo(), uniqueId, tenantId);
 
         LockResponse response = LockResponse.builder().responseInfo(
-                        ResponseInfoFactory.createResponseInfoFromRequestInfo(requestInfo.getRequestInfo(), true))
+                        responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo.getRequestInfo(), true))
                 .lock(Lock.builder().uniqueId(uniqueId).tenantId(tenantId).isLocked(isLocked).build()).build();
 
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -48,7 +50,7 @@ public class LockApiController {
 
         Lock lock = lockService.setLock(request.getRequestInfo(), request.getLock());
         LockResponse response = LockResponse.builder()
-                .responseInfo(ResponseInfoFactory.createResponseInfoFromRequestInfo(request.getRequestInfo(), true))
+                .responseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(request.getRequestInfo(), true))
                 .lock(lock).build();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -61,7 +63,7 @@ public class LockApiController {
         Boolean releaseLock = lockService.releaseLock(requestInfo.getRequestInfo(), uniqueId, tenantId);
 
         LockResponse response = LockResponse.builder().responseInfo(
-                        ResponseInfoFactory.createResponseInfoFromRequestInfo(requestInfo.getRequestInfo(), releaseLock))
+                        responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo.getRequestInfo(), releaseLock))
                 .lock(Lock.builder().uniqueId(uniqueId).tenantId(tenantId).isLocked(!releaseLock).build()).build();
 
         return new ResponseEntity<>(response, HttpStatus.OK);

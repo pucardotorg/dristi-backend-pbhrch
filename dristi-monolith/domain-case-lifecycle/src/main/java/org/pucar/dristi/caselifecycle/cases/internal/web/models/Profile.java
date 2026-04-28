@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 
+import org.pucar.dristi.common.models.Document;
 @Validated
 @Data
 @NoArgsConstructor

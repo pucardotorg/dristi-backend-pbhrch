@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import static org.pucar.dristi.caselifecycle.cases.internal.config.ServiceConstants.*;
 
+import org.pucar.dristi.common.models.Document;
 @Component
 @Slf4j
 public class CaseQueryBuilder {

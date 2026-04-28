@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+import org.pucar.dristi.common.models.Document;
 @Component
 @Slf4j
 public class EvidenceValidator {

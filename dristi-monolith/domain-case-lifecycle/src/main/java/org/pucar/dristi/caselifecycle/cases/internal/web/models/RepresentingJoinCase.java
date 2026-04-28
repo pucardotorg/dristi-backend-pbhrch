@@ -11,6 +11,7 @@ import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
 
+import org.pucar.dristi.common.models.Document;
 @Validated
 @Data
 @AllArgsConstructor

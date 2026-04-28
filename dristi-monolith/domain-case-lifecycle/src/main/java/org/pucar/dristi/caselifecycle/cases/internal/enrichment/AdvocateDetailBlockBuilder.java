@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 
 import static org.pucar.dristi.caselifecycle.cases.internal.config.ServiceConstants.*;
 
+import org.pucar.dristi.common.models.Document;
 /**
  * Centralized builder to populate AdvocateDetailBlock for a CourtCase.
  * Can be reused by v1 and v2 search flows.

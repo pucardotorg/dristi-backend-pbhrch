@@ -17,6 +17,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import org.pucar.dristi.common.models.Document;
 /**
  * Artifact
  */

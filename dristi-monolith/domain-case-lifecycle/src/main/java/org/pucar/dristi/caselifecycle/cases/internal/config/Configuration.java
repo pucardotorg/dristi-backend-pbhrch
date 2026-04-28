@@ -12,6 +12,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import org.pucar.dristi.common.models.individual.Individual;
 @Component("casesConfiguration")
 @Data
 @Import({ TracerConfiguration.class })

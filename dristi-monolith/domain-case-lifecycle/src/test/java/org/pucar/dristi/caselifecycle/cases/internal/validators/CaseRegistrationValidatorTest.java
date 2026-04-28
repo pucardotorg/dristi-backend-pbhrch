@@ -39,11 +39,12 @@ import org.pucar.dristi.caselifecycle.cases.internal.config.Configuration;
 import org.pucar.dristi.caselifecycle.cases.internal.repository.CaseRepository;
 import org.pucar.dristi.caselifecycle.cases.internal.service.IndividualService;
 import org.pucar.dristi.caselifecycle.cases.internal.util.AdvocateUtil;
-import org.pucar.dristi.caselifecycle.cases.internal.util.FileStoreUtil;
+import org.pucar.dristi.common.util.FileStoreUtil;
 import org.pucar.dristi.common.util.MdmsUtil;
 
 import net.minidev.json.JSONArray;
 
+import org.pucar.dristi.common.models.Document;
 @ExtendWith(MockitoExtension.class)
 public class CaseRegistrationValidatorTest {
 

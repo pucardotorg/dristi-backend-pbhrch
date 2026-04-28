@@ -15,7 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.pucar.dristi.caselifecycle.cases.internal.config.Configuration;
-import org.pucar.dristi.caselifecycle.cases.internal.util.IndividualUtil;
+import org.pucar.dristi.common.util.IndividualUtil;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseRequest;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.CourtCase;
 

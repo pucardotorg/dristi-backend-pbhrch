@@ -13,24 +13,20 @@ import static org.pucar.dristi.common.config.CommonConstants.SUCCESSFUL;
  * Builds {@link ResponseInfo} from a {@link RequestInfo}, mirroring the
  * tiny helper that 30 DRISTI services duplicated locally.
  *
- * <p>Both call shapes that exist across the codebase are supported:
- * <ul>
- *   <li>{@link #createResponseInfoFromRequestInfo(RequestInfo, Boolean)} —
- *       used by case, hearing, lock-svc, etc.</li>
- *   <li>{@link #createResponseInfo(RequestInfo, Boolean)} — used by order
- *       and bail-bond.</li>
- * </ul>
+ * <p>Methods are instance-level so existing Mockito-based tests
+ * (`when(responseInfoFactory.createResponseInfoFromRequestInfo(...))`)
+ * keep working unchanged.
  *
- * <p>Both static and instance variants exist because some services call
- * {@code ResponseInfoFactory.createResponseInfo(...)} (static) while
- * others {@code @Autowired} the bean and use the instance method. Either
- * works.
+ * <p>Two call shapes that exist across the codebase are both supported:
+ * <ul>
+ *   <li>{@link #createResponseInfoFromRequestInfo} — used by case, hearing, lock-svc, etc.</li>
+ *   <li>{@link #createResponseInfo} — used by order and bail-bond.</li>
+ * </ul>
  */
 @Component("commonResponseInfoFactory")
 public class ResponseInfoFactory {
 
-    /** Static variant — preferred for new code. */
-    public static ResponseInfo createResponseInfo(final RequestInfo requestInfo, final Boolean success) {
+    public ResponseInfo createResponseInfoFromRequestInfo(final RequestInfo requestInfo, final Boolean success) {
         final String apiId = requestInfo != null ? requestInfo.getApiId() : "";
         final String ver = requestInfo != null ? requestInfo.getVer() : "";
         final Long ts = requestInfo != null ? requestInfo.getTs() : null;
@@ -46,15 +42,8 @@ public class ResponseInfoFactory {
                 .build();
     }
 
-    /** Alias kept for legacy callers that imported the verbose name. */
-    public static ResponseInfo createResponseInfoFromRequestInfo(
-            final RequestInfo requestInfo, final Boolean success) {
-        return createResponseInfo(requestInfo, success);
-    }
-
-    // Instance-method overloads for callers that @Autowire the bean and
-    // call it through the instance (e.g. case-svc's existing controllers).
-    public ResponseInfo buildResponseInfo(final RequestInfo requestInfo, final Boolean success) {
-        return createResponseInfo(requestInfo, success);
+    /** Alias used by services that prefer the shorter name. */
+    public ResponseInfo createResponseInfo(final RequestInfo requestInfo, final Boolean success) {
+        return createResponseInfoFromRequestInfo(requestInfo, success);
     }
 }

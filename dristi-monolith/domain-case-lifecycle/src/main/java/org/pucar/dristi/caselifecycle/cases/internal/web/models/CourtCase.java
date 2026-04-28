@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.pucar.dristi.common.models.Document;
 /**
  * Case registry
  */

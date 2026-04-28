@@ -18,7 +18,9 @@
     "Producer",
     "KafkaProducerService",
     "ServiceRequestRepository",
-    "AuditDetails"
+    "AuditDetails",
+    "Document",
+    "Individual"
   ],
   "rest_call_files": [
     "dristi-services/case/src/main/java/org/pucar/dristi/repository/ServiceRequestRepository.java",

@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.model.CustomException;
 import org.pucar.dristi.common.config.CommonConfiguration;
+import org.pucar.dristi.common.models.individual.Individual;
 import org.pucar.dristi.common.models.individual.IndividualSearch;
 import org.pucar.dristi.common.models.individual.IndividualSearchRequest;
 import org.pucar.dristi.common.repository.ServiceRequestRepository;
@@ -59,6 +60,15 @@ public class IndividualUtil {
         this.serviceRequestRepository = serviceRequestRepository;
         this.objectMapper = objectMapper;
         this.configs = configs;
+    }
+
+    /**
+     * 2-arg overload — returns the canonical
+     * {@link Individual} type from dristi-common.models.individual.
+     * Most legacy callers use this shape.
+     */
+    public List<Individual> getIndividualByIndividualId(Object individualRequest, StringBuilder uri) {
+        return getIndividualByIndividualId(individualRequest, uri, Individual.class);
     }
 
     /**

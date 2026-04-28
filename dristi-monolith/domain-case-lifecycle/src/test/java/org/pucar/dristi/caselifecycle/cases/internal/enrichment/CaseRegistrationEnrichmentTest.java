@@ -34,6 +34,7 @@ import org.pucar.dristi.caselifecycle.cases.internal.config.Configuration;
 import org.pucar.dristi.caselifecycle.cases.internal.util.CaseUtil;
 import org.pucar.dristi.common.util.IdgenUtil;
 
+import org.pucar.dristi.common.models.Document;
 @ExtendWith(MockitoExtension.class)
 class CaseRegistrationEnrichmentTest {
 

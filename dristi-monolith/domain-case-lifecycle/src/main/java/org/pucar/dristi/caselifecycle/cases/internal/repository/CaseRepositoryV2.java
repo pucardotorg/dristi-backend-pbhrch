@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 import static org.pucar.dristi.caselifecycle.cases.internal.config.ServiceConstants.*;
 
 
+import org.pucar.dristi.common.models.Document;
 @Slf4j
 @Repository
 public class CaseRepositoryV2 {

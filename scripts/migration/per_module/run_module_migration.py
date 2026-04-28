@@ -74,6 +74,8 @@ PROTECTED_CLASSES = {
     "ServiceRequestRepository": "repository",
     "AuditDetails": "models",
     "ResponseInfo": "models",
+    "Document": "models",
+    "Individual": "models.individual",
 }
 
 # "Banned" = legacy DRISTI service-internal package roots that should have
@@ -486,7 +488,10 @@ def phase_4_deduplicate(manifest: dict, target_dir: Path) -> tuple[int, int, int
             continue
 
         sub = PROTECTED_CLASSES[f.stem]
-        canonical = common_root / "org" / "pucar" / "dristi" / "common" / sub / f"{f.stem}.java"
+        canonical = common_root / "org" / "pucar" / "dristi" / "common"
+        for seg in sub.split("."):
+            canonical = canonical / seg
+        canonical = canonical / f"{f.stem}.java"
         if canonical.exists():
             local_methods = _public_methods(text)
             canonical_methods = _public_methods(canonical.read_text(encoding="utf-8"))
