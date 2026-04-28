@@ -17,8 +17,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Service
 @Slf4j
@@ -38,6 +40,8 @@ public class DocPreviewService {
     private final OrderUtil orderUtil;
     private final CtcUtil ctcUtil;
     private final Producer producer;
+
+    private final MdmsV2Util mdmsV2Util;
 
     private final CaseBundleEngine engine;
 
@@ -134,6 +138,8 @@ public class DocPreviewService {
                 .pagination(Pagination.builder().order(OrderPagination.ASC).limit(100).sortBy("last_modified_time").build())
                 .build();
 
+        List<Mdms> sectionConfig = fetchSectionConfigFromMdms(requestInfo, tenantId);
+
         return BundleData.builder()
                 .cases(courtCase)
                 .evidences(evidenceUtil.searchEvidence(filingNumber, courtId, tenantId, requestInfo))
@@ -144,7 +150,43 @@ public class DocPreviewService {
                 .taskCases(taskUtil.searchTaskTable(taskCaseSearchCriteria, requestInfo))
                 .taskManagements(taskManagementUtil.searchTaskManagement(taskSearchRequest))
                 .digitalDocs(digitalizedDocumentUtil.searchDigitalizedDocuments(String.valueOf(courtCase.getId()), courtCase.getCourtId() ,requestInfo, tenantId))
+                .sectionOrders(parseSectionOrders(sectionConfig))
+                .inactiveSections(parseInactiveSections(sectionConfig))
                 .build();
+    }
+
+    private List<Mdms> fetchSectionConfigFromMdms(RequestInfo requestInfo, String tenantId) {
+        try {
+            return mdmsV2Util.fetchMdmsV2Data(
+                    requestInfo, tenantId, null, null,
+                    configuration.getCaseBundleSectionOrderSchema(), true, null);
+        } catch (Exception e) {
+            log.warn("Failed to fetch section config from MDMS, using defaults: {}", e.getMessage());
+            return List.of();
+        }
+    }
+
+    private Map<String, String> parseSectionOrders(List<Mdms> sectionConfig) {
+        Map<String, String> orders = new HashMap<>();
+        for (Mdms m : sectionConfig) {
+            if (m.getData() == null || !m.getData().has("sectionKey") || !m.getData().has("order")) continue;
+            if (m.getData().has("isActive") && !m.getData().get("isActive").asBoolean(true)) continue;
+            String key = m.getData().get("sectionKey").asText();
+            String order = String.format("%02d", m.getData().get("order").asInt());
+            orders.put(key, order);
+        }
+        return orders;
+    }
+
+    private Set<String> parseInactiveSections(List<Mdms> sectionConfig) {
+        Set<String> inactive = new HashSet<>();
+        for (Mdms m : sectionConfig) {
+            if (m.getData() == null || !m.getData().has("sectionKey")) continue;
+            if (m.getData().has("isActive") && !m.getData().get("isActive").asBoolean(true)) {
+                inactive.add(m.getData().get("sectionKey").asText());
+            }
+        }
+        return inactive;
     }
 
     private String resolveSearchText(CourtCase courtCase) {

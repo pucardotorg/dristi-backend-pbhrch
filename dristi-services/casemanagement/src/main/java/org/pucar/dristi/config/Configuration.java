@@ -75,6 +75,9 @@ public class Configuration {
 	@Value("${schemacode.state.master}")
 	private String stateMasterSchema;
 
+	@Value("${schemacode.casebundle.section.order}")
+	private String caseBundleSectionOrderSchema;
+
 
 	//HRMS
 	@Value("${egov.hrms.host}")
