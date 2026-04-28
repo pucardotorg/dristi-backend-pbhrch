@@ -31,8 +31,8 @@ import java.util.regex.Pattern;
 
 import static org.pucar.dristi.caselifecycle.cases.internal.config.ServiceConstants.*;
 
-import org.pucar.dristi.common.models.Document;
 import org.pucar.dristi.common.util.IdgenUtil;
+import org.pucar.dristi.common.models.Document;
 @Component
 @Slf4j
 public class CaseRegistrationEnrichment {

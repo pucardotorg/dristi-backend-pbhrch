@@ -205,10 +205,13 @@ def rewrite_text(text: str, current_pkg: str, target_pkg: str) -> str:
     )
 
     # Inline FQN rewrite. Pattern: <currentPkg>.<seg>.<rest>
-    # The lookbehind `(?<![\w.])` ensures we match `pucar.` only at the start
-    # of a fully-qualified path — never as a substring inside an already
-    # rewritten path like `org.pucar.dristi.caselifecycle...`.
-    inline_pattern = re.compile(rf"(?<![\w.]){cur_re}\.([a-zA-Z_][\w]*)\.")
+    # The lookbehind `(?<![\w.${])` ensures we match `pucar.` only at the
+    # start of a fully-qualified Java path — NEVER as a substring inside:
+    #   - an already-rewritten path: `org.pucar.dristi.caselifecycle...`
+    #     (preceded by `.`, blocked)
+    #   - a Spring property placeholder: `@Value("${pucar.lock.duration}")`
+    #     (preceded by `{`, blocked — and `$` for safety on `$pucar...`)
+    inline_pattern = re.compile(rf"(?<![\w.${{]){cur_re}\.([a-zA-Z_][\w]*)\.")
 
     def _replace_inline(m: re.Match) -> str:
         seg = m.group(1)

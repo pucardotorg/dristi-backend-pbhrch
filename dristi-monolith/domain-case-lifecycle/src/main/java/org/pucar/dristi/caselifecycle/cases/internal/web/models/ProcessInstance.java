@@ -21,8 +21,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import org.pucar.dristi.common.models.Document;
 import org.pucar.dristi.common.models.AuditDetails;
+import org.pucar.dristi.common.models.Document;
 /**
  * A Object holds the basic data for a Trade License
  */
