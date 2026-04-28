@@ -40,4 +40,6 @@ public class BundleData {
 
     private final Set<String> inactiveSections;
 
+    private final Map<String, String> sectionSortFields;
+
 }

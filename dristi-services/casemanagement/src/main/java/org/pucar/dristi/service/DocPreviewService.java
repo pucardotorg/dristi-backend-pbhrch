@@ -139,6 +139,7 @@ public class DocPreviewService {
                 .build();
 
         List<Mdms> sectionConfig = fetchSectionConfigFromMdms(requestInfo, tenantId);
+        List<Mdms> caseBundleMaster = fetchCaseBundleMasterFromMdms(requestInfo, tenantId);
 
         return BundleData.builder()
                 .cases(courtCase)
@@ -152,6 +153,7 @@ public class DocPreviewService {
                 .digitalDocs(digitalizedDocumentUtil.searchDigitalizedDocuments(String.valueOf(courtCase.getId()), courtCase.getCourtId() ,requestInfo, tenantId))
                 .sectionOrders(parseSectionOrders(sectionConfig))
                 .inactiveSections(parseInactiveSections(sectionConfig))
+                .sectionSortFields(parseSectionSortFields(caseBundleMaster))
                 .build();
     }
 
@@ -162,6 +164,17 @@ public class DocPreviewService {
                     configuration.getCaseBundleSectionOrderSchema(), true, null);
         } catch (Exception e) {
             log.warn("Failed to fetch section config from MDMS, using defaults: {}", e.getMessage());
+            return List.of();
+        }
+    }
+
+    private List<Mdms> fetchCaseBundleMasterFromMdms(RequestInfo requestInfo, String tenantId) {
+        try {
+            return mdmsV2Util.fetchMdmsV2Data(
+                    requestInfo, tenantId, null, null,
+                    configuration.getCaseBundleMasterSchema(), true, null);
+        } catch (Exception e) {
+            log.warn("Failed to fetch case bundle master from MDMS, using defaults: {}", e.getMessage());
             return List.of();
         }
     }
@@ -187,6 +200,19 @@ public class DocPreviewService {
             }
         }
         return inactive;
+    }
+
+    private Map<String, String> parseSectionSortFields(List<Mdms> caseBundleMaster) {
+        Map<String, String> sortFields = new HashMap<>();
+        for (Mdms m : caseBundleMaster) {
+            if (m.getData() == null || !m.getData().has("name")) continue;
+            if (m.getData().has("isActive") && !m.getData().get("isActive").asBoolean(true)) continue;
+            String sectionName = m.getData().get("name").asText();
+            if (m.getData().has("sorton") && !m.getData().get("sorton").isNull()) {
+                sortFields.put(sectionName, m.getData().get("sorton").asText());
+            }
+        }
+        return sortFields;
     }
 
     private String resolveSearchText(CourtCase courtCase) {
