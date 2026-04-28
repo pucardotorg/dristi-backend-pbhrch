@@ -205,6 +205,12 @@ public class Configuration {
 	@Value("${casemanagement.kafka.update.casebundles.topic}")
 	private String updateCaseBundlesTopic;
 
+	@Value("${mdms.kafka.save.topic}")
+	private String saveMdmsDataTopic;
+
+	@Value("${mdms.kafka.update.topic}")
+	private String updateMdmsDataTopic;
+
 	@Value("${generate.vc.code}")
 	private String vcCode;
 
