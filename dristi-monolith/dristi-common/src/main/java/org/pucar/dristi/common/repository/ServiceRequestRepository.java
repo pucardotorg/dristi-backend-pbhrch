@@ -48,4 +48,22 @@ public class ServiceRequestRepository {
 
         return response;
     }
+
+    /**
+     * POST that expects a Boolean response body — used by services calling
+     * existence/check endpoints (e.g. case validation).
+     */
+    public Boolean getResult(StringBuilder uri, Object request) {
+        mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+        Boolean response = null;
+        try {
+            response = restTemplate.postForObject(uri.toString(), request, Boolean.class);
+        } catch (HttpClientErrorException e) {
+            log.error(EXTERNAL_SERVICE_EXCEPTION + " URI: {}", uri, e);
+            throw new ServiceCallException(e.getResponseBodyAsString());
+        } catch (Exception e) {
+            log.error(SEARCHER_SERVICE_EXCEPTION, e);
+        }
+        return response;
+    }
 }

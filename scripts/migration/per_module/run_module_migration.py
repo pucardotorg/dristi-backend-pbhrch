@@ -56,7 +56,8 @@ CURATED_MARKER = "// HAND-CURATED"
 EGOV_HOST_TOKENS = (
     "egov", "digit", "individual", "user", "mdms", "filestore",
     "idgen", "workflow", "shortener", "shortner", "tracer",
-    "encryption", "keycloak",
+    "encryption", "keycloak", "billing", "hrms", "localization",
+    "url",  # urlShortener variants
 )
 
 PROTECTED_CLASSES = {
@@ -73,9 +74,29 @@ PROTECTED_CLASSES = {
     "ResponseInfo": "models",
 }
 
+# "Banned" = legacy DRISTI service-internal package roots that should have
+# been rewritten by Phase 3. NOT in this list (and intentionally so):
+#   - digit.models.coremodels.*  — egov-services digit-models library
+#   - digit.models.bankaccount.* — same external library
+#   - digit.models.individual.*  — same external library
+# These are real shared DTOs that ride alongside the DRISTI codebase.
 BANNED_IMPORT_PREFIXES = (
-    "digit.",
-    "pucar.",
+    "digit.config.",
+    "digit.repository.",
+    "digit.service.",
+    "digit.util.",
+    "digit.web.",
+    "digit.kafka.",
+    "digit.enrichment.",
+    "digit.validators.",
+    "digit.scheduling.",
+    "digit.annotation.",
+    "pucar.config.",
+    "pucar.repository.",
+    "pucar.service.",
+    "pucar.util.",
+    "pucar.web.",
+    "pucar.kafka.",
     "notification.",
     "drishti.payment.",
     "com.egov.icops",
@@ -149,9 +170,23 @@ def java_files(root: Path) -> list[Path]:
     return [p for p in root.rglob("*.java") if p.is_file()]
 
 
+DOMAIN_MODULE_SEGMENTS = {
+    "common", "caselifecycle", "identity", "integration", "payments",
+}
+
+
 def rewrite_text(text: str, current_pkg: str, target_pkg: str) -> str:
+    """Rewrite three styles of references from the current package to the
+    target package:
+      1. `package <currentPkg>...;` declaration
+      2. `import [static] <currentPkg>...;` lines
+      3. inline fully-qualified type references in code (e.g.
+         `private org.pucar.dristi.web.models.X foo;`)
+
+    For (3), references that point at another monolith module
+    (`org.pucar.dristi.common.*`, `org.pucar.dristi.caselifecycle.*`, etc.)
+    are NOT rewritten — those resolve through normal import chains."""
     cur_re = re.escape(current_pkg)
-    # package <currentPkg>(.x.y)?  ->  package <targetPkg>(.x.y)?
     new = re.sub(
         rf"^(\s*package\s+){cur_re}\b",
         rf"\1{target_pkg}",
@@ -164,6 +199,18 @@ def rewrite_text(text: str, current_pkg: str, target_pkg: str) -> str:
         new,
         flags=re.MULTILINE,
     )
+
+    # Inline FQN rewrite. Pattern: <currentPkg>.<seg>.<rest>
+    # `seg` lets us skip references that already point at common/other domains.
+    inline_pattern = re.compile(rf"\b{cur_re}\.([a-zA-Z_][\w]*)\.")
+
+    def _replace_inline(m: re.Match) -> str:
+        seg = m.group(1)
+        if seg in DOMAIN_MODULE_SEGMENTS:
+            return m.group(0)
+        return f"{target_pkg}.{seg}."
+
+    new = inline_pattern.sub(_replace_inline, new)
     return new
 
 
@@ -324,13 +371,20 @@ def _add_import_if_missing(text: str, fqcn: str) -> str:
     return new_import + "\n" + text
 
 
-def _public_methods(text: str) -> set[str]:
-    """Best-effort: collect names of public/package-private methods declared
-    in a .java file (used to compare local vs canonical method surface)."""
-    return set(re.findall(
-        r"public\s+(?:static\s+|final\s+|abstract\s+)*[\w<>,?\s\[\]]+?\s+(\w+)\s*\(",
+def _public_methods(text: str) -> set[tuple[str, int]]:
+    """Best-effort signature extraction. Returns a set of
+    (method-name, parameter-count) tuples. Different overloads of the
+    same name show up as distinct entries — two methods with the same
+    name but different arities are treated as different surface."""
+    methods = re.findall(
+        r"public\s+(?:static\s+|final\s+|abstract\s+)*[\w<>,?\s\[\]]+?\s+(\w+)\s*\(([^)]*)\)",
         text,
-    ))
+    )
+    out: set[tuple[str, int]] = set()
+    for name, params in methods:
+        argc = 0 if not params.strip() else params.count(",") + 1
+        out.add((name, argc))
+    return out
 
 
 def phase_4_deduplicate(manifest: dict, target_dir: Path) -> tuple[int, int, int]:
@@ -351,6 +405,7 @@ def phase_4_deduplicate(manifest: dict, target_dir: Path) -> tuple[int, int, int
     followups: list[str] = []
 
     deleted_classes_by_pkg: dict[str, set[str]] = {}
+    kept_classes: set[str] = set()  # protected classes left in target tree (extra methods)
     common_root = MONOLITH_ROOT / "dristi-common" / "src" / "main" / "java"
     for f in list(target_dir.rglob("*.java")):
         if f.stem not in PROTECTED_CLASSES:
@@ -364,12 +419,15 @@ def phase_4_deduplicate(manifest: dict, target_dir: Path) -> tuple[int, int, int
         if canonical.exists():
             local_methods = _public_methods(text)
             canonical_methods = _public_methods(canonical.read_text(encoding="utf-8"))
-            extra = local_methods - canonical_methods - {f.stem}  # ignore constructor
+            # Drop the constructor entry (same name as the class).
+            local_methods = {m for m in local_methods if m[0] != f.stem}
+            extra = local_methods - canonical_methods
             if extra:
                 followups.append(
-                    f"{f.relative_to(REPO_ROOT)} has {len(extra)} method(s) absent "
-                    f"from canonical: {sorted(extra)}"
+                    f"{f.relative_to(REPO_ROOT)} has {len(extra)} method(s)/"
+                    f"overload(s) absent from canonical: {sorted(extra)}"
                 )
+                kept_classes.add(f.stem)
                 continue  # keep this file — reviewer decides
 
         m = PACKAGE_RE.search(text)
@@ -404,6 +462,10 @@ def phase_4_deduplicate(manifest: dict, target_dir: Path) -> tuple[int, int, int
             text = f.read_text(encoding="utf-8")
             new = text
             for cls, sub in PROTECTED_CLASSES.items():
+                # Skip kept-with-followup classes — their callers may use
+                # extra service-only methods that the canonical doesn't have.
+                if cls in kept_classes:
+                    continue
                 common_fqcn = f"{COMMON_PKG}.{sub}.{cls}"
                 new = re.sub(
                     rf"^(\s*import\s+){re.escape(cur_pkg)}\.\w+(?:\.\w+)*\.{re.escape(cls)}\s*;",
@@ -426,14 +488,24 @@ def phase_4_deduplicate(manifest: dict, target_dir: Path) -> tuple[int, int, int
             if new != text:
                 rewritten += 1
 
-            # Same-package auto-import insertion (only matters for main tree
-            # where deleted_classes_by_pkg has entries).
-            m = PACKAGE_RE.search(new)
-            own_pkg = m.group(1) if m else ""
-            deleted_in_own_pkg = deleted_classes_by_pkg.get(own_pkg, set())
-            for cls in deleted_in_own_pkg:
+            # Auto-import insertion for any deleted protected class that the
+            # file references by simple name without an explicit single-class
+            # import. Catches three cases at once:
+            #   - same-package reference (no import at all)
+            #   - wildcard import `internal.util.*` that no longer covers the
+            #     class because it was deleted from that package
+            #   - file imports the OLD package's wildcard before Phase 3
+            #     rewrote it to point at the now-empty target package
+            #
+            # Skips classes that are KEPT under follow-up review — those
+            # callers may use the local class's extra methods, so steering
+            # them at the canonical would silently change behaviour.
+            all_deleted_classes = {
+                c for s in deleted_classes_by_pkg.values() for c in s
+            } - kept_classes
+            for cls in all_deleted_classes:
                 if re.search(rf"\b{cls}\b", new) and not re.search(
-                    rf"^\s*import\s+\S+\.{cls}\s*;", new, re.MULTILINE
+                    rf"^\s*import\s+(?:static\s+)?\S+\.{cls}\s*;", new, re.MULTILINE
                 ):
                     sub = PROTECTED_CLASSES[cls]
                     fqcn = f"{COMMON_PKG}.{sub}.{cls}"
@@ -515,32 +587,12 @@ def phase_6_test_migration(manifest: dict) -> int:
             skipped_curated += 1
             continue
 
-        # Apply the same package + protected-class import rewrites Phase 4
-        # does for the main tree.
-        rewritten = rewrite_text(text, cur, new)
-        for cls, sub in PROTECTED_CLASSES.items():
-            common_fqcn = f"{COMMON_PKG}.{sub}.{cls}"
-            rewritten = re.sub(
-                rf"^(\s*import\s+){re.escape(cur)}\.\w+(?:\.\w+)*\.{re.escape(cls)}\s*;",
-                rf"\1{common_fqcn};",
-                rewritten,
-                flags=re.MULTILINE,
-            )
-            rewritten = re.sub(
-                rf"^(\s*import\s+){re.escape(new)}\.\w+(?:\.\w+)*\.{re.escape(cls)}\s*;",
-                rf"\1{common_fqcn};",
-                rewritten,
-                flags=re.MULTILINE,
-            )
-            rewritten = re.sub(
-                rf"^(\s*import\s+static\s+){re.escape(cur)}\.\w+(?:\.\w+)*\.{re.escape(cls)}\.",
-                rf"\1{common_fqcn}.",
-                rewritten,
-                flags=re.MULTILINE,
-            )
-
+        # Just package rename here. Protected-class import rewrites and
+        # auto-imports are applied by Phase 4 once the test files are in
+        # place (so its kept_classes / deleted_classes state is consistent
+        # across the main and test trees).
         dest.parent.mkdir(parents=True, exist_ok=True)
-        dest.write_text(rewritten, encoding="utf-8")
+        dest.write_text(rewrite_text(text, cur, new), encoding="utf-8")
         copied += 1
     print(
         f"Phase 6 (test migration): copied {copied} test files"
@@ -805,12 +857,14 @@ def main() -> int:
         phase_2_scaffold(manifest)
     if 3 in phases:
         phase_3_auto_rename(manifest, target_dir)
+    # Phase 6 (test migration) runs BEFORE Phase 4 so the test tree exists
+    # when Phase 4's auto-import sweep walks both main + test directories.
+    if 6 in phases:
+        phase_6_test_migration(manifest)
     if 4 in phases:
         phase_4_deduplicate(manifest, target_dir)
     if 5 in phases:
         phase_5_detect_rest(manifest, target_dir)
-    if 6 in phases:
-        phase_6_test_migration(manifest)
     if 8 in phases:
         phase_8_wire_module_deps(manifest)
     if 7 in phases:

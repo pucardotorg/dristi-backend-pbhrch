@@ -118,8 +118,15 @@ public class IndividualUtil {
         }
     }
 
-    /** Returns the {@code individualId} of the first match, or empty string. */
-    public String getIndividualId(IndividualSearchRequest individualRequest, StringBuilder uri) {
+    /**
+     * Returns the {@code individualId} of the first match, or empty string.
+     *
+     * <p>{@code individualRequest} is intentionally typed as {@link Object}
+     * because services have their own {@code IndividualSearchRequest}
+     * variants with extra fields. The request is sent verbatim — the
+     * canonical only inspects the JSON response.
+     */
+    public String getIndividualId(Object individualRequest, StringBuilder uri) {
         JsonNode individual = getIndividual(individualRequest, uri);
         if (!ObjectUtils.isEmpty(individual) && individual.hasNonNull(INDIVIDUAL_ID_FIELD)) {
             return individual.get(INDIVIDUAL_ID_FIELD).asText();
@@ -128,10 +135,35 @@ public class IndividualUtil {
     }
 
     /**
+     * "Does any individual match this search?" — true iff the response array
+     * is non-empty and the first element has an {@code individualId}.
+     */
+    public Boolean individualCall(Object individualRequest, StringBuilder uri) {
+        try {
+            JsonNode individualNode = fetchIndividualArray(individualRequest, uri);
+            return individualNode.isArray()
+                    && !individualNode.isEmpty()
+                    && individualNode.get(0).hasNonNull(INDIVIDUAL_ID_FIELD);
+        } catch (CustomException e) {
+            log.error("Custom Exception occurred in individual Utility :: {}", e.toString());
+            throw e;
+        } catch (Exception e) {
+            throw new CustomException(
+                    INDIVIDUAL_UTILITY_EXCEPTION,
+                    "Exception in individual utility service: " + e.getMessage());
+        }
+    }
+
+    /** Convenience: {@code !getIndividualId(...).isEmpty()}. */
+    public Boolean individualExists(Object individualRequest, StringBuilder uri) {
+        return !getIndividualId(individualRequest, uri).isEmpty();
+    }
+
+    /**
      * Returns the first object under the {@code "Individual"} array as a
      * raw {@link JsonNode}. Empty {@link JsonNode} when no match.
      */
-    public JsonNode getIndividual(IndividualSearchRequest individualRequest, StringBuilder uri) {
+    public JsonNode getIndividual(Object individualRequest, StringBuilder uri) {
         try {
             JsonNode individualNode = fetchIndividualArray(individualRequest, uri);
             if (individualNode.isArray() && !individualNode.isEmpty() && individualNode.get(0) != null) {

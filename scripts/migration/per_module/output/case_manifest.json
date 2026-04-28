@@ -1,0 +1,34 @@
+{
+  "service": "case",
+  "source_dir": "dristi-services/case",
+  "target_module": "case-lifecycle",
+  "target_subdomain": "cases",
+  "current_package": "org.pucar.dristi",
+  "target_package": "org.pucar.dristi.caselifecycle.cases",
+  "main_file_count": 330,
+  "test_file_count": 53,
+  "has_spring_boot_main": true,
+  "duplicated_protected_classes": [
+    "MdmsUtil",
+    "IdgenUtil",
+    "WorkflowUtil",
+    "FileStoreUtil",
+    "IndividualUtil",
+    "Producer",
+    "ServiceRequestRepository",
+    "AuditDetails"
+  ],
+  "rest_call_files": [
+    "dristi-services/case/src/main/java/org/pucar/dristi/repository/ServiceRequestRepository.java",
+    "dristi-services/case/src/main/java/org/pucar/dristi/service/UserService.java",
+    "dristi-services/case/src/main/java/org/pucar/dristi/service/WorkflowService.java",
+    "dristi-services/case/src/main/java/org/pucar/dristi/service/NotificationService.java",
+    "dristi-services/case/src/main/java/org/pucar/dristi/service/SmsNotificationService.java",
+    "dristi-services/case/src/main/java/org/pucar/dristi/util/WorkflowUtil.java",
+    "dristi-services/case/src/main/java/org/pucar/dristi/util/OrderUtil.java",
+    "dristi-services/case/src/main/java/org/pucar/dristi/util/InboxUtil.java",
+    "dristi-services/case/src/main/java/org/pucar/dristi/util/IdgenUtil.java",
+    "dristi-services/case/src/main/java/org/pucar/dristi/util/IndividualUtil.java",
+    "dristi-services/case/src/main/java/org/pucar/dristi/util/LockUtil.java"
+  ]
+}

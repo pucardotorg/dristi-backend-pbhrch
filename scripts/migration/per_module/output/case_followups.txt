@@ -1,0 +1,2 @@
+dristi-monolith/domain-case-lifecycle/src/main/java/org/pucar/dristi/caselifecycle/cases/internal/util/FileStoreUtil.java has 2 method(s)/overload(s) absent from canonical: [('getFilename', 0), ('saveDocumentToFileStore', 2)]
+dristi-monolith/domain-case-lifecycle/src/main/java/org/pucar/dristi/caselifecycle/cases/internal/util/IndividualUtil.java has 1 method(s)/overload(s) absent from canonical: [('getIndividualByIndividualId', 2)]

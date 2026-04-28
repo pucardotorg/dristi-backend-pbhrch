@@ -200,6 +200,147 @@ pipeline will not undo that work.
 
 ---
 
+## Skill 14 — Inline FQN Rewriter (learned from `case`)
+
+**New skill, surfaced by the case service test drive.**
+
+Some legacy code uses fully-qualified class names inline rather than via
+`import`:
+
+```java
+public org.pucar.dristi.web.models.ProcessInstance getCurrentWorkflow(...) { ... }
+private final org.pucar.dristi.enrichment.AdvocateDetailBlockBuilder builder;
+```
+
+Phase 3's package rewrite previously only handled `package` and `import`
+statements, leaving inline FQNs broken after migration. The rewrite now
+also walks every `<currentPkg>.<seg>.` reference in the body, with
+`<seg>` checked against `DOMAIN_MODULE_SEGMENTS` (`common`,
+`caselifecycle`, `identity`, `integration`, `payments`) — references
+into other modules pass through unchanged.
+
+---
+
+## Skill 15 — Arity-Aware Method-Surface Comparison
+
+**New skill, learned from the case service.**
+
+`Skill 13`'s naïve approach compared protected-class method *names*
+only. Case's local `IndividualUtil.getIndividualByIndividualId(req, uri)`
+had the same name as the canonical's
+`getIndividualByIndividualId(req, uri, Class<T>)` but a different arity,
+so the local was deleted and callers stopped compiling.
+
+The fix: `_public_methods()` now returns `(name, parameter-count)`
+tuples. Different arities produce different surface entries — case's
+local IndividualUtil is now correctly KEPT as a follow-up because its
+two-arg overload doesn't exist on the canonical.
+
+---
+
+## Skill 16 — Banned Imports Need a Whitelist
+
+**New skill, surfaced by the case service test drive.**
+
+The original "banned import prefixes" list was too coarse — `digit.`
+caught both the legacy DRISTI service-internal `digit.config.*` AND the
+legitimate external library `digit.models.coremodels.*` (from
+`org.egov.services:digit-models`). After the case-service run reported
+seven false-positive Gate-1 hits, the list was tightened to enumerate
+the real service-internal subpackages
+(`digit.config.`, `digit.repository.`, `digit.service.`, `digit.util.`,
+`digit.web.`, `digit.kafka.`, `digit.enrichment.`,
+`digit.validators.`, `digit.scheduling.`, `digit.annotation.`)
+plus the legacy `pucar.*` subpackages and explicit external service
+roots (`org.egov.eTreasury.`, `com.egov.icops`, etc.).
+
+`digit.models.*` and `org.egov.common.*` flow through cleanly.
+
+---
+
+## Skill 17 — eGov Platform Skip List Is Repository-Wide
+
+**New skill, surfaced by the case service test drive.**
+
+Phase 5's intra-DRISTI REST detector skips host-getters whose names
+contain platform tokens (so the eGov platform calls stay as REST). The
+case service revealed two missing tokens — `billing` and `hrms` — both
+of which point at egov platform services, not DRISTI services. The
+skip list was extended to cover them. Updating the list is cheap;
+re-running Phase 5 on a service that contains a previously-flagged
+genuine intra-DRISTI candidate will re-emit it after the change.
+
+---
+
+## Skill 18 — Canonical Method Surface Must Stay Generic Where Service DTOs Diverge
+
+**New skill, learned from the case service test drive.**
+
+The canonical `IndividualUtil` originally took the
+`org.pucar.dristi.common.models.individual.IndividualSearchRequest`
+type. Case has its own `IndividualSearchRequest` with extra fields,
+incompatible with the common shape. The four
+`Individual*` methods on the canonical were widened to accept `Object`
+for the request — the canonical only inspects the JSON response shape,
+not the request. This pattern (widen to `Object` when service DTOs
+diverge but the JSON wire format is fixed) is the right call whenever
+canonical methods would otherwise force every service to migrate its
+DTO before adopting the canonical.
+
+---
+
+## Skill 19 — `kept_classes` Must Suppress BOTH Import-Rewrites AND Auto-Imports
+
+**New skill, learned from the case service test drive.**
+
+Skill 13 introduced "keep local protected class as follow-up" but
+applied that flag only when deciding whether to delete the file.
+Phase 4's import-rewrite block still redirected
+`org.pucar.dristi.caselifecycle.cases.internal.util.FileStoreUtil`
+imports to `org.pucar.dristi.common.util.FileStoreUtil` — even though
+case's local `FileStoreUtil` was kept (it has `saveDocumentToFileStore`
+that the canonical lacks). Callers like `CasePdfService` then failed
+to compile because the canonical doesn't expose that method.
+
+The fix: Phase 4 now skips kept classes both in the import-rewrite
+loop and in the auto-import-insertion sweep. Local references continue
+to resolve to the kept local file; callers compile against the methods
+the file actually has.
+
+---
+
+## Skill 20 — Phase Order: 6 Before 4
+
+**New skill, learned from the case service test drive.**
+
+Phase 4's import-rewrite + auto-import sweep needs to walk both the
+main and test trees. Originally Phase 4 ran before Phase 6, so the
+test tree didn't exist and tests retained stale imports / lacked
+auto-inserted dristi-common imports.
+
+Reordered: `1, 2, 3, 6, 4, 5, 8, 7`. Phase 6 now does only the package
+rename when copying tests; Phase 4's sweep covers both trees with
+consistent state.
+
+---
+
+## Skill 21 — Spring Modulith: Filter Style Violations
+
+**New skill, learned from the case service test drive.**
+
+Spring Modulith's `verify()` runs both structural rules (boundaries,
+cycles, named-interface respect) and stylistic rules (e.g.
+"prefer constructor injection over field injection"). The 48 case-svc
+classes that use `@Autowired` on fields all flag the latter.
+
+`ModuleStructureTest` now calls `detectViolations()` and filters out
+lines containing the style-only hints (`uses field injection`,
+`Prefer constructor injection`). Real boundary or cycle violations
+still fail the build. The kept-but-filtered violations are tracked
+separately for cleanup.
+
+---
+
 ## Skill 13 — Service-Augmented Helper Detection
 
 **New skill, learned from the lock-svc test drive.**
