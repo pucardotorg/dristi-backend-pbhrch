@@ -27,4 +27,16 @@ public class LitigantTypeInfo {
     @JsonProperty("isIndividual")
     private Boolean isIndividual;
 
+    @JsonProperty("commonFields")
+    private Boolean commonFields;
+
+    @JsonProperty("complainantTypeId")
+    private Integer complainantTypeId;
+
+    @JsonProperty("showCompanyDetails")
+    private Boolean showCompanyDetails;
+
+    @JsonProperty("complainantLocation")
+    private Boolean complainantLocation;
+
 }
