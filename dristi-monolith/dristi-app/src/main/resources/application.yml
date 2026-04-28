@@ -2,14 +2,14 @@
 # Per-environment overrides live in application-<profile>.yml — defaults here
 # are intentionally minimal so a missing `spring.profiles.active` is loud.
 #
-# Endpoint paths follow the legacy lock-svc shape: requests come in at
-# /lock-svc/v1/_set etc. Once additional services migrate into the monolith,
-# the per-service context path approach is replaced by per-controller
-# `@RequestMapping("/lock-svc")` prefixes (Pipeline 5 — Config Consolidation).
+# Each migrated service's controllers carry their own URL prefix on the
+# class-level `@RequestMapping` (e.g. `/lock-svc`, `/case`). Spring Boot
+# only supports ONE `server.servlet.context-path` per app, so a multi-
+# service monolith uses per-controller prefixes instead. The per-module
+# migration pipeline applies these automatically by reading the source
+# service's `server.contextPath` and prefixing every `@RestController`.
 server:
   port: 8080
-  servlet:
-    context-path: /lock-svc
 
 spring:
   application:

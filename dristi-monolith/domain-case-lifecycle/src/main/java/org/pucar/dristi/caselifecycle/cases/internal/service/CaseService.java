@@ -60,8 +60,8 @@ import static org.pucar.dristi.caselifecycle.cases.internal.enrichment.CaseRegis
 import static org.pucar.dristi.caselifecycle.cases.internal.enrichment.CaseRegistrationEnrichment.enrichRepresentativesOnCreateAndUpdate;
 
 
-import org.pucar.dristi.common.util.FileStoreUtil;
 import org.pucar.dristi.common.models.individual.Individual;
+import org.pucar.dristi.common.util.FileStoreUtil;
 import org.pucar.dristi.common.models.Document;
 @Service
 @Slf4j

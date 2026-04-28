@@ -200,6 +200,39 @@ pipeline will not undo that work.
 
 ---
 
+## Skill 23 — Per-Controller Context-Path Prefix
+
+**New skill, learned the moment a second service joined the monolith.**
+
+Spring Boot supports exactly **one** `server.servlet.context-path` per
+application. While the monolith hosts only lock-svc the
+`server.servlet.context-path: /lock-svc` setting in
+`dristi-app/application.yml` worked. As soon as case migrated, every
+case endpoint started 404'ing because `/case/v1/_search` was being
+served from `/lock-svc/v1/_search`.
+
+The fix: **drop the global context-path** and make each controller carry
+its own URL prefix on the class-level `@RequestMapping`.
+
+Phase 3 of `run_module_migration.py` now does this automatically:
+1. `_read_source_context_path` extracts the original
+   `server.servlet.context-path` (or `server.contextPath`) from the
+   service's source `application.properties`. Stored in the migration
+   manifest as `source_context_path`.
+2. `_prefix_controller_paths` walks every `@RestController` /
+   `@Controller` in the migrated tree, locates the class-level
+   `@RequestMapping`, and prefixes its value with the original
+   context-path. Idempotent — re-running on an already-prefixed file
+   is a no-op.
+3. If a controller has no class-level `@RequestMapping`, one is
+   inserted above the class declaration.
+
+After this skill, both `/lock-svc/v1/_set` and `/case/v1/_search` work
+out of the box; the caller URL contract is preserved at every gateway
+remap point (no UI / Postman changes).
+
+---
+
 ## Skill 22 — Config Consolidation Engine (Pipeline 5)
 
 **New pipeline phase, learned from the case-svc boot attempt.**

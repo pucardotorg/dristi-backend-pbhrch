@@ -248,6 +248,26 @@ def rewrite_protected_imports(text: str, owning_pkg: str) -> str:
 # --- phases -----------------------------------------------------------------
 
 
+def _read_source_context_path(service_dir: Path) -> str | None:
+    """Pull `server.contextPath` / `server.servlet.context-path` from a
+    service's source application.properties. Returns None if neither key
+    is set (the service had no servlet context-path)."""
+    props = service_dir / "src" / "main" / "resources" / "application.properties"
+    if not props.exists():
+        return None
+    for line in props.read_text(encoding="utf-8").splitlines():
+        s = line.strip()
+        if s.startswith("#") or "=" not in s:
+            continue
+        key, _, value = s.partition("=")
+        key = key.strip()
+        if key in ("server.contextPath", "server.servlet.context-path"):
+            v = value.strip()
+            if v:
+                return v if v.startswith("/") else f"/{v}"
+    return None
+
+
 def phase_1_analyze(args, service_dir: Path) -> dict:
     main_dir = service_dir / "src" / "main" / "java"
     test_dir = service_dir / "src" / "test" / "java"
@@ -277,6 +297,8 @@ def phase_1_analyze(args, service_dir: Path) -> dict:
         if "serviceRequestRepository" in text or "ServiceRequestRepository" in text:
             rest_call_files.append(str(f.relative_to(REPO_ROOT)))
 
+    context_path = _read_source_context_path(service_dir)
+
     manifest = {
         "service": args.service,
         "source_dir": str(service_dir.relative_to(REPO_ROOT)),
@@ -289,6 +311,7 @@ def phase_1_analyze(args, service_dir: Path) -> dict:
         "has_spring_boot_main": has_main,
         "duplicated_protected_classes": duplicated,
         "rest_call_files": rest_call_files,
+        "source_context_path": context_path,
     }
     out = REPO_ROOT / "scripts" / "migration" / "per_module" / "output" / f"{args.service}_manifest.json"
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -300,6 +323,7 @@ def phase_1_analyze(args, service_dir: Path) -> dict:
     print(f"  has @SpringBootApplication: {has_main}")
     print(f"  protected dups: {duplicated}")
     print(f"  REST candidate files: {len(rest_call_files)}")
+    print(f"  source context-path:  {context_path or '(none)'}")
     return manifest
 
 
@@ -320,6 +344,63 @@ def phase_2_scaffold(manifest: dict) -> Path:
     test_path.mkdir(parents=True, exist_ok=True)
     print(f"Phase 2 (scaffold): created {pkg_path.relative_to(REPO_ROOT)}")
     return pkg_path
+
+
+_CONTROLLER_RE = re.compile(r"^@(?:RestController|Controller)\b", re.MULTILINE)
+_CLASS_REQUEST_MAPPING_RE = re.compile(
+    r'(@RequestMapping\s*\(\s*(?:value\s*=\s*|path\s*=\s*)?)"([^"]*)"',
+)
+
+
+def _prefix_controller_paths(target_dir: Path, context_path: str) -> int:
+    """Prefix every `@RestController`'s class-level `@RequestMapping(value)`
+    with the source service's original `server.servlet.context-path`.
+
+    Spring Boot allows ONE global context-path per app, so each migrated
+    controller has to carry its own prefix once multiple services share
+    the same monolith. Idempotent: re-running on an already-prefixed
+    file is a no-op (we check for the prefix before applying).
+    """
+    if not context_path:
+        return 0
+    prefix = context_path.rstrip("/")
+    count = 0
+    for java in target_dir.rglob("*.java"):
+        text = java.read_text(encoding="utf-8")
+        if not _CONTROLLER_RE.search(text):
+            continue
+        # Find the FIRST @RequestMapping after the controller annotation
+        # but before the `class` keyword — that's the class-level one.
+        controller_match = _CONTROLLER_RE.search(text)
+        class_match = re.search(r"\b(?:public\s+)?class\s+\w+\b", text)
+        if not (controller_match and class_match):
+            continue
+        scope_start = controller_match.end()
+        scope_end = class_match.start()
+        scope = text[scope_start:scope_end]
+
+        rm_match = _CLASS_REQUEST_MAPPING_RE.search(scope)
+        if rm_match:
+            existing_value = rm_match.group(2)
+            if existing_value.startswith(prefix):
+                continue  # already prefixed
+            new_value = prefix + existing_value
+            new_text = (
+                text[:scope_start]
+                + scope[: rm_match.start()]
+                + rm_match.group(1) + f'"{new_value}"'
+                + scope[rm_match.end():]
+                + text[scope_end:]
+            )
+        else:
+            # No class-level @RequestMapping; insert one immediately above
+            # the class declaration. Indentation kept zero for top-level.
+            insertion = f'@org.springframework.web.bind.annotation.RequestMapping("{prefix}")\n'
+            new_text = text[:scope_end] + insertion + text[scope_end:]
+
+        java.write_text(new_text, encoding="utf-8")
+        count += 1
+    return count
 
 
 def phase_3_auto_rename(manifest: dict, target_dir: Path) -> int:
@@ -355,9 +436,15 @@ def phase_3_auto_rename(manifest: dict, target_dir: Path) -> int:
         dest.parent.mkdir(parents=True, exist_ok=True)
         dest.write_text(rewrite_text(text, cur, new), encoding="utf-8")
         copied += 1
+    # Apply the source service's servlet context-path as a per-controller
+    # @RequestMapping prefix — the monolith no longer has a global
+    # server.servlet.context-path so each controller carries its own.
+    prefixed = _prefix_controller_paths(target_dir, manifest.get("source_context_path"))
+
     print(
         f"Phase 3 (auto-rename): copied {copied} files into {target_dir.relative_to(REPO_ROOT)}"
         + (f"; preserved {skipped_curated} hand-curated files" if skipped_curated else "")
+        + (f"; prefixed {prefixed} controller(s) with {manifest['source_context_path']}" if prefixed else "")
     )
     return copied
 

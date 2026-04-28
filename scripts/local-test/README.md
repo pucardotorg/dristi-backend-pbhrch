@@ -64,24 +64,28 @@ up and the `locksvc` DB exists (Step 1 created it).
 In another terminal:
 
 ```bash
-# Health
-curl -s http://localhost:8080/lock-svc/actuator/health
+# Health (Spring Boot actuator — no service prefix)
+curl -s http://localhost:8080/actuator/health
 # expect: {"status":"UP"}
 
-# Set lock
+# lock-svc endpoints — class-level @RequestMapping("/lock-svc") in
+# LockApiController, set automatically by the per-module migration
+# pipeline from the source service's server.servlet.context-path.
 curl -s -X POST http://localhost:8080/lock-svc/v1/_set \
   -H 'Content-Type: application/json' \
   -d @scripts/local-test/sample-set-lock.json | jq
 
-# Check lock status (uniqueId + tenantId go on the query string)
 curl -s -X POST "http://localhost:8080/lock-svc/v1/_get?uniqueId=case-LOCAL-TEST-1&tenantId=kl" \
   -H 'Content-Type: application/json' \
   -d @scripts/local-test/sample-get-lock-request.json | jq
 
-# Release lock
 curl -s -X POST "http://localhost:8080/lock-svc/v1/_release?uniqueId=case-LOCAL-TEST-1&tenantId=kl" \
   -H 'Content-Type: application/json' \
   -d @scripts/local-test/sample-get-lock-request.json | jq
+
+# case endpoints — same pattern, class-level @RequestMapping("/case").
+# (Sample bodies for case endpoints not yet shipped; capture from QA postman
+#  collection or the original case service.)
 ```
 
 Expected: `_set` returns the lock with `isLocked: true`; `_get` returns

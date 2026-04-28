@@ -18,7 +18,7 @@ import org.pucar.dristi.caselifecycle.locksvc.internal.web.models.LockResponse;
 
 @jakarta.annotation.Generated(value = "org.egov.codegen.SpringBootCodegen", date = "2025-01-17T15:07:55.861454512+05:30[Asia/Kolkata]")
 @RestController
-@RequestMapping("")
+@RequestMapping("/lock-svc")
 public class LockApiController {
 
     private final LockService lockService;

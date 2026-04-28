@@ -18,5 +18,6 @@
   "rest_call_files": [
     "dristi-services/lock-svc/src/main/java/pucar/repository/ServiceRequestRepository.java",
     "dristi-services/lock-svc/src/main/java/pucar/util/IndividualUtil.java"
-  ]
+  ],
+  "source_context_path": "/lock-svc"
 }

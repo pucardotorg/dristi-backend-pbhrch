@@ -34,5 +34,6 @@
     "dristi-services/case/src/main/java/org/pucar/dristi/util/IdgenUtil.java",
     "dristi-services/case/src/main/java/org/pucar/dristi/util/IndividualUtil.java",
     "dristi-services/case/src/main/java/org/pucar/dristi/util/LockUtil.java"
-  ]
+  ],
+  "source_context_path": "/case"
 }
