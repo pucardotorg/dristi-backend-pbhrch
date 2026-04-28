@@ -21,7 +21,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.List;
 
 
-@Component
+@Component("commonFileStoreUtil")
 @Slf4j
 public class FileStoreUtil {
 

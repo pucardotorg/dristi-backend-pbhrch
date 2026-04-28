@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 import static org.pucar.dristi.caselifecycle.locksvc.internal.config.ServiceConstants.*;
 
-@Component
+@Component("locksvcResponseInfoFactory")
 public class ResponseInfoFactory {
 
     public static ResponseInfo createResponseInfoFromRequestInfo(final RequestInfo requestInfo, final Boolean success) {

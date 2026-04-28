@@ -19,7 +19,7 @@ import java.util.Map;
 
 import static org.pucar.dristi.common.config.CommonConstants.*;
 
-@Repository
+@Repository("commonServiceRequestRepository")
 @Slf4j
 public class ServiceRequestRepository {
 

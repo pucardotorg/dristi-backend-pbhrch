@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-@Component
+@Component("casesIndividualUtil")
 @Slf4j
 public class IndividualUtil {
 

@@ -21,7 +21,7 @@ import org.springframework.util.CollectionUtils;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Service
+@Service("commonWorkflowUtil")
 public class WorkflowUtil {
 
     @Autowired

@@ -18,7 +18,7 @@ import java.util.concurrent.CompletableFuture;
  * outcome (partition/offset on success; classified failure type on error).
  * Used as the single send-path for the canonical {@link Producer}.
  */
-@Component
+@Component("commonKafkaProducerService")
 public class KafkaProducerService {
 
     private static final Logger log = LoggerFactory.getLogger(KafkaProducerService.class);

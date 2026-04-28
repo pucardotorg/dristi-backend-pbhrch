@@ -15,6 +15,7 @@
     "FileStoreUtil",
     "IndividualUtil",
     "Producer",
+    "KafkaProducerService",
     "ServiceRequestRepository",
     "AuditDetails"
   ],

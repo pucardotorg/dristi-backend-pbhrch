@@ -40,7 +40,7 @@ import static org.pucar.dristi.common.config.CommonConstants.INDIVIDUAL_UTILITY_
  *       callers that don't have a typed Individual model.</li>
  * </ul>
  */
-@Component
+@Component("commonIndividualUtil")
 public class IndividualUtil {
 
     private static final Logger log = LoggerFactory.getLogger(IndividualUtil.class);

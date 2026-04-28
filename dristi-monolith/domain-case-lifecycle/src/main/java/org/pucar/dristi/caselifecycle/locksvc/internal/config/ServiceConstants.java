@@ -4,7 +4,7 @@ package org.pucar.dristi.caselifecycle.locksvc.internal.config;
 import org.springframework.stereotype.Component;
 
 
-@Component
+@Component("locksvcServiceConstants")
 public class ServiceConstants {
 
     public static final String EXTERNAL_SERVICE_EXCEPTION = "External Service threw an Exception: ";

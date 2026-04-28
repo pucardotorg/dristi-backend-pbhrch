@@ -25,7 +25,7 @@ import java.util.List;
 import static org.pucar.dristi.common.config.CommonConstants.IDGEN_ERROR;
 import static org.pucar.dristi.common.config.CommonConstants.NO_IDS_FOUND_ERROR;
 
-@Component
+@Component("commonIdgenUtil")
 public class IdgenUtil {
 
     private static final Logger log = LoggerFactory.getLogger(IdgenUtil.class);

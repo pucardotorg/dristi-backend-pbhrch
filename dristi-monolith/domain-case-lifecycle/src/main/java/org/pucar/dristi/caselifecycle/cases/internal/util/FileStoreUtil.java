@@ -23,7 +23,7 @@ import java.util.List;
 import static org.pucar.dristi.caselifecycle.cases.internal.config.ServiceConstants.FILE_STORE_UTILITY_EXCEPTION;
 
 
-@Component
+@Component("casesFileStoreUtil")
 @Slf4j
 public class FileStoreUtil {
 

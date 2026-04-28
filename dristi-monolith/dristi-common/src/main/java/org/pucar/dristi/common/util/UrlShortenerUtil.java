@@ -15,7 +15,7 @@ import org.pucar.dristi.common.config.CommonConfiguration;
 import static org.pucar.dristi.common.config.CommonConstants.*;
 
 @Slf4j
-@Component
+@Component("commonUrlShortenerUtil")
 public class UrlShortenerUtil {
 
     @Autowired

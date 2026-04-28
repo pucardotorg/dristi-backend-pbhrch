@@ -39,7 +39,7 @@ import json
 import os
 import re
 import subprocess
-from collections import Counter
+from collections import Counter, defaultdict
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -69,6 +69,7 @@ PROTECTED_CLASSES = {
     "UrlShortenerUtil": "util",
     "IndividualUtil": "util",
     "Producer": "kafka",
+    "KafkaProducerService": "kafka",
     "ServiceRequestRepository": "repository",
     "AuditDetails": "models",
     "ResponseInfo": "models",
@@ -371,6 +372,73 @@ def _add_import_if_missing(text: str, fqcn: str) -> str:
     return new_import + "\n" + text
 
 
+def _ensure_unique_bean_name(path: Path, subdomain: str, class_name: str) -> bool:
+    """Re-stamp `@Component` / `@Service` / `@Repository` / `@Configuration`
+    on a class with an explicit, subdomain-prefixed bean name so it doesn't
+    collide with another class of the same simple name elsewhere in the
+    monolith.
+
+    Example: `@Component` on cases/.../FileStoreUtil → `@Component("casesFileStoreUtil")`.
+
+    No-op if an explicit bean name is already present, or if the class
+    has no Spring stereotype annotation. Returns True on rewrite.
+    """
+    bean_name = subdomain + class_name[0].upper() + class_name[1:]
+    text = path.read_text(encoding="utf-8")
+    # Match a stereotype annotation that is NOT already given an explicit
+    # value. Negative-lookahead avoids re-stamping `@Component("foo")`.
+    pattern = re.compile(
+        r"^(\s*@(?:Component|Service|Repository|Configuration))(?!\s*\()(\s*$)",
+        re.MULTILINE,
+    )
+    new_text, n = pattern.subn(rf'\1("{bean_name}")', text)
+    if n:
+        path.write_text(new_text, encoding="utf-8")
+    return n > 0
+
+
+def _resolve_cross_subdomain_bean_collisions(target_module: str) -> int:
+    """Spring fails fast if two `@Component`-annotated classes derive the
+    same default bean name (which happens whenever two service-internal
+    classes share a simple class name across subdomains, e.g. case's
+    `ResponseInfoFactory` and lock-svc's `ResponseInfoFactory`).
+
+    Walk the whole domain module and auto-prefix bean names for any
+    simple class name that appears in 2+ subdomains. Idempotent."""
+    domain_root = MONOLITH_ROOT / f"domain-{target_module}" / "src" / "main" / "java"
+    if not domain_root.exists():
+        return 0
+
+    # subdomain is the segment immediately after `<base>/<base>` (e.g.
+    # `org/pucar/dristi/caselifecycle/<subdomain>/internal/...`). Walk and
+    # group simple class names by (subdomain, path).
+    by_simple_name: dict[str, list[tuple[str, Path]]] = defaultdict(list)
+    for java in domain_root.rglob("*.java"):
+        text = java.read_text(encoding="utf-8")
+        m = PACKAGE_RE.search(text)
+        if not m:
+            continue
+        pkg = m.group(1).split(".")
+        # Find segment "internal" — the subdomain is one before it.
+        if "internal" not in pkg:
+            continue
+        idx = pkg.index("internal")
+        if idx == 0:
+            continue
+        subdomain = pkg[idx - 1]
+        by_simple_name[java.stem].append((subdomain, java))
+
+    fixed = 0
+    for simple_name, occurrences in by_simple_name.items():
+        unique_subdomains = {sd for sd, _ in occurrences}
+        if len(unique_subdomains) <= 1:
+            continue
+        for subdomain, path in occurrences:
+            if _ensure_unique_bean_name(path, subdomain, simple_name):
+                fixed += 1
+    return fixed
+
+
 def _public_methods(text: str) -> set[tuple[str, int]]:
     """Best-effort signature extraction. Returns a set of
     (method-name, parameter-count) tuples. Different overloads of the
@@ -428,6 +496,12 @@ def phase_4_deduplicate(manifest: dict, target_dir: Path) -> tuple[int, int, int
                     f"overload(s) absent from canonical: {sorted(extra)}"
                 )
                 kept_classes.add(f.stem)
+                # Avoid a bean-name collision at startup: by default
+                # `@Component`/`@Service`/`@Repository` derive the bean name
+                # from the simple class name, which collides with the
+                # canonical's bean. Re-stamp the local class with a
+                # subdomain-prefixed bean name (e.g. `casesFileStoreUtil`).
+                _ensure_unique_bean_name(f, manifest["target_subdomain"], f.stem)
                 continue  # keep this file — reviewer decides
 
         m = PACKAGE_RE.search(text)
@@ -514,9 +588,16 @@ def phase_4_deduplicate(manifest: dict, target_dir: Path) -> tuple[int, int, int
 
             if new != text:
                 f.write_text(new, encoding="utf-8")
+    # Cross-subdomain bean-name collision resolution. Spring fails fast on
+    # `responseInfoFactory` (case + lock-svc both have one). Auto-prefix the
+    # bean name in EVERY file whose simple class name appears in 2+
+    # subdomains of this domain module.
+    bean_renamed = _resolve_cross_subdomain_bean_collisions(manifest["target_module"])
+
     print(
         f"Phase 4 (deduplicate): deleted={deleted} protected-class copies, "
         f"rewrote={rewritten} imports, auto-imported={auto_imported}"
+        + (f", uniquified-bean-names={bean_renamed}" if bean_renamed else "")
     )
     return deleted, rewritten, auto_imported
 

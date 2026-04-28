@@ -24,7 +24,7 @@ import java.util.Map;
 import static org.pucar.dristi.common.config.CommonConstants.*;
 
 @Slf4j
-@Component
+@Component("commonMdmsUtil")
 public class MdmsUtil {
 
     @Autowired

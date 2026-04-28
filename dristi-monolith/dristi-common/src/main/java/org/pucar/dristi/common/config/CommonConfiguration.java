@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
  * <p>Getters/setters are written by hand (not Lombok) so this class never
  * depends on annotation-processor wiring being correct.
  */
-@Component
+@Component("commonConfiguration")
 public class CommonConfiguration {
 
     @Value("${egov.idgen.host}")
