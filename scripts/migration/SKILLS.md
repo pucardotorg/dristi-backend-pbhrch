@@ -200,6 +200,58 @@ pipeline will not undo that work.
 
 ---
 
+## Skill 22 — Config Consolidation Engine (Pipeline 5)
+
+**New pipeline phase, learned from the case-svc boot attempt.**
+
+Each migrated service has its own `application.properties` — case alone has
+217 keys feeding 148 `@Value` bindings. The monolith's bootstrap
+`application.yml` can't satisfy all of them by hand, and Spring fails
+fast on any unresolved `${placeholder}`.
+
+Pipeline 5 (`scripts/migration/config_consolidation/run_consolidation.py`)
+takes a list of services, parses each `application.properties`, and
+classifies every key:
+
+| Classification | Where it lands |
+|---|---|
+| **SHARED** — same value across all services that have it | `dristi-app/src/main/resources/application-shared.yml` |
+| **SERVICE-SPECIFIC** — only one service has the key | `domain-<module>/src/main/resources/application-<subdomain>.yml` |
+| **CONFLICT** — different values across services | per-subdomain yml of each service; profile-overlay order resolves |
+
+Per-subdomain YMLs live in the **owning domain module**'s resources
+(not at the bootstrap). Spring Boot scans `application-<profile>.yml`
+from anywhere on the classpath, so each domain module ships its own
+config — case's properties travel with `domain-case-lifecycle`,
+lock-svc's with the same module, etc.
+
+Drop-list (keys the monolith decides, not the service):
+- `server.port`, `server.contextPath`, `server.servlet.context-path`
+- `spring.datasource.*`, `spring.flyway.*`, `spring.kafka.*`,
+  `spring.jpa.*` (single DB, single Kafka, single Hibernate config)
+- `otel.service.name`, `logging.loki.app` (single OTel + Loki app name)
+- `spring.application.name`, `spring.profiles.active`,
+  `management.endpoints.web.base-path`
+
+Activation (in `dristi-app/.../application.yml`):
+```
+spring:
+  profiles:
+    active: shared,cases,locksvc,local
+```
+
+Output of running on case + lock-svc:
+- 192 keys consolidated
+- 26 SHARED (one shared yml)
+- 4 CONFLICTs (each subdomain yml carries its own value)
+- 162 SERVICE-SPECIFIC (split across the two subdomains)
+
+After running, `mvn package` succeeds and the monolith parses every
+`@Value` placeholder cleanly — only environmental issues (DB creds)
+remain at boot.
+
+---
+
 ## Skill 14 — Inline FQN Rewriter (learned from `case`)
 
 **New skill, surfaced by the case service test drive.**

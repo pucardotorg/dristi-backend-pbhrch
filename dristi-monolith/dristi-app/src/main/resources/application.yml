@@ -17,7 +17,11 @@ spring:
   main:
     allow-bean-definition-overriding: true
   profiles:
-    active: local
+    # Order matters — later profiles override earlier ones for conflicting
+    # keys. `shared` carries values every consolidated service agrees on;
+    # per-subdomain profiles (cases / locksvc / ...) overlay subdomain
+    # config; `local` overrides DB/host/etc. for local dev.
+    active: shared,cases,locksvc,local
 
   jpa:
     show-sql: true

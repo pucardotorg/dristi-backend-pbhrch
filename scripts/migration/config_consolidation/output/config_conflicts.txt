@@ -1,0 +1,15 @@
+# 4 keys with different values across services
+# Per-service profile YAML resolves them via Spring's profile-overlay rules.
+
+otel.instrumentation.http.server.ignore-urls
+  case=/case/health,/case/prometheus | lock-svc=/lock-svc/health,/lock-svc/prometheus
+
+egov.mdms.host
+  case=http://localhost:8084 | lock-svc=https://dev.digit.org
+
+egov.user.host
+  case=http://localhost:8086 | lock-svc=https://dev.digit.org
+
+kafka.topics.receipt.create
+  case=egov.collection.payment-create | lock-svc=dss-collection
+
