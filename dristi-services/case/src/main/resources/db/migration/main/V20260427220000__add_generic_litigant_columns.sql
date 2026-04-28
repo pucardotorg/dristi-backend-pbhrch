@@ -7,8 +7,8 @@ ADD COLUMN IF NOT EXISTS is_joined BOOLEAN DEFAULT TRUE,
 
 -- Modify existing column
 ALTER COLUMN mobile_number TYPE JSONB USING CASE
-    WHEN mobile_number IS NULL OR btrim(mobile_number) = '' THEN NULL
-    ELSE to_jsonb(ARRAY[mobile_number])
+    WHEN mobile_number IS NULL OR btrim(trim(both '"' from mobile_number::text)) = '' THEN NULL
+    ELSE to_jsonb(ARRAY[trim(both '"' from mobile_number::text)])
 END;
 
 -- Drop old columns (if they exist from previous schema)
