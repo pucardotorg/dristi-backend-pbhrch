@@ -13,7 +13,7 @@ import org.pucar.dristi.caselifecycle.cases.internal.service.CasePdfService;
 import org.pucar.dristi.caselifecycle.cases.internal.service.CaseService;
 import org.pucar.dristi.caselifecycle.cases.internal.service.CaseServiceV2;
 import org.pucar.dristi.caselifecycle.cases.internal.service.WitnessService;
-import org.pucar.dristi.caselifecycle.cases.internal.util.ResponseInfoFactory;
+import org.pucar.dristi.common.util.ResponseInfoFactory;
 import org.pucar.dristi.caselifecycle.cases.internal.web.OpenApiCaseSummary;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.*;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.advocateofficemember.*;

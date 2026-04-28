@@ -11,7 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.pucar.dristi.caselifecycle.locksvc.internal.service.LockService;
-import org.pucar.dristi.caselifecycle.locksvc.internal.util.ResponseInfoFactory;
+import org.pucar.dristi.common.util.ResponseInfoFactory;
 import org.pucar.dristi.caselifecycle.locksvc.internal.web.models.Lock;
 import org.pucar.dristi.caselifecycle.locksvc.internal.web.models.LockRequest;
 import org.pucar.dristi.caselifecycle.locksvc.internal.web.models.LockResponse;

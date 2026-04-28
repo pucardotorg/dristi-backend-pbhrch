@@ -11,6 +11,7 @@
   "duplicated_protected_classes": [
     "MdmsUtil",
     "IndividualUtil",
+    "ResponseInfoFactory",
     "ServiceRequestRepository",
     "AuditDetails"
   ],

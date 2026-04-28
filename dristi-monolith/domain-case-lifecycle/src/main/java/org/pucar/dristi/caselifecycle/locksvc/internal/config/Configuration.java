@@ -47,6 +47,6 @@ public class Configuration {
     @Value("${egov.individual.search.path}")
     private String individualSearchEndpoint;
 
-    @Value("${pucar.lock.duration}")
+    @Value("${org.pucar.dristi.caselifecycle.locksvc.internal.lock.duration}")
     private Long lockDurationMillis;
 }

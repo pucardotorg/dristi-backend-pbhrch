@@ -68,6 +68,7 @@ PROTECTED_CLASSES = {
     "UserUtil": "util",
     "UrlShortenerUtil": "util",
     "IndividualUtil": "util",
+    "ResponseInfoFactory": "util",
     "Producer": "kafka",
     "KafkaProducerService": "kafka",
     "ServiceRequestRepository": "repository",
@@ -202,8 +203,10 @@ def rewrite_text(text: str, current_pkg: str, target_pkg: str) -> str:
     )
 
     # Inline FQN rewrite. Pattern: <currentPkg>.<seg>.<rest>
-    # `seg` lets us skip references that already point at common/other domains.
-    inline_pattern = re.compile(rf"\b{cur_re}\.([a-zA-Z_][\w]*)\.")
+    # The lookbehind `(?<![\w.])` ensures we match `pucar.` only at the start
+    # of a fully-qualified path — never as a substring inside an already
+    # rewritten path like `org.pucar.dristi.caselifecycle...`.
+    inline_pattern = re.compile(rf"(?<![\w.]){cur_re}\.([a-zA-Z_][\w]*)\.")
 
     def _replace_inline(m: re.Match) -> str:
         seg = m.group(1)
