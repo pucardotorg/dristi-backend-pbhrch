@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ComplainantTypeInfo {
+public class LitigantTypeOfEntity {
 
     @JsonProperty("id")
     private Integer id;
@@ -21,10 +21,6 @@ public class ComplainantTypeInfo {
     @JsonProperty("name")
     private String name;
 
-    @JsonProperty("isactive")
-    private Boolean isactive;
-
-    @JsonProperty("isIndividual")
-    private Boolean isIndividual;
-
+    @JsonProperty("isActive")
+    private Boolean isActive;
 }

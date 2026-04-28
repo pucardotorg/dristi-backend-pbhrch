@@ -11,8 +11,8 @@ import org.egov.common.contract.models.AuditDetails;
 import org.egov.tracer.model.CustomException;
 import org.postgresql.util.PGobject;
 import org.pucar.dristi.web.models.Address;
-import org.pucar.dristi.web.models.ComplainantTypeInfo;
-import org.pucar.dristi.web.models.ComplainantTypeOfEntity;
+import org.pucar.dristi.web.models.LitigantTypeInfo;
+import org.pucar.dristi.web.models.LitigantTypeOfEntity;
 import org.pucar.dristi.web.models.Party;
 import org.pucar.dristi.web.models.TransferredPOAInfo;
 import org.springframework.jdbc.core.ResultSetExtractor;
@@ -60,18 +60,18 @@ public class LitigantRowMapper implements ResultSetExtractor<Map<UUID, List<Part
                         .lastName(rs.getString("last_name"))
                         .fullName(rs.getString("full_name"))
                         .mobileNumber(getJsonNodeFromJson(rs.getString("mobile_number")))
+                        .email(getJsonNodeFromJson(rs.getString("email")))
                         .age(rs.getString("age"))
                         .companyName(rs.getString("company_name"))
                         .designation(rs.getString("designation"))
-                        .complainantType(getObjectFromJson(rs.getString("complainant_type"), ComplainantTypeInfo.class))
-                        .complainantTypeOfEntity(getObjectFromJson(rs.getString("complainant_type_of_entity"), ComplainantTypeOfEntity.class))
+                        .litigantType(getObjectFromJson(rs.getString("litigant_type"), LitigantTypeInfo.class))
+                        .litigantTypeOfEntity(getObjectFromJson(rs.getString("litigant_type_of_entity"), LitigantTypeOfEntity.class))
                         .transferredPOA(getObjectFromJson(rs.getString("transferred_poa"), TransferredPOAInfo.class))
                         .permanentAddress(getObjectFromJson(rs.getString("permanent_address"), Address.class))
                         .currentAddress(getObjectFromJson(rs.getString("current_address"), Address.class))
                         .isSameAddress(rs.getBoolean("is_same_address"))
                         .isJoined(rs.getBoolean("is_joined"))
                         .addressDetails(getJsonNodeFromJson(rs.getString("address_details")))
-                        .partyTypeDetail(getJsonNodeFromJson(rs.getString("party_type_detail")))
                         .auditDetails(auditdetails)
                         .build();
 

@@ -190,7 +190,7 @@ public class CaseServiceTest {
         objectMapper = new ObjectMapper();
         enrichmentService = new EnrichmentService(new ArrayList<>());
         OrderUtil orderUtil = new OrderUtil(null, null, null);
-    caseService = new CaseService(validator,enrichmentUtil,caseRepository,workflowService,config,producer,taskUtil,etreasuryUtil,encryptionDecryptionUtil, hearingUtil,userService,paymentCalculaterUtil,objectMapper,cacheService,enrichmentService, notificationService, individualService, advocateUtil, evidenceUtil, evidenceValidator,caseUtil,fileStoreUtil, orderUtil, dateUtil,inboxUtil, advocateOfficeCaseMemberRepository,advocateDetailBlockBuilder);
+        caseService = new CaseService(validator,enrichmentUtil,caseRepository,workflowService,config,producer,taskUtil,etreasuryUtil,encryptionDecryptionUtil, hearingUtil,userService,paymentCalculaterUtil,objectMapper,cacheService,enrichmentService, notificationService, individualService, advocateUtil, evidenceUtil, evidenceValidator,caseUtil,fileStoreUtil, orderUtil, dateUtil,inboxUtil, advocateOfficeCaseMemberRepository,advocateDetailBlockBuilder);
 
         requestInfo = RequestInfo.builder()
                 .userInfo(User.builder().uuid("ba8767a6-7cb1-416b-803e-19cf9dca06bc").tenantId(TENANT_ID).build())
@@ -966,7 +966,6 @@ public class CaseServiceTest {
         when(encryptionDecryptionUtil.encryptObject(any(),any(),any())).thenReturn(courtCase);
 
         doNothing().when(producer).push(anyString(), any(CaseRequest.class));
-        doNothing().when(cacheService).save(anyString(), any());
         when(config.getCaseUpdateTopic()).thenReturn("case-update-topic");
         List<CaseCriteria> caseCriteriaList = new ArrayList<>();
         CaseCriteria caseCriteria = new CaseCriteria();

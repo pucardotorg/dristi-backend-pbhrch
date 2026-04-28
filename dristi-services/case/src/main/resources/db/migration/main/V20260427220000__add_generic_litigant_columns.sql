@@ -13,3 +13,7 @@ END,
 
 -- Drop old columns (if they exist from previous schema)
 DROP COLUMN IF EXISTS company_address;
+Drop COLUMN IF EXISTS party_type_detail JSONB;
+
+ALTER TABLE dristi_case_litigants
+ADD COLUMN IF NOT EXISTS email JSONB;

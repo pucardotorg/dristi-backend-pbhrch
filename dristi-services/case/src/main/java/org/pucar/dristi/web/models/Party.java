@@ -81,16 +81,20 @@ public class Party {
     @Valid
     private JsonNode mobileNumber = null;
 
+    @JsonProperty("email")
+    @Valid
+    private JsonNode email = null;
+
     @JsonProperty("age")
     private String age = null;
 
-    @JsonProperty("complainantType")
+    @JsonProperty("litigantType")
     @Valid
-    private ComplainantTypeInfo complainantType = null;
+    private LitigantTypeInfo litigantType = null;
 
-    @JsonProperty("complainantTypeOfEntity")
+    @JsonProperty("litigantTypeOfEntity")
     @Valid
-    private ComplainantTypeOfEntity complainantTypeOfEntity = null;
+    private LitigantTypeOfEntity litigantTypeOfEntity = null;
 
     @JsonProperty("companyName")
     private String companyName = null;
@@ -119,10 +123,6 @@ public class Party {
     @JsonProperty("addressDetails")
     @Valid
     private JsonNode addressDetails = null;
-
-    @JsonProperty("partyTypeDetail")
-    @Valid
-    private JsonNode partyTypeDetail = null;
 
     @JsonProperty("documents")
     @Valid
