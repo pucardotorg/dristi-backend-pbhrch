@@ -16,6 +16,8 @@ import org.pucar.dristi.web.models.taskManagement.TaskSearchRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -154,6 +156,7 @@ public class DocPreviewService {
                 .sectionOrders(parseSectionOrders(sectionConfig))
                 .inactiveSections(parseInactiveSections(sectionConfig))
                 .sectionSortFields(parseSectionSortFields(caseBundleMaster))
+                .sectionDoctypeOrder(parseSectionDoctypeOrder(caseBundleMaster))
                 .build();
     }
 
@@ -213,6 +216,26 @@ public class DocPreviewService {
             }
         }
         return sortFields;
+    }
+
+    private Map<String, List<String>> parseSectionDoctypeOrder(List<Mdms> caseBundleMaster) {
+        Map<String, List<com.fasterxml.jackson.databind.JsonNode>> grouped = new HashMap<>();
+        for (Mdms m : caseBundleMaster) {
+            if (m.getData() == null || !m.getData().has("name") || !m.getData().has("doctype")) continue;
+            if (m.getData().has("isActive") && !m.getData().get("isActive").asBoolean(true)) continue;
+            String name = m.getData().get("name").asText();
+            grouped.computeIfAbsent(name, k -> new ArrayList<>()).add(m.getData());
+        }
+        Map<String, List<String>> result = new HashMap<>();
+        for (Map.Entry<String, List<com.fasterxml.jackson.databind.JsonNode>> entry : grouped.entrySet()) {
+            List<String> doctypes = entry.getValue().stream()
+                    .sorted(Comparator.comparingInt(node ->
+                            node.has("sorton") ? node.get("sorton").asInt(Integer.MAX_VALUE) : Integer.MAX_VALUE))
+                    .map(node -> node.get("doctype").asText())
+                    .toList();
+            result.put(entry.getKey(), doctypes);
+        }
+        return result;
     }
 
     private String resolveSearchText(CourtCase courtCase) {

@@ -42,4 +42,6 @@ public class BundleData {
 
     private final Map<String, String> sectionSortFields;
 
+    private final Map<String, List<String>> sectionDoctypeOrder;
+
 }
