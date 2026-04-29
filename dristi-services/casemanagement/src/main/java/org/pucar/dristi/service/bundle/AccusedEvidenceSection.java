@@ -25,7 +25,8 @@ public class AccusedEvidenceSection implements CaseBundleSection {
 
         if (data == null || data.getEvidences() == null) return null;
 
-        String sortField = data.getSectionSortFields() != null ? data.getSectionSortFields().get("accusedevidence") : null;
+        String depositionSortField = data.getSectionSortFields() != null ? data.getSectionSortFields().get("accusedevidencedepositions") : null;
+        String evidenceSortField = data.getSectionSortFields() != null ? data.getSectionSortFields().get("accusedevidence") : null;
 
         List<CaseBundleNode> result = new ArrayList<>();
 
@@ -37,7 +38,7 @@ public class AccusedEvidenceSection implements CaseBundleSection {
                 .filter(a -> a.getFile() != null && a.getFile().getFileStore() != null)
                 .collect(Collectors.toCollection(ArrayList::new));
 
-        BundleSectionUtils.sortArtifacts(depositionArtifacts, sortField);
+        BundleSectionUtils.sortArtifacts(depositionArtifacts, depositionSortField);
 
         List<CaseBundleNode> depositions = depositionArtifacts.stream()
                 .map(a -> CaseBundleNode.builder()
@@ -62,7 +63,7 @@ public class AccusedEvidenceSection implements CaseBundleSection {
                 .filter(a -> a.getFile() != null && a.getFile().getFileStore() != null)
                 .collect(Collectors.toCollection(ArrayList::new));
 
-        BundleSectionUtils.sortArtifacts(evidenceArtifacts, sortField);
+        BundleSectionUtils.sortArtifacts(evidenceArtifacts, evidenceSortField);
 
         List<CaseBundleNode> evidences = evidenceArtifacts.stream()
                 .map(a -> CaseBundleNode.builder()
