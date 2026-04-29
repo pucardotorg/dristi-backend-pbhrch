@@ -417,16 +417,17 @@ public class CaseService {
             List<CaseCriteria> casesList = caseRepository.getCases(caseSearchRequests.getCriteria(), caseSearchRequests.getRequestInfo());
            // saveInRedisCache(casesList, caseSearchRequests.getRequestInfo());
 
-            casesList.addAll(caseCriteriaInRedis);
-
             casesList.forEach(caseCriteria -> {
                 List<CourtCase> decryptedCourtCases = new ArrayList<>();
                 caseCriteria.getResponseList().forEach(cases -> {
-                    decryptedCourtCases.add(encryptionDecryptionUtil.decryptObject(cases, config.getCaseDecryptSelf(), CourtCase.class, caseSearchRequests.getRequestInfo()));
-                    decryptedCourtCases.forEach(
-                            courtCase -> {
-                                enrichAdvocateJoinedStatus(courtCase, caseCriteria.getAdvocateId());
-                            });
+                    CourtCase courtCase = encryptionDecryptionUtil.decryptObject(cases, config.getCaseDecryptSelf(), CourtCase.class, caseSearchRequests.getRequestInfo());
+                    enrichAdvocateJoinedStatus(courtCase, caseCriteria.getAdvocateId());
+                    try {
+                        advocateDetailBlockBuilder.buildAndSet(courtCase);
+                    } catch (Exception e) {
+                        log.error("Error building AdvocateDetailBlock in CaseService.searchCases: {}", e.toString());
+                    }
+                    decryptedCourtCases.add(courtCase);
                 });
                 caseCriteria.setResponseList(decryptedCourtCases);
             });
@@ -479,7 +480,7 @@ public class CaseService {
                     caseRequest.getCases().getWorkflow().setAction(UPLOAD_WITH_PAYMENT);
                 }
             }
-            workflowService.updateWorkflowStatus(caseRequest);
+            //workflowService.updateWorkflowStatus(caseRequest);
 
 
             if (caseRequest.getCases().getCourtId() == null && PENDING_REGISTRATION.equalsIgnoreCase(caseRequest.getCases().getStatus())) {
@@ -621,7 +622,7 @@ public class CaseService {
 
             log.info("Updating the case in redis cache after filtering the documents, advocates, litigants, poa holders and advocate offices : {}", caseRequest.getCases().getId());
 
-            cacheService.save(caseRequest.getCases().getTenantId() + ":" + caseRequest.getCases().getId(), caseRequest.getCases());
+//cacheService.save(caseRequest.getCases().getTenantId() + ":" + caseRequest.getCases().getId(), caseRequest.getCases());
 
             CourtCase cases = encryptionDecryptionUtil.decryptObject(caseRequest.getCases(), null, CourtCase.class, caseRequest.getRequestInfo());
             cases.setAccessCode(null);
