@@ -962,7 +962,6 @@ public class CaseServiceTest {
         courtCase.setStatus(updatedStatus);
         when(validator.validateUpdateRequest(any(CaseRequest.class),any())).thenReturn(true);
         doNothing().when(enrichmentUtil).enrichCaseApplicationUponUpdate(any(CaseRequest.class),any());
-        doNothing().when(workflowService).updateWorkflowStatus(any(CaseRequest.class));
         when(encryptionDecryptionUtil.encryptObject(any(),any(),any())).thenReturn(courtCase);
 
         doNothing().when(producer).push(anyString(), any(CaseRequest.class));
