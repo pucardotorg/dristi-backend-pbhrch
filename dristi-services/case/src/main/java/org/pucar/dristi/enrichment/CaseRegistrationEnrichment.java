@@ -67,6 +67,18 @@ public class CaseRegistrationEnrichment {
             document.setId(String.valueOf(UUID.randomUUID()));
             document.setDocumentUid(document.getId());
         }
+
+        Map<String, Object> additionalDetails = new LinkedHashMap<>();
+        if (document.getAdditionalDetails() instanceof Map<?, ?> existingAdditionalDetails) {
+            existingAdditionalDetails.forEach((key, value) -> additionalDetails.put(String.valueOf(key), value));
+        }
+        if (document.getFileName() != null) {
+            additionalDetails.put("fileName", document.getFileName());
+        }
+        if (document.getDocumentName() != null) {
+            additionalDetails.put("documentName", document.getDocumentName());
+        }
+        document.setAdditionalDetails(additionalDetails.isEmpty() ? null : additionalDetails);
     }
 
     public static void enrichRepresentativesOnCreateAndUpdate(CourtCase courtCase, AuditDetails auditDetails) {
