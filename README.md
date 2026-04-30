@@ -1,4 +1,14 @@
 # e-courts
+
+> **Migrating a service into the modular monolith?** Start at
+> **[scripts/migration/RUNBOOK.md](scripts/migration/RUNBOOK.md)**.
+> Service-to-module mapping is in
+> [SERVICE_REGISTRY.md](scripts/migration/SERVICE_REGISTRY.md);
+> rationale + 23 hard-won pipeline lessons in
+> [SKILLS.md](scripts/migration/SKILLS.md);
+> local boot smoke-test in
+> [scripts/local-test/README.md](scripts/local-test/README.md).
+
 PUCAR is a public mission by a collaborative of changemakers to transform the dispute resolution experience for citizens in India. PUCAR sees opportunity to go beyond digitising paper-based processes, and transform end-to-end processes for a digital environment in a phased manner. Digital courts can radically improve access, efficiency and predictability of the system for its users. 
 
 This repository houses the digital platform that will act as the chassis for Digital Courts of the future. This is being built with open source software as a Digital Public Good on top of the DIGIT platform. 

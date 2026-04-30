@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
  * (e.g. CTC's batch wrapper, hearing's outbox) keep their own
  * service-local helpers that autowire this Producer.
  */
-@Service
+@Service("commonProducer")
 public class Producer {
 
     private final KafkaProducerService kafkaProducerService;

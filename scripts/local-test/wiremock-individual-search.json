@@ -1,0 +1,28 @@
+{
+  "request": {
+    "method": "POST",
+    "urlPathPattern": "/individual/v1/_search.*"
+  },
+  "response": {
+    "status": 200,
+    "headers": { "Content-Type": "application/json" },
+    "jsonBody": {
+      "ResponseInfo": {
+        "apiId": "Mihy",
+        "ver": ".01",
+        "ts": 1714211400000,
+        "resMsgId": "uief87324",
+        "msgId": "20170310130900",
+        "status": "successful"
+      },
+      "Individual": [
+        {
+          "individualId": "IND-LOCAL-1234",
+          "userUuid": "00000000-0000-0000-0000-000000000001",
+          "userId": 1,
+          "tenantId": "kl"
+        }
+      ]
+    }
+  }
+}

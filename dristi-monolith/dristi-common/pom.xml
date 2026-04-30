@@ -83,6 +83,23 @@
             <artifactId>mdms-client</artifactId>
             <version>2.9.0-SNAPSHOT</version>
         </dependency>
+
+        <!-- DIGIT individual platform models (Address, Name, Gender, Identifier,
+             Skill, AdditionalFields, UserDetails, BloodGroup) used by
+             dristi-common.models.individual.Individual. -->
+        <dependency>
+            <groupId>org.egov.common</groupId>
+            <artifactId>health-services-models</artifactId>
+            <version>1.0.9-SNAPSHOT</version>
+        </dependency>
+
+        <!-- Spring Modulith: only @NamedInterface package-info markers; the
+             actual modulith verifier lives in dristi-app (test scope). -->
+        <dependency>
+            <groupId>org.springframework.modulith</groupId>
+            <artifactId>spring-modulith-api</artifactId>
+            <version>1.1.6</version>
+        </dependency>
     </dependencies>
 
     <build>

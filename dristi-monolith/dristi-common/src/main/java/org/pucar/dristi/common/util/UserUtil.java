@@ -38,7 +38,7 @@ import static org.pucar.dristi.common.config.CommonConstants.OBJECTMAPPER_UNABLE
 import static org.pucar.dristi.common.config.CommonConstants.PWD_EXPIRY_DATE;
 import static org.pucar.dristi.common.config.CommonConstants.USER;
 
-@Component
+@Component("commonUserUtil")
 public class UserUtil {
 
     @Autowired

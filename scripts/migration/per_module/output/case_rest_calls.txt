@@ -1,0 +1,7 @@
+dristi-monolith/domain-case-lifecycle/src/main/java/org/pucar/dristi/caselifecycle/cases/internal/util/EtreasuryUtil.java  uses ['EtreasuryHost']
+dristi-monolith/domain-case-lifecycle/src/main/java/org/pucar/dristi/caselifecycle/cases/internal/util/AdvocateUtil.java  uses ['AdvocateClerkPath', 'AdvocateHost', 'AdvocatePath']
+dristi-monolith/domain-case-lifecycle/src/main/java/org/pucar/dristi/caselifecycle/cases/internal/util/HearingUtil.java  uses ['HearingHost', 'HearingPath', 'HearingSearchPath']
+dristi-monolith/domain-case-lifecycle/src/main/java/org/pucar/dristi/caselifecycle/cases/internal/util/AdvocateOfficeUtil.java  uses ['AdvocateOfficeHost']
+dristi-monolith/domain-case-lifecycle/src/main/java/org/pucar/dristi/caselifecycle/cases/internal/util/PaymentCalculaterUtil.java  uses ['PaymentCalculatorHost']
+dristi-monolith/domain-case-lifecycle/src/main/java/org/pucar/dristi/caselifecycle/cases/internal/util/EvidenceUtil.java  uses ['EvidenceServiceCreatePath', 'EvidenceServiceHost', 'EvidenceServiceSearchPath']
+dristi-monolith/domain-case-lifecycle/src/main/java/org/pucar/dristi/caselifecycle/cases/internal/util/TaskUtil.java  uses ['TaskServiceHost']

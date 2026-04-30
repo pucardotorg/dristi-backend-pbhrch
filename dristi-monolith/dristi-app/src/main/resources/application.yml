@@ -1,4 +1,13 @@
-# Auto-generated bootstrap config — extended by Pipeline 5 (Config Consolidation).
+# Base config for dristi-monolith.
+# Per-environment overrides live in application-<profile>.yml — defaults here
+# are intentionally minimal so a missing `spring.profiles.active` is loud.
+#
+# Each migrated service's controllers carry their own URL prefix on the
+# class-level `@RequestMapping` (e.g. `/lock-svc`, `/case`). Spring Boot
+# only supports ONE `server.servlet.context-path` per app, so a multi-
+# service monolith uses per-controller prefixes instead. The per-module
+# migration pipeline applies these automatically by reading the source
+# service's `server.contextPath` and prefixing every `@RestController`.
 server:
   port: 8080
 
@@ -7,9 +16,62 @@ spring:
     name: dristi-monolith
   main:
     allow-bean-definition-overriding: true
+  profiles:
+    # Order matters — later profiles override earlier ones for conflicting
+    # keys. `shared` carries values every consolidated service agrees on;
+    # per-subdomain profiles (cases / locksvc / ...) overlay subdomain
+    # config; `local` overrides DB/host/etc. for local dev.
+    active: shared,cases,locksvc,local
+
+  jpa:
+    show-sql: true
+    open-in-view: false
+    hibernate:
+      ddl-auto: none
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: false
+        order_inserts: true
+
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    out-of-order: true
+    # Each subdomain owns its DDL under domain-<module>/src/main/resources/<subdomain>/db/migration/main/.
+    # Phase 9 of the per-module migration pipeline appends a new entry here
+    # for each migrated subdomain — DO NOT remove existing entries by hand
+    # without also pruning the corresponding submodule SQL tree.
+    locations:
+      - classpath:/cases/db/migration/main
+      - classpath:/locksvc/db/migration/main
+    table: public-monolith
+
+  kafka:
+    consumer:
+      group-id: dristi-monolith
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.egov.tracer.kafka.deserializer.HashMapDeserializer
+      properties:
+        spring.json.use.type.headers: false
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    listener:
+      missing-topics-fatal: false
 
 management:
   endpoints:
     web:
+      base-path: /actuator
       exposure:
         include: health,info
+
+app:
+  timezone: Asia/Kolkata
+
+logging:
+  level:
+    root: INFO

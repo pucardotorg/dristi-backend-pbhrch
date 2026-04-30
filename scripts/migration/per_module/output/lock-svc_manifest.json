@@ -1,0 +1,23 @@
+{
+  "service": "lock-svc",
+  "source_dir": "dristi-services/lock-svc",
+  "target_module": "case-lifecycle",
+  "target_subdomain": "locksvc",
+  "current_package": "pucar",
+  "target_package": "org.pucar.dristi.caselifecycle.locksvc",
+  "main_file_count": 20,
+  "test_file_count": 7,
+  "has_spring_boot_main": true,
+  "duplicated_protected_classes": [
+    "MdmsUtil",
+    "IndividualUtil",
+    "ResponseInfoFactory",
+    "ServiceRequestRepository",
+    "AuditDetails"
+  ],
+  "rest_call_files": [
+    "dristi-services/lock-svc/src/main/java/pucar/repository/ServiceRequestRepository.java",
+    "dristi-services/lock-svc/src/main/java/pucar/util/IndividualUtil.java"
+  ],
+  "source_context_path": "/lock-svc"
+}

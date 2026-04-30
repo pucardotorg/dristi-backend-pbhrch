@@ -1,0 +1,79 @@
+# Local-dev profile for dristi-monolith.
+# Pairs with: docker-run Postgres on :5432 + WireMock on :8081 (egov-individual stub).
+# See scripts/local-test/README.md for the boot recipe.
+
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/pucar
+    username: postgres
+    password: admin
+
+  flyway:
+    url: jdbc:postgresql://localhost:5432/pucar
+    user: postgres
+    password: admin
+
+  kafka:
+    bootstrap-servers: localhost:9092
+
+# eGov / DIGIT platform host configs.
+# Lock-svc only actually calls egov.individual.* — the rest just need to bind
+# (CommonConfiguration uses @Value on these). Pointed at WireMock locally so
+# any accidental call fast-fails with a 404 instead of hanging.
+egov:
+  individual:
+    host: http://localhost:8081/
+    search:
+      path: individual/v1/_search
+
+  user:
+    host: http://localhost:8081
+    context:
+      path: /user/users
+    create:
+      path: /_createnovalidate
+    search:
+      path: /user/_search
+    update:
+      path: /_updatenovalidate
+
+  mdms:
+    host: http://localhost:8081
+    search:
+      endpoint: /egov-mdms-service/v1/_search
+
+  idgen:
+    host: http://localhost:8081
+    path: /egov-idgen/id/_generate
+
+  filestore:
+    host: http://localhost:8081
+    path: /filestore/v1/files
+  file:
+    store:
+      delete:
+        endpoint: /filestore/v1/files
+
+  workflow:
+    host: http://localhost:8081
+    transition:
+      path: /egov-workflow-v2/egov-wf/process/_transition
+    businessservice:
+      search:
+        path: /egov-workflow-v2/egov-wf/businessservice/_search
+
+  url:
+    shortner:
+      host: http://localhost:8081
+      endpoint: /egov-url-shortener/shortener
+
+# Lock-svc specific
+pucar:
+  lock:
+    duration: 1200000
+
+logging:
+  level:
+    org.pucar.dristi: DEBUG
+    org.springframework.web: INFO

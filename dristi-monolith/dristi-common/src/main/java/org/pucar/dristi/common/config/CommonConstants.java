@@ -18,6 +18,11 @@ public final class CommonConstants {
     public static final String SEARCHER_SERVICE_EXCEPTION = "Exception while fetching from searcher: ";
     public static final String PARSING_ERROR = "PARSING ERROR";
 
+    // ResponseInfo factory constants
+    public static final String RES_MSG_ID = "uief87324";
+    public static final String SUCCESSFUL = "successful";
+    public static final String FAILED = "failed";
+
     // IdGen
     public static final String IDGEN_ERROR = "IDGEN ERROR";
     public static final String NO_IDS_FOUND_ERROR = "No ids returned from idgen Service";
@@ -36,6 +41,7 @@ public final class CommonConstants {
 
     // Individual
     public static final String INDIVIDUAL_UTILITY_EXCEPTION = "INDIVIDUAL_UTILITY_EXCEPTION";
+    public static final String INDIVIDUAL_SERVICE_EXCEPTION = "INDIVIDUAL_SERVICE_EXCEPTION";
 
     // Workflow
     public static final String BUSINESS_SERVICE_NOT_FOUND = "BUSINESSSERVICE_NOT_FOUND";
