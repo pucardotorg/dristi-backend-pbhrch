@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Per-module migration pipeline (8 phases).
+Per-module migration pipeline (9 phases).
 
 Migrates one DRISTI service from `dristi-services/<svc>` (or
 `integration-services/<svc>`) into the corresponding
@@ -17,9 +17,12 @@ Phases:
                               usage for manual conversion later
   6 Test migration          — copy src/test/java -> target/test with package rewrite
   7 Validate                — gate checks: no banned packages, no protected class
-                              duplicates, no service application.yml, mvn -pl validate
+                              duplicates, no service application.yml, mvn -pl validate,
+                              SQL parity, no Flyway version collisions
   8 Wire module deps        — add dristi-common dep to the target domain module pom.xml
                               if not already present
+  9 DB migrations           — copy src/main/resources/db/migration/**/*.sql -> target
+                              submodule's resources, preserving sub-folder structure
 
 Phase 8 (commit + PR) is left to the caller — running this script does not
 auto-commit so the diff can be reviewed first.
@@ -29,7 +32,7 @@ Usage:
       --service lock-svc \\
       --module case-lifecycle \\
       --subdomain locksvc \\
-      [--phase 1,2,3,4,5,6,7,8]
+      [--phase 1,2,3,4,5,6,7,8,9]
 """
 
 from __future__ import annotations
@@ -780,6 +783,148 @@ def phase_6_test_migration(manifest: dict) -> int:
     return copied
 
 
+_FLYWAY_VERSION_RE = re.compile(r"^V([0-9][0-9_.]*)__")
+
+
+def _flyway_version(filename: str) -> str | None:
+    """Extract the Flyway version prefix from a SQL filename. Returns None
+    for repeatable (`R__`) or undecorated migrations."""
+    m = _FLYWAY_VERSION_RE.match(filename)
+    return m.group(1) if m else None
+
+
+def phase_9_db_migrations(manifest: dict) -> int:
+    """Copy DB migration files from the source service into the target
+    subdomain's resources tree, then register that subdomain's location
+    with the unified Flyway config in dristi-app/application.yml.
+
+    Layout: each subdomain owns its DDL under
+        domain-<module>/src/main/resources/<subdomain>/db/migration/<sub>/
+    mirroring the Java tree where each subdomain is a top-level slice
+    under the domain. Spring's classpath resolver scans every JAR on the
+    classpath, so the dristi-app Flyway config just lists one location
+    per subdomain (`classpath:/<subdomain>/db/migration/main`) and the
+    unified history table sees the union.
+
+    Sub-folder structure under `db/migration/` is preserved (e.g.
+    `main/`, `dml/`). Only the `main/` location is auto-registered with
+    Flyway — extra sub-folders need manual `locations:` entries.
+
+    Idempotent: re-runs overwrite. SQL files whose first line contains
+    the `HAND-CURATED` marker are preserved.
+    """
+    src_root = (
+        REPO_ROOT
+        / manifest["source_dir"]
+        / "src"
+        / "main"
+        / "resources"
+        / "db"
+        / "migration"
+    )
+    if not src_root.exists():
+        print("Phase 9 (db migrations): no db/migration tree, skipping")
+        return 0
+    sql_files = sorted(p for p in src_root.rglob("*.sql") if p.is_file())
+    if not sql_files:
+        print("Phase 9 (db migrations): no SQL files, skipping")
+        return 0
+
+    subdomain = manifest["target_subdomain"]
+    target_root = (
+        MONOLITH_ROOT
+        / f"domain-{manifest['target_module']}"
+        / "src"
+        / "main"
+        / "resources"
+        / subdomain
+        / "db"
+        / "migration"
+    )
+    target_root.mkdir(parents=True, exist_ok=True)
+
+    copied = 0
+    skipped_curated = 0
+    for sql in sql_files:
+        rel = sql.relative_to(src_root)
+        dest = target_root / rel
+        if dest.exists():
+            head = ""
+            try:
+                lines = dest.read_text(encoding="utf-8", errors="ignore").splitlines()
+                head = lines[0] if lines else ""
+            except OSError:
+                pass
+            if "HAND-CURATED" in head:
+                skipped_curated += 1
+                continue
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        dest.write_bytes(sql.read_bytes())
+        copied += 1
+
+    registered = _ensure_flyway_location(subdomain)
+    print(
+        f"Phase 9 (db migrations): copied {copied} SQL file(s) into "
+        f"{target_root.relative_to(REPO_ROOT)}"
+        + (f"; preserved {skipped_curated} hand-curated" if skipped_curated else "")
+        + ("; registered Flyway location in dristi-app/application.yml" if registered else "")
+    )
+    return copied
+
+
+_FLYWAY_LIST_RE = re.compile(
+    r"(?P<head>\n(?P<indent>[ \t]+)locations:\n)"
+    r"(?P<body>(?:(?P=indent)  -[ \t]+\S[^\n]*\n)+)",
+)
+
+
+def _ensure_flyway_location(subdomain: str) -> bool:
+    """Idempotently append a `classpath:/<subdomain>/db/migration/main`
+    entry to `spring.flyway.locations` in dristi-app/application.yml.
+    Returns True if the file was modified."""
+    yml = MONOLITH_ROOT / "dristi-app" / "src" / "main" / "resources" / "application.yml"
+    if not yml.exists():
+        print(f"  WARN: {yml.relative_to(REPO_ROOT)} not found; cannot register Flyway location")
+        return False
+    text = yml.read_text(encoding="utf-8")
+    location = f"classpath:/{subdomain}/db/migration/main"
+    # Already present?
+    if re.search(rf"^[ \t]+-[ \t]+{re.escape(location)}\s*$", text, re.MULTILINE):
+        return False
+
+    m = _FLYWAY_LIST_RE.search(text)
+    if m:
+        new_text = (
+            text[: m.end()]
+            + f"{m.group('indent')}  - {location}\n"
+            + text[m.end() :]
+        )
+        yml.write_text(new_text, encoding="utf-8")
+        return True
+
+    # Scalar form fallback: `    locations: classpath:/foo`
+    scalar_re = re.compile(r"^([ \t]+)locations:[ \t]+([^\n#][^\n]*)$", re.MULTILINE)
+    sm = scalar_re.search(text)
+    if sm:
+        indent = sm.group(1)
+        existing = [s.strip() for s in sm.group(2).split(",") if s.strip()]
+        if location in existing:
+            return False
+        all_locs = existing + [location]
+        replacement = f"{indent}locations:\n" + "\n".join(
+            f"{indent}  - {loc}" for loc in all_locs
+        )
+        new_text = scalar_re.sub(replacement, text, count=1)
+        yml.write_text(new_text, encoding="utf-8")
+        return True
+
+    print(
+        f"  WARN: could not auto-update Flyway locations in "
+        f"{yml.relative_to(REPO_ROOT)}; please add `{location}` manually"
+    )
+    return False
+
+
 def phase_7_validate(manifest: dict, target_dir: Path) -> tuple[int, list[str]]:
     fails: list[str] = []
 
@@ -854,6 +999,86 @@ def phase_7_validate(manifest: dict, target_dir: Path) -> tuple[int, list[str]]:
         fails.append("  stderr tail: " + (result.stderr.splitlines() or [""])[-1])
     else:
         print("PASS Gate 5: dristi-common compiles")
+
+    # Gate 6: SQL parity. If the source service had Flyway migrations,
+    # the target subdomain must have at least one too — otherwise Phase 9
+    # was skipped or silently failed and the schema will never be created
+    # at boot. Also requires the corresponding Flyway location to be
+    # registered in dristi-app/application.yml.
+    src_db = (
+        REPO_ROOT / manifest["source_dir"] / "src" / "main" / "resources" / "db" / "migration"
+    )
+    src_sql = list(src_db.rglob("*.sql")) if src_db.exists() else []
+    subdomain = manifest["target_subdomain"]
+    target_db = (
+        MONOLITH_ROOT
+        / f"domain-{manifest['target_module']}"
+        / "src"
+        / "main"
+        / "resources"
+        / subdomain
+        / "db"
+        / "migration"
+    )
+    target_sql = list(target_db.rglob("*.sql")) if target_db.exists() else []
+    expected_location = f"classpath:/{subdomain}/db/migration/main"
+    app_yml = MONOLITH_ROOT / "dristi-app" / "src" / "main" / "resources" / "application.yml"
+    location_registered = (
+        app_yml.exists() and expected_location in app_yml.read_text(encoding="utf-8")
+    )
+    if src_sql and not target_sql:
+        fails.append(
+            f"Gate 6 (db migrations): source has {len(src_sql)} SQL file(s) "
+            f"but {target_db.relative_to(REPO_ROOT)} has none. Re-run with --phase 9."
+        )
+    elif src_sql and not location_registered:
+        fails.append(
+            f"Gate 6 (db migrations): SQL present at {target_db.relative_to(REPO_ROOT)} "
+            f"but `{expected_location}` is not in spring.flyway.locations of "
+            f"{app_yml.relative_to(REPO_ROOT)}. Re-run with --phase 9 or add it manually."
+        )
+    elif not src_sql:
+        print("PASS Gate 6: source has no SQL migrations (nothing to copy)")
+    else:
+        print(
+            f"PASS Gate 6: {len(target_sql)} SQL file(s) under "
+            f"{target_db.relative_to(REPO_ROOT)}; Flyway location registered"
+        )
+
+    # Gate 7: no Flyway version collisions across the whole monolith.
+    # Flyway uses one history table (`public-monolith`); two SQL files
+    # whose names share a V<version>__ prefix break boot with
+    # "Found more than one migration with version X". Scope = every
+    # `domain-*/src/main/resources/<subdomain>/db/migration/` tree.
+    versions: dict[str, list[Path]] = defaultdict(list)
+    for domain_dir in MONOLITH_ROOT.glob("domain-*"):
+        for mig_root in (domain_dir / "src" / "main" / "resources").glob("*/db/migration"):
+            if not mig_root.is_dir():
+                continue
+            for sql in mig_root.rglob("*.sql"):
+                v = _flyway_version(sql.name)
+                if v:
+                    versions[v].append(sql)
+    dup_versions = {v: paths for v, paths in versions.items() if len(paths) > 1}
+    if dup_versions:
+        fails.append(
+            f"Gate 7 (flyway version uniqueness): {len(dup_versions)} colliding version(s)"
+        )
+        for v, paths in sorted(dup_versions.items()):
+            fails.append(f"  V{v} appears in:")
+            for p in paths:
+                fails.append(f"    - {p.relative_to(REPO_ROOT)}")
+        fails.append(
+            "  Fix: rename one file with an `_<n>` suffix on the version, e.g. "
+            "`V20240424110535_2__order__ddl.sql`. Flyway parses underscores as "
+            "decimal separators, so the renamed migration sorts after the original "
+            "and the unified history table sees both as distinct versions."
+        )
+    else:
+        print(
+            f"PASS Gate 7: {sum(len(v) for v in versions.values())} migration(s) "
+            f"across {len(versions)} version(s); no collisions"
+        )
 
     if fails:
         print()
@@ -1011,7 +1236,7 @@ def main() -> int:
     parser.add_argument("--service", required=True)
     parser.add_argument("--module", required=True, help="case-lifecycle | identity-access | integration | payments")
     parser.add_argument("--subdomain", required=True)
-    parser.add_argument("--phase", default="1,2,3,4,5,6,7,8",
+    parser.add_argument("--phase", default="1,2,3,4,5,6,7,8,9",
                         help="comma-separated subset of phases to run")
     args = parser.parse_args()
 
@@ -1044,6 +1269,8 @@ def main() -> int:
         phase_4_deduplicate(manifest, target_dir)
     if 5 in phases:
         phase_5_detect_rest(manifest, target_dir)
+    if 9 in phases:
+        phase_9_db_migrations(manifest)
     if 8 in phases:
         phase_8_wire_module_deps(manifest)
     if 7 in phases:

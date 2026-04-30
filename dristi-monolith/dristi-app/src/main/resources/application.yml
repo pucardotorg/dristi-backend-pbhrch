@@ -40,7 +40,13 @@ spring:
     enabled: true
     baseline-on-migrate: true
     out-of-order: true
-    locations: classpath:/db/migration/main
+    # Each subdomain owns its DDL under domain-<module>/src/main/resources/<subdomain>/db/migration/main/.
+    # Phase 9 of the per-module migration pipeline appends a new entry here
+    # for each migrated subdomain — DO NOT remove existing entries by hand
+    # without also pruning the corresponding submodule SQL tree.
+    locations:
+      - classpath:/cases/db/migration/main
+      - classpath:/locksvc/db/migration/main
     table: public-monolith
 
   kafka:

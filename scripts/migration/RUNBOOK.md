@@ -60,10 +60,10 @@ directory name from `dristi-services/` or `integration-services/`).
 
 ## 3. Run the pipeline
 
-Single command per service — the pipeline runs all 8 phases (analyze →
+Single command per service — the pipeline runs all 9 phases (analyze →
 scaffold → auto-rename → tests → deduplicate → REST detection → deps →
-validate). Look up the `(module, subdomain)` for your service in
-`SERVICE_REGISTRY.md`.
+db migrations → validate). Look up the `(module, subdomain)` for your
+service in `SERVICE_REGISTRY.md`.
 
 ```bash
 python3 scripts/migration/per_module/run_module_migration.py \
@@ -94,15 +94,18 @@ Phase 3 (auto-rename): copied 195 files; prefixed 1 controller(s) with /hearing
 Phase 6 (test migration): copied 25 test files
 Phase 4 (deduplicate): deleted=N protected-class copies, rewrote=N imports, ...
 Phase 5 (REST detection): N intra-DRISTI candidate(s); see ..._rest_calls.txt
+Phase 9 (db migrations): copied N SQL file(s) into dristi-monolith/domain-.../<subdomain>/db/migration; registered Flyway location in dristi-app/application.yml
 Phase 8: lifted N deps into dristi-monolith/domain-...pom.xml
 PASS Gate 1: no banned-package imports
 PASS Gate 2: no unresolved protected-class duplicates
 PASS Gate 3: no module-level application.yml
 PASS Gate 4: all target files in expected package
 PASS Gate 5: dristi-common compiles
+PASS Gate 6: N SQL file(s) under dristi-monolith/domain-.../<subdomain>/db/migration; Flyway location registered
+PASS Gate 7: N migration(s) across M version(s); no collisions
 ```
 
-All five gates must `PASS`. If any **FAIL**, see [Troubleshooting](#7-troubleshooting).
+All seven gates must `PASS`. If any **FAIL**, see [Troubleshooting](#7-troubleshooting).
 
 ---
 
@@ -227,6 +230,8 @@ the endpoints.
 | `Could not resolve placeholder '${a.b.c}'` | A property key isn't in any `application-*.yml`. | Either include it in `application-<subdomain>.yml` (re-run Pipeline 5 after editing the source `.properties`) or add a default in the `@Value` (`${a.b.c:#{null}}`). |
 | Gate 1 fails on `digit.models.coremodels` | False positive — that's an external library, not a banned local prefix. | The pipeline already excludes that pattern. If you see it, your branch is behind — `git pull origin monolith/main`. |
 | Gate 2 fails (unresolved dups) | Phase 4 left dups and didn't list them as follow-ups. | Investigate the file — the canonical may have changed signature. Add to follow-ups manually if legitimate. |
+| Gate 6 fails (db migrations) | Phase 9 was skipped via `--phase`, the source had no Flyway tree, or `dristi-app/application.yml` is missing the `classpath:/<subdomain>/db/migration/main` entry. | Re-run with `--phase 9` if the source actually has SQL. The phase auto-registers the Flyway location; if it warned that it couldn't, add it manually under `spring.flyway.locations:` in `dristi-app/application.yml`. |
+| Gate 7 fails (flyway version uniqueness) | Two services chose the same `V<timestamp>` prefix (case/order/task all use `V20240424110535`). | Rename one file with an `_<n>` suffix on the version, e.g. `V20240424110535_2__order__ddl.sql`. Flyway parses underscores as decimal separators, so the renamed migration sorts after the original and the unified history table sees both as distinct versions. |
 
 For deeper detail on **why** the pipeline does what it does, see
 [SKILLS.md](SKILLS.md) — every skill notes the original failure that
@@ -279,6 +284,12 @@ EOF
 - **Don't edit auto-generated files** (`dristi-monolith/pom.xml`,
   `application-shared.yml`, `application-<subdomain>.yml`). They're
   regenerated on every pipeline run; manual edits get clobbered.
+- **Don't remove `spring.flyway.locations` entries by hand** in
+  `dristi-app/application.yml` — Phase 9 appends one
+  `classpath:/<subdomain>/db/migration/main` entry per migrated
+  subdomain. Removing one without also pruning that subdomain's SQL
+  tree under `domain-<module>/src/main/resources/<subdomain>/` will
+  break boot when Flyway can't reconcile its history table.
 - **Don't add files marked `// HAND-CURATED`** to the auto-generated
   list. The marker exists so re-runs preserve your edits.
 - **Don't commit `target/` directories** (already in `.gitignore`).
