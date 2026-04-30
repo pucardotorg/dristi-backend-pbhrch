@@ -5,12 +5,12 @@
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/locksvc
+    url: jdbc:postgresql://localhost:5432/pucar
     username: postgres
     password: admin
 
   flyway:
-    url: jdbc:postgresql://localhost:5432/locksvc
+    url: jdbc:postgresql://localhost:5432/pucar
     user: postgres
     password: admin
 

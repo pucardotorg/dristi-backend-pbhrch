@@ -1,7 +1,11 @@
-# Local-test recipe — dristi-monolith with lock-svc only
+# Local-test recipe — dristi-monolith
 
-End-to-end steps to run the monolith locally with just the migrated lock-svc
-and exercise its three endpoints (`/v1/_set`, `/v1/_get`, `/v1/_release`).
+End-to-end steps to run the monolith locally and exercise the migrated
+subdomains. Currently covers `lock-svc` (`/lock-svc/v1/_set`, `/v1/_get`,
+`/v1/_release`) and `case` (`/case/v1/_search` and the rest of the
+`/case` controller). One Postgres DB named `pucar` hosts every
+subdomain's schema; per-subdomain Flyway migrations run on boot under
+the unified `public-monolith` history table.
 
 Estimated time on a fresh machine: ~10 minutes (Docker pulls dominate).
 
@@ -17,7 +21,7 @@ Estimated time on a fresh machine: ~10 minutes (Docker pulls dominate).
 docker run -d --name dristi-pg \
   -e POSTGRES_USER=postgres \
   -e POSTGRES_PASSWORD=admin \
-  -e POSTGRES_DB=locksvc \
+  -e POSTGRES_DB=pucar \
   -p 5432:5432 \
   postgres:14
 
@@ -57,7 +61,15 @@ Started DristiApplication in N.NNN seconds
 ```
 
 If it fails on first run with "Schema doesn't exist", make sure Postgres is
-up and the `locksvc` DB exists (Step 1 created it).
+up and the `pucar` DB exists (Step 1 created it).
+
+Verify Flyway ran every subdomain's migrations:
+
+```bash
+docker exec dristi-pg psql -U postgres -d pucar -c '\dt' | grep -E 'lock|dristi_cases'
+# expect: rows for `lock` (from locksvc) and `dristi_cases` (from cases),
+# plus the unified `public-monolith` history table.
+```
 
 ## 4. Smoke test the lock endpoints
 
@@ -84,8 +96,17 @@ curl -s -X POST "http://localhost:8080/lock-svc/v1/_release?uniqueId=case-LOCAL-
   -d @scripts/local-test/sample-get-lock-request.json | jq
 
 # case endpoints — same pattern, class-level @RequestMapping("/case").
-# (Sample bodies for case endpoints not yet shipped; capture from QA postman
-#  collection or the original case service.)
+# Liveness check: hit search with an empty body. Expect a 4xx
+# (validation rejection from the controller) — that proves the route is
+# mapped and the schema is queryable. A 404 means the controller didn't
+# wire; a 5xx with "relation does not exist" means Flyway never ran.
+curl -sw '\nstatus=%{http_code}\n' -X POST http://localhost:8080/case/v1/_search \
+  -H 'Content-Type: application/json' -d '{}'
+# expect: status=400 (or similar 4xx), JSON body with a validation message.
+
+# Full sample bodies for case endpoints aren't shipped here yet — capture
+# from the QA postman collection or the original case service when you
+# need to exercise the happy path.
 ```
 
 Expected: `_set` returns the lock with `isLocked: true`; `_get` returns
