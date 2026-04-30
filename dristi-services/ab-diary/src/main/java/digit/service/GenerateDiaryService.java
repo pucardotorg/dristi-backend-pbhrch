@@ -80,7 +80,7 @@ public class GenerateDiaryService {
         return rooms.stream().map(CourtRoom::getCode).toList();
     }
 
-    private Long generateDiaryDate() {
+    private java.time.OffsetDateTime generateDiaryDate() {
         // Get current date using configured zone
         ZoneId configuredZoneId = configuration.getZoneId();
         LocalDate today = LocalDate.now(configuredZoneId);
@@ -88,11 +88,8 @@ public class GenerateDiaryService {
         // Get 12:00 AM time for today
         ZonedDateTime midnight = today.atStartOfDay(configuredZoneId);
 
-        // Convert to epoch milliseconds
-        long epochMillis = midnight.toInstant().toEpochMilli();
-
-        log.info("Epoch Time (Milliseconds) :: {} for date :: {} " , epochMillis,today);
-        return epochMillis;
+        log.info("Diary date :: {} " , midnight);
+        return midnight.toOffsetDateTime();
     }
 
     private RequestInfo createInternalRequestInfo() {

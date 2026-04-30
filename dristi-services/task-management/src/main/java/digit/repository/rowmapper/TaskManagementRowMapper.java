@@ -2,10 +2,11 @@ package digit.repository.rowmapper;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import digit.util.DateUtil;
+import digit.web.models.AuditDetails;
 import digit.web.models.TaskManagement;
 import digit.web.models.enums.PartyType;
 import lombok.extern.slf4j.Slf4j;
-import org.egov.common.contract.models.AuditDetails;
 import org.egov.tracer.model.CustomException;
 import org.postgresql.util.PGobject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,17 +16,24 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.OffsetDateTime;
 import java.util.*;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Component
 @Slf4j
 public class TaskManagementRowMapper implements ResultSetExtractor<List<TaskManagement>> {
 
     private final ObjectMapper objectMapper;
+    private final DateUtil dateUtil;
 
     @Autowired
-    public TaskManagementRowMapper(ObjectMapper objectMapper) {
+    public TaskManagementRowMapper(ObjectMapper objectMapper, DateUtil dateUtil) {
         this.objectMapper = objectMapper;
+        this.dateUtil = dateUtil;
     }
 
     @Override
@@ -39,11 +47,16 @@ public class TaskManagementRowMapper implements ResultSetExtractor<List<TaskMana
 
                 if (task == null) {
 
+                    Timestamp createdTimeTs = rs.getTimestamp("created_time");
+                    OffsetDateTime createdTime = createdTimeTs != null ? dateUtil.timestampToOffsetDateTime(createdTimeTs) : null;
+                    Timestamp lastModifiedTimeTs = rs.getTimestamp("last_modified_time");
+                    OffsetDateTime lastModifiedTime = lastModifiedTimeTs != null ? dateUtil.timestampToOffsetDateTime(lastModifiedTimeTs) : null;
+
                     AuditDetails auditDetails = AuditDetails.builder()
                             .createdBy(rs.getString("created_by"))
-                            .createdTime(rs.getLong("created_time"))
+                            .createdTime(createdTime)
                             .lastModifiedBy(rs.getString("last_modified_by"))
-                            .lastModifiedTime(rs.getLong("last_modified_time"))
+                            .lastModifiedTime(lastModifiedTime)
                             .build();
 
                     task = TaskManagement.builder()

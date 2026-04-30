@@ -40,6 +40,9 @@ import org.springframework.util.StringUtils;
 import com.jayway.jsonpath.JsonPath;
 
 import lombok.extern.slf4j.Slf4j;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Component
 @Slf4j
@@ -118,9 +121,9 @@ public class PaymentEnricher {
 
 		AuditDetails auditDetails = AuditDetails.builder()
 				.createdBy(paymentRequest.getRequestInfo().getUserInfo().getId().toString())
-				.createdTime(System.currentTimeMillis())
+				.createdTime(java.time.OffsetDateTime.now())
 				.lastModifiedBy(paymentRequest.getRequestInfo().getUserInfo().getId().toString())
-				.lastModifiedTime(System.currentTimeMillis()).build();
+				.lastModifiedTime(java.time.OffsetDateTime.now()).build();
 
 		// Assigns bill object to each paymentDetail if no bill object is found the
 		// billId from paymentDetail is added in error map

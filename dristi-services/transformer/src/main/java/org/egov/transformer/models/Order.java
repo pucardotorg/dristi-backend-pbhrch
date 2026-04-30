@@ -15,6 +15,7 @@ import org.springframework.validation.annotation.Validated;
 
 import java.text.ParseException;
 import java.time.Instant;
+import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -68,7 +69,7 @@ public class Order {
     private String linkedOrderNumber = null;
 
     @Valid
-    private Long createdDate = null;
+    private OffsetDateTime createdDate = null;
 
     @JsonProperty("issuedBy")
     private IssuedBy issuedBy = null;
@@ -123,7 +124,7 @@ public class Order {
     private String purposeOfNextHearing = null;
 
     @JsonProperty("nextHearingDate")
-    private Long nextHearingDate = null;
+    private OffsetDateTime nextHearingDate = null;
 
     @JsonProperty("orderTitle")
     private String orderTitle = null;

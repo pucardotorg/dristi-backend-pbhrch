@@ -3,7 +3,6 @@ package digit.enrichment;
 import digit.repository.DiaryRepository;
 import digit.util.ADiaryUtil;
 import digit.web.models.*;
-import org.egov.common.contract.models.AuditDetails;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
 import org.egov.tracer.model.CustomException;
@@ -14,11 +13,16 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.Collections;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @ExtendWith(MockitoExtension.class)
 class ADiaryEnrichmentTest {
@@ -28,6 +32,9 @@ class ADiaryEnrichmentTest {
 
     @Mock
     private DiaryRepository diaryRepository;
+
+    @Mock
+    private digit.util.DateTimeUtil dateTimeUtil;
 
     @InjectMocks
     private ADiaryEnrichment aDiaryEnrichment;
@@ -48,6 +55,7 @@ class ADiaryEnrichmentTest {
         caseDiaryRequest = new CaseDiaryRequest();
         caseDiaryRequest.setRequestInfo(requestInfo);
         caseDiaryRequest.setDiary(new CaseDiary());
+        lenient().when(dateTimeUtil.getCurrentOffsetDateTime()).thenReturn(OffsetDateTime.now());
     }
 
     @Test
@@ -56,8 +64,6 @@ class ADiaryEnrichmentTest {
         CaseDiaryDocument caseDiaryDocument = mock(CaseDiaryDocument.class);
         diary.setDocuments(Collections.singletonList(caseDiaryDocument));
         caseDiaryRequest.setDiary(diary);
-
-        when(aDiaryUtil.getCurrentTimeInMilliSec()).thenReturn(12345L);
 
         aDiaryEnrichment.enrichUpdateCaseDiary(caseDiaryRequest);
 
@@ -69,7 +75,6 @@ class ADiaryEnrichmentTest {
         CaseDiaryDocument document = new CaseDiaryDocument();
         caseDiaryRequest.getDiary().setDocuments(Collections.singletonList(document));
 
-        when(aDiaryUtil.getCurrentTimeInMilliSec()).thenReturn(12345L);
         UUID uuid = UUID.randomUUID();
         when(aDiaryUtil.generateUUID()).thenReturn(uuid);
 
@@ -81,8 +86,7 @@ class ADiaryEnrichmentTest {
 
     @Test
     void testEnrichUpdateCaseDiaryThrowsException() {
-        caseDiaryRequest.setDiary(mock(CaseDiary.class));
-        when(aDiaryUtil.getCurrentTimeInMilliSec()).thenThrow(RuntimeException.class);
+        caseDiaryRequest.setRequestInfo(null);
 
         CustomException exception = assertThrows(CustomException.class, () ->
                 aDiaryEnrichment.enrichUpdateCaseDiary(caseDiaryRequest)
@@ -99,7 +103,6 @@ class ADiaryEnrichmentTest {
         UUID uuid = UUID.randomUUID();
 
         when(aDiaryUtil.generateUUID()).thenReturn(uuid);
-        when(aDiaryUtil.getCurrentTimeInMilliSec()).thenReturn(12345L);
 
         aDiaryEnrichment.enrichDiaryDocument(caseDiaryRequest);
 
@@ -113,7 +116,7 @@ class ADiaryEnrichmentTest {
     void testEnrichGenerateRequestForDiaryWithExistingDiary() {
         CaseDiary diary = new CaseDiary();
         diary.setCourtId("court-1");
-        diary.setDiaryDate(1L);
+        diary.setDiaryDate(OffsetDateTime.now(ZoneOffset.UTC).minusDays(1));
         diary.setDiaryType("A");
         diary.setTenantId("tenant-1");
         CaseDiaryGenerateRequest generateRequest = new CaseDiaryGenerateRequest();
@@ -127,7 +130,6 @@ class ADiaryEnrichmentTest {
         existingDiary.setDocuments(Collections.singletonList(CaseDiaryDocument.builder().id(uuid).auditDetails(AuditDetails.builder().build()).build()));
 
         when(diaryRepository.getCaseDiariesWithDocuments(any())).thenReturn(Collections.singletonList(existingDiary));
-        when(aDiaryUtil.getCurrentTimeInMilliSec()).thenReturn(12345L);
 
         aDiaryEnrichment.enrichGenerateRequestForDiary(generateRequest);
 
@@ -140,7 +142,7 @@ class ADiaryEnrichmentTest {
         CaseDiary diary = new CaseDiary();
         diary.setCourtId("court-2");
         UUID uuid = UUID.randomUUID();
-        diary.setDiaryDate(1L);
+        diary.setDiaryDate(OffsetDateTime.now(ZoneOffset.UTC).minusDays(1));
         diary.setDiaryType("B");
         diary.setTenantId("tenant-2");
         CaseDiaryGenerateRequest generateRequest = new CaseDiaryGenerateRequest();
@@ -149,7 +151,6 @@ class ADiaryEnrichmentTest {
 
         when(diaryRepository.getCaseDiariesWithDocuments(any())).thenReturn(Collections.emptyList());
         when(aDiaryUtil.generateUUID()).thenReturn(uuid);
-        when(aDiaryUtil.getCurrentTimeInMilliSec()).thenReturn(12345L);
 
         aDiaryEnrichment.enrichGenerateRequestForDiary(generateRequest);
 

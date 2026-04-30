@@ -22,11 +22,15 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
 import jakarta.annotation.PostConstruct;
+import java.time.OffsetDateTime;
 import java.util.*;
 
 import static org.egov.pgr.util.PGRConstants.IMAGE_DOCUMENT_TYPE;
 import static org.egov.pgr.util.PGRConstants.PGR_BUSINESSSERVICE;
 import static org.egov.pgr.util.PGRConstants.PGR_MODULENAME;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @ConditionalOnProperty(
         value="migration.enabled",
@@ -48,6 +52,9 @@ public class MigrationService {
 
     @Autowired
     private PGRConfiguration config;
+
+    @Autowired
+    private org.egov.pgr.util.DateUtil dateUtil;
 
     private Map<String,String> statusToUUIDMap;
 
@@ -374,8 +381,9 @@ public class MigrationService {
         State state = State.builder().uuid(stateUUID).state(oldToNewStatus.get(status)).build();
 
         // LastmodifiedTime and by is same as that for created as every time new entry is created whenever any action is taken
+        OffsetDateTime createdTimeOffset = dateUtil.epochMillisToOffsetDateTime(createdTime);
         AuditDetails auditDetails = AuditDetails.builder().createdBy(createdBy)
-                .createdTime(createdTime).lastModifiedBy(createdBy).lastModifiedTime(createdTime).build();
+                .createdTime(createdTimeOffset).lastModifiedBy(createdBy).lastModifiedTime(createdTimeOffset).build();
 
         // Setting uuid in place of id in auditDetails
         auditDetails.setCreatedBy(idToUuidMap.get(Long.parseLong(auditDetails.getCreatedBy())));

@@ -14,6 +14,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.pucar.dristi.config.Configuration;
 import org.pucar.dristi.util.CaseUtil;
+import org.pucar.dristi.util.DateUtil;
 import org.pucar.dristi.util.IdgenUtil;
 import org.pucar.dristi.web.models.Order;
 import org.pucar.dristi.web.models.OrderRequest;
@@ -25,6 +26,9 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 class OrderRegistrationEnrichmentTest {
 
@@ -40,12 +44,17 @@ class OrderRegistrationEnrichmentTest {
     @Mock
     private CaseUtil caseUtil;
 
+    @Mock
+    private DateUtil dateUtil;
+
     @InjectMocks
     private OrderRegistrationEnrichment orderRegistrationEnrichment;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+        lenient().when(configuration.getZoneId()).thenReturn("UTC");
+        lenient().when(dateUtil.getCurrentOffsetDateTime()).thenReturn(OffsetDateTime.now(ZoneId.of("UTC")));
     }
 
     private OrderRequest createMockOrderRequest() {
@@ -134,7 +143,7 @@ class OrderRegistrationEnrichmentTest {
     void testEnrichOrderRegistrationUponUpdate_Success() {
         // Given
         OrderRequest orderRequest = createMockOrderRequest();
-        orderRequest.getOrder().setAuditDetails(new org.egov.common.contract.models.AuditDetails());
+        orderRequest.getOrder().setAuditDetails(new org.pucar.dristi.web.models.AuditDetails());
 
         // When
         orderRegistrationEnrichment.enrichOrderRegistrationUponUpdate(orderRequest);

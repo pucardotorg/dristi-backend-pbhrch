@@ -25,7 +25,7 @@ public class ApplicationRowMapperTest {
     @BeforeEach
     public void setUp() {
         resultSet = Mockito.mock(ResultSet.class);
-        applicationRowMapper = new ApplicationRowMapper();
+        applicationRowMapper = new ApplicationRowMapper(null);
     }
     @Test
     public void testExtractData() throws SQLException {
@@ -36,9 +36,9 @@ public class ApplicationRowMapperTest {
 
         when(resultSet.next()).thenReturn(true, true, false);
         when(resultSet.getString("id")).thenReturn("123e4567-e89b-12d3-a456-556642440000", "123e4567-e89b-12d3-a456-556642440001");
-        when(resultSet.getLong("lastmodifiedtime")).thenReturn(123456789L, 987654321L);
+        when(resultSet.getTimestamp("lastmodifiedtime")).thenReturn(null);
         when(resultSet.getString("createdby")).thenReturn("John", "Alice");
-        when(resultSet.getLong("createdtime")).thenReturn(123456789L, 987654321L);
+        when(resultSet.getTimestamp("createdtime")).thenReturn(null);
         when(resultSet.getString("lastmodifiedby")).thenReturn("Doe", "Smith");
         when(resultSet.getString("applicationnumber")).thenReturn("APP-001", "APP-002");
         when(resultSet.getString("applicationtype")).thenReturn("1");
@@ -46,7 +46,7 @@ public class ApplicationRowMapperTest {
         when(resultSet.getString("filingnumber")).thenReturn("F-001", "F-002");
         when(resultSet.getString("caseid")).thenReturn("Case-001", "Case-002");
         when(resultSet.getString("referenceid")).thenReturn("123e4567-e89b-12d3-a456-556642440000", "123e4567-e89b-12d3-a456-556642440001");
-        when(resultSet.getString("createddate")).thenReturn("2024-05-27", "2024-05-28");
+        when(resultSet.getTimestamp("createddate")).thenReturn(null);
         when(resultSet.getString("applicationcreatedby")).thenReturn("123e4567-e89b-12d3-a456-556642440002", "123e4567-e89b-12d3-a456-556642440003");
         when(resultSet.getString("tenantid")).thenReturn("tenant1", "tenant2");
         when(resultSet.getBoolean("isactive")).thenReturn(true, false);
@@ -56,7 +56,7 @@ public class ApplicationRowMapperTest {
         when(resultSet.getString("onbehalfof")).thenReturn(onBehalfOfUuidArray);
 
         // Creating ApplicationRowMapper instance
-        ApplicationRowMapper rowMapper = new ApplicationRowMapper();
+        ApplicationRowMapper rowMapper = new ApplicationRowMapper(null);
 
         // Invoking the extractData method
         List<Application> applications = rowMapper.extractData(resultSet);

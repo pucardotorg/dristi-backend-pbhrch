@@ -3,32 +3,41 @@ package org.pucar.dristi.repository.rowmapper;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.egov.common.contract.models.AuditDetails;
+import org.pucar.dristi.web.models.AuditDetails;
 import org.egov.tracer.model.CustomException;
 import org.postgresql.util.PGobject;
 import org.pucar.dristi.web.models.CompositeItem;
 import org.pucar.dristi.web.models.IssuedBy;
 import org.pucar.dristi.web.models.Order;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.pucar.dristi.util.DateUtil;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.OffsetDateTime;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.*;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Component
 @Slf4j
 public class OrderRowMapper implements ResultSetExtractor<List<Order>> {
 
     private final ObjectMapper objectMapper;
+    private final DateUtil dateUtil;
 
     @Autowired
-    public OrderRowMapper(ObjectMapper objectMapper) {
+    public OrderRowMapper(ObjectMapper objectMapper, DateUtil dateUtil) {
         this.objectMapper = objectMapper;
+        this.dateUtil = dateUtil;
     }
 
     public List<Order> extractData(ResultSet rs) {
@@ -40,14 +49,14 @@ public class OrderRowMapper implements ResultSetExtractor<List<Order>> {
                 Order order = orderMap.get(uuid);
 
                 if (order == null) {
-                    Long lastModifiedTime = rs.getLong("lastmodifiedtime");
-                    if (rs.wasNull()) {
-                        lastModifiedTime = null;
-                    }
+                    Timestamp lastModifiedTimeTs = rs.getTimestamp("lastmodifiedtime");
+                    OffsetDateTime lastModifiedTime = lastModifiedTimeTs != null ? dateUtil.timestampToOffsetDateTime(lastModifiedTimeTs) : null;
+                    Timestamp createdTimeTs = rs.getTimestamp("createdtime");
+                    OffsetDateTime createdTime = createdTimeTs != null ? dateUtil.timestampToOffsetDateTime(createdTimeTs) : null;
 
                     AuditDetails auditdetails = AuditDetails.builder()
                             .createdBy(rs.getString("createdby"))
-                            .createdTime(rs.getLong("createdtime"))
+                            .createdTime(createdTime)
                             .lastModifiedBy(rs.getString("lastmodifiedby"))
                             .lastModifiedTime(lastModifiedTime)
                             .build();
@@ -66,7 +75,7 @@ public class OrderRowMapper implements ResultSetExtractor<List<Order>> {
                             .courtId(rs.getString("courtId"))
                             .itemText(rs.getString("itemtext"))
                             .purposeOfNextHearing(rs.getString("purposeofnexthearing"))
-                            .createdDate(rs.getLong("createddate"))
+                            .createdDate(rs.getTimestamp("createddate") != null ? dateUtil.timestampToOffsetDateTime(rs.getTimestamp("createddate")) : null)
                             .comments(rs.getString("comments"))
                             .filingNumber(rs.getString("filingnumber"))
                             .issuedBy(getObjectFromJson(rs.getString("issuedby"), new TypeReference<IssuedBy>() {}))
@@ -76,12 +85,12 @@ public class OrderRowMapper implements ResultSetExtractor<List<Order>> {
                             .auditDetails(auditdetails)
                             .build();
                 }
-                long nextHearingDate = rs.getLong("nexthearingdate");
+                java.sql.Timestamp nextHearingDateTs = rs.getTimestamp("nexthearingdate");
 
-                if (rs.wasNull()) {
+                if (nextHearingDateTs == null) {
                     order.setNextHearingDate(null);
                 } else {
-                    order.setNextHearingDate(nextHearingDate);
+                    order.setNextHearingDate(nextHearingDateTs.toInstant().atOffset(java.time.ZoneOffset.UTC));
                 }
 
                 PGobject pgObject1 = (PGobject) rs.getObject("applicationnumber");

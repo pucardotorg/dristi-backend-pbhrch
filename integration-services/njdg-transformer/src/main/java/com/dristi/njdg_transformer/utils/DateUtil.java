@@ -5,8 +5,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
@@ -68,5 +70,32 @@ public class DateUtil {
             log.error("Error extracting year from timestamp {}: {}", timestamp, e.getMessage(), e);
             return 0;
         }
+    }
+
+    /**
+     * Get current time as OffsetDateTime using MDMS-configured timezone
+     */
+    public OffsetDateTime getCurrentOffsetDateTime() {
+        return OffsetDateTime.now(ZoneId.of(properties.getApplicationZoneId()));
+    }
+
+    /**
+     * Convert OffsetDateTime to Timestamp for JDBC writes
+     */
+    public Timestamp offsetDateTimeToTimestamp(OffsetDateTime offsetDateTime) {
+        if (offsetDateTime == null) {
+            return null;
+        }
+        return Timestamp.from(offsetDateTime.toInstant());
+    }
+
+    /**
+     * Convert Timestamp from JDBC to OffsetDateTime using MDMS-configured timezone
+     */
+    public OffsetDateTime timestampToOffsetDateTime(Timestamp timestamp) {
+        if (timestamp == null) {
+            return null;
+        }
+        return OffsetDateTime.ofInstant(timestamp.toInstant(), ZoneId.of(properties.getApplicationZoneId()));
     }
 }

@@ -11,6 +11,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -34,7 +38,7 @@ public class SurveyTrackerRowMapperTest {
         when(resultSet.getString("tenant_id")).thenReturn("pg");
         when(resultSet.getObject("remind_me_later")).thenReturn(true);
         when(resultSet.getBoolean("remind_me_later")).thenReturn(true);
-        when(resultSet.getLong("last_triggered_date")).thenReturn(1634567890000L);
+        when(resultSet.getTimestamp("last_triggered_date")).thenReturn(new Timestamp(1634567890000L));
         when(resultSet.getInt("attempts")).thenReturn(3);
         when(resultSet.getString("created_by")).thenReturn("creator-uuid");
         when(resultSet.getString("last_modified_by")).thenReturn("modifier-uuid");
@@ -73,7 +77,7 @@ public class SurveyTrackerRowMapperTest {
         when(resultSet.getString("tenant_id")).thenReturn("pg", "pb");
         when(resultSet.getObject("remind_me_later")).thenReturn(true, false);
         when(resultSet.getBoolean("remind_me_later")).thenReturn(true, false);
-        when(resultSet.getLong("last_triggered_date")).thenReturn(1000000L, 2000000L);
+        when(resultSet.getTimestamp("last_triggered_date")).thenReturn(new Timestamp(1000000L), new Timestamp(2000000L));
         when(resultSet.getInt("attempts")).thenReturn(1, 2);
         when(resultSet.getString("created_by")).thenReturn("creator-1", "creator-2");
         when(resultSet.getString("last_modified_by")).thenReturn("modifier-1", "modifier-2");
@@ -114,7 +118,7 @@ public class SurveyTrackerRowMapperTest {
         when(resultSet.getString("user_type")).thenReturn("LITIGANT");
         when(resultSet.getString("tenant_id")).thenReturn("pg");
         when(resultSet.getObject("remind_me_later")).thenReturn(null);
-        when(resultSet.getLong("last_triggered_date")).thenReturn(1634567890000L);
+        when(resultSet.getTimestamp("last_triggered_date")).thenReturn(new Timestamp(1634567890000L));
         when(resultSet.getInt("attempts")).thenReturn(0);
         when(resultSet.getString("created_by")).thenReturn("creator");
         when(resultSet.getString("last_modified_by")).thenReturn("modifier");
@@ -139,7 +143,7 @@ public class SurveyTrackerRowMapperTest {
         when(resultSet.getString("tenant_id")).thenReturn("pg");
         when(resultSet.getObject("remind_me_later")).thenReturn(false);
         when(resultSet.getBoolean("remind_me_later")).thenReturn(false);
-        when(resultSet.getLong("last_triggered_date")).thenReturn(0L); // Zero expiry date
+        when(resultSet.getTimestamp("last_triggered_date")).thenReturn(null);
         when(resultSet.getInt("attempts")).thenReturn(0);
         when(resultSet.getString("created_by")).thenReturn("creator");
         when(resultSet.getString("last_modified_by")).thenReturn("modifier");
@@ -164,7 +168,7 @@ public class SurveyTrackerRowMapperTest {
         when(resultSet.getString("tenant_id")).thenReturn("pg");
         when(resultSet.getObject("remind_me_later")).thenReturn(false);
         when(resultSet.getBoolean("remind_me_later")).thenReturn(false);
-        when(resultSet.getLong("last_triggered_date")).thenReturn(1634567890000L);
+        when(resultSet.getTimestamp("last_triggered_date")).thenReturn(new Timestamp(1634567890000L));
         when(resultSet.getInt("attempts")).thenReturn(0);
         when(resultSet.getString("created_by")).thenReturn("creator");
         when(resultSet.getString("last_modified_by")).thenReturn("modifier");
@@ -177,7 +181,7 @@ public class SurveyTrackerRowMapperTest {
         // Assert
         assertNotNull(result);
         assertEquals(1, result.size());
-        assertEquals(1634567890000L, result.get(0).getLastTriggeredDate());
+        assertEquals(OffsetDateTime.ofInstant(Instant.ofEpochMilli(1634567890000L), ZoneOffset.UTC), result.get(0).getLastTriggeredDate());
     }
 
     @Test
@@ -217,7 +221,7 @@ public class SurveyTrackerRowMapperTest {
         when(resultSet.getString("tenant_id")).thenReturn("pg");
         when(resultSet.getObject("remind_me_later")).thenReturn(false);
         when(resultSet.getBoolean("remind_me_later")).thenReturn(false);
-        when(resultSet.getLong("last_triggered_date")).thenReturn(1634567890000L);
+        when(resultSet.getTimestamp("last_triggered_date")).thenReturn(new Timestamp(1634567890000L));
         when(resultSet.getInt("attempts")).thenReturn(0);
         when(resultSet.getString("created_by")).thenReturn("creator");
         when(resultSet.getString("last_modified_by")).thenReturn("modifier");
@@ -242,7 +246,7 @@ public class SurveyTrackerRowMapperTest {
         when(resultSet.getString("tenant_id")).thenReturn("complete-tenant");
         when(resultSet.getObject("remind_me_later")).thenReturn(true);
         when(resultSet.getBoolean("remind_me_later")).thenReturn(true);
-        when(resultSet.getLong("last_triggered_date")).thenReturn(9999999999999L);
+        when(resultSet.getTimestamp("last_triggered_date")).thenReturn(new Timestamp(9999999999999L));
         when(resultSet.getInt("attempts")).thenReturn(999);
         when(resultSet.getString("created_by")).thenReturn("complete-creator");
         when(resultSet.getString("last_modified_by")).thenReturn("complete-modifier");
@@ -261,7 +265,7 @@ public class SurveyTrackerRowMapperTest {
         assertEquals("ADVOCATE", tracker.getUserType());
         assertEquals("complete-tenant", tracker.getTenantId());
         assertTrue(tracker.getRemindMeLater());
-        assertEquals(9999999999999L, tracker.getLastTriggeredDate());
+        assertEquals(OffsetDateTime.ofInstant(Instant.ofEpochMilli(9999999999999L), ZoneOffset.UTC), tracker.getLastTriggeredDate());
         assertEquals(999, tracker.getAttempts());
         assertEquals("complete-creator", tracker.getAuditDetails().getCreatedBy());
         assertEquals("complete-modifier", tracker.getAuditDetails().getLastModifiedBy());
@@ -278,7 +282,7 @@ public class SurveyTrackerRowMapperTest {
         when(resultSet.getString("tenant_id")).thenReturn("pg");
         when(resultSet.getObject("remind_me_later")).thenReturn(false);
         when(resultSet.getBoolean("remind_me_later")).thenReturn(false);
-        when(resultSet.getLong("last_triggered_date")).thenReturn(1000000L);
+        when(resultSet.getTimestamp("last_triggered_date")).thenReturn(new Timestamp(1000000L));
         when(resultSet.getInt("attempts")).thenReturn(0);
         when(resultSet.getString("created_by")).thenReturn("creator");
         when(resultSet.getString("last_modified_by")).thenReturn("modifier");
@@ -301,7 +305,7 @@ public class SurveyTrackerRowMapperTest {
         when(resultSet.getString("tenant_id")).thenReturn("pg");
         when(resultSet.getObject("remind_me_later")).thenReturn(true);
         when(resultSet.getBoolean("remind_me_later")).thenReturn(true);
-        when(resultSet.getLong("last_triggered_date")).thenReturn(1000000L);
+        when(resultSet.getTimestamp("last_triggered_date")).thenReturn(new Timestamp(1000000L));
         when(resultSet.getInt("attempts")).thenReturn(100);
         when(resultSet.getString("created_by")).thenReturn("creator");
         when(resultSet.getString("last_modified_by")).thenReturn("modifier");

@@ -41,8 +41,8 @@ public class HearingsEnrichment {
             Map<String, List<HearingResponse>> groupedByDate = hearingList.stream()
                     .filter(hearing -> hearing.getStartTime() != null)
                     .collect(Collectors.groupingBy(
-                            hearing -> Instant.ofEpochMilli(hearing.getStartTime())
-                                    .atZone(ZoneId.of(config.getZoneId()))
+                            hearing -> hearing.getStartTime()
+                                    .atZoneSameInstant(ZoneId.of(config.getZoneId()))
                                     .toLocalDate()
                                     .toString(),
                             Collectors.mapping(hearing -> HearingResponse.builder()

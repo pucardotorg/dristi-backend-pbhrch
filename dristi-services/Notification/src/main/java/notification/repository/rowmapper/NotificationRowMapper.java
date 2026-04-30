@@ -4,8 +4,9 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import lombok.extern.slf4j.Slf4j;
+import notification.util.DateUtil;
+import notification.web.models.AuditDetails;
 import notification.web.models.Notification;
-import org.egov.common.contract.models.AuditDetails;
 import notification.web.models.Document;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,17 +17,24 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.OffsetDateTime;
 import java.util.*;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Component
 @Slf4j
 public class NotificationRowMapper implements ResultSetExtractor<List<Notification>> {
 
     private final ObjectMapper mapper;
+    private final DateUtil dateUtil;
 
     @Autowired
-    public NotificationRowMapper(ObjectMapper mapper) {
+    public NotificationRowMapper(ObjectMapper mapper, DateUtil dateUtil) {
         this.mapper = mapper;
+        this.dateUtil = dateUtil;
     }
 
     @Override
@@ -40,11 +48,16 @@ public class NotificationRowMapper implements ResultSetExtractor<List<Notificati
             Notification notification = notificationMap.get(notificationId);
             if (notification == null) {
 
+                Timestamp createdTimeTs = rs.getTimestamp("createdtime");
+                OffsetDateTime createdTime = createdTimeTs != null ? dateUtil.timestampToOffsetDateTime(createdTimeTs) : null;
+                Timestamp lastModifiedTimeTs = rs.getTimestamp("lastmodifiedtime");
+                OffsetDateTime lastModifiedTime = lastModifiedTimeTs != null ? dateUtil.timestampToOffsetDateTime(lastModifiedTimeTs) : null;
+
                 AuditDetails auditdetails = AuditDetails.builder()
                         .createdBy(rs.getString("createdby"))
-                        .createdTime(rs.getLong("createdtime"))
+                        .createdTime(createdTime)
                         .lastModifiedBy(rs.getString("lastmodifiedby"))
-                        .lastModifiedTime(rs.getLong("lastmodifiedtime"))
+                        .lastModifiedTime(lastModifiedTime)
                         .build();
 
                 notification = Notification.builder()
@@ -61,7 +74,7 @@ public class NotificationRowMapper implements ResultSetExtractor<List<Notificati
                         .notificationDetails(rs.getString("notificationdetails"))
                         .additionalDetails(getObjectFromJson(rs.getString("additionaldetails"), new TypeReference<Map<String, Object>>() {}))
                         .issuedBy(rs.getString("issuedby"))
-                        .createdDate(rs.getLong("createddate"))
+                        .createdDate(rs.getTimestamp("createddate") != null ? rs.getTimestamp("createddate").toInstant().atOffset(java.time.ZoneOffset.UTC) : null)
                         .comments(rs.getString("comment"))
                         .status(rs.getString("status"))
                         .documents(new ArrayList<>())

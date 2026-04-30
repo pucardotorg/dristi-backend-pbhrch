@@ -345,5 +345,4 @@ public class Configuration {
 	@Value("${state.level.tenant.id}")
 	private String tenantId;
 
-
 }

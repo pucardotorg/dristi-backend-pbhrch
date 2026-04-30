@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @Validated
@@ -29,22 +30,22 @@ public class EPostTrackerSearchCriteria {
     private List<String> deliveryStatusList;
 
     @JsonProperty("bookingDate")
-    private Long bookingDate;
+    private OffsetDateTime bookingDate;
 
     @JsonProperty("receivedDate")
-    private Long receivedDate;
+    private OffsetDateTime receivedDate;
 
     @JsonProperty("bookingDateStartTime")
-    private Long bookingDateStartTime;
+    private OffsetDateTime bookingDateStartTime;
 
     @JsonProperty("bookingDateEndTime")
-    private Long bookingDateEndTime;
+    private OffsetDateTime bookingDateEndTime;
 
     @JsonProperty("receivedDateStartTime")
-    private Long receivedDateStartTime;
+    private OffsetDateTime receivedDateStartTime;
 
     @JsonProperty("receivedDateEndTime")
-    private Long receivedDateEndTime;
+    private OffsetDateTime receivedDateEndTime;
 
     @JsonProperty("postalHub")
     private String postalHub;

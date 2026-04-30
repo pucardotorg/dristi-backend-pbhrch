@@ -2,11 +2,14 @@ package digit.web.models.payment;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
+import digit.web.models.AuditDetails;
 import lombok.*;
-import org.egov.common.contract.models.AuditDetails;
 
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Setter
 @Getter

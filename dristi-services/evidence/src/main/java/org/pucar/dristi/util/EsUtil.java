@@ -4,12 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.NullNode;
 import com.jayway.jsonpath.JsonPath;
 import lombok.extern.slf4j.Slf4j;
-import org.egov.common.contract.models.AuditDetails;
 import org.egov.common.contract.models.Document;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.pucar.dristi.config.Configuration;
 import org.pucar.dristi.web.models.Advocate;
+import org.pucar.dristi.web.models.AuditDetails;
 import org.pucar.dristi.web.models.Comment;
 import org.pucar.dristi.web.models.OpenArtifact;
 import org.pucar.dristi.web.models.WorkflowObject;
@@ -27,6 +27,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.pucar.dristi.config.ServiceConstants.*;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Component
 @Slf4j
@@ -68,8 +71,8 @@ public class EsUtil {
         String sourceName = openArtifact.getSourceName();
         List<String> applicableTo = openArtifact.getApplicableTo();
         String applicableToString = applicableTo != null ? new JSONArray(applicableTo).toString() : null;
-        Long createdDate = openArtifact.getCreatedDate() != null ? openArtifact.getCreatedDate() : 0L;
-        Long publishedDate = openArtifact.getPublishedDate() != null ? openArtifact.getPublishedDate() : 0L;
+        Long createdDate = openArtifact.getCreatedDate() != null ? openArtifact.getCreatedDate().toInstant().toEpochMilli() : 0L;
+        Long publishedDate = openArtifact.getPublishedDate() != null ? openArtifact.getPublishedDate().toInstant().toEpochMilli() : 0L;
         Boolean isActive = openArtifact.getIsActive();
         Boolean isEvidence = openArtifact.getIsEvidence();
         String status = openArtifact.getStatus();

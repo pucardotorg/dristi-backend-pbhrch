@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.Valid;
 import lombok.*;
 
+import java.time.OffsetDateTime;
+
 @Getter
 @Setter
 @Builder
@@ -53,10 +55,10 @@ public class OrderCriteria {
 
     @JsonProperty("fromPublishedDate")
     @Valid
-    private Long fromPublishedDate = null;
+    private OffsetDateTime fromPublishedDate = null;
 
     @JsonProperty("toPublishedDate")
     @Valid
-    private Long toPublishedDate = null;
+    private OffsetDateTime toPublishedDate = null;
 
 }

@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.OffsetDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -27,11 +28,11 @@ public class BulkReschedule {
 
     @JsonProperty("startTime")
     @NotNull
-    private Long startTime;
+    private OffsetDateTime startTime;
 
     @JsonProperty("endTime")
     @NotNull
-    private Long endTime;
+    private OffsetDateTime endTime;
 
     @JsonProperty("tenantId")
     @NotNull
@@ -48,5 +49,5 @@ public class BulkReschedule {
 
     @JsonProperty("scheduleAfter")
     @NotNull
-    private Long scheduleAfter;
+    private OffsetDateTime scheduleAfter;
 }

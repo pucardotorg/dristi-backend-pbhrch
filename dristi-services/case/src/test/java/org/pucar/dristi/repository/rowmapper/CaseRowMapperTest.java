@@ -29,7 +29,7 @@ class CaseRowMapperTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        rowMapper = new CaseRowMapper();
+        rowMapper = new CaseRowMapper(null);
     }
 
     @Test
@@ -51,9 +51,9 @@ class CaseRowMapperTest {
         when(rs.getString("stage")).thenReturn("stage1");
         when(rs.getString("substage")).thenReturn("substage1");
         when(rs.getInt("advocatecount")).thenReturn(2);
-        when(rs.getString("filingdate")).thenReturn("123453634747");
-        when(rs.getString("judgementdate")).thenReturn("12325326");
-        when(rs.getString("registrationdate")).thenReturn("123453634747");
+        when(rs.getTimestamp("filingdate")).thenReturn(new java.sql.Timestamp(123453634747L));
+        when(rs.getTimestamp("judgementdate")).thenReturn(new java.sql.Timestamp(12325326L));
+        when(rs.getTimestamp("registrationdate")).thenReturn(new java.sql.Timestamp(123453634747L));
         when(rs.getString("casecategory")).thenReturn("category1");
         when(rs.getString("casetype")).thenReturn("casetype");
         when(rs.getString("cmpnumber")).thenReturn("cmpnumber");
@@ -61,11 +61,11 @@ class CaseRowMapperTest {
         when(rs.getString("status")).thenReturn("status1");
         when(rs.getString("remarks")).thenReturn("remarks");
         when(rs.getString("outcome")).thenReturn("outcome");
-        when(rs.getString("natureofdisposal")).thenReturn("DISMISSED");
+        when(rs.getString("natureofdisposal")).thenReturn(null);
 
-        when(rs.getLong("lastmodifiedtime")).thenReturn(123456789L);
+        when(rs.getTimestamp("lastmodifiedtime")).thenReturn(null);
         when(rs.getString("createdby")).thenReturn("user1");
-        when(rs.getLong("createdtime")).thenReturn(123456789L);
+        when(rs.getTimestamp("createdtime")).thenReturn(null);
         when(rs.getString("lastmodifiedby")).thenReturn("modifier");
 
         when(rs.getObject("additionalDetails")).thenReturn(null);

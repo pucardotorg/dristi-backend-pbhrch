@@ -3,10 +3,12 @@ package org.pucar.dristi.web.models;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
+import java.time.OffsetDateTime;
+
 @Data
 public class PaymentTask {
     @JsonProperty("dueDate")
-    private Long dueDate;
+    private OffsetDateTime dueDate;
 
     @JsonProperty("daysRemaining")
     private Integer daysRemaining;

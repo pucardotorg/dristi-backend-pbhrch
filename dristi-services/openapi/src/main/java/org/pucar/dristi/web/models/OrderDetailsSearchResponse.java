@@ -14,9 +14,13 @@ import org.pucar.dristi.web.models.cases.PartyDetails;
 import org.pucar.dristi.web.models.order.IssuedBy;
 import org.pucar.dristi.web.models.order.StatuteSection;
 
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Data
 @AllArgsConstructor
@@ -64,7 +68,7 @@ public class OrderDetailsSearchResponse {
 
     @JsonProperty("createdDate")
     @Valid
-    private Long createdDate = null;
+    private OffsetDateTime createdDate = null;
 
     @JsonProperty("issuedBy")
     private IssuedBy issuedBy = null;
@@ -112,7 +116,7 @@ public class OrderDetailsSearchResponse {
     private String purposeOfNextHearing = null;
 
     @JsonProperty("nextHearingDate")
-    private Long nextHearingDate = null;
+    private OffsetDateTime nextHearingDate = null;
 
     @JsonProperty("orderTitle")
     private String orderTitle = null;

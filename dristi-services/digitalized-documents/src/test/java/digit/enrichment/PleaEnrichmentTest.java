@@ -10,11 +10,16 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.Arrays;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 class PleaEnrichmentTest {
 
@@ -32,9 +37,9 @@ class PleaEnrichmentTest {
         MockitoAnnotations.openMocks(this);
         
         userId = "a4f1210b-5bac-46cb-a1a7-914a592e72ba";
-        long currentTime = System.currentTimeMillis();
+        OffsetDateTime currentTime = OffsetDateTime.now(ZoneOffset.UTC);
         
-        when(digitalizedDocumentUtil.getCurrentTimeInMilliSec()).thenReturn(currentTime);
+        when(digitalizedDocumentUtil.getCurrentTimeOffset()).thenReturn(currentTime);
         when(digitalizedDocumentUtil.generateUUID()).thenReturn(UUID.fromString("30e0d170-8f78-4935-9215-80f086037d7e"));
         
         request = DigitalizedDocumentRequest.builder()
@@ -72,7 +77,8 @@ class PleaEnrichmentTest {
         // Setup existing audit details
         AuditDetails existingAudit = new AuditDetails();
         existingAudit.setCreatedBy("creator");
-        existingAudit.setCreatedTime(12345L);
+        OffsetDateTime existingCreatedTime = OffsetDateTime.of(2024, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC);
+        existingAudit.setCreatedTime(existingCreatedTime);
         request.getDigitalizedDocument().setAuditDetails(existingAudit);
         
         // Execute
@@ -82,7 +88,7 @@ class PleaEnrichmentTest {
         AuditDetails auditDetails = request.getDigitalizedDocument().getAuditDetails();
         assertNotNull(auditDetails);
         assertEquals("creator", auditDetails.getCreatedBy());
-        assertEquals(12345L, auditDetails.getCreatedTime());
+        assertEquals(existingCreatedTime, auditDetails.getCreatedTime());
         assertEquals(userId, auditDetails.getLastModifiedBy());
         assertNotNull(auditDetails.getLastModifiedTime());
         

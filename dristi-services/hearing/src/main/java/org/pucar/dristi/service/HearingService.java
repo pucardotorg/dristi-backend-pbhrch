@@ -27,7 +27,9 @@ import org.springframework.util.CollectionUtils;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -380,7 +382,7 @@ public class HearingService {
                     throw new CustomException(HEARING_UPDATE_TIME_EXCEPTION, "Hearing Id is required for updating start and end time");
                 }
                 Hearing existingHearing = validator.validateHearingExistence(body.getRequestInfo(), hearing);
-                existingHearing.getAuditDetails().setLastModifiedTime(System.currentTimeMillis());
+                existingHearing.getAuditDetails().setLastModifiedTime(dateUtil.getCurrentOffsetDateTime());
                 existingHearing.getAuditDetails().setLastModifiedBy(body.getRequestInfo().getUserInfo().getUuid());
                 hearing.setAuditDetails(existingHearing.getAuditDetails());
 
@@ -466,8 +468,8 @@ public class HearingService {
                         .criteria(hearingCriteria)
                         .build();
                 Hearing existingHearing = searchHearing(hearingSearchRequest).get(0);
-                long oldHearingStartTime = existingHearing.getStartTime();
-                oldHearingDate = String.valueOf(dateUtil.getLocalDateFromEpoch(oldHearingStartTime));
+                OffsetDateTime oldHearingStartTime = existingHearing.getStartTime();
+                oldHearingDate = oldHearingStartTime != null ? String.valueOf(oldHearingStartTime.toLocalDate()) : null;
             }
             SmsTemplateData smsTemplateData = SmsTemplateData.builder()
                     .courtCaseNumber(caseDetails.has("courtCaseNumber") ? caseDetails.get("courtCaseNumber").textValue() : "")
@@ -599,22 +601,22 @@ public class HearingService {
 
     private void updateJudgeCalendar(@Valid BulkRescheduleRequest request) {
         log.info("operation=updateJudgeCalendar, status=IN_PROGRESS");
-        Long startTime = request.getBulkReschedule().getStartTime();
-        Long endTime = request.getBulkReschedule().getEndTime();
+        OffsetDateTime startTime = request.getBulkReschedule().getStartTime();
+        OffsetDateTime endTime = request.getBulkReschedule().getEndTime();
         String judgeId = request.getBulkReschedule().getJudgeId();
         String tenantId = request.getBulkReschedule().getTenantId();
         String courtId = request.getBulkReschedule().getCourtId();
 
-        Long startOfTheDay = dateUtil.getStartOfTheDayForEpoch(startTime);
+        OffsetDateTime startOfTheDay = startTime != null ? startTime.toLocalDate().atStartOfDay(startTime.getOffset()).toOffsetDateTime() : null;
 
         log.info("startOfTheDay: {}, endTime: {}", startOfTheDay, endTime);
         List<JudgeCalendarRule> judgeCalendars = new ArrayList<>();
 
-        for (Long i = startOfTheDay; i < endTime; i = i + 86400000) {
+        for (OffsetDateTime i = startOfTheDay; i != null && endTime != null && i.isBefore(endTime); i = i.plusDays(1)) {
             JudgeCalendarRule judgeCalendarRule = new JudgeCalendarRule();
             judgeCalendarRule.setTenantId(tenantId);
             judgeCalendarRule.setJudgeId(judgeId);
-            judgeCalendarRule.setDate(i);
+            judgeCalendarRule.setDate(i.toInstant().toEpochMilli());
             judgeCalendarRule.setRuleType("RESCHEDULE");
             judgeCalendarRule.setCourtIds(Collections.singletonList(courtId));
             judgeCalendars.add(judgeCalendarRule);
@@ -650,18 +652,18 @@ public class HearingService {
                 HearingSlot hearingSlot = objectMapper.convertValue(slot, HearingSlot.class);
                 if (slotIds.contains(hearingSlot.getId())) {
 
-                    Long startDate = bulkReschedule.getStartTime();
-                    Long endDate = bulkReschedule.getEndTime();
+                    OffsetDateTime startDate = bulkReschedule.getStartTime();
+                    OffsetDateTime endDate = bulkReschedule.getEndTime();
                     String startTime = hearingSlot.getSlotStartTime();
                     String endTime = hearingSlot.getSlotEndTime();
 
-                    LocalDateTime from = dateUtil.getLocalDateTimeFromEpoch(startDate);
+                    LocalDateTime from = dateUtil.getLocalDateTimeFromEpoch(startDate != null ? startDate.toInstant().toEpochMilli() : 0L);
                     LocalDateTime fromLocalDateTime = dateUtil.getLocalDateTime(from, startTime);
-                    Long fromDate = dateUtil.getEpochFromLocalDateTime(fromLocalDateTime);
+                    OffsetDateTime fromDate = fromLocalDateTime != null ? fromLocalDateTime.atOffset(startDate != null ? startDate.getOffset() : java.time.ZoneOffset.UTC) : null;
 
-                    LocalDateTime to = dateUtil.getLocalDateTimeFromEpoch(endDate);
+                    LocalDateTime to = dateUtil.getLocalDateTimeFromEpoch(endDate != null ? endDate.toInstant().toEpochMilli() : 0L);
                     LocalDateTime toLocalDateTime = dateUtil.getLocalDateTime(to, endTime);
-                    Long toDate = dateUtil.getEpochFromLocalDateTime(toLocalDateTime);
+                    OffsetDateTime toDate = toLocalDateTime != null ? toLocalDateTime.atOffset(endDate != null ? endDate.getOffset() : java.time.ZoneOffset.UTC) : null;
 
                     log.info("fromDate: {}, toDate: {}", fromDate, toDate);
                     criteria.setFromDate(fromDate);
@@ -911,15 +913,15 @@ public class HearingService {
             // Sort hearings chronologically by startTime
             List<Hearing> sortedHearings = hearings.stream()
                     .filter(h -> h.getStartTime() != null)
-                    .sorted(Comparator.comparingLong(Hearing::getStartTime))
+                    .sorted(Comparator.comparing(Hearing::getStartTime))
                     .toList();
 
             List<Long> differences = new ArrayList<>();
 
             for (int i = 0; i < sortedHearings.size() - 1; i++) {
-                long start = sortedHearings.get(i).getStartTime();
-                long nextStart = sortedHearings.get(i + 1).getStartTime();
-                differences.add(Duration.ofMillis(nextStart - start).toDays());
+                OffsetDateTime start = sortedHearings.get(i).getStartTime();
+                OffsetDateTime nextStart = sortedHearings.get(i + 1).getStartTime();
+                differences.add(Duration.between(start, nextStart).toDays());
             }
 
             if (!differences.isEmpty()) {

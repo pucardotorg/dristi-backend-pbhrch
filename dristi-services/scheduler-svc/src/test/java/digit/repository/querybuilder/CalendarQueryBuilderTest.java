@@ -11,6 +11,8 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,12 +50,12 @@ public class CalendarQueryBuilderTest {
             }
 
             @Override
-            public Long getFromDate() {
+            public OffsetDateTime getFromDate() {
                 return null;
             }
 
             @Override
-            public Long getToDate() {
+            public OffsetDateTime getToDate() {
                 return null;
             }
         };
@@ -78,13 +80,13 @@ public class CalendarQueryBuilderTest {
             }
 
             @Override
-            public Long getFromDate() {
-                return LocalDate.parse("2023-01-01").toEpochDay();
+            public OffsetDateTime getFromDate() {
+                return LocalDate.parse("2023-01-01").atStartOfDay(ZoneOffset.UTC).toOffsetDateTime();
             }
 
             @Override
-            public Long getToDate() {
-                return LocalDate.parse("2023-01-01").toEpochDay();
+            public OffsetDateTime getToDate() {
+                return LocalDate.parse("2023-01-01").atStartOfDay(ZoneOffset.UTC).toOffsetDateTime();
             }
         };
 
@@ -133,12 +135,12 @@ public class CalendarQueryBuilderTest {
             }
 
             @Override
-            public Long getFromDate() {
+            public OffsetDateTime getFromDate() {
                 return null;
             }
 
             @Override
-            public Long getToDate() {
+            public OffsetDateTime getToDate() {
                 return null;
             }
         };
@@ -177,12 +179,12 @@ public class CalendarQueryBuilderTest {
             }
 
             @Override
-            public Long getFromDate() {
+            public OffsetDateTime getFromDate() {
                 return null;
             }
 
             @Override
-            public Long getToDate() {
+            public OffsetDateTime getToDate() {
                 return null;
             }
         };
@@ -220,12 +222,12 @@ public class CalendarQueryBuilderTest {
             }
 
             @Override
-            public Long getFromDate() {
-                return LocalDate.parse("2023-01-01").toEpochDay();
+            public OffsetDateTime getFromDate() {
+                return LocalDate.parse("2023-01-01").atStartOfDay(ZoneOffset.UTC).toOffsetDateTime();
             }
 
             @Override
-            public Long getToDate() {
+            public OffsetDateTime getToDate() {
                 return null;
             }
         };
@@ -263,13 +265,13 @@ public class CalendarQueryBuilderTest {
             }
 
             @Override
-            public Long getFromDate() {
+            public OffsetDateTime getFromDate() {
                 return null;
             }
 
             @Override
-            public Long getToDate() {
-                return LocalDate.parse("2023-12-31").toEpochDay();
+            public OffsetDateTime getToDate() {
+                return LocalDate.parse("2023-12-31").atStartOfDay(ZoneOffset.UTC).toOffsetDateTime();
             }
         };
 

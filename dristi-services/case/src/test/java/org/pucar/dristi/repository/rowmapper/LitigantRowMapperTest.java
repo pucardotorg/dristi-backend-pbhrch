@@ -22,6 +22,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.postgresql.util.PGobject;
 import org.pucar.dristi.web.models.Party;
 import org.springframework.jdbc.core.ResultSetExtractor;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @ExtendWith(MockitoExtension.class)
 class LitigantRowMapperTest {
@@ -33,7 +36,7 @@ class LitigantRowMapperTest {
 
     @BeforeEach
     void setUp() {
-        rowMapper = new LitigantRowMapper();
+        rowMapper = new LitigantRowMapper(null);
     }
 
     @Test
@@ -47,9 +50,9 @@ class LitigantRowMapperTest {
         when(rs.getString("organisationid")).thenReturn("123");
         when(rs.getString("partytype")).thenReturn("party");
         when(rs.getString("createdby")).thenReturn("creator");
-        when(rs.getLong("createdtime")).thenReturn(1000000L);
+        when(rs.getTimestamp("createdtime")).thenReturn(null);
         when(rs.getString("lastmodifiedby")).thenReturn("modifier");
-        when(rs.getLong("lastmodifiedtime")).thenReturn(1000001L);
+        when(rs.getTimestamp("lastmodifiedtime")).thenReturn(null);
         when(rs.getBoolean("isactive")).thenReturn(true);
 
         PGobject pgObject = mock(PGobject.class);

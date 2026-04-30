@@ -89,7 +89,8 @@ class InboxUtilTest {
         assertEquals("1234", mappedCase.getCmpNumber());
         assertEquals("5678", mappedCase.getStNumber());
         assertEquals("Final", mappedCase.getPurpose());
-        assertEquals(13214343l, mappedCase.getNextHearingDate());
+        assertNotNull(mappedCase.getNextHearingDate());
+        assertEquals(13214343L, mappedCase.getNextHearingDate().toInstant().toEpochMilli());
     }
 
     @Test

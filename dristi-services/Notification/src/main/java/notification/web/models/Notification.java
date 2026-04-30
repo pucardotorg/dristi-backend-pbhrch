@@ -8,13 +8,16 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.egov.common.contract.models.AuditDetails;
 import org.egov.common.contract.models.Workflow;
 import org.springframework.validation.annotation.Validated;
 
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 /**
  * An Notification is created as an outcome of an hearing or based on an application. Notification will contain a set of tasks
@@ -46,7 +49,7 @@ public class    Notification {
     private String notificationNumber = null;
 
     @JsonProperty("createdDate")
-    private Long createdDate = null;
+    private OffsetDateTime createdDate = null;
 
     @JsonProperty("issuedBy")
     private String issuedBy = null;

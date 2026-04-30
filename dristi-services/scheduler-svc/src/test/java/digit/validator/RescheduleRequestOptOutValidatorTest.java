@@ -15,6 +15,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -68,7 +70,14 @@ class RescheduleRequestOptOutValidatorTest {
 
     @Test
     public void validateRequest_Success() {
-        ReScheduleHearing reScheduleHearing = ReScheduleHearing.builder().rescheduledRequestId("rescheduleRequestId").status("ACTIVE").suggestedDates(List.of(1L, 2L, 3L)).build();
+        OffsetDateTime suggested1 = OffsetDateTime.now(ZoneOffset.UTC);
+        OffsetDateTime suggested2 = suggested1.plusDays(1);
+        OffsetDateTime suggested3 = suggested1.plusDays(2);
+        ReScheduleHearing reScheduleHearing = ReScheduleHearing.builder().rescheduledRequestId("rescheduleRequestId").status("ACTIVE").suggestedDates(List.of(suggested1, suggested2, suggested3)).build();
+
+        // Align opt-out dates with the suggested dates (matching epoch millis).
+        optOut.setOptoutDates(List.of(suggested1.toInstant().toEpochMilli()));
+
         SchedulerConfig schedulerConfig = SchedulerConfig.builder().identifier("OPT_OUT_SELECTION_LIMIT").unit(1).build();
         List<SchedulerConfig> schedulerConfigList = new ArrayList<>();
         schedulerConfigList.add(schedulerConfig);
@@ -83,7 +92,7 @@ class RescheduleRequestOptOutValidatorTest {
 
     @Test
     public void validateRequest_Inactive(){
-        ReScheduleHearing reScheduleHearing = ReScheduleHearing.builder().rescheduledRequestId("rescheduleRequestId").status("INACTIVE").suggestedDates(List.of(1L, 2L, 3L)).build();
+        ReScheduleHearing reScheduleHearing = ReScheduleHearing.builder().rescheduledRequestId("rescheduleRequestId").status("INACTIVE").suggestedDates(List.of(OffsetDateTime.now(ZoneOffset.UTC))).build();
         when(reScheduleHearingService.search(any(), any(), any())).thenReturn(List.of(reScheduleHearing));
         CustomException customException = assertThrows(CustomException.class, () -> {
             validator.validateRequest(request);

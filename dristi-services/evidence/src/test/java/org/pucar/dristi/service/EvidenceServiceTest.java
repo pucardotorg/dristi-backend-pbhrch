@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
-import org.egov.common.contract.models.AuditDetails;
+import org.pucar.dristi.web.models.AuditDetails;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.Role;
 import org.egov.common.contract.request.User;
@@ -29,6 +29,8 @@ import org.pucar.dristi.validators.EvidenceValidator;
 import org.pucar.dristi.web.models.*;
 
 import java.io.IOException;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -36,6 +38,9 @@ import static org.mockito.Mockito.*;
 import static org.pucar.dristi.config.ServiceConstants.COMMENT_ADD_ERR;
 import static org.pucar.dristi.config.ServiceConstants.INITIATE_E_SIGN;
 import static org.pucar.dristi.config.ServiceConstants.EMPLOYEE_UPPER;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @ExtendWith(MockitoExtension.class)
 class EvidenceServiceTest {
@@ -563,21 +568,22 @@ class EvidenceServiceTest {
                 .put("filingNumber", "CASE-001");
 
         // Scheduled hearing
+        OffsetDateTime hearingStartTime = OffsetDateTime.of(2024, 1, 15, 10, 0, 0, 0, ZoneOffset.UTC);
         Hearing hearing = new Hearing();
         hearing.setStatus("SCHEDULED");
-        hearing.setStartTime(1234567890L);
+        hearing.setStartTime(hearingStartTime);
         List<Hearing> hearings = Arrays.asList(hearing);
 
-        Long currentTime = System.currentTimeMillis();
-        Long startOfDay = currentTime - (currentTime % 86400000L);
+        OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
+        OffsetDateTime startOfDay = now.toLocalDate().atStartOfDay(ZoneOffset.UTC).toOffsetDateTime();
 
         // Mock dependencies
         when(caseUtil.searchCaseDetails(any(CaseSearchRequest.class)))
                 .thenReturn(caseDetailsNode);
         when(hearingUtil.fetchHearing(any(HearingSearchRequest.class)))
                 .thenReturn(hearings);
-        when(dateUtil.getCurrentTimeInMilis()).thenReturn(currentTime);
-        when(dateUtil.getStartOfTheDayForEpoch(currentTime)).thenReturn(startOfDay);
+        when(dateUtil.getCurrentOffsetDateTime()).thenReturn(now);
+        when(dateUtil.getStartOfDayOffsetDateTime(now)).thenReturn(startOfDay);
 
         // Act
         List<CaseDiaryEntry> result = evidenceService.createADiaryEntries(artifact, requestInfo);
@@ -594,7 +600,7 @@ class EvidenceServiceTest {
         assertEquals("Document submission", entry.getBusinessOfDay());
         assertEquals("ART-001", entry.getReferenceId());
         assertEquals("Documents", entry.getReferenceType());
-        assertEquals(Long.valueOf(1234567890L), entry.getHearingDate());
+        assertEquals(hearingStartTime, entry.getHearingDate());
 
         // Verify additional details
         Map<String, Object> entryAdditionalDetails = (Map<String, Object>) entry.getAdditionalDetails();
@@ -677,19 +683,19 @@ class EvidenceServiceTest {
         // No scheduled hearings
         Hearing hearing = new Hearing();
         hearing.setStatus("COMPLETED");
-        hearing.setStartTime(1234567890L);
+        hearing.setStartTime(OffsetDateTime.of(2024, 1, 15, 10, 0, 0, 0, ZoneOffset.UTC));
         List<Hearing> hearings = Arrays.asList(hearing);
 
-        Long currentTime = System.currentTimeMillis();
-        Long startOfDay = currentTime - (currentTime % 86400000L);
+        OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
+        OffsetDateTime startOfDay = now.toLocalDate().atStartOfDay(ZoneOffset.UTC).toOffsetDateTime();
 
         // Mock dependencies
         when(caseUtil.searchCaseDetails(any(CaseSearchRequest.class)))
                 .thenReturn(caseDetailsNode);
         when(hearingUtil.fetchHearing(any(HearingSearchRequest.class)))
                 .thenReturn(hearings);
-        when(dateUtil.getCurrentTimeInMilis()).thenReturn(currentTime);
-        when(dateUtil.getStartOfTheDayForEpoch(currentTime)).thenReturn(startOfDay);
+        when(dateUtil.getCurrentOffsetDateTime()).thenReturn(now);
+        when(dateUtil.getStartOfDayOffsetDateTime(now)).thenReturn(startOfDay);
 
         // Act
         List<CaseDiaryEntry> result = evidenceService.createADiaryEntries(artifact, requestInfo);
@@ -722,16 +728,16 @@ class EvidenceServiceTest {
 
         List<Hearing> hearings = Collections.emptyList();
 
-        Long currentTime = System.currentTimeMillis();
-        Long startOfDay = currentTime - (currentTime % 86400000L);
+        OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
+        OffsetDateTime startOfDay = now.toLocalDate().atStartOfDay(ZoneOffset.UTC).toOffsetDateTime();
 
         // Mock dependencies
         when(caseUtil.searchCaseDetails(any(CaseSearchRequest.class)))
                 .thenReturn(caseDetailsNode);
         when(hearingUtil.fetchHearing(any(HearingSearchRequest.class)))
                 .thenReturn(hearings);
-        when(dateUtil.getCurrentTimeInMilis()).thenReturn(currentTime);
-        when(dateUtil.getStartOfTheDayForEpoch(currentTime)).thenReturn(startOfDay);
+        when(dateUtil.getCurrentOffsetDateTime()).thenReturn(now);
+        when(dateUtil.getStartOfDayOffsetDateTime(now)).thenReturn(startOfDay);
 
         // Act
         List<CaseDiaryEntry> result = evidenceService.createADiaryEntries(artifact, requestInfo);
@@ -805,11 +811,12 @@ class EvidenceServiceTest {
                 .put("cmpNumber", "CMP-001");
 
         String botd = "Document submission";
-        Long hearingDate = 1234567890L;
-        Long entryDate = System.currentTimeMillis();
+        OffsetDateTime hearingDate = OffsetDateTime.of(2024, 1, 15, 10, 0, 0, 0, ZoneOffset.UTC);
+        OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
+        OffsetDateTime startOfDay = now.toLocalDate().atStartOfDay(ZoneOffset.UTC).toOffsetDateTime();
 
-        when(dateUtil.getStartOfTheDayForEpoch(anyLong())).thenReturn(entryDate);
-        when(dateUtil.getCurrentTimeInMilis()).thenReturn(entryDate);
+        when(dateUtil.getCurrentOffsetDateTime()).thenReturn(now);
+        when(dateUtil.getStartOfDayOffsetDateTime(now)).thenReturn(startOfDay);
 
         // Act
         CaseDiaryEntry result = evidenceService.createCaseDiaryEntry(artifact, caseDetailsNode, botd, hearingDate);
@@ -817,14 +824,14 @@ class EvidenceServiceTest {
         // Assert
         assertNotNull(result);
         assertEquals("pb", result.getTenantId());
-        assertEquals(entryDate, result.getEntryDate());
+        assertEquals(startOfDay, result.getEntryDate());
         assertEquals("CC-001", result.getCaseNumber());
         assertEquals("case-123", result.getCaseId());
         assertEquals("court-123", result.getCourtId());
         assertEquals("Document submission", result.getBusinessOfDay());
         assertEquals("ART-001", result.getReferenceId());
         assertEquals("Documents", result.getReferenceType());
-        assertEquals(1234567890L, result.getHearingDate());
+        assertEquals(hearingDate, result.getHearingDate());
 
         // Verify additional details
         Map<String, Object> additionalDetails = (Map<String, Object>) result.getAdditionalDetails();

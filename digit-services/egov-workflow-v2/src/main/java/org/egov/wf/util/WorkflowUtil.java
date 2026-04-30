@@ -25,6 +25,9 @@ import org.egov.wf.web.models.State;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 
 @Component
@@ -49,7 +52,7 @@ public class WorkflowUtil {
      * @return AuditDetails The auditdetails of the request
      */
     public AuditDetails getAuditDetails(String by, Boolean isCreate) {
-        Long time = System.currentTimeMillis();
+        java.time.OffsetDateTime time = java.time.OffsetDateTime.now();
         if(isCreate)
             return AuditDetails.builder().createdBy(by).lastModifiedBy(by).createdTime(time).lastModifiedTime(time).build();
         else
@@ -394,13 +397,14 @@ public class WorkflowUtil {
      * @return The lastest processStateAndAction for the given businessId
      */
     public ProcessStateAndAction getLatestProcessStateAndAction(String businessId,List<ProcessStateAndAction> processStateAndActions){
-        Long maxTime = 0l;
+        java.time.OffsetDateTime maxTime = java.time.OffsetDateTime.MIN;
         ProcessStateAndAction latestProcessStateAndAction = null;
         for(ProcessStateAndAction processStateAndAction:processStateAndActions) {
+            java.time.OffsetDateTime lmt = processStateAndAction.getProcessInstanceFromRequest().getAuditDetails().getLastModifiedTime();
             if(processStateAndAction.getProcessInstanceFromRequest().getBusinessId().equalsIgnoreCase(businessId)
-                    && maxTime<processStateAndAction.getProcessInstanceFromRequest().getAuditDetails().getLastModifiedTime()){
+                    && lmt != null && maxTime.isBefore(lmt)){
                 latestProcessStateAndAction = processStateAndAction;
-                maxTime = processStateAndAction.getProcessInstanceFromRequest().getAuditDetails().getLastModifiedTime();
+                maxTime = lmt;
             }
         }
         return latestProcessStateAndAction;

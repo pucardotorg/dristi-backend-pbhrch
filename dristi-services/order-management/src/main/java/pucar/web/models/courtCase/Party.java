@@ -6,11 +6,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import org.egov.common.contract.models.AuditDetails;
 import org.egov.common.contract.models.Document;
+import pucar.web.models.AuditDetails;
 
 import java.util.List;
 import java.util.UUID;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Data
 @AllArgsConstructor

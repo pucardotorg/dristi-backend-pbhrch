@@ -2,12 +2,16 @@ package digit.web.models.payment;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
+import digit.web.models.AuditDetails;
 import lombok.*;
-import org.egov.common.contract.models.AuditDetails;
 
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import java.time.OffsetDateTime;
 import java.util.List;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Setter
 @Getter
@@ -39,11 +43,11 @@ public class BillDetail {
 
     @NotNull
     @JsonProperty("fromPeriod")
-    private Long fromPeriod;
+    private OffsetDateTime fromPeriod;
 
     @NotNull
     @JsonProperty("toPeriod")
-    private Long toPeriod;
+    private OffsetDateTime toPeriod;
 
     @JsonProperty("additionalDetails")
     private JsonNode additionalDetails;
@@ -61,7 +65,7 @@ public class BillDetail {
     private String manualReceiptNumber;
 
     @JsonProperty("manualReceiptDate")
-    private Long manualReceiptDate;
+    private OffsetDateTime manualReceiptDate;
 
     @JsonProperty("billAccountDetails")
     private List<BillAccountDetail> billAccountDetails;
@@ -77,7 +81,7 @@ public class BillDetail {
 
     @NotNull
     @JsonProperty("expiryDate")
-    private Long expiryDate;
+    private OffsetDateTime expiryDate;
 
 
 }

@@ -43,6 +43,9 @@ package com.dristi.njdg_transformer.model.hrms;
 import lombok.*;
 import org.egov.common.contract.models.AuditDetails;
 import org.springframework.validation.annotation.Validated;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Validated
 @EqualsAndHashCode(exclude = {"auditDetails"})

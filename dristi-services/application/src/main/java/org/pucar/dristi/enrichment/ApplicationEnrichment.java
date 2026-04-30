@@ -2,7 +2,7 @@ package org.pucar.dristi.enrichment;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.extern.slf4j.Slf4j;
-import org.egov.common.contract.models.AuditDetails;
+import org.pucar.dristi.web.models.AuditDetails;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.model.CustomException;
 import org.pucar.dristi.config.Configuration;
@@ -13,10 +13,15 @@ import org.pucar.dristi.web.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.UUID;
 
 import static org.pucar.dristi.config.ServiceConstants.*;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Component
 @Slf4j
@@ -46,16 +51,17 @@ public class ApplicationEnrichment {
                 Application application = applicationRequest.getApplication();
                 application.setApplicationNumber(applicationRequest.getApplication().getFilingNumber() + "-" + applicationIdList.get(0));
 
+                OffsetDateTime now = dateUtil.getCurrentOffsetDateTime();
                 AuditDetails auditDetails = AuditDetails
                         .builder()
                         .createdBy(applicationRequest.getRequestInfo().getUserInfo().getUuid())
-                        .createdTime(System.currentTimeMillis())
+                        .createdTime(now)
                         .lastModifiedBy(applicationRequest.getRequestInfo().getUserInfo().getUuid())
-                        .lastModifiedTime(System.currentTimeMillis())
+                        .lastModifiedTime(now)
                         .build();
                 application.setAuditDetails(auditDetails);
                 application.setId(UUID.randomUUID());
-                application.setCreatedDate(System.currentTimeMillis());
+                application.setCreatedDate(now);
                 application.setIsActive(true);
                 application.setCourtId(getCourtId(applicationRequest));
 
@@ -137,7 +143,8 @@ public class ApplicationEnrichment {
         try {
             // Enrich lastModifiedTime and lastModifiedBy in case of update
             Application application = applicationRequest.getApplication();
-            application.getAuditDetails().setLastModifiedTime(System.currentTimeMillis());
+            OffsetDateTime now = dateUtil.getCurrentOffsetDateTime();
+            application.getAuditDetails().setLastModifiedTime(now);
             application.getAuditDetails().setLastModifiedBy(applicationRequest.getRequestInfo().getUserInfo().getUuid());
 
             if (application.getDocuments() != null) {

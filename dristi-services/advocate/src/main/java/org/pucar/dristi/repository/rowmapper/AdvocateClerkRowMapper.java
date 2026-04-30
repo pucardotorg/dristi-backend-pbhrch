@@ -2,22 +2,31 @@ package org.pucar.dristi.repository.rowmapper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.egov.common.contract.models.AuditDetails;
 import org.egov.common.contract.models.Document;
 import org.egov.tracer.model.CustomException;
 import org.postgresql.util.PGobject;
 import org.pucar.dristi.web.models.AdvocateClerk;
+import org.pucar.dristi.web.models.AuditDetails;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.*;
 
 import static org.pucar.dristi.config.ServiceConstants.ROW_MAPPER_EXCEPTION;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Component
 @Slf4j
 public class AdvocateClerkRowMapper implements ResultSetExtractor<List<AdvocateClerk>> {
+
+    public AdvocateClerkRowMapper() {}
 
     /** To map query result to a list of advocate clerk instance
      * @param rs
@@ -34,16 +43,14 @@ public class AdvocateClerkRowMapper implements ResultSetExtractor<List<AdvocateC
 
                 if (advocateClerkApplication == null) {
 
-                    Long lastModifiedTime = rs.getLong("lastmodifiedtime");
-                    if (rs.wasNull()) {
-                        lastModifiedTime = null;
-                    }
+                    Timestamp lastModifiedTimeTs = rs.getTimestamp("lastmodifiedtime");
+                    Timestamp createdTimeTs = rs.getTimestamp("createdtime");
 
                     AuditDetails auditdetails = AuditDetails.builder()
                             .createdBy(rs.getString("createdby"))
-                            .createdTime(rs.getLong("createdtime"))
+                            .createdTime(createdTimeTs != null ? createdTimeTs.toInstant().atOffset(ZoneOffset.UTC) : null)
                             .lastModifiedBy(rs.getString("lastmodifiedby"))
-                            .lastModifiedTime(lastModifiedTime)
+                            .lastModifiedTime(lastModifiedTimeTs != null ? lastModifiedTimeTs.toInstant().atOffset(ZoneOffset.UTC) : null)
                             .build();
 
                     advocateClerkApplication = AdvocateClerk.builder()

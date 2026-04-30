@@ -1,6 +1,7 @@
 package org.pucar.dristi.web.models.payment;
 
 import java.math.BigDecimal;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +20,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.pucar.dristi.web.models.AuditDetails;
 import org.pucar.dristi.web.models.payment.BillDetailV2;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Data
 @NoArgsConstructor
@@ -64,7 +68,7 @@ public class BillV2 {
     private String billNumber;
 
     @JsonProperty("billDate")
-    private Long billDate;
+    private OffsetDateTime billDate;
 
     @JsonProperty("consumerCode")
     @Size(max = 256)

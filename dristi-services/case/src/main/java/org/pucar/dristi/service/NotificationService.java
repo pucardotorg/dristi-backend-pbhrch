@@ -15,6 +15,8 @@ import org.pucar.dristi.web.models.SMSRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.*;
 
 import static org.pucar.dristi.config.ServiceConstants.*;
@@ -81,7 +83,7 @@ public class NotificationService {
                 .contentType("TEXT")
                 .category("NOTIFICATION")
                 .locale(NOTIFICATION_ENG_LOCALE_CODE)
-                .expiryTime(System.currentTimeMillis() + 60 * 60 * 1000)
+                .expiryTime(OffsetDateTime.now(ZoneId.of(config.getZoneId())).plusHours(1).toInstant().toEpochMilli())
                 .message(message).build();
         log.info("push message {}", smsRequest);
 

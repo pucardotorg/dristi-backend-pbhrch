@@ -9,6 +9,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 
+import java.time.OffsetDateTime;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
+
 /**
  * Collection of audit related fields used by most models
  */
@@ -25,10 +30,10 @@ public class AuditDetails   {
   private String lastModifiedBy = null;
 
   @JsonProperty("createdTime")
-  private Long createdTime = null;
+  private OffsetDateTime createdTime = null;
 
   @JsonProperty("lastModifiedTime")
-  private Long lastModifiedTime = null;
+  private OffsetDateTime lastModifiedTime = null;
 
   public AuditDetails createdBy(String createdBy) {
     this.createdBy = createdBy;
@@ -68,7 +73,7 @@ public class AuditDetails   {
     this.lastModifiedBy = lastModifiedBy;
   }
 
-  public AuditDetails createdTime(Long createdTime) {
+  public AuditDetails createdTime(OffsetDateTime createdTime) {
     this.createdTime = createdTime;
     return this;
   }
@@ -79,15 +84,15 @@ public class AuditDetails   {
   **/
 
 
-  public Long getCreatedTime() {
+  public OffsetDateTime getCreatedTime() {
     return createdTime;
   }
 
-  public void setCreatedTime(Long createdTime) {
+  public void setCreatedTime(OffsetDateTime createdTime) {
     this.createdTime = createdTime;
   }
 
-  public AuditDetails lastModifiedTime(Long lastModifiedTime) {
+  public AuditDetails lastModifiedTime(OffsetDateTime lastModifiedTime) {
     this.lastModifiedTime = lastModifiedTime;
     return this;
   }
@@ -98,11 +103,11 @@ public class AuditDetails   {
   **/
 
 
-  public Long getLastModifiedTime() {
+  public OffsetDateTime getLastModifiedTime() {
     return lastModifiedTime;
   }
 
-  public void setLastModifiedTime(Long lastModifiedTime) {
+  public void setLastModifiedTime(OffsetDateTime lastModifiedTime) {
     this.lastModifiedTime = lastModifiedTime;
   }
 

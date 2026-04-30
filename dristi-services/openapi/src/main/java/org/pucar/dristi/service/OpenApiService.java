@@ -170,7 +170,7 @@ public class OpenApiService {
         }
     }
 
-    public Long enrichNextHearingDate(String filingNumber) {
+    public java.time.OffsetDateTime enrichNextHearingDate(String filingNumber) {
         StringBuilder uri = new StringBuilder(configuration.getHearingServiceHost()).append(configuration.getHearingSearchEndpoint());
         HearingCriteria criteria = HearingCriteria.builder().filingNumber(filingNumber).build();
         HearingSearchRequest request = HearingSearchRequest.builder().criteria(criteria).build();
@@ -221,8 +221,10 @@ public class OpenApiService {
     public List<OpenHearing> getHearings(OpenAPiHearingRequest body) {
         String tenantId = body.getTenantId();
         String searchText = body.getSearchText();
-        Long fromDate = body.getFromDate();
-        Long toDate = body.getToDate();
+        java.time.OffsetDateTime fromDateOdt = body.getFromDate();
+        java.time.OffsetDateTime toDateOdt = body.getToDate();
+        Long fromDate = fromDateOdt != null ? fromDateOdt.toInstant().toEpochMilli() : null;
+        Long toDate = toDateOdt != null ? toDateOdt.toInstant().toEpochMilli() : null;
         Boolean isHearingSerialNumberSorting = body.getIsHearingSerialNumberSorting();
 
         InboxRequest inboxRequest = inboxUtil.getInboxRequestForOpenHearing(tenantId, fromDate, toDate, searchText, isHearingSerialNumberSorting);
@@ -506,25 +508,26 @@ public class OpenApiService {
 
         if (!CollectionUtils.isEmpty(searchResponse.getData())) {
             for (Data data : searchResponse.getData()) {
-                Long dueDate = null;
+                Long dueDateEpoch = null;
                 String taskName = null;
 
                 for (Field field : data.getFields()) {
                     if ("stateSla".equals(field.getKey()) && field.getValue() != null) {
-                        dueDate = Long.parseLong(field.getValue().toString());
+                        dueDateEpoch = Long.parseLong(field.getValue().toString());
                     } else if ("name".equals(field.getKey()) && field.getValue() != null) {
                         taskName = field.getValue().toString();
                     }
                 }
 
-                if (dueDate != null && taskName != null) {
+                if (dueDateEpoch != null && taskName != null) {
+                    java.time.OffsetDateTime dueDate = java.time.Instant.ofEpochMilli(dueDateEpoch).atOffset(java.time.ZoneOffset.UTC);
                     PaymentTask paymentTask = new PaymentTask();
                     paymentTask.setDueDate(dueDate);
                     paymentTask.setTask(taskName);
 
                     // Optional: Calculate days remaining
                     long currentTime = System.currentTimeMillis();
-                    int daysRemaining = (int) ((dueDate - currentTime) / (1000 * 60 * 60 * 24));
+                    int daysRemaining = (int) ((dueDateEpoch - currentTime) / (1000 * 60 * 60 * 24));
                     paymentTask.setDaysRemaining(daysRemaining);
 
                     paymentTasks.add(paymentTask);

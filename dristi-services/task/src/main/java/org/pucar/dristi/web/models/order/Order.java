@@ -9,13 +9,17 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.egov.common.contract.models.AuditDetails;
+import org.pucar.dristi.web.models.AuditDetails;
 import org.pucar.dristi.web.models.Document;
 import org.springframework.validation.annotation.Validated;
 
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 /**
  * An order is created as an outcome of an hearing or based on an application. Order will contain a set of tasks
@@ -69,7 +73,7 @@ public class Order {
 
     @JsonProperty("createdDate")
     @Valid
-    private Long createdDate = null;
+    private OffsetDateTime createdDate = null;
 
     @JsonProperty("issuedBy")
     private IssuedBy issuedBy = null;
@@ -117,7 +121,7 @@ public class Order {
     private String purposeOfNextHearing = null;
 
     @JsonProperty("nextHearingDate")
-    private Long nextHearingDate = null;
+    private OffsetDateTime nextHearingDate = null;
 
     @JsonProperty("orderTitle")
     private String orderTitle = null;

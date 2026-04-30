@@ -2,19 +2,34 @@ package org.pucar.dristi.repository.rowmapper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.egov.common.contract.models.AuditDetails;
+import org.pucar.dristi.web.models.AuditDetails;
 import org.egov.tracer.model.CustomException;
 import org.postgresql.util.PGobject;
 import org.pucar.dristi.web.models.StatuteSection;
+import org.pucar.dristi.util.DateUtil;
 import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.OffsetDateTime;
 import java.util.*;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Component
 @Slf4j
 public class StatuteSectionRowMapper implements ResultSetExtractor<Map<UUID, StatuteSection>> {
+    
+    private final DateUtil dateUtil;
+    
+    @Autowired
+    public StatuteSectionRowMapper(DateUtil dateUtil) {
+        this.dateUtil = dateUtil;
+    }
     public Map<UUID, StatuteSection> extractData(ResultSet rs) {
         Map<UUID, StatuteSection> statuteSectionMap = new LinkedHashMap<>();
 
@@ -25,12 +40,16 @@ public class StatuteSectionRowMapper implements ResultSetExtractor<Map<UUID, Sta
                 UUID uuid = UUID.fromString(orderId);
 
                 Long lastModifiedTime = rs.getLong("lastmodifiedtime");
+                Timestamp lastModifiedTimeTs = rs.getTimestamp("lastmodifiedtime");
+                OffsetDateTime lastModifiedTimeOffset = lastModifiedTimeTs != null ? dateUtil.timestampToOffsetDateTime(lastModifiedTimeTs) : null;
+                Timestamp createdTimeTs = rs.getTimestamp("createdtime");
+                OffsetDateTime createdTime = createdTimeTs != null ? dateUtil.timestampToOffsetDateTime(createdTimeTs) : null;
 
                 AuditDetails auditdetails = AuditDetails.builder()
                         .createdBy(rs.getString("createdby"))
-                        .createdTime(rs.getLong("createdtime"))
+                        .createdTime(createdTime)
                         .lastModifiedBy(rs.getString("lastmodifiedby"))
-                        .lastModifiedTime(lastModifiedTime)
+                        .lastModifiedTime(lastModifiedTimeOffset)
                         .build();
                 StatuteSection statuteSection = StatuteSection.builder()
                         .id(UUID.fromString(rs.getString("id")))

@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 import org.apache.commons.lang3.StringUtils;
-import org.egov.common.contract.models.AuditDetails;
 import org.egov.common.contract.models.Document;
 import org.egov.common.contract.models.Workflow;
 import org.egov.common.contract.request.RequestInfo;
@@ -28,9 +27,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.OffsetDateTime;
 import java.util.*;
 
 import static org.pucar.dristi.config.ServiceConstants.*;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Slf4j
 @Service
@@ -674,7 +677,8 @@ public class EvidenceService {
     }
 
     private AuditDetails createAuditDetails(RequestInfo requestInfo) {
-        return AuditDetails.builder().createdBy(requestInfo.getUserInfo().getUuid()).createdTime(System.currentTimeMillis()).lastModifiedBy(requestInfo.getUserInfo().getUuid()).lastModifiedTime(System.currentTimeMillis()).build();
+        OffsetDateTime now = dateUtil.getCurrentOffsetDateTime();
+        return AuditDetails.builder().createdBy(requestInfo.getUserInfo().getUuid()).createdTime(now).lastModifiedBy(requestInfo.getUserInfo().getUuid()).lastModifiedTime(now).build();
     }
 
     private void callNotificationService(EvidenceRequest evidenceRequest,Boolean isEvidence,Boolean isCreateCall) {
@@ -1201,7 +1205,7 @@ public class EvidenceService {
         log.info("finding scheduled hearing for filingNumber: {}", artifact.getFilingNumber());
         Optional<Hearing> scheduledHearing = hearings.stream().filter((hearing) -> SCHEDULED.equalsIgnoreCase(hearing.getStatus())).findFirst();
 
-        Long hearingDate = null;
+        OffsetDateTime hearingDate = null;
         if (scheduledHearing.isPresent()) {
             hearingDate = scheduledHearing.get().getStartTime();
         }
@@ -1227,14 +1231,14 @@ public class EvidenceService {
 
     }
 
-    public CaseDiaryEntry createCaseDiaryEntry(Artifact artifact, JsonNode caseDetails, String botd, Long hearingDate) {
+    public CaseDiaryEntry createCaseDiaryEntry(Artifact artifact, JsonNode caseDetails, String botd, OffsetDateTime hearingDate) {
         String cmpNumber = caseDetails.has("cmpNumber") ? (caseDetails.get("cmpNumber").textValue() != null ? caseDetails.get("cmpNumber").textValue() : null) : null;
         String courtCaseNumber = caseDetails.has("courtCaseNumber") ? (caseDetails.get("courtCaseNumber").textValue() != null ? caseDetails.get("courtCaseNumber").textValue() : null) : null;
         String caseId = caseDetails.has("id") ? (caseDetails.get("id").textValue() != null ? caseDetails.get("id").textValue() : null) : null;
 
         return CaseDiaryEntry.builder()
                 .tenantId(artifact.getTenantId())
-                .entryDate(dateUtil.getStartOfTheDayForEpoch(dateUtil.getCurrentTimeInMilis()))
+                .entryDate(dateUtil.getStartOfDayOffsetDateTime(dateUtil.getCurrentOffsetDateTime()))
                 .caseNumber(getCaseReferenceNumber(courtCaseNumber, cmpNumber, artifact.getFilingNumber()))
                 .caseId(caseId)
                 .courtId(artifact.getCourtId())

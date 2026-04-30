@@ -22,6 +22,9 @@ import java.util.Map;
 import java.util.Objects;
 
 import static java.util.Collections.singletonMap;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Slf4j
 @Service
@@ -75,7 +78,7 @@ public class EnrichmentService {
 
         AuditDetails auditDetails = AuditDetails.builder()
                 .createdBy(requestInfo.getUserInfo() != null ? requestInfo.getUserInfo().getUuid() : null)
-                .createdTime(System.currentTimeMillis())
+                .createdTime(java.time.OffsetDateTime.now())
                 .build();
         transaction.setAuditDetails(auditDetails);
     }
@@ -88,7 +91,7 @@ public class EnrichmentService {
                 .createdBy(currentTxnStatus.getAuditDetails().getCreatedBy())
                 .createdTime(currentTxnStatus.getAuditDetails().getCreatedTime())
                 .lastModifiedBy(requestInfo.getUserInfo() != null ? requestInfo.getUserInfo().getUuid() : null)
-                .lastModifiedTime(System.currentTimeMillis()).build();
+                .lastModifiedTime(java.time.OffsetDateTime.now()).build();
         newTxn.setAuditDetails(auditDetails);
 
         newTxn.setTxnId(currentTxnStatus.getTxnId());

@@ -3,12 +3,16 @@ package digit.web.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import digit.models.coremodels.AuditDetails;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.egov.tracer.model.Error;
+
+import java.time.OffsetDateTime;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Data
 @AllArgsConstructor
@@ -47,16 +51,16 @@ public class ScheduleHearing {
     private String status;
 
     @JsonProperty("hearingDate")
-    private Long hearingDate;
+    private OffsetDateTime hearingDate;
 
     @JsonProperty("startTime")
-    private Long startTime;
+    private OffsetDateTime startTime;
 
     @JsonProperty("endTime")
-    private Long endTime;
+    private OffsetDateTime endTime;
 
     @JsonProperty("expiryTime")
-    private Long expiryTime;
+    private OffsetDateTime expiryTime;
 
     @JsonProperty("auditDetails")
     private AuditDetails auditDetails;
@@ -96,7 +100,8 @@ public class ScheduleHearing {
     }
 
     public boolean overlapsWith(ScheduleHearing other) {
-        return !(startTime >= other.endTime || endTime <= other.startTime);
+        if (startTime == null || endTime == null || other.startTime == null || other.endTime == null) return false;
+        return !(startTime.compareTo(other.endTime) >= 0 || endTime.compareTo(other.startTime) <= 0);
 
     }
 

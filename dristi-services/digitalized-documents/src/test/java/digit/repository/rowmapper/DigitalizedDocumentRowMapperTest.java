@@ -11,6 +11,10 @@ import org.postgresql.util.PGobject;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Map;
 
@@ -45,10 +49,9 @@ class DigitalizedDocumentRowMapperTest {
         when(rs.getString("order_number")).thenReturn("order-1");
 
         when(rs.getString("created_by")).thenReturn("creator");
-        when(rs.getLong("created_time")).thenReturn(123L);
+        when(rs.getTimestamp("created_time")).thenReturn(new Timestamp(123L));
         when(rs.getString("last_modified_by")).thenReturn("modifier");
-        when(rs.getLong("last_modified_time")).thenReturn(0L);
-        when(rs.wasNull()).thenReturn(true); // last_modified_time was null
+        when(rs.getTimestamp("last_modified_time")).thenReturn(null);
 
         // Prepare JSONB fields via PGobject
         PGobject plea = pgjson("{}");
@@ -79,9 +82,9 @@ class DigitalizedDocumentRowMapperTest {
 
         assertNotNull(d.getAuditDetails());
         assertEquals("creator", d.getAuditDetails().getCreatedBy());
-        assertEquals(123L, d.getAuditDetails().getCreatedTime());
+        assertEquals(OffsetDateTime.ofInstant(Instant.ofEpochMilli(123L), ZoneOffset.UTC), d.getAuditDetails().getCreatedTime());
         assertEquals("modifier", d.getAuditDetails().getLastModifiedBy());
-        assertNull(d.getAuditDetails().getLastModifiedTime()); // due to wasNull()
+        assertNull(d.getAuditDetails().getLastModifiedTime());
 
         // additionalDetails
         assertNotNull(d.getAdditionalDetails());
@@ -113,10 +116,9 @@ class DigitalizedDocumentRowMapperTest {
         when(rs.getString("order_number")).thenReturn(null);
 
         when(rs.getString("created_by")).thenReturn("c2");
-        when(rs.getLong("created_time")).thenReturn(222L);
+        when(rs.getTimestamp("created_time")).thenReturn(new Timestamp(222L));
         when(rs.getString("last_modified_by")).thenReturn(null);
-        when(rs.getLong("last_modified_time")).thenReturn(0L);
-        when(rs.wasNull()).thenReturn(true);
+        when(rs.getTimestamp("last_modified_time")).thenReturn(null);
 
         // All JSONB fields null
         when(rs.getObject(anyString())).thenReturn(null);

@@ -11,6 +11,7 @@ import org.pucar.dristi.web.models.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.OffsetDateTime;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
@@ -78,13 +79,13 @@ public class CtcApplicationEnrichment {
 
     public void enrichAuditDetailsOnCreate(RequestInfo requestInfo, CtcApplication ctcApplication) {
 
-        long currentTime = System.currentTimeMillis();
+        long now = java.time.Instant.now().toEpochMilli();
 
         AuditDetails auditDetails = AuditDetails.builder()
                 .createdBy(requestInfo.getUserInfo().getUuid())
-                .createdTime(currentTime)
+                .createdTime(now)
                 .lastModifiedBy(requestInfo.getUserInfo().getUuid())
-                .lastModifiedTime(currentTime)
+                .lastModifiedTime(now)
                 .build();
 
         ctcApplication.setAuditDetails(auditDetails);
@@ -94,7 +95,7 @@ public class CtcApplicationEnrichment {
         AuditDetails auditDetails = ctcApplication.getAuditDetails();
         if (auditDetails != null) {
             auditDetails.setLastModifiedBy(requestInfo.getUserInfo().getUuid());
-            auditDetails.setLastModifiedTime(System.currentTimeMillis());
+            auditDetails.setLastModifiedTime(java.time.Instant.now().toEpochMilli());
             ctcApplication.setAuditDetails(auditDetails);
         }
     }

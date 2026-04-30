@@ -2,6 +2,7 @@ package org.egov.pgr.repository.rowmapper;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.egov.pgr.util.DateUtil;
 import org.egov.pgr.web.models.*;
 import org.egov.tracer.model.CustomException;
 import org.postgresql.util.PGobject;
@@ -13,10 +14,15 @@ import org.springframework.stereotype.Repository;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Repository
 public class PGRRowMapper implements ResultSetExtractor<List<Service>> {
@@ -24,6 +30,9 @@ public class PGRRowMapper implements ResultSetExtractor<List<Service>> {
 
     @Autowired
     private ObjectMapper mapper;
+
+    @Autowired
+    private DateUtil dateUtil;
 
 
 
@@ -54,8 +63,8 @@ public class PGRRowMapper implements ResultSetExtractor<List<Service>> {
                 Integer rating = rs.getInt("rating");
                 if(rs.wasNull()){rating = null;}
 
-                AuditDetails auditDetails = AuditDetails.builder().createdBy(createdby).createdTime(createdtime)
-                                                .lastModifiedBy(lastmodifiedby).lastModifiedTime(lastmodifiedtime).build();
+                AuditDetails auditDetails = AuditDetails.builder().createdBy(createdby).createdTime(dateUtil.epochMillisToOffsetDateTime(createdtime))
+                                                .lastModifiedBy(lastmodifiedby).lastModifiedTime(dateUtil.epochMillisToOffsetDateTime(lastmodifiedtime)).build();
 
                 currentService = Service.builder().id(id).active(active)
                         .serviceCode(serviceCode)

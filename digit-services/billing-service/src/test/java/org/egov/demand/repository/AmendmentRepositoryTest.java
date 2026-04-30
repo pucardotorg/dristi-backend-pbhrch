@@ -38,6 +38,9 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @ContextConfiguration(classes = {AmendmentRepository.class})
 @ExtendWith(SpringExtension.class)
@@ -205,8 +208,9 @@ class AmendmentRepositoryTest {
         Amendment amendment = new Amendment();
         amendment.setAmendmentReason(AmendmentReason.COURT_CASE_SETTLEMENT);
         AuditDetails auditDetails = mock(AuditDetails.class);
-        when(auditDetails.getCreatedTime()).thenReturn(1L);
-        when(auditDetails.getLastModifiedTime()).thenReturn(1L);
+        OffsetDateTime fixedTime = OffsetDateTime.ofInstant(Instant.ofEpochMilli(1L), ZoneId.systemDefault());
+        when(auditDetails.getCreatedTime()).thenReturn(fixedTime);
+        when(auditDetails.getLastModifiedTime()).thenReturn(fixedTime);
         when(auditDetails.getCreatedBy()).thenReturn("Jan 1, 2020 8:00am GMT+0100");
         when(auditDetails.getLastModifiedBy()).thenReturn("Jan 1, 2020 9:00am GMT+0100");
         ProcessInstance workflow = new ProcessInstance();
@@ -301,7 +305,8 @@ class AmendmentRepositoryTest {
         when(this.namedParameterJdbcTemplate.batchUpdate((String) any(),
                 (org.springframework.jdbc.core.namedparam.SqlParameterSource[]) any())).thenReturn(new int[]{1, 1, 1, 1});
         AuditDetails auditDetails = mock(AuditDetails.class);
-        when(auditDetails.getLastModifiedTime()).thenReturn(1L);
+        OffsetDateTime fixedTime = OffsetDateTime.ofInstant(Instant.ofEpochMilli(1L), ZoneId.systemDefault());
+        when(auditDetails.getLastModifiedTime()).thenReturn(fixedTime);
         when(auditDetails.getLastModifiedBy()).thenReturn("Jan 1, 2020 9:00am GMT+0100");
         MissingNode additionalDetails = MissingNode.getInstance();
         ProcessInstance workflow = new ProcessInstance();
@@ -352,8 +357,9 @@ class AmendmentRepositoryTest {
         Amendment amendment = new Amendment();
         amendment.setAmendmentReason(AmendmentReason.COURT_CASE_SETTLEMENT);
         AuditDetails auditDetails = mock(AuditDetails.class);
-        when(auditDetails.getCreatedTime()).thenReturn(1L);
-        when(auditDetails.getLastModifiedTime()).thenReturn(1L);
+        OffsetDateTime fixedTime = OffsetDateTime.ofInstant(Instant.ofEpochMilli(1L), ZoneId.systemDefault());
+        when(auditDetails.getCreatedTime()).thenReturn(fixedTime);
+        when(auditDetails.getLastModifiedTime()).thenReturn(fixedTime);
         when(auditDetails.getCreatedBy()).thenReturn("Jan 1, 2020 8:00am GMT+0100");
         when(auditDetails.getLastModifiedBy()).thenReturn("Jan 1, 2020 9:00am GMT+0100");
         ProcessInstance workflow = new ProcessInstance();

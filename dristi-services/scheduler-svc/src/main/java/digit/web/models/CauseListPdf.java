@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 
+import java.time.OffsetDateTime;
+
 @Validated
 @Data
 @AllArgsConstructor
@@ -30,7 +32,7 @@ public class CauseListPdf {
     private String tenantId;
 
     @JsonProperty("createdTime")
-    private Long createdTime;
+    private OffsetDateTime createdTime;
 
     @JsonProperty("createdBy")
     private String createdBy;

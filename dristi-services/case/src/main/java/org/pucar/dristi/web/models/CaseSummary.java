@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @Data
@@ -24,7 +25,7 @@ public class CaseSummary {
     private String caseTitle;
 
     @JsonProperty("filingDate")
-    private Long filingDate;
+    private OffsetDateTime filingDate;
 
     @JsonProperty("statutesAndSections")
     private String statutesAndSections;
@@ -54,7 +55,7 @@ public class CaseSummary {
     private String courtId;
 
     @JsonProperty("registrationDate")
-    private Long registrationDate ;
+    private OffsetDateTime registrationDate ;
 
     @JsonProperty("registrationNumber")
     private String registrationNumber;

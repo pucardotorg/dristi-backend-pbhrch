@@ -10,6 +10,9 @@ import org.pucar.dristi.web.models.landingpagenotices.LandingPageNotice;
 import org.pucar.dristi.web.models.landingpagenotices.LandingPageNoticeRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Component
 @Slf4j
@@ -34,9 +37,9 @@ public class LandingPageNoticeEnrichment {
 
             landingPageNotice.setCreatedBy(user.getUuid());
             landingPageNotice.setNoticeNumber(landingPageNoticeUtil.getNoticeNumber());
-            landingPageNotice.setCreatedTime(landingPageNoticeUtil.getCurrentTimeInMilliSec());
+            landingPageNotice.setCreatedTime(java.time.OffsetDateTime.now());
             landingPageNotice.setLastModifiedBy(user.getUuid());
-            landingPageNotice.setLastModifiedTime(landingPageNoticeUtil.getCurrentTimeInMilliSec());
+            landingPageNotice.setLastModifiedTime(java.time.OffsetDateTime.now());
 
         } catch (CustomException e) {
             log.error("Error occurred while enriching landing page notice: {}", e.getMessage(), e);
@@ -54,7 +57,7 @@ public class LandingPageNoticeEnrichment {
         User user = requestInfo.getUserInfo();
 
         landingPageNotice.setLastModifiedBy(user.getUuid());
-        landingPageNotice.setLastModifiedTime(landingPageNoticeUtil.getCurrentTimeInMilliSec());
+        landingPageNotice.setLastModifiedTime(java.time.OffsetDateTime.now());
 
     }
 

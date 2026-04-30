@@ -40,6 +40,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.client.RestTemplate;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @ContextConfiguration(classes = {EnrichmentService.class})
 @ExtendWith(SpringExtension.class)
@@ -228,7 +231,7 @@ class EnrichmentServiceTest {
     void testEnrichProcessRequestWithInstance() {
 
         AuditDetails auditDetails = new AuditDetails();
-        auditDetails.setLastModifiedTime(1L);
+        auditDetails.setLastModifiedTime(OffsetDateTime.ofInstant(Instant.ofEpochMilli(1L), ZoneId.systemDefault()));
         when(this.workflowUtil.getAuditDetails((String) any(), (Boolean) any())).thenReturn(auditDetails);
         when(this.userService.searchUser((RequestInfo) any(), (java.util.List<String>) any())).thenReturn(new HashMap<>());
 
@@ -263,9 +266,9 @@ class EnrichmentServiceTest {
     void EnrichProcessRequestwithAction() {
 
         AuditDetails auditDetails = mock(AuditDetails.class);
-        when(auditDetails.getLastModifiedTime()).thenReturn(1L);
-        doNothing().when(auditDetails).setLastModifiedTime((Long) any());
-        auditDetails.setLastModifiedTime(4L);
+        when(auditDetails.getLastModifiedTime()).thenReturn(OffsetDateTime.ofInstant(Instant.ofEpochMilli(1L), ZoneId.systemDefault()));
+        doNothing().when(auditDetails).setLastModifiedTime((OffsetDateTime) any());
+        auditDetails.setLastModifiedTime(OffsetDateTime.ofInstant(Instant.ofEpochMilli(4L), ZoneId.systemDefault()));
         when(this.workflowUtil.getAuditDetails((String) any(), (Boolean) any())).thenReturn(auditDetails);
         when(this.userService.searchUser((RequestInfo) any(), (java.util.List<String>) any())).thenReturn(new HashMap<>());
         RequestInfo requestInfo = new RequestInfo();
@@ -297,9 +300,9 @@ class EnrichmentServiceTest {
 
     void testEnrichProcessRequestReturnAuditDetails() {
         AuditDetails auditDetails = mock(AuditDetails.class);
-        when(auditDetails.getLastModifiedTime()).thenReturn(1L);
-        doNothing().when(auditDetails).setLastModifiedTime((Long) any());
-        auditDetails.setLastModifiedTime(4L);
+        when(auditDetails.getLastModifiedTime()).thenReturn(OffsetDateTime.ofInstant(Instant.ofEpochMilli(1L), ZoneId.systemDefault()));
+        doNothing().when(auditDetails).setLastModifiedTime((OffsetDateTime) any());
+        auditDetails.setLastModifiedTime(OffsetDateTime.ofInstant(Instant.ofEpochMilli(4L), ZoneId.systemDefault()));
         when(this.workflowUtil.getAuditDetails((String) any(), (Boolean) any())).thenReturn(auditDetails);
         when(this.userService.searchUser((RequestInfo) any(), (java.util.List<String>) any())).thenReturn(new HashMap<>());
         RequestInfo requestInfo = new RequestInfo();
@@ -335,9 +338,9 @@ class EnrichmentServiceTest {
     void TestEnrichProcessRequest() {
 
         AuditDetails auditDetails = mock(AuditDetails.class);
-        when(auditDetails.getLastModifiedTime()).thenReturn(1L);
-        doNothing().when(auditDetails).setLastModifiedTime((Long) any());
-        auditDetails.setLastModifiedTime(4L);
+        when(auditDetails.getLastModifiedTime()).thenReturn(OffsetDateTime.ofInstant(Instant.ofEpochMilli(1L), ZoneId.systemDefault()));
+        doNothing().when(auditDetails).setLastModifiedTime((OffsetDateTime) any());
+        auditDetails.setLastModifiedTime(OffsetDateTime.ofInstant(Instant.ofEpochMilli(4L), ZoneId.systemDefault()));
         when(this.workflowUtil.getAuditDetails((String) any(), (Boolean) any())).thenReturn(auditDetails);
         when(this.userService.searchUser((RequestInfo) any(), (java.util.List<String>) any())).thenReturn(new HashMap<>());
 
@@ -345,7 +348,7 @@ class EnrichmentServiceTest {
         requestInfo.setUserInfo(new User());
 
         AuditDetails auditDetails1 = new AuditDetails();
-        auditDetails1.setLastModifiedTime(1L);
+        auditDetails1.setLastModifiedTime(OffsetDateTime.ofInstant(Instant.ofEpochMilli(1L), ZoneId.systemDefault()));
 
         ProcessInstance processInstance = new ProcessInstance();
         processInstance.setAuditDetails(auditDetails1);
@@ -375,15 +378,15 @@ class EnrichmentServiceTest {
     @Test
     void testEnrichProcessRequests() {
         AuditDetails auditDetails = mock(AuditDetails.class);
-        when(auditDetails.getLastModifiedTime()).thenReturn(1L);
-        doNothing().when(auditDetails).setLastModifiedTime((Long) any());
-        auditDetails.setLastModifiedTime(4L);
+        when(auditDetails.getLastModifiedTime()).thenReturn(OffsetDateTime.ofInstant(Instant.ofEpochMilli(1L), ZoneId.systemDefault()));
+        doNothing().when(auditDetails).setLastModifiedTime((OffsetDateTime) any());
+        auditDetails.setLastModifiedTime(OffsetDateTime.ofInstant(Instant.ofEpochMilli(4L), ZoneId.systemDefault()));
         when(this.workflowUtil.getAuditDetails((String) any(), (Boolean) any())).thenReturn(auditDetails);
         when(this.userService.searchUser((RequestInfo) any(), (java.util.List<String>) any())).thenReturn(new HashMap<>());
         RequestInfo requestInfo = new RequestInfo();
         requestInfo.setUserInfo(new User());
         AuditDetails auditDetails1 = new AuditDetails();
-        auditDetails1.setLastModifiedTime(4L);
+        auditDetails1.setLastModifiedTime(OffsetDateTime.ofInstant(Instant.ofEpochMilli(4L), ZoneId.systemDefault()));
         State state = new State();
         ArrayList<Document> documents = new ArrayList<>();
         User assigner = new User();
@@ -418,7 +421,7 @@ class EnrichmentServiceTest {
                 () -> this.enrichmentService.enrichProcessRequest(requestInfo, processStateAndActionList));
         verify(this.workflowUtil).getAuditDetails((String) any(), (Boolean) any());
         verify(auditDetails).getLastModifiedTime();
-        verify(auditDetails).setLastModifiedTime((Long) any());
+        verify(auditDetails).setLastModifiedTime((OffsetDateTime) any());
         verify(this.userService).searchUser((RequestInfo) any(), (java.util.List<String>) any());
         verify(processStateAndAction, atLeast(1)).getAction();
         verify(processStateAndAction, atLeast(1)).getProcessInstanceFromDb();
@@ -1416,7 +1419,7 @@ class EnrichmentServiceTest {
 
     void testEnrichAndUpdateSlaForSearchWithTime() {
         AuditDetails auditDetails = new AuditDetails();
-        auditDetails.setLastModifiedTime(1L);
+        auditDetails.setLastModifiedTime(OffsetDateTime.ofInstant(Instant.ofEpochMilli(1L), ZoneId.systemDefault()));
         ProcessInstance processInstance = new ProcessInstance();
         processInstance.setAuditDetails(auditDetails);
         ArrayList<ProcessInstance> processInstanceList = new ArrayList<>();
@@ -1428,7 +1431,7 @@ class EnrichmentServiceTest {
     @Test
     void testEnrichAndUpdateSlaForSearchWithTrue() {
         AuditDetails auditDetails = new AuditDetails();
-        auditDetails.setLastModifiedTime(0L);
+        auditDetails.setLastModifiedTime(OffsetDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneId.systemDefault()));
         State state = new State();
         ArrayList<Document> documents = new ArrayList<>();
         User assigner = new User();
@@ -1447,7 +1450,7 @@ class EnrichmentServiceTest {
     @Test
     void testEnrichAndUpdateSlaForSearchWithInstanceList() {
         AuditDetails auditDetails = new AuditDetails();
-        auditDetails.setLastModifiedTime(0L);
+        auditDetails.setLastModifiedTime(OffsetDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneId.systemDefault()));
         State state = new State();
         ArrayList<Document> documents = new ArrayList<>();
         User assigner = new User();
@@ -1468,9 +1471,9 @@ class EnrichmentServiceTest {
     @Test
     void TestEnrichAndUpdateSlaForSearch() {
         AuditDetails auditDetails = mock(AuditDetails.class);
-        when(auditDetails.getLastModifiedTime()).thenReturn(1L);
-        doNothing().when(auditDetails).setLastModifiedTime((Long) any());
-        auditDetails.setLastModifiedTime(0L);
+        when(auditDetails.getLastModifiedTime()).thenReturn(OffsetDateTime.ofInstant(Instant.ofEpochMilli(1L), ZoneId.systemDefault()));
+        doNothing().when(auditDetails).setLastModifiedTime((OffsetDateTime) any());
+        auditDetails.setLastModifiedTime(OffsetDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneId.systemDefault()));
         State state = new State();
         ArrayList<Document> documents = new ArrayList<>();
         User assigner = new User();
@@ -1486,7 +1489,7 @@ class EnrichmentServiceTest {
         processInstanceList.add(processInstance);
         this.enrichmentService.enrichAndUpdateSlaForSearch(processInstanceList);
         verify(auditDetails).getLastModifiedTime();
-        verify(auditDetails).setLastModifiedTime((Long) any());
+        verify(auditDetails).setLastModifiedTime((OffsetDateTime) any());
     }
 
 

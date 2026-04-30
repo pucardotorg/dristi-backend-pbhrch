@@ -1,0 +1,17 @@
+-- Convert timestamp columns from BIGINT (epoch millis) to TIMESTAMPTZ
+-- This migration supports the OffsetDateTime refactoring in the codebase
+
+-- Convert dristi_advocate table
+ALTER TABLE dristi_advocate 
+  ALTER COLUMN createdtime TYPE TIMESTAMPTZ USING to_timestamp(createdtime / 1000.0) AT TIME ZONE 'UTC',
+  ALTER COLUMN lastmodifiedtime TYPE TIMESTAMPTZ USING to_timestamp(lastmodifiedtime / 1000.0) AT TIME ZONE 'UTC';
+
+-- Convert dristi_advocate_clerk table
+ALTER TABLE dristi_advocate_clerk 
+  ALTER COLUMN createdtime TYPE TIMESTAMPTZ USING to_timestamp(createdtime / 1000.0) AT TIME ZONE 'UTC',
+  ALTER COLUMN lastmodifiedtime TYPE TIMESTAMPTZ USING to_timestamp(lastmodifiedtime / 1000.0) AT TIME ZONE 'UTC';
+
+-- Convert dristi_advocate_document table
+ALTER TABLE dristi_advocate_document 
+  ALTER COLUMN createdtime TYPE TIMESTAMPTZ USING to_timestamp(createdtime / 1000.0) AT TIME ZONE 'UTC',
+  ALTER COLUMN lastmodifiedtime TYPE TIMESTAMPTZ USING to_timestamp(lastmodifiedtime / 1000.0) AT TIME ZONE 'UTC';

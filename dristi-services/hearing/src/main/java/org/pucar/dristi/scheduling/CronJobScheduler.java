@@ -30,6 +30,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -234,7 +235,7 @@ public class CronJobScheduler {
 
     private List<Hearing> getHearingsHeldToday(RequestInfo requestInfo){
         ZoneId zoneId = ZoneId.of(config.getZoneId());
-        Long today = dateUtil.getEPochFromLocalDate(LocalDate.now(zoneId));
+        OffsetDateTime today = LocalDate.now(zoneId).atStartOfDay(zoneId).toOffsetDateTime();
         HearingCriteria hearingCriteria = HearingCriteria.builder()
                 .fromDate(today)
                 .status(COMPLETED)
@@ -354,8 +355,8 @@ public class CronJobScheduler {
 
         List<Hearing> hearings = fetchHearings(requestInfo, criteria, null);
         if(!hearings.isEmpty()){
-            Long startTime = hearings.get(0).getStartTime();
-            LocalDate nextHearingDate = dateUtil.getLocalDateFromEpoch(startTime);
+            OffsetDateTime startTime = hearings.get(0).getStartTime();
+            LocalDate nextHearingDate = startTime != null ? startTime.toLocalDate() : null;
             return String.valueOf(nextHearingDate);
         }
         return null;
@@ -363,8 +364,8 @@ public class CronJobScheduler {
 
     private List<Hearing> getHearingsScheduledTomorrow(RequestInfo requestInfo){
         ZoneId zoneId = ZoneId.of(config.getZoneId());
-        Long tomorrowStart = dateUtil.getEPochFromLocalDate(LocalDate.now(zoneId).plusDays(1));
-        Long tomorrowEnd = dateUtil.getEPochFromLocalDate(LocalDate.now(zoneId).plusDays(2)) - 1L;
+        OffsetDateTime tomorrowStart = LocalDate.now(zoneId).plusDays(1).atStartOfDay(zoneId).toOffsetDateTime();
+        OffsetDateTime tomorrowEnd = LocalDate.now(zoneId).plusDays(2).atStartOfDay(zoneId).toOffsetDateTime().minusNanos(1);
         HearingCriteria hearingCriteria = HearingCriteria.builder()
                 .fromDate(tomorrowStart)
                 .toDate(tomorrowEnd)

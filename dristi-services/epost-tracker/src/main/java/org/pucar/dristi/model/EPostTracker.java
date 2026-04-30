@@ -3,6 +3,11 @@ package org.pucar.dristi.model;
 import lombok.*;
 import org.egov.common.contract.models.AuditDetails;
 
+import java.time.OffsetDateTime;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -24,9 +29,9 @@ public class EPostTracker {
     private String remarks;
     private Object additionalDetails;
     private Integer rowVersion;
-    private Long bookingDate;
-    private Long receivedDate;
-    private Long statusUpdateDate;
+    private OffsetDateTime bookingDate;
+    private OffsetDateTime receivedDate;
+    private OffsetDateTime statusUpdateDate;
     private String postalHub;
     private AuditDetails auditDetails;
     private String totalAmount;

@@ -194,7 +194,7 @@ public class IndexerUtils {
         String screenType = pendingTask.getScreenType();
         String caseNumber = filingNumber;
         String actionCategory = pendingTask.getActionCategory();
-        Long filingDate = pendingTask.getFilingDate();
+        Long filingDate = pendingTask.getFilingDate() != null ? pendingTask.getFilingDate().toInstant().toEpochMilli() : null;
         String sectionAndSubSection = pendingTask.getSectionAndSubSection();
         String referenceEntityType = pendingTask.getReferenceEntityType();
 
@@ -257,9 +257,9 @@ public class IndexerUtils {
             }
         }
 
-        Long createdTime = pendingTask.getCreatedTime() != null ? pendingTask.getCreatedTime() : clock.millis();
+        Long createdTime = pendingTask.getCreatedTime() != null ? pendingTask.getCreatedTime().toInstant().toEpochMilli() : clock.millis();
 
-        Long expiryTime = pendingTask.getExpiryDate();
+        Long expiryTime = pendingTask.getExpiryDate() != null ? pendingTask.getExpiryDate().toInstant().toEpochMilli() : null;
         try {
             additionalDetails = mapper.writeValueAsString(pendingTask.getAdditionalDetails());
         } catch (Exception e) {
@@ -296,7 +296,7 @@ public class IndexerUtils {
         String screenType = pendingTask.getScreenType();
         String caseNumber = filingNumber;
         String actionCategory = pendingTask.getActionCategory();
-        Long filingDate = pendingTask.getFilingDate();
+        Long filingDate = pendingTask.getFilingDate() != null ? pendingTask.getFilingDate().toInstant().toEpochMilli() : null;
         String sectionAndSubSection = pendingTask.getSectionAndSubSection();
         String referenceEntityType = pendingTask.getReferenceEntityType();
 
@@ -358,9 +358,9 @@ public class IndexerUtils {
             }
         }
 
-        Long createdTime = pendingTask.getCreatedTime() != null ? pendingTask.getCreatedTime() : clock.millis();
+        Long createdTime = pendingTask.getCreatedTime() != null ? pendingTask.getCreatedTime().toInstant().toEpochMilli() : clock.millis();
 
-        Long expiryTime = pendingTask.getExpiryDate();
+        Long expiryTime = pendingTask.getExpiryDate() != null ? pendingTask.getExpiryDate().toInstant().toEpochMilli() : null;
         try {
             additionalDetails = mapper.writeValueAsString(pendingTask.getAdditionalDetails());
         } catch (Exception e) {

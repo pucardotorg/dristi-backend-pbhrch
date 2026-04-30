@@ -6,10 +6,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.egov.common.contract.models.AuditDetails;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 /**
  * AdvocateMapping
@@ -54,9 +56,6 @@ public class AdvocateMapping {
 
     @JsonProperty("additionalDetails")
     private Object additionalDetails = null;
-
-    @JsonProperty("advocate")
-    private Advocate advocate = null;
 
     @JsonProperty("hasSigned")
     private Boolean hasSigned = false;

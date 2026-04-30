@@ -102,4 +102,8 @@ public class Configuration {
 
     @Value("${egov.file.store.delete.endpoint}")
     private String fileStoreDeleteEndPoint;
+
+    // Timezone
+    @Value("${app.timezone:Asia/Kolkata}")
+    private String zoneId;
 }

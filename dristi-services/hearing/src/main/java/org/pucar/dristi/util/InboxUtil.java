@@ -200,8 +200,8 @@ public class InboxUtil {
 
     public InboxRequest getInboxRequestForOpenHearing(BulkReschedule bulkReschedule) {
 
-        Long fromDate = bulkReschedule.getStartTime();
-        Long toDate = bulkReschedule.getEndTime();
+        Object fromDate = bulkReschedule.getStartTime();
+        Object toDate = bulkReschedule.getEndTime();
         String searchableFields = bulkReschedule.getSearchableFields();
 
         HashMap<String, Object> moduleSearchCriteria = new HashMap<>();

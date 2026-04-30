@@ -142,7 +142,8 @@ public class CronJobScheduler {
 
             if(ERRORS_PENDING.equalsIgnoreCase(notificationType)){
                 ProcessInstance processInstance = workflowService.getCurrentWorkflow(requestInfo, config.getTenantId(), courtCase.getFilingNumber());
-                Long createdTime = processInstance.getAuditDetails().getCreatedTime();
+                java.time.OffsetDateTime createdTimeOdt = processInstance.getAuditDetails().getCreatedTime();
+                long createdTime = createdTimeOdt != null ? createdTimeOdt.toInstant().toEpochMilli() : 0L;
                 if(shouldTriggerSmsForErrorsPending(createdTime)){
                     courtCase.getRepresentatives().forEach(representative -> {
                         JsonNode advocateNode = objectMapper.convertValue(representative, JsonNode.class);

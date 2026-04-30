@@ -15,9 +15,13 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 /**
  * CauseList
@@ -64,11 +68,11 @@ public class CauseList {
 
     @JsonProperty("startTime")
     @Valid
-    private Long startTime = null;
+    private OffsetDateTime startTime = null;
 
     @JsonProperty("endTime")
     @Valid
-    private Long endTime = null;
+    private OffsetDateTime endTime = null;
 
     @JsonProperty("presidedBy")
     private PresidedBy presidedBy = null;
@@ -116,7 +120,7 @@ public class CauseList {
     private String caseTitle = null;
 
     @JsonProperty("caseRegistrationDate")
-    private Long caseRegistrationDate = null;
+    private OffsetDateTime caseRegistrationDate = null;
 
     @JsonProperty("caseNumber")
     private String caseNumber = null;

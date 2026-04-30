@@ -30,6 +30,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static org.pucar.dristi.config.ServiceConstants.*;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Component
 @Slf4j
@@ -190,7 +193,8 @@ public class CaseRegistrationEnrichment {
 
             List<String> courtCaseRegistrationFillingNumberIdList = idgenUtil.getIdList(caseRequest.getRequestInfo(), tenantId, idName, idFormat, 1, true);
             log.info("Court Case Registration Filling Number cp Id List :: {}", courtCaseRegistrationFillingNumberIdList);
-            AuditDetails auditDetails = AuditDetails.builder().createdBy(caseRequest.getRequestInfo().getUserInfo().getUuid()).createdTime(caseUtil.getCurrentTimeMil()).lastModifiedBy(caseRequest.getRequestInfo().getUserInfo().getUuid()).lastModifiedTime(caseUtil.getCurrentTimeMil()).build();
+            long nowEpoch = caseUtil.getCurrentTimeOffset().toInstant().toEpochMilli();
+            AuditDetails auditDetails = AuditDetails.builder().createdBy(caseRequest.getRequestInfo().getUserInfo().getUuid()).createdTime(nowEpoch).lastModifiedBy(caseRequest.getRequestInfo().getUserInfo().getUuid()).lastModifiedTime(nowEpoch).build();
             courtCase.setAuditdetails(auditDetails);
 
             courtCase.setId(UUID.randomUUID());
@@ -337,7 +341,7 @@ public class CaseRegistrationEnrichment {
     }
 
     public void enrichCaseRegistrationFillingDate(CourtCase courtCase) {
-        courtCase.setFilingDate(caseUtil.getCurrentTimeMil());
+        courtCase.setFilingDate(caseUtil.getCurrentTimeOffset());
     }
 
     public void enrichStatuteAndSectionsOnCreateAndUpdate(CourtCase courtCase, AuditDetails auditDetails) {
@@ -380,7 +384,7 @@ public class CaseRegistrationEnrichment {
             // Enrich lastModifiedTime and lastModifiedBy in case of update
             CourtCase courtCase = caseRequest.getCases();
             AuditDetails auditDetails = courtCase.getAuditdetails();
-            auditDetails.setLastModifiedTime(caseUtil.getCurrentTimeMil());
+            auditDetails.setLastModifiedTime(caseUtil.getCurrentTimeOffset().toInstant().toEpochMilli());
             auditDetails.setLastModifiedBy(caseRequest.getRequestInfo().getUserInfo().getUuid());
             enrichCaseRegistrationUponCreateAndUpdate(courtCase, auditDetails);
             enrichDocument(caseRequest, existingCourtCaseList);
@@ -521,7 +525,7 @@ public class CaseRegistrationEnrichment {
 
     public void enrichRegistrationDate(CaseRequest caseRequest) {
         try {
-            caseRequest.getCases().setRegistrationDate(caseUtil.getCurrentTimeMil());
+            caseRequest.getCases().setRegistrationDate(caseUtil.getCurrentTimeOffset());
         } catch (Exception e) {
             log.error("Error enriching registration date: {}", e.toString());
             throw new CustomException(ENRICHMENT_EXCEPTION, "Error in case enrichment service while enriching registration date: " + e.getMessage());

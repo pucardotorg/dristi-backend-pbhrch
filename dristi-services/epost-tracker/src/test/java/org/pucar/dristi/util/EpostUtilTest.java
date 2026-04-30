@@ -24,6 +24,9 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @ExtendWith(MockitoExtension.class)
 class EpostUtilTest {
@@ -104,6 +107,7 @@ class EpostUtilTest {
         AuditDetails auditDetails = mock(AuditDetails.class);
         User userInfo = mock(User.class);
 
+        when(config.getZoneId()).thenReturn("Asia/Kolkata");
         when(ePostRequest.getEPostTracker()).thenReturn(ePostTracker);
         when(ePostRequest.getRequestInfo()).thenReturn(requestInfo);
         when(ePostTracker.getAuditDetails()).thenReturn(auditDetails);

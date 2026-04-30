@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @Validated
@@ -52,7 +53,7 @@ public class CaseSearch {
     private List<Participant> litigants = null;
 
     @JsonProperty("nextHearingDate")
-    private Long nextHearingDate = null;
+    private OffsetDateTime nextHearingDate = null;
 
     @JsonProperty("caseStage")
     private String caseStage = null;
@@ -67,13 +68,13 @@ public class CaseSearch {
     private String hearingType = null;
 
     @JsonProperty("lastHearingDate")
-    private Long lastHearingDate;
+    private OffsetDateTime lastHearingDate;
 
     @JsonProperty("filingDate")
-    private Long filingDate;
+    private OffsetDateTime filingDate;
 
     @JsonProperty("registrationDate")
-    private Long registrationDate;
+    private OffsetDateTime registrationDate;
 
     @JsonProperty("caseSubStage")
     private String caseSubStage = null;

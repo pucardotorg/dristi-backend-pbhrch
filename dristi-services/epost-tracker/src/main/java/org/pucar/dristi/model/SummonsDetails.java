@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import org.springframework.validation.annotation.Validated;
 
+import java.time.OffsetDateTime;
+
 /**
  * Summon
  */
@@ -17,7 +19,7 @@ public class SummonsDetails {
     private String summonId = null;
 
     @JsonProperty("issueDate")
-    private Long issueDate;
+    private OffsetDateTime issueDate;
 
     @JsonProperty("docType")
     private String docType;

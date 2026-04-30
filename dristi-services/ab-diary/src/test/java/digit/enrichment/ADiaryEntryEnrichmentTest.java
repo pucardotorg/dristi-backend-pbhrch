@@ -3,7 +3,6 @@ package digit.enrichment;
 import digit.util.ADiaryUtil;
 import digit.web.models.CaseDiaryEntry;
 import digit.web.models.CaseDiaryEntryRequest;
-import org.egov.common.contract.models.AuditDetails;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
 import org.egov.tracer.model.CustomException;
@@ -13,15 +12,24 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import digit.web.models.AuditDetails;
+
+import java.time.OffsetDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @ExtendWith(MockitoExtension.class)
 class ADiaryEntryEnrichmentTest {
 
     @Mock
     private ADiaryUtil aDiaryUtil;
+
+    @Mock
+    private digit.util.DateTimeUtil dateTimeUtil;
 
     @InjectMocks
     private ADiaryEntryEnrichment enrichment;
@@ -50,6 +58,7 @@ class ADiaryEntryEnrichmentTest {
                 .diaryEntry(diaryEntry)
                 .build();
 
+        lenient().when(dateTimeUtil.getCurrentOffsetDateTime()).thenReturn(OffsetDateTime.now());
     }
 
     @Test
@@ -64,7 +73,6 @@ class ADiaryEntryEnrichmentTest {
 
         // Verify
         verify(aDiaryUtil).generateUUID();
-        verify(aDiaryUtil, times(2)).getCurrentTimeInMilliSec();
     }
 
     @Test
@@ -81,11 +89,12 @@ class ADiaryEntryEnrichmentTest {
     @Test
     void enrichUpdateEntry_Success() {
         // Arrange
+        OffsetDateTime originalCreatedTime = OffsetDateTime.now();
         AuditDetails existingAuditDetails = AuditDetails.builder()
                 .createdBy("original-creator")
-                .createdTime(1000L)
+                .createdTime(originalCreatedTime)
                 .lastModifiedBy("original-modifier")
-                .lastModifiedTime(2000L)
+                .lastModifiedTime(OffsetDateTime.now())
                 .build();
         diaryEntry.setAuditDetails(existingAuditDetails);
 
@@ -94,11 +103,9 @@ class ADiaryEntryEnrichmentTest {
 
         // Assert
         assertEquals("original-creator", diaryEntry.getAuditDetails().getCreatedBy());
-        assertEquals(1000L, diaryEntry.getAuditDetails().getCreatedTime());
+        assertEquals(originalCreatedTime, diaryEntry.getAuditDetails().getCreatedTime());
         assertEquals(uuid, diaryEntry.getAuditDetails().getLastModifiedBy());
 
-        // Verify
-        verify(aDiaryUtil).getCurrentTimeInMilliSec();
     }
 
     @Test
@@ -140,7 +147,8 @@ class ADiaryEntryEnrichmentTest {
     void enrichUpdateEntry_UtilException_ThrowsException() {
         // Arrange
         diaryEntry.setAuditDetails(AuditDetails.builder().build());
-        when(aDiaryUtil.getCurrentTimeInMilliSec()).thenThrow(new RuntimeException("Time retrieval failed"));
+        // Throw from getAuditDetails to simulate exception path
+        request.getDiaryEntry().setAuditDetails(null);
 
         // Act & Assert
         CustomException exception = assertThrows(CustomException.class,

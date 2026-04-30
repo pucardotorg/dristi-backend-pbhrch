@@ -15,7 +15,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
 import java.time.Instant;
+import java.time.OffsetDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -45,8 +47,8 @@ public class HearingServiceTest {
     public void testSearchHearings_successWithData() {
         HearingSearchRequest request = HearingSearchRequest.builder()
                 .criteria(HearingCriteria.builder()
-                        .fromDate(17980808085l)
-                        .toDate(1835707057070l)
+                        .fromDate(OffsetDateTime.of(2024, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC))
+                        .toDate(OffsetDateTime.of(2024, 12, 31, 0, 0, 0, 0, ZoneOffset.UTC))
                         .courtId("court1")
                         .tenantId("tenant1")
                         .build())

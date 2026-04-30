@@ -3,6 +3,9 @@ package org.egov.demand.repository.rowmapper;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -41,9 +44,13 @@ public class BillRowMapperV2 implements ResultSetExtractor<List<BillV2>>{
 
 				AuditDetails auditDetails = new AuditDetails();
 				auditDetails.setCreatedBy(rs.getString("b_createdby"));
-				auditDetails.setCreatedTime((Long) rs.getObject("b_createddate"));
+				Long createdTime = (Long) rs.getObject("b_createddate");
+				auditDetails.setCreatedTime(createdTime != null ?
+					OffsetDateTime.ofInstant(Instant.ofEpochMilli(createdTime), ZoneId.systemDefault()) : null);
 				auditDetails.setLastModifiedBy(rs.getString("b_lastmodifiedby"));
-				auditDetails.setLastModifiedTime((Long) rs.getObject("b_lastmodifieddate"));
+				Long lastModifiedTime = (Long) rs.getObject("b_lastmodifieddate");
+				auditDetails.setLastModifiedTime(lastModifiedTime != null ?
+					OffsetDateTime.ofInstant(Instant.ofEpochMilli(lastModifiedTime), ZoneId.systemDefault()) : null);
 
 
 				bill = BillV2.builder()

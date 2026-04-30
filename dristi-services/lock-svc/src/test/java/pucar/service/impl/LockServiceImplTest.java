@@ -20,6 +20,9 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @ExtendWith(MockitoExtension.class)
 class LockServiceImplTest {
@@ -51,7 +54,7 @@ class LockServiceImplTest {
         lock.setTenantId("tenant1");
         lock.setUserId("test-user");
         lock.setIsLocked(true);
-        lock.setLockReleaseTime(System.currentTimeMillis() + 10000);
+        lock.setLockReleaseTime(java.time.OffsetDateTime.now().plusSeconds(10));
         lock.setAuditDetails(new AuditDetails());
     }
 
@@ -71,7 +74,7 @@ class LockServiceImplTest {
     void testSetLock_AlreadyLockedByAnotherUser() {
         Lock existingLock = new Lock();
         existingLock.setUserId("another-user");
-        existingLock.setLockReleaseTime(System.currentTimeMillis()+120000);
+        existingLock.setLockReleaseTime(java.time.OffsetDateTime.now().plusSeconds(120));
         when(repository.getLockByUniqueIdAndTenantIdAndIsLocked(anyString(), anyString(), anyBoolean()))
                 .thenReturn(Optional.of(existingLock));
 
@@ -83,7 +86,7 @@ class LockServiceImplTest {
     void testIsLocked_ReturnsTrueWhenLockedByAnotherUser() {
         Lock existingLock = new Lock();
         existingLock.setUserId("another-user");
-        existingLock.setLockReleaseTime(System.currentTimeMillis()+120000);
+        existingLock.setLockReleaseTime(java.time.OffsetDateTime.now().plusSeconds(120));
         when(repository.getLockByUniqueIdAndTenantIdAndIsLocked(anyString(), anyString(), anyBoolean()))
                 .thenReturn(Optional.of(existingLock));
 

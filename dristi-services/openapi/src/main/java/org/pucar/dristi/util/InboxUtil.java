@@ -208,6 +208,10 @@ public class InboxUtil {
                         field.set(landingPageCase, convertedList);
                     }
                 }
+                // Handle OffsetDateTime fields converted from epoch millis
+                else if (field.getType() == java.time.OffsetDateTime.class) {
+                    field.set(landingPageCase, convertValue(value, java.time.OffsetDateTime.class));
+                }
                 // Handle nested objects
                 else if (!field.getType().isPrimitive() && !field.getType().equals(String.class) &&
                         !Number.class.isAssignableFrom(field.getType()) && !Boolean.class.isAssignableFrom(field.getType())) {
@@ -244,6 +248,13 @@ public class InboxUtil {
             return Boolean.parseBoolean(value.toString());
         } else if (targetType == String.class) {
             return value.toString();
+        } else if (targetType == java.time.OffsetDateTime.class) {
+            try {
+                long epochMilli = Long.parseLong(value.toString());
+                return java.time.Instant.ofEpochMilli(epochMilli).atOffset(java.time.ZoneOffset.UTC);
+            } catch (NumberFormatException e) {
+                return java.time.OffsetDateTime.parse(value.toString());
+            }
         }
 
         return value; // Return as is if no conversion logic is provided

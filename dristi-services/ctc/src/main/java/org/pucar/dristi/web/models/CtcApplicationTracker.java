@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @Data
@@ -33,10 +34,10 @@ public class CtcApplicationTracker {
     private String status;
 
     @JsonProperty("dateOfApplicationApproval")
-    private Long dateOfApplicationApproval;
+    private OffsetDateTime dateOfApplicationApproval;
 
     @JsonProperty("dateRaised")
-    private Long dateRaised;
+    private OffsetDateTime dateRaised;
 
     @JsonProperty("applicantName")
     private String applicantName;

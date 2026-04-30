@@ -9,6 +9,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 
+import java.time.OffsetDateTime;
+
 @Validated
 @Data
 @AllArgsConstructor
@@ -34,7 +36,7 @@ public class AdvocateDetails {
 
     @JsonProperty("requestedDate")
     @NotNull
-    private Long requestedDate;
+    private OffsetDateTime requestedDate;
 
     @JsonProperty("individualDetails")
     @NotNull

@@ -22,6 +22,9 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.client.HttpClientErrorException;
 
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -59,8 +62,8 @@ public class HearingUtilTest {
     public void testCallHearing_Success() {
         Hearing hearing = new Hearing();
         hearing.setTenantId("tenantId");
-        hearing.setStartTime(1614556800000L);
-        hearing.setEndTime(1614556800000L);
+        hearing.setStartTime(OffsetDateTime.ofInstant(Instant.ofEpochMilli(1614556800000L), ZoneOffset.UTC));
+        hearing.setEndTime(OffsetDateTime.ofInstant(Instant.ofEpochMilli(1614556800000L), ZoneOffset.UTC));
         updateBulkRequest.setHearings(List.of(hearing));
 
         when(configuration.getHearingHost()).thenReturn("http://hearing-host");

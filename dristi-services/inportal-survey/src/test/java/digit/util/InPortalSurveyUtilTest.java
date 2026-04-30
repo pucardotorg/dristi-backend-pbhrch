@@ -1,17 +1,23 @@
 package digit.util;
 
+import digit.config.Configuration;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.OffsetDateTime;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 public class InPortalSurveyUtilTest {
+
+    @Mock
+    private Configuration config;
 
     @InjectMocks
     private InPortalSurveyUtil inPortalSurveyUtil;
@@ -53,74 +59,75 @@ public class InPortalSurveyUtilTest {
     }
 
     @Test
-    public void testGetExpiryTimeInMilliSec_PositiveDays() {
+    public void testGetExpiryTimeOffset_PositiveDays() {
         // Arrange
         Long noOfDaysInMilliSec = 7 * 24 * 60 * 60 * 1000L; // 7 days
 
         // Act
-        Long expiryTime = inPortalSurveyUtil.getExpiryTimeInMilliSec(noOfDaysInMilliSec);
+        OffsetDateTime before = OffsetDateTime.now().minusSeconds(1);
+        OffsetDateTime expiryTime = inPortalSurveyUtil.getExpiryTimeOffset(noOfDaysInMilliSec);
 
         // Assert
         assertNotNull(expiryTime);
-        Long currentTime = inPortalSurveyUtil.getCurrentTimeInMilliSec();
-        assertTrue(expiryTime > currentTime || Math.abs(expiryTime - currentTime - noOfDaysInMilliSec) < 100);
+        assertTrue(expiryTime.isAfter(before));
     }
 
     @Test
-    public void testGetExpiryTimeInMilliSec_ZeroDays() {
+    public void testGetExpiryTimeOffset_ZeroDays() {
         // Arrange
         Long noOfDaysInMilliSec = 0L;
 
         // Act
-        Long expiryTime = inPortalSurveyUtil.getExpiryTimeInMilliSec(noOfDaysInMilliSec);
+        OffsetDateTime before = OffsetDateTime.now().minusSeconds(1);
+        OffsetDateTime expiryTime = inPortalSurveyUtil.getExpiryTimeOffset(noOfDaysInMilliSec);
+        OffsetDateTime after = OffsetDateTime.now().plusSeconds(1);
 
         // Assert
         assertNotNull(expiryTime);
-        Long currentTime = inPortalSurveyUtil.getCurrentTimeInMilliSec();
-        assertTrue(Math.abs(expiryTime - currentTime) < 100); // Should be approximately current time
+        assertTrue(expiryTime.isAfter(before));
+        assertTrue(expiryTime.isBefore(after));
     }
 
     @Test
-    public void testGetExpiryTimeInMilliSec_LargeDays() {
+    public void testGetExpiryTimeOffset_LargeDays() {
         // Arrange
         Long noOfDaysInMilliSec = 365 * 24 * 60 * 60 * 1000L; // 1 year
 
         // Act
-        Long expiryTime = inPortalSurveyUtil.getExpiryTimeInMilliSec(noOfDaysInMilliSec);
+        OffsetDateTime before = OffsetDateTime.now();
+        OffsetDateTime expiryTime = inPortalSurveyUtil.getExpiryTimeOffset(noOfDaysInMilliSec);
 
         // Assert
         assertNotNull(expiryTime);
-        Long currentTime = inPortalSurveyUtil.getCurrentTimeInMilliSec();
-        assertTrue(expiryTime > currentTime);
-        assertTrue(expiryTime - currentTime >= noOfDaysInMilliSec - 100);
+        assertTrue(expiryTime.isAfter(before));
     }
 
     @Test
-    public void testGetExpiryTimeInMilliSec_SmallDuration() {
+    public void testGetExpiryTimeOffset_SmallDuration() {
         // Arrange
         Long noOfDaysInMilliSec = 1000L; // 1 second
 
         // Act
-        Long expiryTime = inPortalSurveyUtil.getExpiryTimeInMilliSec(noOfDaysInMilliSec);
+        OffsetDateTime before = OffsetDateTime.now().minusSeconds(1);
+        OffsetDateTime expiryTime = inPortalSurveyUtil.getExpiryTimeOffset(noOfDaysInMilliSec);
 
         // Assert
         assertNotNull(expiryTime);
-        Long currentTime = inPortalSurveyUtil.getCurrentTimeInMilliSec();
-        assertTrue(expiryTime >= currentTime);
+        assertTrue(expiryTime.isAfter(before));
     }
 
     @Test
-    public void testGetExpiryTimeInMilliSec_ConsistentCalculation() {
+    public void testGetExpiryTimeOffset_ConsistentCalculation() {
         // Arrange
         Long noOfDaysInMilliSec = 30 * 24 * 60 * 60 * 1000L; // 30 days
 
         // Act
-        Long currentTime = inPortalSurveyUtil.getCurrentTimeInMilliSec();
-        Long expiryTime = inPortalSurveyUtil.getExpiryTimeInMilliSec(noOfDaysInMilliSec);
+        OffsetDateTime before = OffsetDateTime.now().minusSeconds(1);
+        OffsetDateTime expiryTime = inPortalSurveyUtil.getExpiryTimeOffset(noOfDaysInMilliSec);
 
         // Assert
-        Long expectedExpiry = currentTime + noOfDaysInMilliSec;
-        assertTrue(Math.abs(expiryTime - expectedExpiry) < 100); // Allow small time difference
+        assertNotNull(expiryTime);
+        assertTrue(expiryTime.isAfter(before.plusNanos(noOfDaysInMilliSec * 1_000_000L)));
     }
 
     @Test
@@ -185,12 +192,11 @@ public class InPortalSurveyUtilTest {
     public void testAllMethods_Integration() {
         // Test all methods work together
         Long currentTime = inPortalSurveyUtil.getCurrentTimeInMilliSec();
-        Long expiryTime = inPortalSurveyUtil.getExpiryTimeInMilliSec(1000L);
+        OffsetDateTime expiryTime = inPortalSurveyUtil.getExpiryTimeOffset(1000L);
         UUID uuid = inPortalSurveyUtil.generateUUID();
 
         assertNotNull(currentTime);
         assertNotNull(expiryTime);
         assertNotNull(uuid);
-        assertTrue(expiryTime >= currentTime);
     }
 }

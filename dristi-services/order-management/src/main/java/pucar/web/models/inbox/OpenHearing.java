@@ -5,6 +5,7 @@ import lombok.*;
 import org.springframework.validation.annotation.Validated;
 import pucar.web.models.OrderStatus;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 
 
@@ -50,10 +51,10 @@ public class OpenHearing {
     private String status = null;
 
     @JsonProperty("fromDate")
-    private Long fromDate = null;
+    private OffsetDateTime fromDate = null;
 
     @JsonProperty("toDate")
-    private Long toDate = null;
+    private OffsetDateTime toDate = null;
 
     @JsonProperty("advocate")
     private AdvocateDetails advocate = null;
@@ -65,7 +66,7 @@ public class OpenHearing {
     private String hearingType = null;
 
     @JsonProperty("caseFilingDate")
-    private Long caseFilingDate = null;
+    private OffsetDateTime caseFilingDate = null;
 
     @JsonProperty("statusOrder")
     private Integer statusOrder = null;

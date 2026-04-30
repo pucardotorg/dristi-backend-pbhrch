@@ -99,7 +99,7 @@ public class ADiaryValidator {
     private void validateExistingDiary(CaseDiary diary) {
 
         CaseDiarySearchCriteria searchCriteria = CaseDiarySearchCriteria.builder().tenantId(diary.getTenantId())
-                .date(diary.getDiaryDate()).courtId(diary.getCourtId())
+                .date(diary.getDiaryDate() != null ? diary.getDiaryDate().toInstant().toEpochMilli() : null).courtId(diary.getCourtId())
                 .build();
 
         CaseDiarySearchRequest caseDiarySearchRequest = CaseDiarySearchRequest.builder().criteria(searchCriteria).build();
@@ -116,7 +116,7 @@ public class ADiaryValidator {
 
     public void validateGenerateRequest(CaseDiaryGenerateRequest generateRequest) {
         //check if diaryDate is greater than current date
-        if (generateRequest.getDiary().getDiaryDate() != null && generateRequest.getDiary().getDiaryDate() > System.currentTimeMillis()) {
+        if (generateRequest.getDiary().getDiaryDate() != null && generateRequest.getDiary().getDiaryDate().isAfter(java.time.OffsetDateTime.now())) {
             throw new CustomException(VALIDATION_EXCEPTION, "diary date can not be in future");
         }
     }

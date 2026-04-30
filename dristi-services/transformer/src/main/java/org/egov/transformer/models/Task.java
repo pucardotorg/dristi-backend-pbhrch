@@ -14,6 +14,7 @@ import org.springframework.validation.annotation.Validated;
 
 import java.text.ParseException;
 import java.time.Instant;
+import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -55,11 +56,11 @@ public class Task {
 
 
     @NotNull
-    private Long createdDate = null;
+    private OffsetDateTime createdDate = null;
 
-    private Long dateCloseBy = null;
+    private OffsetDateTime dateCloseBy = null;
 
-    private Long dateClosed = null;
+    private OffsetDateTime dateClosed = null;
 
     @JsonProperty("taskDescription")
     private String taskDescription = null;
@@ -111,7 +112,7 @@ public class Task {
         if (null != dateTime) {
             if (dateTime > 0) {
                 formattedDateTime = Instant.ofEpochMilli(dateTime)
-                        .atZone(ZoneId.of("Asia/Kolkata"))
+                        .atZone(java.time.ZoneOffset.UTC)
                         .toLocalDate()
                         .format(DateTimeFormatter.ofPattern(pattern));
             }
@@ -121,17 +122,17 @@ public class Task {
 
     @JsonProperty("createdDate")
     public String getCreatedDate() {
-        return getFormattedDateTime(this.createdDate, "dd/MM/yyyy");
+        return this.createdDate != null ? getFormattedDateTime(this.createdDate.toInstant().toEpochMilli(), "dd/MM/yyyy") : null;
     }
 
     @JsonProperty("dateCloseBy")
     public String getDateCloseBy() {
-        return getFormattedDateTime(this.dateCloseBy, "dd/MM/yyyy");
+        return this.dateCloseBy != null ? getFormattedDateTime(this.dateCloseBy.toInstant().toEpochMilli(), "dd/MM/yyyy") : null;
     }
 
     @JsonProperty("dateClosed")
     public String getDateClosed() {
-        return getFormattedDateTime(this.dateClosed, "dd/MM/yyyy");
+        return this.dateClosed != null ? getFormattedDateTime(this.dateClosed.toInstant().toEpochMilli(), "dd/MM/yyyy") : null;
     }
 
     public Long convertDateToLong(String dateTime, String pattern) throws ParseException {
@@ -140,28 +141,31 @@ public class Task {
 
     @JsonProperty("createdDate")
     public void setCreatedDate(String date) throws ParseException {
+        if (date == null) return;
         try {
-            this.createdDate = Long.parseLong(date);
+            this.createdDate = Instant.ofEpochMilli(Long.parseLong(date)).atOffset(java.time.ZoneOffset.UTC);
         } catch (NumberFormatException e) {
-            this.createdDate = convertDateToLong(date, "dd/MM/yyyy");
+            this.createdDate = Instant.ofEpochMilli(convertDateToLong(date, "dd/MM/yyyy")).atOffset(java.time.ZoneOffset.UTC);
         }
     }
 
     @JsonProperty("dateCloseBy")
     public void setDateCloseBy(String date) throws ParseException {
+        if (date == null) return;
         try {
-            this.dateCloseBy = Long.parseLong(date);
+            this.dateCloseBy = Instant.ofEpochMilli(Long.parseLong(date)).atOffset(java.time.ZoneOffset.UTC);
         } catch (NumberFormatException e) {
-            this.dateCloseBy = convertDateToLong(date, "dd/MM/yyyy");
+            this.dateCloseBy = Instant.ofEpochMilli(convertDateToLong(date, "dd/MM/yyyy")).atOffset(java.time.ZoneOffset.UTC);
         }
     }
 
     @JsonProperty("dateClosed")
     public void setDateClosed(String date) throws ParseException {
+        if (date == null) return;
         try {
-            this.dateClosed = Long.parseLong(date);
+            this.dateClosed = Instant.ofEpochMilli(Long.parseLong(date)).atOffset(java.time.ZoneOffset.UTC);
         } catch (NumberFormatException e) {
-            this.dateClosed = convertDateToLong(date, "dd/MM/yyyy");
+            this.dateClosed = Instant.ofEpochMilli(convertDateToLong(date, "dd/MM/yyyy")).atOffset(java.time.ZoneOffset.UTC);
         }
     }
 }

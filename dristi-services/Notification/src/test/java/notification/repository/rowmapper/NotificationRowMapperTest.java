@@ -8,7 +8,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import notification.web.models.Notification;
-import org.egov.common.contract.models.AuditDetails;
+import notification.web.models.AuditDetails;
 import org.egov.common.contract.models.Document;
 import org.egov.tracer.model.CustomException;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,6 +21,9 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @ExtendWith(MockitoExtension.class)
 class NotificationRowMapperTest {
@@ -31,11 +34,14 @@ class NotificationRowMapperTest {
     @Mock
     private ObjectMapper objectMapper;
 
+    @Mock
+    private notification.util.DateUtil dateUtil;
+
     private NotificationRowMapper rowMapper;
 
     @BeforeEach
     void setUp() {
-        rowMapper = new NotificationRowMapper(objectMapper);
+        rowMapper = new NotificationRowMapper(objectMapper, dateUtil);
     }
 
     @Test
@@ -142,15 +148,12 @@ class NotificationRowMapperTest {
         when(resultSet.getBoolean("isactive")).thenReturn(true);
         when(resultSet.getString("notificationdetails")).thenReturn("details");
         when(resultSet.getString("issuedby")).thenReturn("issuer");
-        when(resultSet.getLong("createddate")).thenReturn(123L);
         when(resultSet.getString("comment")).thenReturn("comments");
     }
 
     private void mockAuditDetails() throws SQLException {
         when(resultSet.getString("createdby")).thenReturn("creator");
-        when(resultSet.getLong("createdtime")).thenReturn(123L);
         when(resultSet.getString("lastmodifiedby")).thenReturn("modifier");
-        when(resultSet.getLong("lastmodifiedtime")).thenReturn(456L);
     }
 
     private void mockDocumentData(boolean withDocument) throws SQLException {

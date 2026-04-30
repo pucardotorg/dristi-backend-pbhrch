@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 
@@ -36,10 +37,10 @@ public class ProcessInstanceSearchCriteria {
     private Boolean history = false;
 
     @JsonProperty("fromDate")
-    private Long fromDate = null;
+    private OffsetDateTime fromDate = null;
 
     @JsonProperty("toDate")
-    private Long toDate = null;
+    private OffsetDateTime toDate = null;
 
 
     @JsonProperty("offset")

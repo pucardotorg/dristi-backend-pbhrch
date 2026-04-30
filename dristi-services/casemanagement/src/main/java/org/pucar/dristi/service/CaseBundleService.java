@@ -18,6 +18,8 @@ import org.pucar.dristi.web.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.egov.tracer.model.CustomException;
+import java.time.Instant;
+import java.time.OffsetDateTime;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -221,12 +223,13 @@ public class CaseBundleService {
 
     public String getCaseBundle(CaseBundleRequest caseBundleRequest) {
         CaseBundleTracker caseBundleTracker = new CaseBundleTracker();
-        caseBundleTracker.setStartTime(System.currentTimeMillis());
+        caseBundleTracker.setStartTime(OffsetDateTime.now());
         caseBundleTracker.setId(UUID.randomUUID().toString());
+        long nowMillis = Instant.now().toEpochMilli();
         AuditDetails auditDetails = AuditDetails.builder().createdBy(caseBundleRequest.getRequestInfo().getUserInfo().getUuid())
-                .createdTime(System.currentTimeMillis())
+                .createdTime(nowMillis)
                 .lastModifiedBy(caseBundleRequest.getRequestInfo().getUserInfo().getUuid())
-                .lastModifiedTime(System.currentTimeMillis())
+                .lastModifiedTime(nowMillis)
                 .build();
         caseBundleTracker.setAuditDetails(auditDetails);
 
@@ -321,7 +324,7 @@ public class CaseBundleService {
             throw new CustomException("UNKNOWN_ERROR", "Unexpected error while processing case bundle");
         }
 
-        caseBundleTracker.setEndTime(System.currentTimeMillis());
+        caseBundleTracker.setEndTime(OffsetDateTime.now());
         caseBundleRepository.insertCaseTracker(caseBundleTracker);
 
         return fileStoreId;
@@ -397,7 +400,7 @@ public class CaseBundleService {
 
     public Boolean getBulkCaseBundle(CaseBundleBulkRequest caseBundleBulkRequest){
         BulkCaseBundleTracker bulkCaseBundleTracker = new BulkCaseBundleTracker();
-        bulkCaseBundleTracker.setStartTime(System.currentTimeMillis());
+        bulkCaseBundleTracker.setStartTime(OffsetDateTime.now());
         bulkCaseBundleTracker.setId(UUID.randomUUID().toString());
         RequestInfo requestInfo = caseBundleBulkRequest.getRequestInfo();
         String tenantId = caseBundleBulkRequest.getTenantId();
@@ -444,7 +447,7 @@ public class CaseBundleService {
             throw new CustomException("UNKNOWN_ERROR", "Unexpected error while processing case bundle");
         }
 
-        bulkCaseBundleTracker.setEndTime(System.currentTimeMillis());
+        bulkCaseBundleTracker.setEndTime(OffsetDateTime.now());
         caseBundleRepository.insertBulkCaseTracker(bulkCaseBundleTracker);
         return true;
     }

@@ -17,6 +17,8 @@ import org.springframework.scheduling.TaskScheduler;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.*;
 
 import static org.pucar.dristi.config.ServiceConstants.*;
@@ -97,7 +99,7 @@ public class SmsNotificationService {
                 .contentType("TEXT")
                 .category("NOTIFICATION")
                 .locale(NOTIFICATION_ENG_LOCALE_CODE)
-                .expiryTime(System.currentTimeMillis() + 60 * 60 * 1000)
+                .expiryTime(OffsetDateTime.now(ZoneId.of(config.getZoneId())).plusHours(1).toInstant().toEpochMilli())
                 .message(message).build();
         log.info("push message {}", smsRequest);
 

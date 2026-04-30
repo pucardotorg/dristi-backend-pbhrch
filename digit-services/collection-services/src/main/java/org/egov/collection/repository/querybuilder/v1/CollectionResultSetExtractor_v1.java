@@ -24,6 +24,9 @@ import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Service
 public class CollectionResultSetExtractor_v1 implements ResultSetExtractor<List<Receipt_v1>> {

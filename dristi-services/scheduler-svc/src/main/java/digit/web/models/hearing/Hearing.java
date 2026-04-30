@@ -15,9 +15,13 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Schema(description = "a case can have multiple hearings. this represents one of the many hearings related to the case")
 @Validated
@@ -71,11 +75,11 @@ public class Hearing {
 
     @JsonProperty("startTime")
     @Valid
-    private Long startTime = null;
+    private OffsetDateTime startTime = null;
 
     @JsonProperty("endTime")
     @Valid
-    private Long endTime = null;
+    private OffsetDateTime endTime = null;
 
     @JsonProperty("presidedBy")
     private PresidedBy presidedBy = null;

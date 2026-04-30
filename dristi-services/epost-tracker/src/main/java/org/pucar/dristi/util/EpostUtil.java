@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -52,13 +53,10 @@ public class EpostUtil {
     public EPostTracker createPostTrackerBody(TaskRequest request) throws JsonProcessingException {
         String processNumber = idgenUtil.getIdList(request.getRequestInfo(), config.getEgovStateTenantId(),
                 config.getIdName(),null,1).get(0);
-        long currentDate = System.currentTimeMillis();
+        OffsetDateTime now = OffsetDateTime.now(ZoneId.of(config.getZoneId()));
 
         ZoneId istZone = ZoneId.of(config.getZoneId());
-        long istMillis = Instant.ofEpochMilli(currentDate)
-                .atZone(istZone)
-                .toInstant()
-                .toEpochMilli();
+        long istMillis = now.toInstant().toEpochMilli();
 
         Task task = request.getTask();
         String docSubType = null;
@@ -89,7 +87,7 @@ public class EpostUtil {
                 .deliveryStatus(DeliveryStatus.NOT_UPDATED)
                 .additionalDetails(request.getTask().getAdditionalDetails())
                 .rowVersion(0)
-                .receivedDate(istMillis)
+                .receivedDate(now)
                 .taskType(request.getTask().getTaskType())
                 .respondentName(respondentName)
                 .auditDetails(createAuditDetails(request.getRequestInfo()))
@@ -135,8 +133,8 @@ public class EpostUtil {
             enrichPostHub(ePostTracker);
         }
 
-        Long currentTime = System.currentTimeMillis();
-        ePostTracker.getAuditDetails().setLastModifiedTime(currentTime);
+        OffsetDateTime now = OffsetDateTime.now(ZoneId.of(config.getZoneId()));
+        ePostTracker.getAuditDetails().setLastModifiedTime(now.toInstant().toEpochMilli());
         ePostTracker.getAuditDetails().setLastModifiedBy(ePostRequest.getRequestInfo().getUserInfo().getUuid());
         ePostTracker.setRowVersion(ePostTracker.getRowVersion() + 1);
 
@@ -153,13 +151,14 @@ public class EpostUtil {
     }
 
     private AuditDetails createAuditDetails(RequestInfo requestInfo) {
-        long currentTime = System.currentTimeMillis();
+        OffsetDateTime now = OffsetDateTime.now(ZoneId.of(config.getZoneId()));
         String userId = requestInfo.getUserInfo().getUuid();
+        long epochMillis = now.toInstant().toEpochMilli();
         return AuditDetails.builder()
                 .createdBy(userId)
-                .createdTime(currentTime)
+                .createdTime(epochMillis)
                 .lastModifiedBy(userId)
-                .lastModifiedTime(currentTime)
+                .lastModifiedTime(epochMillis)
                 .build();
     }
 

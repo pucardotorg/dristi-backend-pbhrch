@@ -10,6 +10,7 @@ import org.pucar.dristi.web.models.NatureOfDisposal;
 import org.pucar.dristi.web.models.POAHolder;
 import org.pucar.dristi.web.models.StatuteSection;
 
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -33,7 +34,7 @@ public class CaseSummarySearch {
     private String caseTitle = null;
 
     @JsonProperty("createdTime")
-    private Long createdTime;
+    private OffsetDateTime createdTime;
 
     @JsonProperty("caseDescription")
     private String caseDescription = null;
@@ -72,13 +73,13 @@ public class CaseSummarySearch {
     private String benchId = null;
 
     @JsonProperty("filingDate")
-    private Long filingDate = null;
+    private OffsetDateTime filingDate = null;
 
     @JsonProperty("registrationDate")
-    private Long registrationDate = null;
+    private OffsetDateTime registrationDate = null;
 
     @JsonProperty("judgementDate")
-    private Long judgementDate = null;
+    private OffsetDateTime judgementDate = null;
 
     @JsonProperty("caseCategory")
     private String caseCategory = null;

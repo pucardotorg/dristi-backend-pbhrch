@@ -4,11 +4,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.*;
-import org.egov.common.contract.models.AuditDetails;
 
 import javax.validation.Valid;
 import java.math.BigDecimal;
+import java.time.OffsetDateTime;
 import java.util.List;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Getter
 @Setter
@@ -87,7 +90,7 @@ public class Bill {
     private String billNumber;
 
     @JsonProperty("billDate")
-    private Long billDate;
+    private OffsetDateTime billDate;
 
     @JsonProperty("amountPaid")
     private BigDecimal amountPaid;

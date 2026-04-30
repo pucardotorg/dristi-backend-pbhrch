@@ -7,13 +7,17 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.egov.common.contract.models.AuditDetails;
 import org.egov.common.contract.models.Document;
+import org.pucar.dristi.web.models.AuditDetails;
 import org.pucar.dristi.web.models.WorkflowObject;
 
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Data
 @AllArgsConstructor
@@ -44,15 +48,15 @@ public class Task {
 
     @JsonProperty("createdDate")
     @Valid
-    private Long createdDate = null;
+    private OffsetDateTime createdDate = null;
 
     @JsonProperty("dateCloseBy")
     @Valid
-    private Long dateCloseBy = null;
+    private OffsetDateTime dateCloseBy = null;
 
     @JsonProperty("dateClosed")
     @Valid
-    private Long dateClosed = null;
+    private OffsetDateTime dateClosed = null;
 
     @JsonProperty("taskDescription")
     private String taskDescription = null;
@@ -100,7 +104,7 @@ public class Task {
     private String state;
 
     @JsonProperty("duedate")
-    private Long duedate;
+    private OffsetDateTime duedate;
 
 
     @JsonProperty("caseTitle")

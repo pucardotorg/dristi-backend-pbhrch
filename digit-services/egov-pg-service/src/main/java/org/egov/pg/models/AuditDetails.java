@@ -43,6 +43,11 @@ package org.egov.pg.models;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
+import java.time.OffsetDateTime;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
+
 @Builder
 @Setter
 @Getter
@@ -56,12 +61,12 @@ public class AuditDetails {
     private String createdBy = null;
 
     @JsonProperty("createdTime")
-    private Long createdTime = null;
+    private OffsetDateTime createdTime = null;
 
     @JsonProperty("lastModifiedBy")
     private String lastModifiedBy = null;
 
     @JsonProperty("lastModifiedTime")
-    private Long lastModifiedTime = null;
+    private OffsetDateTime lastModifiedTime = null;
 
 }

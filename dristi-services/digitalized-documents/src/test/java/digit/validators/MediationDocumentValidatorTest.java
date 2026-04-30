@@ -10,6 +10,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -31,9 +33,9 @@ class MediationDocumentValidatorTest {
     void setup() {
         validDetails = MediationDetails.builder()
                 .natureOfComplainant("Nature")
-                .dateOfInstitution(1L)
+                .dateOfInstitution(OffsetDateTime.now(ZoneOffset.UTC).minusDays(10))
                 .caseStage("Stage")
-                .hearingDate(2L)
+                .hearingDate(OffsetDateTime.now(ZoneOffset.UTC).plusDays(5))
                 .partyDetails(List.of(
                         MediationPartyDetails.builder()
                                 .partyType(PartyTypeEnum.COMPLAINANT)
@@ -85,9 +87,9 @@ class MediationDocumentValidatorTest {
     void validateCreateMediationDocument_WhenPartyFieldMissing_Throws() {
         MediationDetails badDetails = MediationDetails.builder()
                 .natureOfComplainant("Nature")
-                .dateOfInstitution(1L)
+                .dateOfInstitution(OffsetDateTime.now(ZoneOffset.UTC).minusDays(10))
                 .caseStage("Stage")
-                .hearingDate(2L)
+                .hearingDate(OffsetDateTime.now(ZoneOffset.UTC).plusDays(5))
                 .partyDetails(List.of(
                         MediationPartyDetails.builder()
                                 .partyType(null) // missing mandatory field

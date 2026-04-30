@@ -13,6 +13,7 @@ import org.springframework.validation.annotation.Validated;
 
 import java.text.ParseException;
 import java.time.Instant;
+import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -99,13 +100,13 @@ public class CourtCase {
     @JsonProperty("filingDate")
     //@NotNull
     @Valid
-    private Long filingDate = null;
+    private OffsetDateTime filingDate = null;
 
     @JsonProperty("registrationDate")
-    private Long registrationDate = null;
+    private OffsetDateTime registrationDate = null;
 
     @JsonProperty("judgementDate")
-    private Long judgementDate = null;
+    private OffsetDateTime judgementDate = null;
 
     private Dates dates;
 
@@ -184,9 +185,9 @@ public class CourtCase {
     @JsonProperty("lastModifiedBy")
     private String lastModifiedBy = null;
     @JsonProperty("createdTime")
-    private Long createdTime = null;
+    private OffsetDateTime createdTime = null;
     @JsonProperty("lastModifiedTime")
-    private Long lastModifiedTime = null;
+    private OffsetDateTime lastModifiedTime = null;
 
     @JsonProperty("lprNumber")
     private String lprNumber = null;
@@ -226,14 +227,14 @@ public class CourtCase {
     public void setAuditDetails() {
         AuditDetails auditDetails = new AuditDetails();
         auditDetails.setCreatedBy(this.createdBy);
-        auditDetails.setCreatedTime(this.createdTime);
+        auditDetails.setCreatedTime(this.createdTime != null ? this.createdTime.toInstant().toEpochMilli() : null);
         auditDetails.setLastModifiedBy(this.lastModifiedBy);
-        auditDetails.setLastModifiedTime(this.lastModifiedTime);
+        auditDetails.setLastModifiedTime(this.lastModifiedTime != null ? this.lastModifiedTime.toInstant().toEpochMilli() : null);
         this.setAuditdetails(auditDetails);
     }
 
     public String parseDate(Long date) {
-        return parseDate(date, ZoneId.of("Asia/Kolkata"));
+        return parseDate(date, java.time.ZoneOffset.UTC);
     }
 
     public String parseDate(Long date, ZoneId zoneId) {
@@ -250,19 +251,19 @@ public class CourtCase {
     }
 
     public void setDates() {
-        setDates(ZoneId.of("Asia/Kolkata"));
+        setDates(java.time.ZoneOffset.UTC);
     }
 
     public void setDates(ZoneId zoneId) {
         Dates transformedDates = new Dates();
         if (this.getFilingDate() != null) {
-            transformedDates.setFilingDate(parseDate(this.getFilingDate(), zoneId));
+            transformedDates.setFilingDate(parseDate(this.getFilingDate().toInstant().toEpochMilli(), zoneId));
         }
         if (this.getRegistrationDate() != null) {
-            transformedDates.setRegistrationDate(parseDate(this.getRegistrationDate(), zoneId));
+            transformedDates.setRegistrationDate(parseDate(this.getRegistrationDate().toInstant().toEpochMilli(), zoneId));
         }
         if (this.getJudgementDate() != null) {
-            transformedDates.setJudgementDate(parseDate(this.getJudgementDate(), zoneId));
+            transformedDates.setJudgementDate(parseDate(this.getJudgementDate().toInstant().toEpochMilli(), zoneId));
         }
         this.dates = transformedDates;
     }
@@ -271,9 +272,9 @@ public class CourtCase {
     public void setFilingDate(String date) throws ParseException {
         if (null != date) {
             try {
-                this.filingDate = Long.parseLong(date);
+                this.filingDate = Instant.ofEpochMilli(Long.parseLong(date)).atOffset(java.time.ZoneOffset.UTC);
             } catch (NumberFormatException e) {
-                this.filingDate = new java.text.SimpleDateFormat("dd/MM/yyyy").parse(date).getTime();
+                this.filingDate = Instant.ofEpochMilli(new java.text.SimpleDateFormat("dd/MM/yyyy").parse(date).getTime()).atOffset(java.time.ZoneOffset.UTC);
             }
         }
     }
@@ -282,9 +283,9 @@ public class CourtCase {
     public void setRegistrationDate(String date) throws ParseException {
         if (null != date) {
             try {
-                this.registrationDate = Long.parseLong(date);
+                this.registrationDate = Instant.ofEpochMilli(Long.parseLong(date)).atOffset(java.time.ZoneOffset.UTC);
             } catch (NumberFormatException e) {
-                this.registrationDate = new java.text.SimpleDateFormat("dd/MM/yyyy").parse(date).getTime();
+                this.registrationDate = Instant.ofEpochMilli(new java.text.SimpleDateFormat("dd/MM/yyyy").parse(date).getTime()).atOffset(java.time.ZoneOffset.UTC);
             }
         }
     }
@@ -293,9 +294,9 @@ public class CourtCase {
     public void setJudgementDate(String date) throws ParseException {
         if (null != date) {
             try {
-                this.judgementDate = Long.parseLong(date);
+                this.judgementDate = Instant.ofEpochMilli(Long.parseLong(date)).atOffset(java.time.ZoneOffset.UTC);
             } catch (NumberFormatException e) {
-                this.judgementDate = new java.text.SimpleDateFormat("dd/MM/yyyy").parse(date).getTime();
+                this.judgementDate = Instant.ofEpochMilli(new java.text.SimpleDateFormat("dd/MM/yyyy").parse(date).getTime()).atOffset(java.time.ZoneOffset.UTC);
             }
         }
     }

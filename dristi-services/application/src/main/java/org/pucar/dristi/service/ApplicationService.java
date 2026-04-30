@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONArray;
-import org.egov.common.contract.models.AuditDetails;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.Role;
 import org.egov.tracer.model.CustomException;
@@ -14,6 +13,7 @@ import org.pucar.dristi.config.Configuration;
 import org.pucar.dristi.enrichment.ApplicationEnrichment;
 import org.pucar.dristi.kafka.Producer;
 import org.pucar.dristi.repository.ApplicationRepository;
+import org.pucar.dristi.util.DateUtil;
 import org.pucar.dristi.util.DemandUtil;
 import org.pucar.dristi.util.EvidenceUtil;
 import org.pucar.dristi.util.FileStoreUtil;
@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -35,6 +36,9 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static org.pucar.dristi.config.ServiceConstants.*;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Service
 @Slf4j
@@ -51,6 +55,7 @@ public class ApplicationService {
     private final EvidenceUtil evidenceUtil;
     private final DemandUtil demandUtil;
     private final MdmsUtil mdmsUtil;
+    private final DateUtil dateUtil;
 
     @Autowired
     public ApplicationService(
@@ -59,7 +64,7 @@ public class ApplicationService {
             ApplicationRepository applicationRepository,
             WorkflowService workflowService,
             Configuration config,
-            Producer producer, SmsNotificationUtil smsNotificationUtil, ObjectMapper objectMapper, FileStoreUtil fileStoreUtil, EvidenceUtil evidenceUtil, DemandUtil demandUtil, MdmsUtil mdmsUtil) {
+            Producer producer, SmsNotificationUtil smsNotificationUtil, ObjectMapper objectMapper, FileStoreUtil fileStoreUtil, EvidenceUtil evidenceUtil, DemandUtil demandUtil, MdmsUtil mdmsUtil, DateUtil dateUtil) {
         this.validator = validator;
         this.enrichmentUtil = enrichmentUtil;
         this.applicationRepository = applicationRepository;
@@ -72,6 +77,7 @@ public class ApplicationService {
         this.evidenceUtil = evidenceUtil;
         this.demandUtil = demandUtil;
         this.mdmsUtil = mdmsUtil;
+        this.dateUtil = dateUtil;
     }
 
     public Application createApplication(ApplicationRequest body) {
@@ -334,11 +340,12 @@ public class ApplicationService {
             if (CollectionUtils.isEmpty(applicationList)) {
                 throw new CustomException(VALIDATION_ERR, "Application not found");
             }
+            OffsetDateTime now = dateUtil.getCurrentOffsetDateTime();
             AuditDetails auditDetails = AuditDetails.builder()
                     .createdBy(applicationAddCommentRequest.getRequestInfo().getUserInfo().getUuid())
-                    .createdTime(System.currentTimeMillis())
+                    .createdTime(now)
                     .lastModifiedBy(applicationAddCommentRequest.getRequestInfo().getUserInfo().getUuid())
-                    .lastModifiedTime(System.currentTimeMillis())
+                    .lastModifiedTime(now)
                     .build();
             applicationAddComment.getComment().forEach(comment -> enrichmentUtil.enrichCommentUponCreate(comment, auditDetails));
             Application applicationToUpdate = applicationList.get(0);

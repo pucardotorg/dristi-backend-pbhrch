@@ -23,6 +23,9 @@ import java.util.UUID;
 
 import static digit.config.ServiceConstants.EDIT;
 import static digit.config.ServiceConstants.ERROR_WHILE_FETCHING_FROM_CASE;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Component
 @Slf4j
@@ -44,11 +47,12 @@ public class BailRegistrationEnrichment {
         List<String> bailRegistrationBailIdList = idgenUtil.getIdList(requestInfo, tenantId, idName, idFormat, 1,false);
         log.info("Bail Registration ID list: {}", bailRegistrationBailIdList);
 
+        java.time.OffsetDateTime now = java.time.OffsetDateTime.now(java.time.ZoneOffset.UTC);
         AuditDetails auditDetails = AuditDetails.builder()
                 .createdBy(bailRequest.getRequestInfo().getUserInfo().getUuid())
-                .createdTime(System.currentTimeMillis())
+                .createdTime(now)
                 .lastModifiedBy(bailRequest.getRequestInfo().getUserInfo().getUuid())
-                .lastModifiedTime(System.currentTimeMillis())
+                .lastModifiedTime(now)
                 .build();
 
         bail.setAuditDetails(auditDetails);
@@ -102,7 +106,7 @@ public class BailRegistrationEnrichment {
         }
         AuditDetails auditDetails = document.getAuditDetails();
 
-        Long currentTime = System.currentTimeMillis();
+        java.time.OffsetDateTime currentTime = java.time.OffsetDateTime.now(java.time.ZoneOffset.UTC);
         String userUuid = requestInfo.getUserInfo().getUuid();
 
         if (ObjectUtils.isEmpty(auditDetails)) {
@@ -156,7 +160,7 @@ public class BailRegistrationEnrichment {
         auditDetails.setCreatedBy(existingBail.getAuditDetails().getCreatedBy());
         auditDetails.setCreatedTime(existingBail.getAuditDetails().getCreatedTime());
         auditDetails.setLastModifiedBy(bailRequest.getRequestInfo().getUserInfo().getUuid());
-        auditDetails.setLastModifiedTime(System.currentTimeMillis());
+        auditDetails.setLastModifiedTime(java.time.OffsetDateTime.now(java.time.ZoneOffset.UTC));
         bailRequest.getBail().setAuditDetails(auditDetails);
     }
 }

@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.OffsetDateTime;
+
 @Getter
 @Setter
 @Builder
@@ -29,10 +31,10 @@ public class HearingCriteria {
     private String applicationNumber;
 
     @JsonProperty("fromDate")
-    private Long fromDate;
+    private OffsetDateTime fromDate;
 
     @JsonProperty("toDate")
-    private Long toDate;
+    private OffsetDateTime toDate;
 
     @JsonProperty("attendeeIndividualId")
     private String attendeeIndividualId;

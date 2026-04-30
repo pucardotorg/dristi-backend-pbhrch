@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.validation.annotation.Validated;
 
+import java.time.OffsetDateTime;
+
 @Validated
 @jakarta.annotation.Generated(value = "org.egov.codegen.SpringBootCodegen", date = "2024-04-15T11:31:40.281899+05:30[Asia/Kolkata]")
 @Getter
@@ -54,11 +56,11 @@ public class OrderCriteria {
 
     @JsonProperty("fromPublishedDate")
     @Valid
-    private Long fromPublishedDate = null;
+    private OffsetDateTime fromPublishedDate = null;
 
     @JsonProperty("toPublishedDate")
     @Valid
-    private Long toPublishedDate = null;
+    private OffsetDateTime toPublishedDate = null;
 
     @JsonProperty("isFuzzySearch")
     private Boolean isFuzzySearch = false;

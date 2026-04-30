@@ -16,6 +16,9 @@ import static org.pucar.dristi.config.ServiceConstants.*;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.*;
 
 
@@ -45,8 +48,8 @@ public class OpenApiCaseSummaryRowMapper implements ResultSetExtractor<List<Open
                     openApiCaseSummary = OpenApiCaseSummary.builder()
                             .cnrNumber(rs.getString("cnrnumber"))
                             .filingNumber(rs.getString("filingnumber"))
-                            .filingDate(rs.getLong("filingdate"))
-                            .registrationDate(rs.getLong("registrationdate"))
+                            .filingDate(tsToOffsetDateTime(rs.getTimestamp("filingdate")))
+                            .registrationDate(tsToOffsetDateTime(rs.getTimestamp("registrationdate")))
                             .registrationNumber(rs.getString("cmpnumber"))
                             .caseType(getCaseType(rs))
                             .status(getStatus(rs))
@@ -193,5 +196,9 @@ public class OpenApiCaseSummaryRowMapper implements ResultSetExtractor<List<Open
         }
 
         return fullName;
+    }
+
+    private OffsetDateTime tsToOffsetDateTime(Timestamp ts) {
+        return ts != null ? ts.toInstant().atOffset(ZoneOffset.UTC) : null;
     }
 }

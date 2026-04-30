@@ -106,7 +106,7 @@ public class CaseRegistrationValidatorTest {
         CourtCase courtCase = new CourtCase();
         courtCase.setTenantId("pg");
         courtCase.setCaseCategory("civil");
-        courtCase.setFilingDate(System.currentTimeMillis());
+        courtCase.setFilingDate(java.time.OffsetDateTime.now(java.time.ZoneOffset.UTC));
         courtCase.setCaseCategory("category");
 //        courtCase.setStatutesAndSections();
 
@@ -123,7 +123,7 @@ public class CaseRegistrationValidatorTest {
         courtCase.setLitigants(List.of(party));
 
         courtCase.setStatutesAndSections(List.of(new StatuteSection()));
-        courtCase.setFilingDate(System.currentTimeMillis());
+        courtCase.setFilingDate(java.time.OffsetDateTime.now(java.time.ZoneOffset.UTC));
 
         courtCase.setWorkflow(workflow);
 
@@ -175,7 +175,7 @@ public class CaseRegistrationValidatorTest {
         request.setRequestInfo(new RequestInfo());
         CourtCase courtCase = new CourtCase();
         courtCase.setTenantId("pg");
-        courtCase.setFilingDate(System.currentTimeMillis());
+        courtCase.setFilingDate(java.time.OffsetDateTime.now(java.time.ZoneOffset.UTC));
         request.setCases(courtCase);
 
         Exception exception = assertThrows(CustomException.class, () -> validator.validateCaseRegistration(request));
@@ -187,7 +187,7 @@ public class CaseRegistrationValidatorTest {
         request.setRequestInfo(new RequestInfo());
         CourtCase courtCase = new CourtCase();
         courtCase.setTenantId("pg");
-        courtCase.setFilingDate(System.currentTimeMillis());
+        courtCase.setFilingDate(java.time.OffsetDateTime.now(java.time.ZoneOffset.UTC));
         courtCase.setCaseCategory("category1");
         request.setCases(courtCase);
 
@@ -200,7 +200,7 @@ public class CaseRegistrationValidatorTest {
         request.setRequestInfo(new RequestInfo());
         CourtCase courtCase = new CourtCase();
         courtCase.setTenantId("pg");
-        courtCase.setFilingDate(System.currentTimeMillis());
+        courtCase.setFilingDate(java.time.OffsetDateTime.now(java.time.ZoneOffset.UTC));
         courtCase.setCaseCategory("category1");
         courtCase.setWorkflow(workflow);
         List<StatuteSection> statuteSectionList = new ArrayList<>();
@@ -217,7 +217,7 @@ public class CaseRegistrationValidatorTest {
         request.setRequestInfo(new RequestInfo());
         CourtCase courtCase = new CourtCase();
         courtCase.setTenantId("pg");
-        courtCase.setFilingDate(System.currentTimeMillis());
+        courtCase.setFilingDate(java.time.OffsetDateTime.now(java.time.ZoneOffset.UTC));
         courtCase.setCaseCategory("category1");
         workflow.setAction(DELETE_DRAFT_WORKFLOW_ACTION);
         courtCase.setWorkflow(workflow);
@@ -237,7 +237,7 @@ public class CaseRegistrationValidatorTest {
         request.setRequestInfo(new RequestInfo());
         CourtCase courtCase = new CourtCase();
         courtCase.setTenantId("pg");
-        courtCase.setFilingDate(System.currentTimeMillis());
+        courtCase.setFilingDate(java.time.OffsetDateTime.now(java.time.ZoneOffset.UTC));
         courtCase.setCaseCategory("category1");
         courtCase.setWorkflow(workflow);
         List<StatuteSection> statuteSectionList = new ArrayList<>();
@@ -269,7 +269,7 @@ public class CaseRegistrationValidatorTest {
         LinkedCase linkedCase = LinkedCase.builder().id(UUID.randomUUID()).caseNumber("caseNumber").build();
         courtCase.setLinkedCases(List.of(linkedCase));
         courtCase.setStatutesAndSections(List.of(new StatuteSection()));
-        courtCase.setFilingDate(System.currentTimeMillis());
+        courtCase.setFilingDate(java.time.OffsetDateTime.now(java.time.ZoneOffset.UTC));
         Map<String, Map<String, JSONArray>> mdmsRes = new HashMap<>();
         mdmsRes.put("case", new HashMap<>());
         List<String> masterList = new ArrayList<>();
@@ -317,7 +317,7 @@ public class CaseRegistrationValidatorTest {
         LinkedCase linkedCase = LinkedCase.builder().id(UUID.randomUUID()).caseNumber("caseNumber").build();
         courtCase.setLinkedCases(List.of(linkedCase));
         courtCase.setStatutesAndSections(List.of(new StatuteSection()));
-        courtCase.setFilingDate(System.currentTimeMillis());
+        courtCase.setFilingDate(java.time.OffsetDateTime.now(java.time.ZoneOffset.UTC));
         Map<String, Map<String, JSONArray>> mdmsRes = new HashMap<>();
         mdmsRes.put("case", new HashMap<>());
         List<String> masterList = new ArrayList<>();
@@ -410,7 +410,7 @@ public class CaseRegistrationValidatorTest {
         courtCase.setLitigants(List.of(party));
         LinkedCase linkedCase = LinkedCase.builder().id(UUID.randomUUID()).caseNumber("caseNumber").build();
         courtCase.setStatutesAndSections(List.of(new StatuteSection()));
-        courtCase.setFilingDate(System.currentTimeMillis());
+        courtCase.setFilingDate(java.time.OffsetDateTime.now(java.time.ZoneOffset.UTC));
         Map<String, Map<String, JSONArray>> mdmsRes = new HashMap<>();
         mdmsRes.put("case", new HashMap<>());
         List<String> masterList = new ArrayList<>();
@@ -445,7 +445,7 @@ public class CaseRegistrationValidatorTest {
         CourtCase courtCase = new CourtCase();
         CaseCriteria caseCriteria = new CaseCriteria();
         courtCase.setTenantId("pg");
-        courtCase.setFilingDate(System.currentTimeMillis());
+        courtCase.setFilingDate(java.time.OffsetDateTime.now(java.time.ZoneOffset.UTC));
         courtCase.setWorkflow(workflow);
         CaseRequest caseRequest = new CaseRequest();
         caseRequest.setCases(courtCase);
@@ -459,7 +459,7 @@ public class CaseRegistrationValidatorTest {
     void testvalidateUpdateRequest_ExistingApplicationMissingStatutes() {
         CourtCase courtCase = new CourtCase();
         courtCase.setTenantId("pg");
-        courtCase.setFilingDate(System.currentTimeMillis());
+        courtCase.setFilingDate(java.time.OffsetDateTime.now(java.time.ZoneOffset.UTC));
         courtCase.setCaseCategory("categ1");
         courtCase.setWorkflow(workflow);
         CaseCriteria caseCriteria = new CaseCriteria();
@@ -475,7 +475,7 @@ public class CaseRegistrationValidatorTest {
     void testvalidateUpdateRequest_ExistingApplicationMissingLitigantsNotThrowWhenWhenDeleteAction() {
         CourtCase courtCase = new CourtCase();
         courtCase.setTenantId("pg");
-        courtCase.setFilingDate(System.currentTimeMillis());
+        courtCase.setFilingDate(java.time.OffsetDateTime.now(java.time.ZoneOffset.UTC));
         courtCase.setCaseCategory("categ1");
         courtCase.setStatutesAndSections(List.of(StatuteSection.builder().tenantId("pb").build()));
         CaseCriteria caseCriteria = new CaseCriteria();
@@ -493,7 +493,7 @@ public class CaseRegistrationValidatorTest {
     void testvalidateUpdateRequest_ExistingApplicationMissingLitigants() {
         CourtCase courtCase = new CourtCase();
         courtCase.setTenantId("pg");
-        courtCase.setFilingDate(System.currentTimeMillis());
+        courtCase.setFilingDate(java.time.OffsetDateTime.now(java.time.ZoneOffset.UTC));
         courtCase.setCaseCategory("categ1");
         courtCase.setStatutesAndSections(List.of(StatuteSection.builder().tenantId("pb").build()));
         CaseCriteria caseCriteria = new CaseCriteria();

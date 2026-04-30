@@ -2,14 +2,17 @@ package digit.web.models;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import digit.models.coremodels.AuditDetails;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 
+import java.time.OffsetDateTime;
 import java.util.List;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 /**
  * JudgeCalendarRule
@@ -32,7 +35,7 @@ public class JudgeCalendarRule {
     private String ruleType;
 
     @JsonProperty("date")
-    private Long date;
+    private OffsetDateTime date;
 
     @JsonProperty("notes")
     private String notes;

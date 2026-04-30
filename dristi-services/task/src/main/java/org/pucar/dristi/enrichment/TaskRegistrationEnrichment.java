@@ -6,23 +6,28 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.extern.slf4j.Slf4j;
-import org.egov.common.contract.models.AuditDetails;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.model.CustomException;
 import org.pucar.dristi.config.Configuration;
 import org.pucar.dristi.util.CaseUtil;
+import org.pucar.dristi.util.DateUtil;
 import org.pucar.dristi.util.HrmsUtil;
 import org.pucar.dristi.util.IdgenUtil;
+import org.pucar.dristi.web.models.AuditDetails;
 import org.pucar.dristi.web.models.CourtCase;
 import org.pucar.dristi.web.models.Task;
 import org.pucar.dristi.web.models.TaskRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 
 import static org.pucar.dristi.config.ServiceConstants.*;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Component
 @Slf4j
@@ -32,13 +37,15 @@ public class TaskRegistrationEnrichment {
     private final Configuration config;
     private final ObjectMapper objectMapper;
     private final CaseUtil caseUtil;
+    private final DateUtil dateUtil;
 
     @Autowired
-    public TaskRegistrationEnrichment(IdgenUtil idgenUtil, Configuration config, ObjectMapper objectMapper, CaseUtil caseUtil, HrmsUtil hrmsUtil) {
+    public TaskRegistrationEnrichment(IdgenUtil idgenUtil, Configuration config, ObjectMapper objectMapper, CaseUtil caseUtil, HrmsUtil hrmsUtil, DateUtil dateUtil) {
         this.idgenUtil = idgenUtil;
         this.config = config;
         this.objectMapper = objectMapper;
         this.caseUtil = caseUtil;
+        this.dateUtil = dateUtil;
     }
 
     public void enrichTaskRegistration(TaskRequest taskRequest) {
@@ -52,7 +59,8 @@ public class TaskRegistrationEnrichment {
             List<String> taskRegistrationIdList = idgenUtil.getIdList(taskRequest.getRequestInfo(), tenantId, idName, idFormat, 1, false);
             log.info("Task Registration Id List :: {}", taskRegistrationIdList);
 
-            AuditDetails auditDetails = AuditDetails.builder().createdBy(taskRequest.getRequestInfo().getUserInfo().getUuid()).createdTime(System.currentTimeMillis()).lastModifiedBy(taskRequest.getRequestInfo().getUserInfo().getUuid()).lastModifiedTime(System.currentTimeMillis()).build();
+            OffsetDateTime now = dateUtil.getCurrentOffsetDateTime();
+            AuditDetails auditDetails = AuditDetails.builder().createdBy(taskRequest.getRequestInfo().getUserInfo().getUuid()).createdTime(now).lastModifiedBy(taskRequest.getRequestInfo().getUserInfo().getUuid()).lastModifiedTime(now).build();
             task.setAuditDetails(auditDetails);
 
             task.setId(UUID.randomUUID());
@@ -65,7 +73,7 @@ public class TaskRegistrationEnrichment {
                 });
             }
             if (task.getAmount() != null) task.getAmount().setId(UUID.randomUUID());
-            task.setCreatedDate(System.currentTimeMillis());
+            task.setCreatedDate(now);
             task.setTaskNumber(taskRequest.getTask().getFilingNumber() + "-" + taskRegistrationIdList.get(0));
 
 
@@ -121,7 +129,7 @@ public class TaskRegistrationEnrichment {
         try {
             // Enrich lastModifiedTime and lastModifiedBy in case of update
             Task task = taskRequest.getTask();
-            task.getAuditDetails().setLastModifiedTime(System.currentTimeMillis());
+            task.getAuditDetails().setLastModifiedTime(dateUtil.getCurrentOffsetDateTime());
             task.getAuditDetails().setLastModifiedBy(taskRequest.getRequestInfo().getUserInfo().getUuid());
             if (task.getDocuments() != null) {
                 task.getDocuments().removeIf(document -> document.getId() != null);
@@ -144,7 +152,7 @@ public class TaskRegistrationEnrichment {
     }
 
     public void enrichAuditDetailsForUpdate(Task task, RequestInfo requestInfo) {
-        task.getAuditDetails().setLastModifiedTime(System.currentTimeMillis());
+        task.getAuditDetails().setLastModifiedTime(dateUtil.getCurrentOffsetDateTime());
         task.getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getUuid());
     }
 

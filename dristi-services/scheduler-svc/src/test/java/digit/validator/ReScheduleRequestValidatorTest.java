@@ -12,6 +12,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -35,7 +37,7 @@ public class ReScheduleRequestValidatorTest {
         buklRescheduling.setJudgeId("judgeId");
 
         buklRescheduling.setTenantId("tenantId");
-        buklRescheduling.setScheduleAfter(1722501060000L);
+        buklRescheduling.setScheduleAfter(OffsetDateTime.of(2024, 8, 1, 12, 0, 0, 0, ZoneOffset.UTC));
 
         request.setRequestInfo(new RequestInfo());
     }

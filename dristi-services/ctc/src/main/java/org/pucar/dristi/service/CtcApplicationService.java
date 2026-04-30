@@ -507,7 +507,7 @@ public class CtcApplicationService {
             workflowService.updateWorkflowStatus(ctcApplication, requestInfo);
             Long date = System.currentTimeMillis();
             if (PENDING_ISSUE.equalsIgnoreCase(ctcApplication.getStatus())) {
-                ctcApplication.setDateOfApplicationApproval(date);
+                ctcApplication.setDateOfApplicationApproval(java.time.Instant.ofEpochMilli(date).atOffset(java.time.ZoneOffset.UTC));
                 indexerUtils.pushIssueCtcDocumentsToIndex(ctcApplication);
                 indexerUtils.updateTrackerStatus(ctcApplication.getCtcApplicationNumber(), "APPROVED", date);
             }

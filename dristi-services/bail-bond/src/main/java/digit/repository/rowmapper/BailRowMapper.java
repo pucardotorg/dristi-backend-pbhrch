@@ -11,6 +11,9 @@ import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.util.*;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Slf4j
 @Component
@@ -35,9 +38,9 @@ public class BailRowMapper implements ResultSetExtractor<List<Bail>> {
                 if (bail == null) {
                     AuditDetails auditDetails = AuditDetails.builder()
                             .createdBy(rs.getString("bailCreatedBy"))
-                            .createdTime(rs.getLong("bailCreatedTime"))
+                            .createdTime(rs.getTimestamp("bailCreatedTime") != null ? rs.getTimestamp("bailCreatedTime").toInstant().atOffset(java.time.ZoneOffset.UTC) : null)
                             .lastModifiedBy(rs.getString("bailLastModifiedBy"))
-                            .lastModifiedTime(rs.getLong("bailLastModifiedTime"))
+                            .lastModifiedTime(rs.getTimestamp("bailLastModifiedTime") != null ? rs.getTimestamp("bailLastModifiedTime").toInstant().atOffset(java.time.ZoneOffset.UTC) : null)
                             .build();
 
                     bail = Bail.builder()
@@ -82,8 +85,8 @@ public class BailRowMapper implements ResultSetExtractor<List<Bail>> {
                     AuditDetails bailDocAuditDetails = AuditDetails.builder()
                             .createdBy(rs.getString("bailDocCreatedBy"))
                             .lastModifiedBy(rs.getString("bailDocLastModifiedBy"))
-                            .createdTime(rs.getLong("bailDocCreatedTime"))
-                            .lastModifiedTime(rs.getLong("bailDocLastModifiedTime"))
+                            .createdTime(rs.getTimestamp("bailDocCreatedTime") != null ? rs.getTimestamp("bailDocCreatedTime").toInstant().atOffset(java.time.ZoneOffset.UTC) : null)
+                            .lastModifiedTime(rs.getTimestamp("bailDocLastModifiedTime") != null ? rs.getTimestamp("bailDocLastModifiedTime").toInstant().atOffset(java.time.ZoneOffset.UTC) : null)
                             .build();
 
                     Document bailDoc = Document.builder()
@@ -155,8 +158,8 @@ public class BailRowMapper implements ResultSetExtractor<List<Bail>> {
                         AuditDetails suretyDocAuditDetails = AuditDetails.builder()
                                 .createdBy(rs.getString("suretyDocCreatedBy"))
                                 .lastModifiedBy(rs.getString("suretyDocLastModifiedBy"))
-                                .createdTime(rs.getLong("suretyDocCreatedTime"))
-                                .lastModifiedTime(rs.getLong("suretyDocLastModifiedTime"))
+                                .createdTime(rs.getTimestamp("suretyDocCreatedTime") != null ? rs.getTimestamp("suretyDocCreatedTime").toInstant().atOffset(java.time.ZoneOffset.UTC) : null)
+                                .lastModifiedTime(rs.getTimestamp("suretyDocLastModifiedTime") != null ? rs.getTimestamp("suretyDocLastModifiedTime").toInstant().atOffset(java.time.ZoneOffset.UTC) : null)
                                 .build();
 
                         Document suretyDoc = Document.builder()

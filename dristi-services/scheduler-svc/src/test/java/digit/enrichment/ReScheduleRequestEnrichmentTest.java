@@ -1,7 +1,8 @@
 package digit.enrichment;
 
 import digit.config.Configuration;
-import digit.models.coremodels.AuditDetails;
+import digit.util.DateUtil;
+import digit.web.models.AuditDetails;
 import digit.util.IdgenUtil;
 import digit.web.models.ReScheduleHearing;
 import digit.web.models.ReScheduleHearingRequest;
@@ -17,6 +18,8 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,6 +27,9 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @ExtendWith(MockitoExtension.class)
 public class ReScheduleRequestEnrichmentTest {
@@ -37,6 +43,9 @@ public class ReScheduleRequestEnrichmentTest {
     @Mock
     private Configuration configuration;
 
+    @Mock
+    private DateUtil dateUtil;
+
     private RequestInfo requestInfo;
     private ReScheduleHearingRequest reScheduleHearingRequest;
     private List<ReScheduleHearing> reScheduleHearings;
@@ -48,6 +57,7 @@ public class ReScheduleRequestEnrichmentTest {
 
         requestInfo = mock(RequestInfo.class);
         Mockito.lenient().when(requestInfo.getUserInfo()).thenReturn(user);
+        Mockito.lenient().when(dateUtil.getCurrentOffsetDateTime()).thenReturn(OffsetDateTime.now(ZoneOffset.UTC));
 
         reScheduleHearings = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
@@ -86,17 +96,17 @@ public class ReScheduleRequestEnrichmentTest {
             ReScheduleHearing hearing = new ReScheduleHearing();
             hearing.setRescheduledRequestId("ID" + (i + 1));
             hearing.setRowVersion(i);
-            hearing.setAuditDetails(new AuditDetails("old-uuid", "admin", 2L, 0L));
+            hearing.setAuditDetails(new AuditDetails("old-uuid", "admin", OffsetDateTime.now(ZoneOffset.UTC), OffsetDateTime.now(ZoneOffset.UTC)));
             existingReScheduleHearings.add(hearing);
         }
 
-        reScheduleHearings.get(0).setAvailableAfter(LocalDate.now().toEpochDay());
+        reScheduleHearings.get(0).setAvailableAfter(OffsetDateTime.now(ZoneOffset.UTC));
         reScheduleHearings.get(0).setRowVersion(1);
 
-        reScheduleHearings.get(1).setAvailableAfter(LocalDate.now().toEpochDay());
+        reScheduleHearings.get(1).setAvailableAfter(OffsetDateTime.now(ZoneOffset.UTC));
         reScheduleHearings.get(1).setRowVersion(1);
 
-        reScheduleHearings.get(2).setAvailableAfter(LocalDate.now().toEpochDay());
+        reScheduleHearings.get(2).setAvailableAfter(OffsetDateTime.now(ZoneOffset.UTC));
         reScheduleHearings.get(2).setRowVersion(1);
 
         reScheduleRequestEnrichment.enrichRescheduleRequest(reScheduleHearingRequest);
@@ -104,7 +114,7 @@ public class ReScheduleRequestEnrichmentTest {
         for (int i = 0; i < existingReScheduleHearings.size(); i++) {
             ReScheduleHearing hearing = existingReScheduleHearings.get(i);
             assertEquals("admin", hearing.getAuditDetails().getLastModifiedBy());
-            assertTrue(hearing.getAuditDetails().getLastModifiedTime() <= System.currentTimeMillis());
+            assertTrue(hearing.getAuditDetails().getLastModifiedTime().toInstant().toEpochMilli() <= System.currentTimeMillis());
         }
     }
 

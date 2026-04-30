@@ -14,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -61,12 +62,12 @@ public class CalendarRepositoryTest {
             }
 
             @Override
-            public Long getFromDate() {
+            public OffsetDateTime getFromDate() {
                 return null;
             }
 
             @Override
-            public Long getToDate() {
+            public OffsetDateTime getToDate() {
                 return null;
             }
         };

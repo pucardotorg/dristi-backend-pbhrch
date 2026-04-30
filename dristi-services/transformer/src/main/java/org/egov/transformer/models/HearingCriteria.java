@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.OffsetDateTime;
+
 @Getter
 @Setter
 @Builder
@@ -37,10 +39,10 @@ public class HearingCriteria {
     private String applicationNumber;
 
     @JsonProperty("fromDate")
-    private Long fromDate;
+    private OffsetDateTime fromDate;
 
     @JsonProperty("toDate")
-    private Long toDate;
+    private OffsetDateTime toDate;
 
     @JsonProperty("attendeeIndividualId")
     private String attendeeIndividualId;
@@ -50,7 +52,7 @@ public class HearingCriteria {
 
     @AssertTrue(message = "fromDate must be less than or equal to toDate")
     private boolean isValidDateRange() {
-        return fromDate == null || toDate == null || fromDate <= toDate;
+        return fromDate == null || toDate == null || !fromDate.isAfter(toDate);
     }
 
 }

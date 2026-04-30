@@ -18,6 +18,9 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 @Component
 public class VehicleTripDetailRowMapper implements ResultSetExtractor<List<VehicleTripDetail>> {
 

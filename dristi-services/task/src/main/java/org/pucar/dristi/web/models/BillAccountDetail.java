@@ -3,10 +3,12 @@ package org.pucar.dristi.web.models;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.*;
-import org.egov.common.contract.models.AuditDetails;
 
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Setter
 @Getter

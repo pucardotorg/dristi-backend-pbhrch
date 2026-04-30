@@ -25,6 +25,9 @@ import org.springframework.web.client.RestTemplate;
 
 import static org.egov.wf.util.WorkflowConstants.AUTO_ESC_EMPLOYEE_ROLE_CODE;
 import static org.egov.wf.util.WorkflowConstants.UUID_REGEX;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 
 @Service
@@ -325,8 +328,9 @@ public class EnrichmentService {
         if(processStateAndAction.getProcessInstanceFromDb()!=null){
             Long businesssServiceSlaRemaining = processStateAndAction.getProcessInstanceFromDb().getBusinesssServiceSla();
             Long stateSlaRemaining = processStateAndAction.getProcessInstanceFromDb().getStateSla();
-            Long timeSpent = processStateAndAction.getProcessInstanceFromRequest().getAuditDetails().getLastModifiedTime()
-                           - processStateAndAction.getProcessInstanceFromDb().getAuditDetails().getLastModifiedTime();
+            Long timeSpent = java.time.Duration.between(
+                           processStateAndAction.getProcessInstanceFromDb().getAuditDetails().getLastModifiedTime(),
+                           processStateAndAction.getProcessInstanceFromRequest().getAuditDetails().getLastModifiedTime()).toMillis();
             processStateAndAction.getProcessInstanceFromRequest().setBusinesssServiceSla(businesssServiceSlaRemaining-timeSpent);
             if(!isStateChanging && stateSlaRemaining!=null)
                 processStateAndAction.getProcessInstanceFromRequest().setStateSla(stateSlaRemaining-timeSpent);
@@ -342,7 +346,9 @@ public class EnrichmentService {
         processInstances.forEach(processInstance -> {
             Long businessServiceSlaInDb = processInstance.getBusinesssServiceSla();
             Long stateSlaInDB = processInstance.getStateSla();
-            Long timeSinceLastAction = System.currentTimeMillis() - processInstance.getAuditDetails().getLastModifiedTime();
+            Long timeSinceLastAction = java.time.Duration.between(
+                    processInstance.getAuditDetails().getLastModifiedTime(),
+                    java.time.OffsetDateTime.now()).toMillis();
             processInstance.setBusinesssServiceSla(businessServiceSlaInDb-timeSinceLastAction);
             if(stateSlaInDB!=null)
                 processInstance.setStateSla(stateSlaInDB-timeSinceLastAction);

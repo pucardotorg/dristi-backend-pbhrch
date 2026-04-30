@@ -3,7 +3,7 @@ package org.pucar.dristi.repository.rowmapper;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.egov.common.contract.models.AuditDetails;
+import org.pucar.dristi.web.models.AuditDetails;
 import org.egov.tracer.model.CustomException;
 import org.postgresql.util.PGobject;
 import org.pucar.dristi.web.models.AssignedTo;
@@ -15,12 +15,18 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.*;
 
 import static org.pucar.dristi.config.ServiceConstants.ROW_MAPPER_EXCEPTION;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 
 @Slf4j
@@ -43,16 +49,14 @@ public class TaskCaseRowMapper implements ResultSetExtractor<List<TaskCase>> {
                 TaskCase task = taskMap.get(uuid);
 
                 if (task == null) {
-                    Long lastModifiedTime = rs.getLong("lastmodifiedtime");
-                    if (rs.wasNull()) {
-                        lastModifiedTime = null;
-                    }
+                    Timestamp createdTs = rs.getTimestamp("createdtime");
+                    Timestamp lastModifiedTs = rs.getTimestamp("lastmodifiedtime");
 
                     AuditDetails auditdetails = AuditDetails.builder()
                             .createdBy(rs.getString("createdby"))
-                            .createdTime(rs.getLong("createdtime"))
+                            .createdTime(createdTs != null ? createdTs.toInstant().atOffset(ZoneOffset.UTC) : null)
                             .lastModifiedBy(rs.getString("lastmodifiedby"))
-                            .lastModifiedTime(lastModifiedTime)
+                            .lastModifiedTime(lastModifiedTs != null ? lastModifiedTs.toInstant().atOffset(ZoneOffset.UTC) : null)
                             .build();
 
                     task = TaskCase.builder()
@@ -65,9 +69,9 @@ public class TaskCaseRowMapper implements ResultSetExtractor<List<TaskCase>> {
                             .cmpNumber(rs.getString("cmpNumber"))
                             .courtCaseNumber(rs.getString("courtCaseNumber"))
                             .courtId(rs.getString("courtId"))
-                            .createdDate(rs.getLong("createddate"))
-                            .dateCloseBy(rs.getLong("datecloseby"))
-                            .dateClosed(rs.getLong("dateclosed"))
+                            .createdDate(tsToOdt(rs.getTimestamp("createddate")))
+                            .dateCloseBy(tsToOdt(rs.getTimestamp("datecloseby")))
+                            .dateClosed(tsToOdt(rs.getTimestamp("dateclosed")))
                             .taskDescription(rs.getString("taskdescription"))
                             .taskDetails(objectMapper.readValue(rs.getString("taskdetails"), Object.class))
                             .taskType(rs.getString("tasktype"))
@@ -109,6 +113,10 @@ public class TaskCaseRowMapper implements ResultSetExtractor<List<TaskCase>> {
             }
 
         return localDate;
+    }
+
+    private OffsetDateTime tsToOdt(Timestamp ts) {
+        return ts != null ? ts.toInstant().atOffset(ZoneOffset.UTC) : null;
     }
 
     public <T> T getObjectFromJson(String json, TypeReference<T> typeRef) {

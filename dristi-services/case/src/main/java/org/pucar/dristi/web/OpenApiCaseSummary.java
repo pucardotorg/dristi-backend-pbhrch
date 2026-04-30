@@ -8,6 +8,7 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.pucar.dristi.web.models.CaseSummary;
 
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +36,7 @@ public class OpenApiCaseSummary {
     @JsonProperty("filingDate")
     @NotNull
 
-    private Long filingDate = null;
+    private OffsetDateTime filingDate = null;
 
     @JsonProperty("registrationNumber")
     @NotNull
@@ -46,10 +47,10 @@ public class OpenApiCaseSummary {
     @JsonProperty("registrationDate")
     @NotNull
 
-    private Long registrationDate = null;
+    private OffsetDateTime registrationDate = null;
 
     @JsonProperty("nextHearingDate")
-    private Long nextHearingDate = null;
+    private OffsetDateTime nextHearingDate = null;
 
     @JsonProperty("caseType")
     @NotNull

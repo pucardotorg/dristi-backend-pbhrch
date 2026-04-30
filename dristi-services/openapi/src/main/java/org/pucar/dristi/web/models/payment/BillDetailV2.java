@@ -1,6 +1,7 @@
 package org.pucar.dristi.web.models.payment;
 
 import java.math.BigDecimal;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +36,7 @@ public class BillDetailV2 {
     private String billId;
 
     @JsonProperty("expiryDate")
-    private Long expiryDate;
+    private OffsetDateTime expiryDate;
 
     @JsonProperty("amount")
     private BigDecimal amount;

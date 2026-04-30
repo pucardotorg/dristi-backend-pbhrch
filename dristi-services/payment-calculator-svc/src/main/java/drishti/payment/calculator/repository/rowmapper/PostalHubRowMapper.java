@@ -8,6 +8,9 @@ import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Component
 public class PostalHubRowMapper implements RowMapper<PostalHub> {
@@ -27,5 +30,14 @@ public class PostalHubRowMapper implements RowMapper<PostalHub> {
                         .build())
                 .rowVersion(rs.getInt("row_version"))
                 .build();
+
+    }
+
+
+    private OffsetDateTime convertToOffsetDateTime(Long epochMillis) {
+        if (epochMillis == null || epochMillis == 0) {
+            return null;
+        }
+        return OffsetDateTime.ofInstant(Instant.ofEpochMilli(epochMillis), ZoneId.systemDefault());
     }
 }

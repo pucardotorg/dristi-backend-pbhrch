@@ -1,15 +1,18 @@
 package digit.web.models.demand;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import digit.web.models.AuditDetails;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Builder.Default;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.egov.common.contract.models.AuditDetails;
 
 import java.math.BigDecimal;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 /**
  * A object holds a demand and collection values for a tax head and period.

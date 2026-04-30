@@ -1,11 +1,11 @@
 package org.pucar.dristi.web.models;
 
 import java.math.BigDecimal;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 import javax.validation.Valid;
 
-import org.egov.common.contract.models.AuditDetails;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -18,6 +18,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Getter
 @Setter
@@ -96,7 +99,7 @@ public class Bill {
     private String billNumber;
 
     @JsonProperty("billDate")
-    private Long billDate;
+    private OffsetDateTime billDate;
 
     @JsonProperty("amountPaid")
     private BigDecimal amountPaid;

@@ -1,7 +1,7 @@
 package digit.enrichment;
 
 import digit.config.Configuration;
-import digit.models.coremodels.AuditDetails;
+import digit.web.models.AuditDetails;
 import digit.repository.HearingRepository;
 import digit.util.DateUtil;
 import digit.web.models.MdmsHearing;
@@ -10,23 +10,25 @@ import digit.web.models.ScheduleHearing;
 import digit.web.models.ScheduleHearingRequest;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneOffset;
+import java.time.*;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.anyLong;
 import static org.mockito.Mockito.when;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @ExtendWith(MockitoExtension.class)
 public class HearingEnrichmentTest {
@@ -44,6 +46,12 @@ public class HearingEnrichmentTest {
     @Mock
     private DateUtil dateUtil;
 
+    @BeforeEach
+    void setUp() {
+        lenient().when(configuration.getZoneId()).thenReturn("Asia/Kolkata");
+        lenient().when(dateUtil.getCurrentOffsetDateTime()).thenReturn(OffsetDateTime.now(ZoneOffset.UTC));
+    }
+
     @Test
     void testEnrichScheduleHearing() {
         RequestInfo requestInfo = new RequestInfo();
@@ -54,18 +62,18 @@ public class HearingEnrichmentTest {
         ScheduleHearing hearing1 = new ScheduleHearing();
         hearing1.setTenantId("tenantId1");
         hearing1.setHearingBookingId("hearingId1");
-        hearing1.setHearingDate(LocalDate.now().toEpochDay());
+        hearing1.setHearingDate(OffsetDateTime.now(ZoneOffset.UTC));
         hearing1.setJudgeId("judge1");
         hearing1.setHearingType("ADMISSION");
-        hearing1.setStartTime(0L);
+        hearing1.setStartTime(OffsetDateTime.now(ZoneOffset.UTC));
 
         ScheduleHearing hearing2 = new ScheduleHearing();
         hearing2.setTenantId("tenantId1");
         hearing2.setHearingBookingId("hearingId2");
-        hearing2.setHearingDate(LocalDate.now().toEpochDay());
+        hearing2.setHearingDate(OffsetDateTime.now(ZoneOffset.UTC));
         hearing2.setJudgeId("judge1");
         hearing2.setHearingType("ADMISSION");
-        hearing2.setStartTime(0L);
+        hearing2.setStartTime(OffsetDateTime.now(ZoneOffset.UTC));
 
         List<ScheduleHearing> hearingList = Arrays.asList(hearing1, hearing2);
 
@@ -92,11 +100,11 @@ public class HearingEnrichmentTest {
     @Test
     void testUpdateTimingInHearings() {
         ScheduleHearing hearing1 = new ScheduleHearing();
-        hearing1.setHearingDate(LocalDate.now().toEpochDay());
+        hearing1.setHearingDate(OffsetDateTime.now(ZoneOffset.UTC));
         hearing1.setJudgeId("judge1");
         hearing1.setHearingType("ADMISSION");
-        hearing1.setStartTime(0L);
-        hearing1.setEndTime(0L);
+        hearing1.setStartTime(OffsetDateTime.now(ZoneOffset.UTC));
+        hearing1.setEndTime(OffsetDateTime.now(ZoneOffset.UTC));
 
         List<ScheduleHearing> hearingList = Collections.singletonList(hearing1);
 
@@ -112,11 +120,8 @@ public class HearingEnrichmentTest {
         hearingTypeMap.put("ADMISSION", mdmsHearing);
 
         when(repository.getHearings(any(), any(), any())).thenReturn(new ArrayList<>());
-        when(dateUtil.getLocalDateTimeFromEpoch(anyLong())).thenReturn(LocalDateTime.now());
-        when(dateUtil.getLocalDateFromEpoch(anyLong())).thenReturn(LocalDate.now());
         when(dateUtil.getLocalTime(anyString())).thenReturn(LocalTime.of(10, 0));
-        when(dateUtil.getLocalDateTime(dateUtil.getLocalDateTimeFromEpoch(hearing1.getStartTime()), "09:00:00")).thenReturn(LocalDateTime.now());
-        when(dateUtil.getLocalDateTime(dateUtil.getLocalDateTimeFromEpoch(hearing1.getEndTime()), "17:00:00")).thenReturn(LocalDateTime.now());
+        when(dateUtil.getLocalDateFromOffsetDateTime(any())).thenReturn(LocalDate.now());
 
         hearingEnrichment.updateTimingInHearings(hearingList, hearingTypeMap, defaultSlots);
 
@@ -146,10 +151,10 @@ public class HearingEnrichmentTest {
     @Test
     void testUpdateHearingTime() {
         ScheduleHearing hearing = new ScheduleHearing();
-        hearing.setHearingDate(LocalDate.now().toEpochDay());
+        hearing.setHearingDate(OffsetDateTime.now(ZoneOffset.UTC));
         hearing.setHearingType("ADMISSION");
-        hearing.setStartTime(0L);
-        hearing.setEndTime(0L);
+        hearing.setStartTime(OffsetDateTime.now(ZoneOffset.UTC));
+        hearing.setEndTime(OffsetDateTime.now(ZoneOffset.UTC));
 
         List<MdmsSlot> slots = new ArrayList<>();
         MdmsSlot slot = new MdmsSlot();
@@ -159,12 +164,8 @@ public class HearingEnrichmentTest {
 
         List<ScheduleHearing> scheduledHearings = new ArrayList<>();
 
-        when(dateUtil.getLocalDateFromEpoch(anyLong())).thenReturn(LocalDate.now());
         when(dateUtil.getLocalTime(anyString())).thenReturn(LocalTime.of(10, 0));
-        when(dateUtil.getEpochFromLocalDateTime(any())).thenReturn(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC));
-        when(dateUtil.getLocalDateTimeFromEpoch(anyLong())).thenReturn(LocalDateTime.now());
-        when(dateUtil.getLocalDateTime(dateUtil.getLocalDateTimeFromEpoch(hearing.getStartTime()), "09:00:00")).thenReturn(LocalDateTime.now());
-        when(dateUtil.getLocalDateTime(dateUtil.getLocalDateTimeFromEpoch(hearing.getEndTime()), "17:00:00")).thenReturn(LocalDateTime.now());
+        when(dateUtil.getLocalDateFromOffsetDateTime(any())).thenReturn(LocalDate.now());
         hearingEnrichment.updateHearingTime(hearing, slots, scheduledHearings, 30);
 
         assertNotNull(hearing.getStartTime());
@@ -174,12 +175,12 @@ public class HearingEnrichmentTest {
     @Test
     void testCanScheduleHearings() {
         ScheduleHearing hearing1 = new ScheduleHearing();
-        hearing1.setStartTime(LocalDateTime.of(LocalDate.now(), LocalTime.of(10, 0)).toEpochSecond(ZoneOffset.UTC));
-        hearing1.setEndTime(LocalDateTime.of(LocalDate.now(), LocalTime.of(10, 30)).toEpochSecond(ZoneOffset.UTC));
+        hearing1.setStartTime(OffsetDateTime.of(LocalDate.now(), LocalTime.of(10, 0), ZoneOffset.UTC));
+        hearing1.setEndTime(OffsetDateTime.of(LocalDate.now(), LocalTime.of(10, 30), ZoneOffset.UTC));
 
         ScheduleHearing hearing2 = new ScheduleHearing();
-        hearing2.setStartTime(LocalDateTime.of(LocalDate.now(), LocalTime.of(11, 0)).toEpochSecond(ZoneOffset.UTC));
-        hearing2.setEndTime(LocalDateTime.of(LocalDate.now(), LocalTime.of(11, 30)).toEpochSecond(ZoneOffset.UTC));
+        hearing2.setStartTime(OffsetDateTime.of(LocalDate.now(), LocalTime.of(11, 0), ZoneOffset.UTC));
+        hearing2.setEndTime(OffsetDateTime.of(LocalDate.now(), LocalTime.of(11, 30), ZoneOffset.UTC));
 
         List<ScheduleHearing> scheduledHearings = Collections.singletonList(hearing2);
 
@@ -188,13 +189,14 @@ public class HearingEnrichmentTest {
         slot.setSlotStartTime("09:00:00");
         slot.setSlotEndTime("17:00:00");
         slots.add(slot);
-        when(dateUtil.getLocalDateTimeFromEpoch(anyLong())).thenReturn(LocalDateTime.now());
-        when(dateUtil.getLocalDateTime(dateUtil.getLocalDateTimeFromEpoch(hearing1.getStartTime()), "09:00:00")).thenReturn(LocalDateTime.now());
-        when(dateUtil.getLocalDateTime(dateUtil.getLocalDateTimeFromEpoch(hearing1.getEndTime()), "17:00:00")).thenReturn(LocalDateTime.now());
+
+        when(dateUtil.getLocalTime(anyString())).thenReturn(LocalTime.of(9, 0), LocalTime.of(17, 0));
+        when(dateUtil.getLocalDateFromOffsetDateTime(any())).thenReturn(LocalDate.now());
 
         boolean canSchedule = hearingEnrichment.canScheduleHearings(hearing1, scheduledHearings, slots);
 
-        assertFalse(canSchedule);
+        // hearing1 (10:00-10:30) and hearing2 (11:00-11:30) don't overlap, so hearing1 can be scheduled
+        assertTrue(canSchedule);
     }
 
     @Test
@@ -208,11 +210,11 @@ public class HearingEnrichmentTest {
         AuditDetails auditDetails = new AuditDetails();
         hearing1.setAuditDetails(auditDetails);
         hearing1.setRowVersion(1);
-        hearing1.setHearingDate(LocalDate.now().toEpochDay());
+        hearing1.setHearingDate(OffsetDateTime.now(ZoneOffset.UTC));
         hearing1.setJudgeId("judge1");
         hearing1.setHearingType("ADMISSION");
-        hearing1.setStartTime(0L);
-        hearing1.setEndTime(0L);
+        hearing1.setStartTime(OffsetDateTime.now(ZoneOffset.UTC));
+        hearing1.setEndTime(OffsetDateTime.now(ZoneOffset.UTC));
 
 
         List<ScheduleHearing> hearingList = Collections.singletonList(hearing1);
@@ -234,10 +236,7 @@ public class HearingEnrichmentTest {
 
         when(repository.getHearings(any(), any(), any())).thenReturn(new ArrayList<>());
         when(dateUtil.getLocalTime(anyString())).thenReturn(LocalTime.of(10, 0));
-        when(dateUtil.getLocalDateFromEpoch(anyLong())).thenReturn(LocalDate.now());
-        when(dateUtil.getLocalDateTimeFromEpoch(anyLong())).thenReturn(LocalDateTime.now());
-        when(dateUtil.getLocalDateTime(dateUtil.getLocalDateTimeFromEpoch(hearing1.getStartTime()), "09:00:00")).thenReturn(LocalDateTime.now());
-        when(dateUtil.getLocalDateTime(dateUtil.getLocalDateTimeFromEpoch(hearing1.getEndTime()), "17:00:00")).thenReturn(LocalDateTime.now());
+        when(dateUtil.getLocalDateFromOffsetDateTime(any())).thenReturn(LocalDate.now());
 
         hearingEnrichment.enrichBulkReschedule(request, defaultSlots, hearingTypeMap);
 

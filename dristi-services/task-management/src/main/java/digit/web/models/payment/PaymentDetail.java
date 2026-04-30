@@ -8,6 +8,10 @@ import org.egov.tracer.model.AuditDetails;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
+import java.time.OffsetDateTime;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Data
 @NoArgsConstructor
@@ -40,10 +44,10 @@ public class PaymentDetail {
     private String manualReceiptNumber;
 
     @JsonProperty("manualReceiptDate")
-    private Long manualReceiptDate;
+    private OffsetDateTime manualReceiptDate;
 
     @JsonProperty("receiptDate")
-    private Long receiptDate;
+    private OffsetDateTime receiptDate;
 
     @JsonProperty("receiptType")
     private String receiptType;

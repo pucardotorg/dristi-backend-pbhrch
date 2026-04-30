@@ -1,6 +1,6 @@
 package org.pucar.dristi.web.models;
 
-import org.egov.common.contract.models.AuditDetails;
+import org.pucar.dristi.web.models.AuditDetails;
 import org.egov.common.contract.models.Document;
 import org.egov.common.contract.models.Workflow;
 import org.junit.jupiter.api.Assertions;
@@ -10,9 +10,14 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import static org.mockito.Mockito.*;
 
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 public class ArtifactTest {
 
@@ -62,7 +67,7 @@ public class ArtifactTest {
         String sourceName = "testSourceName";
         List<String> applicableTo = new ArrayList<>();
         applicableTo.add("testApplicableTo");
-        Long createdDate = 1234567890l;
+        OffsetDateTime createdDate = OffsetDateTime.of(2009, 2, 13, 23, 31, 30, 0, ZoneOffset.UTC);
         Boolean isActive = true;
         String status = "testStatus";
         Document file = new Document();
@@ -113,7 +118,7 @@ public class ArtifactTest {
         Assertions.assertEquals(sourceID, artifact.getSourceID());
         Assertions.assertEquals(sourceName, artifact.getSourceName());
         Assertions.assertEquals(applicableTo, artifact.getApplicableTo());
-        Assertions.assertEquals(createdDate, artifact.getCreatedDate());
+        Assertions.assertEquals(createdDate, artifact.getCreatedDate()); // OffsetDateTime comparison
         Assertions.assertEquals(isActive, artifact.getIsActive());
         Assertions.assertEquals(status, artifact.getStatus());
         Assertions.assertEquals(file, artifact.getFile());

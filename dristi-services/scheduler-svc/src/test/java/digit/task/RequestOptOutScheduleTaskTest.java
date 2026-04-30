@@ -23,6 +23,8 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -78,7 +80,7 @@ public class RequestOptOutScheduleTaskTest {
         reScheduleHearing.setJudgeId("judgeId");
         reScheduleHearing.setCaseId("caseId");
         reScheduleHearing.setTenantId("tenantId");
-        reScheduleHearing.setSuggestedDates(List.of(1L, 2L, 3L));
+        reScheduleHearing.setSuggestedDates(List.of(OffsetDateTime.now(ZoneOffset.UTC), OffsetDateTime.now(ZoneOffset.UTC).plusDays(1), OffsetDateTime.now(ZoneOffset.UTC).plusDays(2)));
 
         OptOut optOut = new OptOut();
         optOut.setTenantId("tenantId");

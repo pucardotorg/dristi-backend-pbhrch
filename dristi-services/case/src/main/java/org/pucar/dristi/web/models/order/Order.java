@@ -13,9 +13,13 @@ import org.pucar.dristi.web.models.Document;
 import org.pucar.dristi.web.models.StatuteSection;
 import org.pucar.dristi.web.models.WorkflowObject;
 
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Data
 @AllArgsConstructor
@@ -61,7 +65,7 @@ public class Order {
 
     @JsonProperty("createdDate")
     @Valid
-    private Long createdDate = null;
+    private OffsetDateTime createdDate = null;
 
     @JsonProperty("issuedBy")
     private Object issuedBy = null;
@@ -117,6 +121,6 @@ public class Order {
     private WorkflowObject workflow = null;
 
     @JsonProperty("nextHearingDate")
-    private Long nextHearingDate = null;
+    private OffsetDateTime nextHearingDate = null;
 
 }

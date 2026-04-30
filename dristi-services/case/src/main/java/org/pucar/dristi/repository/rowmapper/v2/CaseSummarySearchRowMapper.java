@@ -13,6 +13,9 @@ import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.*;
 
 import static org.pucar.dristi.config.ServiceConstants.ROW_MAPPER_EXCEPTION;
@@ -45,7 +48,7 @@ public class CaseSummarySearchRowMapper implements ResultSetExtractor<List<CaseS
                             .caseTitle(rs.getString("casetitle"))
                             .caseDescription(rs.getString("casedescription"))
                             .filingNumber(rs.getString("filingnumber"))
-                            .createdTime(rs.getLong("createdtime"))
+                            .createdTime(tsToOffsetDateTime(rs.getTimestamp("createdtime")))
                             .caseNumber(rs.getString("casenumber"))
                             .cnrNumber(rs.getString("cnrnumber"))
                             .courtCaseNumber(rs.getString("courtcasenumber"))
@@ -59,9 +62,9 @@ public class CaseSummarySearchRowMapper implements ResultSetExtractor<List<CaseS
                             .stage(rs.getString("stage"))
                             .substage(rs.getString("substage"))
                             .advocateCount(rs.getInt("advocatecount"))
-                            .filingDate(parseDateToLong(rs.getString("filingdate")))
-                            .judgementDate(parseDateToLong(rs.getString("judgementdate")))
-                            .registrationDate(parseDateToLong(rs.getString("registrationdate")))
+                            .filingDate(tsToOffsetDateTime(rs.getTimestamp("filingdate")))
+                            .judgementDate(tsToOffsetDateTime(rs.getTimestamp("judgementdate")))
+                            .registrationDate(tsToOffsetDateTime(rs.getTimestamp("registrationdate")))
                             .caseCategory(rs.getString("casecategory"))
                             .natureOfPleading(rs.getString("natureofpleading"))
                             .status(rs.getString("status"))
@@ -99,16 +102,7 @@ public class CaseSummarySearchRowMapper implements ResultSetExtractor<List<CaseS
         }
     }
 
-    private Long parseDateToLong(String dateStr) {
-        if (dateStr == null || dateStr.trim().isEmpty()) {
-            return null;
-        }
-        try {
-            return Long.valueOf(dateStr);
-        } catch (NumberFormatException e) {
-            log.error("Invalid date format: {}", dateStr);
-            throw new CustomException("INVALID_DATE_FORMAT",
-                    "Date must be a valid timestamp: " + dateStr);
-        }
+    private OffsetDateTime tsToOffsetDateTime(Timestamp ts) {
+        return ts != null ? ts.toInstant().atOffset(ZoneOffset.UTC) : null;
     }
 }

@@ -52,12 +52,17 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.pucar.dristi.config.ServiceConstants.*;
 import static org.pucar.dristi.enrichment.CaseRegistrationEnrichment.enrichLitigantsOnCreateAndUpdate;
 import static org.pucar.dristi.enrichment.CaseRegistrationEnrichment.enrichRepresentativesOnCreateAndUpdate;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 
 @Service
@@ -1032,7 +1037,7 @@ public class CaseService {
             CourtCase decryptedCourtCase = encryptionDecryptionUtil.decryptObject(courtCase, config.getCaseDecryptSelf(), CourtCase.class, caseRequest.getRequestInfo());
 
             AuditDetails auditDetails = courtCase.getAuditdetails();
-            auditDetails.setLastModifiedTime(System.currentTimeMillis());
+            auditDetails.setLastModifiedTime(OffsetDateTime.now(ZoneId.of(config.getZoneId())).toInstant().toEpochMilli());
             auditDetails.setLastModifiedBy(caseRequest.getRequestInfo().getUserInfo().getUuid());
 
             decryptedCourtCase.setAdditionalDetails(caseRequest.getCases().getAdditionalDetails());
@@ -1090,7 +1095,7 @@ public class CaseService {
                     .cases(decryptedCourtCase)
                     .build();
             AuditDetails auditDetails = courtCase.getAuditdetails();
-            auditDetails.setLastModifiedTime(System.currentTimeMillis());
+            auditDetails.setLastModifiedTime(OffsetDateTime.now(ZoneId.of(config.getZoneId())).toInstant().toEpochMilli());
             auditDetails.setLastModifiedBy(caseRequest.getRequestInfo().getUserInfo().getUuid());
 
             updateAdditionalDetails(decryptedCourtCase, profileRequest.getProfile());
@@ -1547,11 +1552,12 @@ public class CaseService {
             UUID caseId = courtCase.getId();
 
 
+            long now = OffsetDateTime.now(ZoneId.of(config.getZoneId())).toInstant().toEpochMilli();
             AuditDetails auditDetails = AuditDetails.builder()
                     .createdBy(joinCaseRequest.getRequestInfo().getUserInfo().getUuid())
-                    .createdTime(System.currentTimeMillis())
+                    .createdTime(now)
                     .lastModifiedBy(joinCaseRequest.getRequestInfo().getUserInfo().getUuid())
-                    .lastModifiedTime(System.currentTimeMillis()).build();
+                    .lastModifiedTime(now).build();
             joinCaseRequest.setAuditDetails(auditDetails);
 
             CourtCase caseObj = CourtCase.builder()
@@ -1686,11 +1692,12 @@ public class CaseService {
 
             JoinCaseDataV2 joinCaseData = joinCaseRequest.getJoinCaseData();
 
+            long now = OffsetDateTime.now(ZoneId.of(config.getZoneId())).toInstant().toEpochMilli();
             AuditDetails auditDetails = AuditDetails.builder()
                     .createdBy(joinCaseRequest.getRequestInfo().getUserInfo().getUuid())
-                    .createdTime(System.currentTimeMillis())
+                    .createdTime(now)
                     .lastModifiedBy(joinCaseRequest.getRequestInfo().getUserInfo().getUuid())
-                    .lastModifiedTime(System.currentTimeMillis()).build();
+                    .lastModifiedTime(now).build();
 
             //For litigant join case
             if (joinCaseData.getLitigant() != null && !joinCaseData.getLitigant().isEmpty()) {
@@ -1911,8 +1918,8 @@ public class CaseService {
 
         List<Hearing> hearings = hearingUtil.fetchHearingDetails(hearingSearchRequest);
         if(!hearings.isEmpty()){
-            Long startTime = hearings.get(0).getStartTime();
-            return dateUtil.getLocalDateFromEpoch(startTime);
+            java.time.OffsetDateTime startTime = hearings.get(0).getStartTime();
+            return startTime != null ? startTime.toLocalDate() : null;
         }
         return null;
     }
@@ -4267,9 +4274,9 @@ public class CaseService {
     private void smsForNewWitnessAddition(CourtCase courtCase, AddWitnessRequest addWitnessRequest) {
         try {
             RequestInfo requestInfo = addWitnessRequest.getRequestInfo();
-            long currentTimeMillis = System.currentTimeMillis();
+            OffsetDateTime now = OffsetDateTime.now(ZoneId.of(config.getZoneId()));
             SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-            String formattedDate = sdf.format(currentTimeMillis);
+            String formattedDate = sdf.format(now.toInstant().toEpochMilli());
             SmsTemplateData smsTemplateData = SmsTemplateData.builder()
                     .efilingNumber(courtCase.getFilingNumber())
                     .courtCaseNumber(courtCase.getCourtCaseNumber())
@@ -4306,9 +4313,9 @@ public class CaseService {
     private void smsForOthersAsWitnessAdded(CourtCase courtCase, AddWitnessRequest addWitnessRequest) {
         try {
             RequestInfo requestInfo = addWitnessRequest.getRequestInfo();
-            long currentTimeMillis = System.currentTimeMillis();
+            OffsetDateTime now = OffsetDateTime.now(ZoneId.of(config.getZoneId()));
             SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-            String formattedDate = sdf.format(currentTimeMillis);
+            String formattedDate = sdf.format(now.toInstant().toEpochMilli());
             SmsTemplateData smsTemplateData = SmsTemplateData.builder()
                     .efilingNumber(courtCase.getFilingNumber())
                     .courtCaseNumber(courtCase.getCourtCaseNumber())
@@ -5703,10 +5710,11 @@ public class CaseService {
     }
 
     private AuditDetails enrichAuditDetails(RequestInfo requestInfo) {
+        long now = OffsetDateTime.now(ZoneId.of(config.getZoneId())).toInstant().toEpochMilli();
         return AuditDetails.builder()
-                .createdTime(System.currentTimeMillis())
+                .createdTime(now)
                 .createdBy(requestInfo.getUserInfo().getUuid())
-                .lastModifiedTime(System.currentTimeMillis())
+                .lastModifiedTime(now)
                 .lastModifiedBy(requestInfo.getUserInfo().getUuid())
                 .build();
     }
@@ -5719,7 +5727,7 @@ public class CaseService {
                 .advocateId(joinCaseData.getRepresentative().getAdvocateId())
                 .advocateUuid(individual.getUserUuid())
                 .mobileNumber(individual.getMobileNumber())
-                .requestedDate(System.currentTimeMillis())
+                .requestedDate(OffsetDateTime.now(ZoneId.of(config.getZoneId())))
                 .individualDetails(individualDetails)
                 .build();
     }
@@ -6441,7 +6449,7 @@ public class CaseService {
             CourtCase decryptedCourtCase = encryptionDecryptionUtil.decryptObject(courtCase, config.getCaseDecryptSelf(), CourtCase.class, addAddressRequest.getRequestInfo());
 
             AuditDetails auditDetails = courtCase.getAuditdetails();
-            auditDetails.setLastModifiedTime(System.currentTimeMillis());
+            auditDetails.setLastModifiedTime(OffsetDateTime.now(ZoneId.of(config.getZoneId())).toInstant().toEpochMilli());
             auditDetails.setLastModifiedBy(addAddressRequest.getRequestInfo().getUserInfo().getUuid());
 
             enrichAdditionalDetailsForAddress(addAddressRequest, decryptedCourtCase);
@@ -6590,7 +6598,7 @@ public class CaseService {
                 .tenantId(courtCase.getTenantId())
                 .build();
         
-        Long dateOfConversion = dateUtil.getEpochFromLocalDate(LocalDate.now());
+        java.time.OffsetDateTime dateOfConversion = dateUtil.getOffsetDateTimeFromLocalDate(LocalDate.now());
         
         if (CMP.equalsIgnoreCase(caseType) && courtCase.getCmpNumber() != null) {
             caseConversionDetails.setConvertedFrom(FILING);

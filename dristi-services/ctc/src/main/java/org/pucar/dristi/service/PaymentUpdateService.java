@@ -27,6 +27,9 @@ import java.util.Map;
 import java.util.UUID;
 
 import static org.pucar.dristi.config.ServiceConstants.ONLINE;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Slf4j
 @Service
@@ -151,7 +154,7 @@ public class PaymentUpdateService {
                     .filingNumber(ctcApplication.getFilingNumber())
                     .ctcApplicationNumber(ctcApplication.getCtcApplicationNumber())
                     .status(ctcApplication.getStatus())
-                    .dateRaised(System.currentTimeMillis())
+                    .dateRaised(java.time.OffsetDateTime.now())
                     .applicantName(ctcApplication.getApplicantName())
                     .caseTitle(ctcApplication.getCaseTitle())
                     .caseNumber(ctcApplication.getCaseNumber())

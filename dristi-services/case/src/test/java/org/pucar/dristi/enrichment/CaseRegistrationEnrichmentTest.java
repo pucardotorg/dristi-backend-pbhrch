@@ -13,6 +13,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.pucar.dristi.config.ServiceConstants.ADMIT_CASE_WORKFLOW_ACTION;
 
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -55,6 +57,7 @@ class CaseRegistrationEnrichmentTest {
 
     @BeforeEach
     void setUp() {
+        org.mockito.Mockito.lenient().when(caseUtil.getCurrentTimeOffset()).thenReturn(OffsetDateTime.now(ZoneId.of("UTC")));
         // Initialize RequestInfo with necessary user info
         requestInfo = new RequestInfo();
         userInfo = new User();
@@ -146,7 +149,7 @@ class CaseRegistrationEnrichmentTest {
         courtCase.setAuditdetails(new AuditDetails());
         String oldLastModifiedBy = "oldUser";
         courtCase.getAuditdetails().setLastModifiedBy(oldLastModifiedBy);
-        Long oldLastModifiedTime = 123456789L;
+        long oldLastModifiedTime = OffsetDateTime.of(2000, 1, 1, 0, 0, 0, 0, ZoneId.of("UTC").getRules().getOffset(java.time.Instant.EPOCH)).toInstant().toEpochMilli();
         courtCase.getAuditdetails().setLastModifiedTime(oldLastModifiedTime);
 
         // Invoke the method

@@ -105,11 +105,9 @@ public class PublishAcceptRescheduleRequest implements OrderUpdateStrategy {
 
         boolean isSameDate = hearingDate.equals(today);
         log.info("After order publish process,result = IN_PROGRESS, orderType :{}, orderNumber:{}", order.getOrderType(), order.getOrderNumber());
-        Long time = hearingDate.atStartOfDay(ZoneId.of(config.getZoneId())).toInstant().toEpochMilli();
-        if (time != null) {
-            hearing.setStartTime(time);
-            hearing.setEndTime(time);
-        }
+        java.time.OffsetDateTime time = hearingDate.atStartOfDay(ZoneId.of(config.getZoneId())).toOffsetDateTime();
+        hearing.setStartTime(time);
+        hearing.setEndTime(time);
         hearing.setHearingType(newPurposeOfHearing);
 
         if (isSameDate) {

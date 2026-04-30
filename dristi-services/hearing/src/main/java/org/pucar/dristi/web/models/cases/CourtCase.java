@@ -7,14 +7,18 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.egov.common.contract.models.AuditDetails;
+import org.pucar.dristi.web.models.AuditDetails;
 import org.pucar.dristi.web.models.Document;
 import org.pucar.dristi.web.models.WorkflowObject;
 import org.pucar.dristi.web.models.orders.StatuteSection;
 
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 
 @Data
@@ -88,13 +92,13 @@ public class CourtCase {
     @JsonProperty("filingDate")
     //@NotNull
     @Valid
-    private Long filingDate = null;
+    private OffsetDateTime filingDate = null;
 
     @JsonProperty("registrationDate")
-    private Long registrationDate = null;
+    private OffsetDateTime registrationDate = null;
 
     @JsonProperty("judgementDate")
-    private Long judgementDate = null;
+    private OffsetDateTime judgementDate = null;
 
     @JsonProperty("caseDetails")
     private Object caseDetails = null;

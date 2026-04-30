@@ -29,14 +29,14 @@ public class CauseListRowMapper implements RowMapper<CauseList> {
                 .judgeId(resultSet.getString("judge_id"))
                 .hearingId(resultSet.getString("hearing_id"))
                 .slot(resultSet.getString("slot"))
-                .startTime(resultSet.getLong("start_time"))
-                .endTime(resultSet.getLong("end_time"))
+                .startTime(resultSet.getTimestamp("start_time") != null ? resultSet.getTimestamp("start_time").toInstant().atOffset(java.time.ZoneOffset.UTC) : null)
+                .endTime(resultSet.getTimestamp("end_time") != null ? resultSet.getTimestamp("end_time").toInstant().atOffset(java.time.ZoneOffset.UTC) : null)
                 .caseId(resultSet.getString("case_id"))
                 .caseType(resultSet.getString("case_type"))
                 .caseNumber(resultSet.getString("case_number"))
                 .caseTitle(resultSet.getString("case_title"))
                 .hearingDate(resultSet.getString("hearing_date"))
-                .caseRegistrationDate(resultSet.getLong("case_registration_date"))
+                .caseRegistrationDate(resultSet.getTimestamp("case_registration_date") != null ? resultSet.getTimestamp("case_registration_date").toInstant().atOffset(java.time.ZoneOffset.UTC) : null)
                 .advocateNames(advocateNames)
                 .build();
     }

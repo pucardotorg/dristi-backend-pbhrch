@@ -18,6 +18,9 @@ import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Component
 public class WorkflowRowMapper implements ResultSetExtractor<List<ProcessInstance>> {
@@ -38,10 +41,8 @@ public class WorkflowRowMapper implements ResultSetExtractor<List<ProcessInstanc
             ProcessInstance processInstance = processInstanceMap.get(id);
 
             if(processInstance==null) {
-                Long lastModifiedTime = rs.getLong("wf_lastModifiedTime");
-                if (rs.wasNull()) {
-                    lastModifiedTime = null;
-                }
+                java.sql.Timestamp wfLastModTs = rs.getTimestamp("wf_lastModifiedTime");
+                java.time.OffsetDateTime lastModifiedTime = wfLastModTs != null ? wfLastModTs.toInstant().atOffset(java.time.ZoneOffset.UTC) : null;
 
                 Long sla = rs.getLong("sla");
                 if (rs.wasNull()) {
@@ -53,9 +54,11 @@ public class WorkflowRowMapper implements ResultSetExtractor<List<ProcessInstanc
                     businessServiceSla = null;
                 }
 
+                java.sql.Timestamp wfCreatedTs = rs.getTimestamp("wf_createdTime");
+                java.time.OffsetDateTime wfCreatedTime = wfCreatedTs != null ? wfCreatedTs.toInstant().atOffset(java.time.ZoneOffset.UTC) : null;
                 AuditDetails auditdetails = AuditDetails.builder()
                         .createdBy(rs.getString("wf_createdBy"))
-                        .createdTime(rs.getLong("wf_createdTime"))
+                        .createdTime(wfCreatedTime)
                         .lastModifiedBy(rs.getString("wf_lastModifiedBy"))
                         .lastModifiedTime(lastModifiedTime)
                         .build();
@@ -127,16 +130,16 @@ public class WorkflowRowMapper implements ResultSetExtractor<List<ProcessInstanc
 
         if(documentId!=null){
 
-            Long lastModifiedTime = rs.getLong("doc_lastModifiedTime");
-            if (rs.wasNull()) {
-                lastModifiedTime = null;
-            }
+            java.sql.Timestamp docLastModTs = rs.getTimestamp("doc_lastModifiedTime");
+            java.time.OffsetDateTime docLastModifiedTime = docLastModTs != null ? docLastModTs.toInstant().atOffset(java.time.ZoneOffset.UTC) : null;
+            java.sql.Timestamp docCreatedTs = rs.getTimestamp("doc_createdTime");
+            java.time.OffsetDateTime docCreatedTime = docCreatedTs != null ? docCreatedTs.toInstant().atOffset(java.time.ZoneOffset.UTC) : null;
 
             AuditDetails auditdetails = AuditDetails.builder()
                     .createdBy(rs.getString("doc_createdBy"))
-                    .createdTime(rs.getLong("doc_createdTime"))
+                    .createdTime(docCreatedTime)
                     .lastModifiedBy(rs.getString("doc_lastModifiedBy"))
-                    .lastModifiedTime(lastModifiedTime)
+                    .lastModifiedTime(docLastModifiedTime)
                     .build();
 
             Document document = Document.builder()

@@ -1,31 +1,37 @@
 package notification.enrichment;
 
 import notification.config.Configuration;
+import notification.util.DateUtil;
 import notification.util.IdgenUtil;
+import notification.web.models.AuditDetails;
 import notification.web.models.Notification;
 import notification.web.models.NotificationRequest;
-import org.egov.common.contract.models.AuditDetails;
 import notification.web.models.Document;
 import org.egov.common.contract.request.RequestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.OffsetDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Component
 public class NotificationEnrichment {
 
     private final IdgenUtil idgenUtil;
     private final Configuration config;
+    private final DateUtil dateUtil;
 
     @Autowired
-    public NotificationEnrichment(IdgenUtil idgenUtil, Configuration config) {
+    public NotificationEnrichment(IdgenUtil idgenUtil, Configuration config, DateUtil dateUtil) {
         this.idgenUtil = idgenUtil;
         this.config = config;
-
+        this.dateUtil = dateUtil;
     }
 
     /**
@@ -76,11 +82,12 @@ public class NotificationEnrichment {
      */
     AuditDetails getAuditDetailForCreate(RequestInfo requestInfo) {
         String userId = requestInfo.getUserInfo().getUuid();
+        OffsetDateTime now = dateUtil.getCurrentOffsetDateTime();
         return AuditDetails.builder()
                 .createdBy(userId)
                 .lastModifiedBy(userId)
-                .createdTime(System.currentTimeMillis())
-                .lastModifiedTime(System.currentTimeMillis())
+                .createdTime(now)
+                .lastModifiedTime(now)
                 .build();
     }
 
@@ -96,7 +103,7 @@ public class NotificationEnrichment {
     AuditDetails getAuditDetailForUpdate(RequestInfo requestInfo, AuditDetails auditDetails) {
         String userId = requestInfo.getUserInfo().getUuid();
         auditDetails.setLastModifiedBy(userId);
-        auditDetails.setLastModifiedTime(System.currentTimeMillis());
+        auditDetails.setLastModifiedTime(dateUtil.getCurrentOffsetDateTime());
 
         return auditDetails;
     }

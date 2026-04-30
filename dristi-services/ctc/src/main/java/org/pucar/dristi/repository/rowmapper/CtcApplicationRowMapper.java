@@ -15,6 +15,9 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Component
 @Slf4j
@@ -25,8 +28,8 @@ public class CtcApplicationRowMapper implements ResultSetExtractor<List<CtcAppli
     @Autowired
     public CtcApplicationRowMapper(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
-    }
 
+    }
     @Override
     public List<CtcApplication> extractData(ResultSet rs) throws SQLException, DataAccessException {
 
@@ -36,10 +39,8 @@ public class CtcApplicationRowMapper implements ResultSetExtractor<List<CtcAppli
             String id = rs.getString("id");
             CtcApplication ctcApplication = ctcApplicationMap.get(id);
             if (ctcApplication == null) {
-                Long dateOfApplicationApproval = rs.getLong("date_of_application_approval");
-                if (rs.wasNull()) {
-                    dateOfApplicationApproval = null;
-                }
+                java.sql.Timestamp doaaTs = rs.getTimestamp("date_of_application_approval");
+                java.time.OffsetDateTime dateOfApplicationApproval = doaaTs != null ? doaaTs.toInstant().atOffset(java.time.ZoneOffset.UTC) : null;
 
                 ctcApplication = CtcApplication.builder()
                         .id(id)
@@ -82,35 +83,50 @@ public class CtcApplicationRowMapper implements ResultSetExtractor<List<CtcAppli
                         .build();
 
                 ctcApplicationMap.put(id, ctcApplication);
+
             }
+
         }
-
         return new ArrayList<>(ctcApplicationMap.values());
-    }
 
+    }
     public <T> T getObjectFromJson(String json, TypeReference<T> typeRef) {
         if (json == null || json.trim().isEmpty()) {
             return null;
+
         }
         try {
             return objectMapper.readValue(json, typeRef);
         } catch (Exception e) {
             throw new CustomException("Failed to convert JSON to " + typeRef.getType(), e.getMessage());
-        }
-    }
 
+        }
+
+    }
     public <T> T getObjectListFromJson(String json, TypeReference<T> typeRef) {
         if (json == null || json.trim().isEmpty()) {
             try {
                 return objectMapper.readValue("[]", typeRef);
             } catch (Exception e) {
                 throw new CustomException("Failed to create an empty instance of " + typeRef.getType(), e.getMessage());
+
             }
+
         }
         try {
             return objectMapper.readValue(json, typeRef);
         } catch (Exception e) {
             throw new CustomException("Failed to convert JSON to " + typeRef.getType(), e.getMessage());
+
         }
+
+    }
+
+
+    private OffsetDateTime convertToOffsetDateTime(Long epochMillis) {
+        if (epochMillis == null || epochMillis == 0) {
+            return null;
+        }
+        return OffsetDateTime.ofInstant(Instant.ofEpochMilli(epochMillis), ZoneId.systemDefault());
     }
 }

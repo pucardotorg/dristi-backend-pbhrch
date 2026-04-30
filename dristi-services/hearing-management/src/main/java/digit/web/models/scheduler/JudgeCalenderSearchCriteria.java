@@ -9,8 +9,12 @@ import lombok.NoArgsConstructor;
 import org.egov.common.contract.models.AuditDetails;
 import org.springframework.validation.annotation.Validated;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Set;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Validated
 @Data
@@ -29,10 +33,10 @@ public class JudgeCalenderSearchCriteria {
     private String courtId;
 
     @JsonProperty("fromDate")
-    private Long fromDate;
+    private OffsetDateTime fromDate;
 
     @JsonProperty("toDate")
-    private Long toDate;
+    private OffsetDateTime toDate;
 
     @JsonProperty("tenantId")
     private String tenantId;

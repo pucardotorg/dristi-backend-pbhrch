@@ -54,8 +54,8 @@ public class NotificationImpl implements EventListener<Notification, RequestInfo
                 .caseNumbers(event.getCaseNumber() != null ? event.getCaseNumber() : new ArrayList<>())
                 .judgeIds( new ArrayList<>())
                 .documents(event.getDocuments())
-                .createdTime(event.getAuditDetails().getCreatedTime())
-                .lastModifiedTime(event.getAuditDetails().getLastModifiedTime())
+                .createdTime(event.getAuditDetails().getCreatedTime() != null ? java.time.Instant.ofEpochMilli(event.getAuditDetails().getCreatedTime()).atOffset(java.time.ZoneOffset.UTC) : null)
+                .lastModifiedTime(event.getAuditDetails().getLastModifiedTime() != null ? java.time.Instant.ofEpochMilli(event.getAuditDetails().getLastModifiedTime()).atOffset(java.time.ZoneOffset.UTC) : null)
                 .caseTitle(null)
                 .caseSTNumber(null)
                 .build();

@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @Data
@@ -35,10 +36,10 @@ public class ScheduleHearingSearchCriteria {
     private String tenantId;
     // to search in a one date between hours (to make it more flexible search)
     @JsonProperty("startDateTime")
-    private Long startDateTime;
+    private OffsetDateTime startDateTime;
 
     @JsonProperty("endDateTime")
-    private Long endDateTime;
+    private OffsetDateTime endDateTime;
 
     @JsonProperty("status")
     private List<String> status;

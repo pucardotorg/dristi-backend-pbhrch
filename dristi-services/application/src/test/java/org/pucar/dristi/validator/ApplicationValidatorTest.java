@@ -59,7 +59,7 @@ public class ApplicationValidatorTest {
         List<UUID> onBehalfOf = new ArrayList<>();
         onBehalfOf.add(UUID.randomUUID());
         application.setTenantId("tenantId");
-        application.setCreatedDate(123453335l);
+        application.setCreatedDate(java.time.Instant.ofEpochMilli(123453335L).atOffset(java.time.ZoneOffset.UTC));
         application.setCreatedBy(UUID.randomUUID());
         requestInfo.setUserInfo(user); // Simulating non-empty user info
         application.setOnBehalfOf(onBehalfOf);

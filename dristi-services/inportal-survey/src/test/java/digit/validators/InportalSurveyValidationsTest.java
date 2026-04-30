@@ -13,6 +13,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -126,7 +130,7 @@ public class InportalSurveyValidationsTest {
     @Test
     public void testValidateEligibility_RemindMeLater_ExceededMaxAttempts_AndExpired_ReturnsTrue() {
         Long currentTime = 172802000L;
-        Long lastTriggered = 1000L;
+        OffsetDateTime lastTriggered = OffsetDateTime.ofInstant(Instant.ofEpochMilli(1000L), ZoneOffset.UTC);
 
         SurveyTracker tracker = SurveyTracker.builder()
                 .attempts(3)
@@ -146,7 +150,7 @@ public class InportalSurveyValidationsTest {
     @Test
     public void testValidateEligibility_RemindMeLater_NotExceededMaxAttempts_ReturnsFalse() {
         Long currentTime = 20000L;
-        Long lastTriggered = 1000L;
+        OffsetDateTime lastTriggered = OffsetDateTime.ofInstant(Instant.ofEpochMilli(1000L), ZoneOffset.UTC);
 
         SurveyTracker tracker = SurveyTracker.builder()
                 .attempts(1)
@@ -167,7 +171,7 @@ public class InportalSurveyValidationsTest {
     @Test
     public void testValidateEligibility_RemindMeLater_ExceededMaxAttempts_ButNotExpired_ReturnsFalse() {
         long currentTime = 10000L;
-        Long lastTriggered = currentTime + 9999999L; // not expired
+        OffsetDateTime lastTriggered = OffsetDateTime.ofInstant(Instant.ofEpochMilli(currentTime + 9999999L), ZoneOffset.UTC); // not expired
 
         SurveyTracker tracker = SurveyTracker.builder()
                 .attempts(3)
@@ -187,7 +191,7 @@ public class InportalSurveyValidationsTest {
     @Test
     public void testValidateEligibility_FeedbackExpired_ReturnsTrue() {
         Long currentTime = System.currentTimeMillis();
-        Long lastTriggered = 1000L;
+        OffsetDateTime lastTriggered = OffsetDateTime.ofInstant(Instant.ofEpochMilli(1000L), ZoneOffset.UTC);
 
         SurveyTracker tracker = SurveyTracker.builder()
                 .attempts(1)
@@ -206,7 +210,7 @@ public class InportalSurveyValidationsTest {
     @Test
     public void testValidateEligibility_FeedbackNotExpired_ReturnsFalse() {
         Long currentTime = 1000L;
-        Long lastTriggered = 9000L;
+        OffsetDateTime lastTriggered = OffsetDateTime.ofInstant(Instant.ofEpochMilli(9000L), ZoneOffset.UTC);
 
         SurveyTracker tracker = SurveyTracker.builder()
                 .attempts(1)
@@ -225,7 +229,7 @@ public class InportalSurveyValidationsTest {
     @Test
     public void testValidateEligibility_RemindMeLaterNull_BehavesAsFeedbackBranch() {
         Long currentTime = 20000L;
-        Long lastTriggered = 1000L;
+        OffsetDateTime lastTriggered = OffsetDateTime.ofInstant(Instant.ofEpochMilli(1000L), ZoneOffset.UTC);
 
         SurveyTracker tracker = SurveyTracker.builder()
                 .attempts(2)

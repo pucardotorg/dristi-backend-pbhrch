@@ -1,12 +1,15 @@
 package digit.web.models.cases;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import digit.web.models.AuditDetails;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.egov.common.contract.models.AuditDetails;
 import org.springframework.validation.annotation.Validated;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Validated
 @Data

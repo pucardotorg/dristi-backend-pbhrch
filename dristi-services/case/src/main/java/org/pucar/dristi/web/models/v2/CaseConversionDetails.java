@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.OffsetDateTime;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -25,7 +27,7 @@ public class CaseConversionDetails {
     private String cnrNumber;
 
     @JsonProperty("dateOfConversion")
-    private Long dateOfConversion;
+    private OffsetDateTime dateOfConversion;
 
     @JsonProperty("convertedFrom")
     private String convertedFrom;

@@ -15,6 +15,9 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Component
 @Slf4j
@@ -25,8 +28,8 @@ public class TemplateConfigurationRowMapper implements ResultSetExtractor<List<T
     @Autowired
     public TemplateConfigurationRowMapper(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
-    }
 
+    }
     public List<TemplateConfiguration> extractData( ResultSet rs) {
         Map<String, TemplateConfiguration> templateMap = new LinkedHashMap<>();
 
@@ -39,8 +42,8 @@ public class TemplateConfigurationRowMapper implements ResultSetExtractor<List<T
                     Long lastModifiedTime = rs.getLong("last_modified_time");
                     if (rs.wasNull()) {
                         lastModifiedTime = null;
-                    }
 
+                    }
                     AuditDetails auditDetails = AuditDetails.builder()
                             .createdBy(rs.getString("created_by"))
                             .createdTime(rs.getLong("created_time"))
@@ -65,12 +68,24 @@ public class TemplateConfigurationRowMapper implements ResultSetExtractor<List<T
                             .build();
 
                     templateMap.put(uuid, template);
+
                 }
+
             }
         } catch (SQLException e) {
             throw new CustomException("Failed to map template configuration {}" , e.getMessage());
 
+
         }
         return new ArrayList<>(templateMap.values());
+
+    }
+
+
+    private OffsetDateTime convertToOffsetDateTime(Long epochMillis) {
+        if (epochMillis == null || epochMillis == 0) {
+            return null;
+        }
+        return OffsetDateTime.ofInstant(Instant.ofEpochMilli(epochMillis), ZoneId.systemDefault());
     }
 }

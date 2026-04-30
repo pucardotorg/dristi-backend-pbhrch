@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
+import java.time.OffsetDateTime;
 
 @Validated
 @Data
@@ -48,7 +49,7 @@ public class LandingPageNotice {
 
     @JsonProperty("validTill")
     @Valid
-    private Long validTill;
+    private OffsetDateTime validTill;
 
     @JsonProperty("fileStoreId")
     @Valid
@@ -61,7 +62,7 @@ public class LandingPageNotice {
     @JsonProperty("publishedDate")
     @Valid
     @NotNull
-    private Long publishedDate;
+    private OffsetDateTime publishedDate;
 
     @JsonProperty("createdBy")
     @Valid
@@ -69,7 +70,7 @@ public class LandingPageNotice {
 
     @JsonProperty("createdTime")
     @Valid
-    private Long createdTime;
+    private OffsetDateTime createdTime;
 
     @JsonProperty("lastModifiedBy")
     @Valid
@@ -77,6 +78,6 @@ public class LandingPageNotice {
 
     @JsonProperty("lastModifiedTime")
     @Valid
-    private Long lastModifiedTime;
+    private OffsetDateTime lastModifiedTime;
 
 }

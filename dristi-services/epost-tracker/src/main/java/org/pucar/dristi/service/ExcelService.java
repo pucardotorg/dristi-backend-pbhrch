@@ -82,7 +82,7 @@ public class ExcelService {
                                     createHelper.createDataFormat().getFormat("dd-MM-yyyy")
                             );
                             dateCell.setCellStyle(dateStyle);
-                            dateCell.setCellValue(new java.util.Date(tracker.getBookingDate()));
+                            dateCell.setCellValue(java.util.Date.from(tracker.getBookingDate().toInstant()));
                         } else {
                             row.createCell(3).setCellValue("");
                         }

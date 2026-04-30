@@ -8,6 +8,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.OffsetDateTime;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
+
 /**
  * Collection of audit related fields used by most models
  */
@@ -25,8 +30,8 @@ public class AuditDetails   {
     private String lastModifiedBy;
 
     @JsonProperty("createdTime")
-    private Long createdTime;
+    private OffsetDateTime createdTime;
 
     @JsonProperty("lastModifiedTime")
-    private Long lastModifiedTime;
+    private OffsetDateTime lastModifiedTime;
 }

@@ -1,6 +1,7 @@
 package org.pucar.dristi.web.models;
 
 import java.math.BigDecimal;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 import javax.validation.constraints.NotNull;
@@ -15,6 +16,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Setter
 @Getter
@@ -68,7 +72,7 @@ public class BillDetail {
     private String manualReceiptNumber;
 
     @JsonProperty("manualReceiptDate")
-    private Long manualReceiptDate;
+    private OffsetDateTime manualReceiptDate;
 
     @JsonProperty("billAccountDetails")
     private List<BillAccountDetail> billAccountDetails;
@@ -84,7 +88,7 @@ public class BillDetail {
 
     @NotNull
     @JsonProperty("expiryDate")
-    private Long expiryDate;
+    private OffsetDateTime expiryDate;
 
 
 }

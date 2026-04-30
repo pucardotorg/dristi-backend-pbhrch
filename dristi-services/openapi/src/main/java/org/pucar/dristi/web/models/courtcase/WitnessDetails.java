@@ -10,6 +10,7 @@ import org.pucar.dristi.web.models.address.Emails;
 import org.pucar.dristi.web.models.address.PartyAddress;
 import org.pucar.dristi.web.models.address.PhoneNumbers;
 
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -60,7 +61,7 @@ public class WitnessDetails {
     private String ownerType;
 
     @JsonProperty("createdTime")
-    private Long createdTime;
+    private OffsetDateTime createdTime;
 
     @EqualsAndHashCode.Exclude
     @ToString.Exclude

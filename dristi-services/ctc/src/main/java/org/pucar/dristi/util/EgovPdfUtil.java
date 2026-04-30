@@ -13,6 +13,9 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Component
 @Slf4j
@@ -39,7 +42,7 @@ public class EgovPdfUtil {
         String applicantName = ctcApplication.getApplicantName();
         String ctcApplicationNumber = ctcApplication.getCtcApplicationNumber();
         Long dateOfApplication = ctcApplication.getAuditDetails().getCreatedTime();
-        Long dateOfApplicationApproval = ctcApplication.getDateOfApplicationApproval();
+        Long dateOfApplicationApproval = ctcApplication.getDateOfApplicationApproval() != null ? ctcApplication.getDateOfApplicationApproval().toInstant().toEpochMilli() : null;
 
         log.info("Calling egov-pdf ctc-certification for ctcApplicationNumber: {}, filingNumber: {}", ctcApplicationNumber, filingNumber);
 

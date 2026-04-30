@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @Data
@@ -26,16 +27,16 @@ public class LandingPageCase {
     private String purpose = null;
 
     @JsonProperty("nextHearingDate")
-    private Long nextHearingDate = null;
+    private OffsetDateTime nextHearingDate = null;
 
     @JsonProperty("lastHearingDate")
-    private Long lastHearingDate = null;
+    private OffsetDateTime lastHearingDate = null;
 
     @JsonProperty("filingDate")
-    private Long filingDate = null;
+    private OffsetDateTime filingDate = null;
 
     @JsonProperty("registrationDate")
-    private Long registrationDate = null;
+    private OffsetDateTime registrationDate = null;
 
     @JsonProperty("advocates")
     private List<PartyInfo> advocates = null;

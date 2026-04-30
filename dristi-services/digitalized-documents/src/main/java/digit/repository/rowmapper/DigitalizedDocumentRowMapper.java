@@ -19,6 +19,9 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.util.*;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Component
 @Slf4j
@@ -40,14 +43,14 @@ public class DigitalizedDocumentRowMapper implements ResultSetExtractor<List<Dig
                 DigitalizedDocument digitalizedDocument = digitalizedDocumentMap.get(uuid);
 
                 if (digitalizedDocument == null) {
-                    Long lastModifiedTime = rs.getLong("last_modified_time");
-                    if (rs.wasNull()) {
-                        lastModifiedTime = null;
-                    }
+                    java.sql.Timestamp lastModTs = rs.getTimestamp("last_modified_time");
+                    java.time.OffsetDateTime lastModifiedTime = lastModTs != null ? lastModTs.toInstant().atOffset(java.time.ZoneOffset.UTC) : null;
+                    java.sql.Timestamp createdTs = rs.getTimestamp("created_time");
+                    java.time.OffsetDateTime createdTime = createdTs != null ? createdTs.toInstant().atOffset(java.time.ZoneOffset.UTC) : null;
 
                     AuditDetails auditdetails = AuditDetails.builder()
                             .createdBy(rs.getString("created_by"))
-                            .createdTime(rs.getLong("created_time"))
+                            .createdTime(createdTime)
                             .lastModifiedBy(rs.getString("last_modified_by"))
                             .lastModifiedTime(lastModifiedTime)
                             .build();

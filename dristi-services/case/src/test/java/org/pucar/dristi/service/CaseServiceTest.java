@@ -46,6 +46,9 @@ import org.pucar.dristi.web.models.v2.WitnessDetails;
 import org.pucar.dristi.web.models.v2.WitnessDetailsRequest;
 import org.pucar.dristi.web.models.v2.WitnessDetailsResponse;
 import org.springframework.web.client.RestTemplate;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @ExtendWith(MockitoExtension.class)
 public class CaseServiceTest {
@@ -166,6 +169,7 @@ public class CaseServiceTest {
 
     @BeforeEach
     void setUp() {
+        lenient().when(config.getZoneId()).thenReturn("UTC");
         caseRequest = new CaseRequest();
         courtCase = new CourtCase();
         courtCase.setId(UUID.randomUUID());
@@ -1681,7 +1685,7 @@ public class CaseServiceTest {
         caseRequest.setCases(courtCase);
         caseRequest.setRequestInfo(requestInfo);
 
-        when(dateUtil.getEpochFromLocalDate(any())).thenReturn(1702857600000L);
+        when(dateUtil.getOffsetDateTimeFromLocalDate(any())).thenReturn(OffsetDateTime.parse("2023-12-18T00:00:00Z"));
         when(config.getCaseConversionTopic()).thenReturn("case-conversion-topic");
         doNothing().when(producer).push(anyString(), any());
 
@@ -1690,7 +1694,7 @@ public class CaseServiceTest {
 
         // Assert
         verify(producer, times(1)).push(eq("case-conversion-topic"), any());
-        verify(dateUtil, times(1)).getEpochFromLocalDate(any());
+        verify(dateUtil, times(1)).getOffsetDateTimeFromLocalDate(any());
     }
 
     @Test
@@ -1709,7 +1713,7 @@ public class CaseServiceTest {
         caseRequest.setCases(courtCase);
         caseRequest.setRequestInfo(requestInfo);
 
-        when(dateUtil.getEpochFromLocalDate(any())).thenReturn(1702857600000L);
+        when(dateUtil.getOffsetDateTimeFromLocalDate(any())).thenReturn(OffsetDateTime.parse("2023-12-18T00:00:00Z"));
         when(config.getCaseConversionTopic()).thenReturn("case-conversion-topic");
         doNothing().when(producer).push(anyString(), any());
 
@@ -1737,7 +1741,7 @@ public class CaseServiceTest {
         caseRequest.setCases(courtCase);
         caseRequest.setRequestInfo(requestInfo);
 
-        when(dateUtil.getEpochFromLocalDate(any())).thenReturn(1702857600000L);
+        when(dateUtil.getOffsetDateTimeFromLocalDate(any())).thenReturn(OffsetDateTime.parse("2023-12-18T00:00:00Z"));
         when(config.getCaseConversionTopic()).thenReturn("case-conversion-topic");
         doNothing().when(producer).push(anyString(), any());
 
@@ -1766,7 +1770,7 @@ public class CaseServiceTest {
         caseRequest.setCases(courtCase);
         caseRequest.setRequestInfo(requestInfo);
 
-        when(dateUtil.getEpochFromLocalDate(any())).thenReturn(1702857600000L);
+        when(dateUtil.getOffsetDateTimeFromLocalDate(any())).thenReturn(OffsetDateTime.parse("2023-12-18T00:00:00Z"));
         when(config.getCaseConversionTopic()).thenReturn("case-conversion-topic");
         doNothing().when(producer).push(anyString(), any());
 
@@ -1814,7 +1818,7 @@ public class CaseServiceTest {
         caseRequest.setCases(courtCase);
         caseRequest.setRequestInfo(requestInfo);
 
-        when(dateUtil.getEpochFromLocalDate(any())).thenReturn(1702857600000L);
+        when(dateUtil.getOffsetDateTimeFromLocalDate(any())).thenReturn(OffsetDateTime.parse("2023-12-18T00:00:00Z"));
         when(config.getCaseConversionTopic()).thenReturn("case-conversion-topic");
         doThrow(new RuntimeException("Kafka error")).when(producer).push(anyString(), any());
 
@@ -1839,7 +1843,7 @@ public class CaseServiceTest {
         caseRequest.setCases(courtCase);
         caseRequest.setRequestInfo(requestInfo);
 
-        when(dateUtil.getEpochFromLocalDate(any())).thenReturn(1702857600000L);
+        when(dateUtil.getOffsetDateTimeFromLocalDate(any())).thenReturn(OffsetDateTime.parse("2023-12-18T00:00:00Z"));
         when(config.getCaseConversionTopic()).thenReturn("case-conversion-topic");
         doNothing().when(producer).push(anyString(), any());
 
@@ -1866,7 +1870,7 @@ public class CaseServiceTest {
         caseRequest.setCases(courtCase);
         caseRequest.setRequestInfo(requestInfo);
 
-        when(dateUtil.getEpochFromLocalDate(any())).thenReturn(1702857600000L);
+        when(dateUtil.getOffsetDateTimeFromLocalDate(any())).thenReturn(OffsetDateTime.parse("2023-12-18T00:00:00Z"));
         when(config.getCaseConversionTopic()).thenReturn("case-conversion-topic");
         doNothing().when(producer).push(anyString(), any());
 
@@ -1875,7 +1879,7 @@ public class CaseServiceTest {
 
         // Assert - should match LPR case conversion (ST -> LP)
         verify(producer, times(1)).push(eq("case-conversion-topic"), any());
-        verify(dateUtil, times(1)).getEpochFromLocalDate(any());
+        verify(dateUtil, times(1)).getOffsetDateTimeFromLocalDate(any());
     }
 
 }

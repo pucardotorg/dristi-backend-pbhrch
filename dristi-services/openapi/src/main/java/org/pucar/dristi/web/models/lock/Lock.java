@@ -12,6 +12,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.pucar.dristi.web.models.AuditDetails;
 
+import java.time.OffsetDateTime;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -34,7 +39,7 @@ public class Lock {
 
     @JsonProperty("lockDate")
     @Valid
-    private Long lockDate = null;
+    private OffsetDateTime lockDate = null;
 
     @JsonProperty("individualId")
     private String individualId = null;
@@ -44,7 +49,7 @@ public class Lock {
     private Boolean isLocked = false;
 
     @JsonProperty("lockReleaseTime")
-    private Long lockReleaseTime = null;
+    private OffsetDateTime lockReleaseTime = null;
 
     @JsonProperty("entity")
     private String entity = null;

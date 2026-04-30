@@ -105,13 +105,13 @@ public class OptOutProcessor {
                         .build()).build();
 
         int totalOptOutCanBeMade = reScheduleHearing.getLitigants().size() + reScheduleHearing.getRepresentatives().size();
-        List<Long> suggestedDates = reScheduleHearing.getSuggestedDates();
-        List<Long> availableDates = reScheduleHearing.getAvailableDates()==null?new ArrayList<>():reScheduleHearing.getAvailableDates();
-        Set<Long> suggestedDatesSet = availableDates.isEmpty() ? new HashSet<>(suggestedDates) : new HashSet<>(availableDates);
+        List<java.time.OffsetDateTime> suggestedDates = reScheduleHearing.getSuggestedDates();
+        List<java.time.OffsetDateTime> availableDates = reScheduleHearing.getAvailableDates()==null?new ArrayList<>():reScheduleHearing.getAvailableDates();
+        Set<java.time.OffsetDateTime> suggestedDatesSet = availableDates.isEmpty() ? new HashSet<>(suggestedDates) : new HashSet<>(availableDates);
 
         List<OptOut> optOuts = optOutService.search(searchRequest, null, null);
         int optOutAlreadyMade = optOuts.size();
-        optoutDates.forEach(suggestedDatesSet::remove);
+        optoutDates.stream().map(e -> java.time.Instant.ofEpochMilli(e).atOffset(java.time.ZoneOffset.UTC)).forEach(suggestedDatesSet::remove);
         reScheduleHearing.setAvailableDates(new ArrayList<>(suggestedDatesSet));
 
         boolean isOptOutSaved = optOuts.stream().anyMatch(optOut1 -> optOut1.getIndividualId().equals(optOut.getIndividualId()));
@@ -122,9 +122,9 @@ public class OptOutProcessor {
     public void unblockJudgeCalendarForSuggestedDays(ReScheduleHearing reScheduleHearing ) {
         try {
             log.info("operation = unblockJudgeCalendarForSuggestedDays, result = IN_PROGRESS, request = {}",reScheduleHearing);
-            List<Long> suggestedDays = reScheduleHearing.getSuggestedDates();
-            List<Long> availableDays = reScheduleHearing.getAvailableDates();
-            Set<Long> suggestedDaysSet = new HashSet<>(suggestedDays);
+            List<java.time.OffsetDateTime> suggestedDays = reScheduleHearing.getSuggestedDates();
+            List<java.time.OffsetDateTime> availableDays = reScheduleHearing.getAvailableDates();
+            Set<java.time.OffsetDateTime> suggestedDaysSet = new HashSet<>(suggestedDays);
             availableDays.forEach(suggestedDaysSet::remove);
             List<ScheduleHearing> scheduleHearings = hearingService.search(HearingSearchRequest.builder()
                     .criteria(ScheduleHearingSearchCriteria.builder()
@@ -135,7 +135,7 @@ public class OptOutProcessor {
 
             List<ScheduleHearing> newHearings = new ArrayList<>();
             for (ScheduleHearing scheduleHearing : scheduleHearings) {
-                Long hearingDate = scheduleHearing.getHearingDate();
+                java.time.OffsetDateTime hearingDate = scheduleHearing.getHearingDate();
                 if(suggestedDaysSet.contains(hearingDate)){
                     scheduleHearing.setStatus(INACTIVE);
                     newHearings.add(scheduleHearing);

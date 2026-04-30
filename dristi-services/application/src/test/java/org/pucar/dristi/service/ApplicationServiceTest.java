@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.pucar.dristi.config.ServiceConstants.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.egov.common.contract.models.AuditDetails;
+import org.pucar.dristi.web.models.AuditDetails;
 import org.egov.common.contract.models.Workflow;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.Role;
@@ -20,6 +20,7 @@ import org.pucar.dristi.config.Configuration;
 import org.pucar.dristi.enrichment.ApplicationEnrichment;
 import org.pucar.dristi.kafka.Producer;
 import org.pucar.dristi.repository.ApplicationRepository;
+import org.pucar.dristi.util.DateUtil;
 import org.pucar.dristi.util.EvidenceUtil;
 import org.pucar.dristi.util.FileStoreUtil;
 import org.pucar.dristi.util.SmsNotificationUtil;
@@ -30,6 +31,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 class ApplicationServiceTest {
 
@@ -79,9 +83,14 @@ class ApplicationServiceTest {
     @Mock
     private EvidenceUtil evidenceUtil;
 
+    @Mock
+    private DateUtil dateUtil;
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+        lenient().when(config.getZoneId()).thenReturn("UTC");
+        lenient().when(dateUtil.getCurrentOffsetDateTime()).thenReturn(OffsetDateTime.now(ZoneId.of("UTC")));
     }
 
     @Test

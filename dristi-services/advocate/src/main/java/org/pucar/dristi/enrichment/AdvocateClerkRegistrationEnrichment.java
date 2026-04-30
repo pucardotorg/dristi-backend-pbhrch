@@ -2,19 +2,23 @@ package org.pucar.dristi.enrichment;
 
 
 import lombok.extern.slf4j.Slf4j;
-import org.egov.common.contract.models.AuditDetails;
 import org.egov.tracer.model.CustomException;
 import org.pucar.dristi.config.Configuration;
 import org.pucar.dristi.util.IdgenUtil;
 import org.pucar.dristi.web.models.AdvocateClerk;
 import org.pucar.dristi.web.models.AdvocateClerkRequest;
+import org.pucar.dristi.web.models.AuditDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 
 import static org.pucar.dristi.config.ServiceConstants.ENRICHMENT_EXCEPTION;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Component
 @Slf4j
@@ -43,7 +47,8 @@ public class AdvocateClerkRegistrationEnrichment {
             log.info("Advocate Clerk Application Number :: {}",clerkApplicationNumbers);
 
             AdvocateClerk advocateClerk = advocateClerkRequest.getClerk();
-            AuditDetails auditDetails = AuditDetails.builder().createdBy(advocateClerkRequest.getRequestInfo().getUserInfo().getUuid()).createdTime(System.currentTimeMillis()).lastModifiedBy(advocateClerkRequest.getRequestInfo().getUserInfo().getUuid()).lastModifiedTime(System.currentTimeMillis()).build();
+            OffsetDateTime now = OffsetDateTime.now();
+            AuditDetails auditDetails = AuditDetails.builder().createdBy(advocateClerkRequest.getRequestInfo().getUserInfo().getUuid()).createdTime(now).lastModifiedBy(advocateClerkRequest.getRequestInfo().getUserInfo().getUuid()).lastModifiedTime(now).build();
             advocateClerk.setAuditDetails(auditDetails);
 
             advocateClerk.setId(UUID.randomUUID());
@@ -71,7 +76,8 @@ public class AdvocateClerkRegistrationEnrichment {
         try {
             // Enrich lastModifiedTime and lastModifiedBy in case of update
             AdvocateClerk advocateClerk = advocateClerkRequest.getClerk();
-            advocateClerk.getAuditDetails().setLastModifiedTime(System.currentTimeMillis());
+            OffsetDateTime now = OffsetDateTime.now();
+            advocateClerk.getAuditDetails().setLastModifiedTime(now);
             advocateClerk.getAuditDetails().setLastModifiedBy(advocateClerkRequest.getRequestInfo().getUserInfo().getUuid());
         } catch (Exception e) {
             log.error("Error enriching advocate clerk  application upon update :: {}", e.toString());

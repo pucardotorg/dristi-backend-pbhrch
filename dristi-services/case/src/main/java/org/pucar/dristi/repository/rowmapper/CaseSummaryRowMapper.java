@@ -14,6 +14,9 @@ import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.*;
 
 @Component
@@ -43,14 +46,14 @@ public class CaseSummaryRowMapper implements ResultSetExtractor<List<CaseSummary
                         .id(caseId)
                         .tenantId(rs.getString("tenantid"))
                         .caseTitle(rs.getString("casetitle"))
-                        .filingDate(parseDateToLong(rs.getString("filingdate")))
+                        .filingDate(tsToOffsetDateTime(rs.getTimestamp("filingdate")))
                         .statutesAndSections(null)
                         .stage(rs.getString("stage"))
                         .subStage(rs.getString("substage"))
                         .outcome(rs.getString("outcome"))
                         .natureOfDisposal(getNatureOfDisposal(rs))
                         .courtId(rs.getString("courtid"))
-                        .registrationDate(parseDateToLong(rs.getString("registrationdate")))
+                        .registrationDate(tsToOffsetDateTime(rs.getTimestamp("registrationdate")))
                         .registrationNumber(rs.getString("cmpnumber"))
                         .litigants(new ArrayList<>())
                         .representatives(new ArrayList<>())
@@ -188,6 +191,10 @@ public class CaseSummaryRowMapper implements ResultSetExtractor<List<CaseSummary
 //        }
 
         return statueAndSections.toString();
+    }
+
+    private OffsetDateTime tsToOffsetDateTime(Timestamp ts) {
+        return ts != null ? ts.toInstant().atOffset(ZoneOffset.UTC) : null;
     }
 
     private Long parseDateToLong(String dateStr) {

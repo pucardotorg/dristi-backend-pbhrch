@@ -13,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.Arrays;
 import java.util.List;
 
@@ -36,10 +38,10 @@ public class JudgeCalendarApiControllerTest {
     @Test
     public void testGetJudgeCalendar(){
         JudgeCalendarSearchRequest searchRequest = new JudgeCalendarSearchRequest();
-        CalendarSearchCriteria searchCriteria = CalendarSearchCriteria.builder().judgeId("judgeId").tenantId("tenantId").fromDate(LocalDate.now().toEpochDay()).toDate(LocalDate.now().plusDays(10).toEpochDay()).build();
+        CalendarSearchCriteria searchCriteria = CalendarSearchCriteria.builder().judgeId("judgeId").tenantId("tenantId").fromDate(OffsetDateTime.now(ZoneOffset.UTC)).toDate(OffsetDateTime.now(ZoneOffset.UTC).plusDays(10)).build();
         searchRequest.setCriteria(searchCriteria);
 
-        HearingCalendar hearingCalendar = HearingCalendar.builder().judgeId("judgeId").date(LocalDate.now().toEpochDay()).build();
+        HearingCalendar hearingCalendar = HearingCalendar.builder().judgeId("judgeId").date(OffsetDateTime.now(ZoneOffset.UTC)).build();
         List<HearingCalendar> calendarList = List.of(hearingCalendar);
         when(calendarService.getJudgeCalendar(searchRequest)).thenReturn(calendarList);
 

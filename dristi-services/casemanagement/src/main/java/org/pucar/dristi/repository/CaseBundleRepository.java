@@ -7,6 +7,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Repository
 public class CaseBundleRepository {
@@ -21,7 +24,10 @@ public class CaseBundleRepository {
         String sql = "INSERT INTO case_bundle_tracker (id, startTime, endTime, pageCount, createdBy, lastModifiedBy, createdTime, lastModifiedTime) " +
                 "VALUES (?, ?, ?, ?, ?, ?,  ?, ?)";
 
-        writerJdbcTemplate.update(sql, caseBundleTracker.getId(), caseBundleTracker.getStartTime(), caseBundleTracker.getEndTime(),
+        writerJdbcTemplate.update(sql,
+                caseBundleTracker.getId(),
+                caseBundleTracker.getStartTime() != null ? java.sql.Timestamp.from(caseBundleTracker.getStartTime().toInstant()) : null,
+                caseBundleTracker.getEndTime() != null ? java.sql.Timestamp.from(caseBundleTracker.getEndTime().toInstant()) : null,
                 caseBundleTracker.getPageCount(), caseBundleTracker.getAuditDetails().getCreatedBy(), caseBundleTracker.getAuditDetails().getLastModifiedBy()
                 , caseBundleTracker.getAuditDetails().getCreatedTime(), caseBundleTracker.getAuditDetails().getLastModifiedTime());
     }
@@ -30,7 +36,10 @@ public class CaseBundleRepository {
         String sql = "INSERT INTO case_bundle_bulk_tracker (id, startTime, endTime, caseCount) " +
                 "VALUES (?, ?, ?, ?)";
 
-        writerJdbcTemplate.update(sql, bulkCaseBundleTracker.getId(), bulkCaseBundleTracker.getStartTime(), bulkCaseBundleTracker.getEndTime(),
+        writerJdbcTemplate.update(sql,
+                bulkCaseBundleTracker.getId(),
+                bulkCaseBundleTracker.getStartTime() != null ? java.sql.Timestamp.from(bulkCaseBundleTracker.getStartTime().toInstant()) : null,
+                bulkCaseBundleTracker.getEndTime() != null ? java.sql.Timestamp.from(bulkCaseBundleTracker.getEndTime().toInstant()) : null,
                 bulkCaseBundleTracker.getCaseCount());
     }
 

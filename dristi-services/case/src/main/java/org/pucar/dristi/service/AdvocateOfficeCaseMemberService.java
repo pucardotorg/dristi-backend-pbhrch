@@ -16,12 +16,17 @@ import org.pucar.dristi.web.models.enums.MemberType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
 import static org.pucar.dristi.web.models.enums.OfficeManagementStatus.IN_PROGRESS;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Slf4j
 @Service
@@ -163,41 +168,41 @@ public class AdvocateOfficeCaseMemberService {
     }
 
     private AuditDetails createAuditDetails(AddMemberRequest request) {
-        Long currentTime = System.currentTimeMillis();
+        long now = OffsetDateTime.now(ZoneId.of(configuration.getZoneId())).toInstant().toEpochMilli();
         String userId = request.getRequestInfo() != null && request.getRequestInfo().getUserInfo() != null ?
                 request.getRequestInfo().getUserInfo().getUuid() : "SYSTEM";
 
         return AuditDetails.builder()
                 .createdBy(userId)
-                .createdTime(currentTime)
+                .createdTime(now)
                 .lastModifiedBy(userId)
-                .lastModifiedTime(currentTime)
+                .lastModifiedTime(now)
                 .build();
     }
 
     private AuditDetails createAuditDetailsForLeave(LeaveOfficeRequest request) {
-        Long currentTime = System.currentTimeMillis();
+        long now = OffsetDateTime.now(ZoneId.of(configuration.getZoneId())).toInstant().toEpochMilli();
         String userId = request.getRequestInfo() != null && request.getRequestInfo().getUserInfo() != null ?
                 request.getRequestInfo().getUserInfo().getUuid() : "SYSTEM";
 
         AuditDetails auditDetails = request.getLeaveOffice().getAuditDetails();
         auditDetails.setLastModifiedBy(userId);
-        auditDetails.setLastModifiedTime(currentTime);
+        auditDetails.setLastModifiedTime(now);
 
         return auditDetails;
 
     }
 
     private AuditDetails createAuditDetailsForProcessCaseMember(ProcessCaseMemberRequest request) {
-        Long currentTime = System.currentTimeMillis();
+        long now = OffsetDateTime.now(ZoneId.of(configuration.getZoneId())).toInstant().toEpochMilli();
         String userId = request.getRequestInfo() != null && request.getRequestInfo().getUserInfo() != null ?
                 request.getRequestInfo().getUserInfo().getUuid() : "SYSTEM";
 
         return AuditDetails.builder()
                 .createdBy(userId)
-                .createdTime(currentTime)
+                .createdTime(now)
                 .lastModifiedBy(userId)
-                .lastModifiedTime(currentTime)
+                .lastModifiedTime(now)
                 .build();
     }
 

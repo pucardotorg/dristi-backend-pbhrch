@@ -15,11 +15,16 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.util.ObjectUtils;
 
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.Collections;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 class BailRegistrationEnrichmentTest {
 
@@ -97,9 +102,10 @@ class BailRegistrationEnrichmentTest {
         bail.setSureties(Collections.singletonList(surety));
 
         Bail existingBail = new Bail();
+        OffsetDateTime createdTime = OffsetDateTime.of(2024, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC);
         existingBail.setAuditDetails(AuditDetails.builder()
                 .createdBy("creator")
-                .createdTime(12345L)
+                .createdTime(createdTime)
                 .build());
 
         AuditDetails existingAudit = AuditDetails.builder().build();
@@ -112,7 +118,7 @@ class BailRegistrationEnrichmentTest {
         assertFalse(bail.getLitigantSigned());
         assertFalse(bail.getSureties().get(0).getHasSigned());
         assertEquals("creator", bail.getAuditDetails().getCreatedBy());
-        assertEquals(12345L, bail.getAuditDetails().getCreatedTime());
+        assertEquals(createdTime, bail.getAuditDetails().getCreatedTime());
         assertEquals("user-uuid", bail.getAuditDetails().getLastModifiedBy());
     }
 

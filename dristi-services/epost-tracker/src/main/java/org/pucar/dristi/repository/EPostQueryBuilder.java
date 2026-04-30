@@ -53,32 +53,32 @@ public class EPostQueryBuilder {
         if(!ObjectUtils.isEmpty(searchCriteria.getBookingDate())){
             addClauseIfRequired(query,preparedStmtList);
             query.append(" booking_date = ? ");
-            preparedStmtList.add(searchCriteria.getTrackingNumber());
+            preparedStmtList.add(java.sql.Timestamp.from(searchCriteria.getBookingDate().toInstant()));
         }
         if (!ObjectUtils.isEmpty(searchCriteria.getBookingDateStartTime())) {
             addClauseIfRequired(query,preparedStmtList);
             query.append(" booking_date >= ? ");
-            preparedStmtList.add(searchCriteria.getBookingDateStartTime());
+            preparedStmtList.add(java.sql.Timestamp.from(searchCriteria.getBookingDateStartTime().toInstant()));
         }
         if (!ObjectUtils.isEmpty(searchCriteria.getBookingDateEndTime())) {
             addClauseIfRequired(query,preparedStmtList);
             query.append(" booking_date <= ? ");
-            preparedStmtList.add(searchCriteria.getBookingDateEndTime());
+            preparedStmtList.add(java.sql.Timestamp.from(searchCriteria.getBookingDateEndTime().toInstant()));
         }
         if (!ObjectUtils.isEmpty(searchCriteria.getReceivedDateStartTime())) {
             addClauseIfRequired(query,preparedStmtList);
             query.append(" received_date >= ? ");
-            preparedStmtList.add(searchCriteria.getReceivedDateStartTime());
+            preparedStmtList.add(java.sql.Timestamp.from(searchCriteria.getReceivedDateStartTime().toInstant()));
         }
         if (!ObjectUtils.isEmpty(searchCriteria.getReceivedDateEndTime())) {
             addClauseIfRequired(query,preparedStmtList);
             query.append(" received_date <= ? ");
-            preparedStmtList.add(searchCriteria.getReceivedDateEndTime());
+            preparedStmtList.add(java.sql.Timestamp.from(searchCriteria.getReceivedDateEndTime().toInstant()));
         }
         if(!ObjectUtils.isEmpty(searchCriteria.getReceivedDate())){
             addClauseIfRequired(query,preparedStmtList);
             query.append(" received_date = ? ");
-            preparedStmtList.add(searchCriteria.getTrackingNumber());
+            preparedStmtList.add(java.sql.Timestamp.from(searchCriteria.getReceivedDate().toInstant()));
         }
         if (searchCriteria.getPostalHub() != null) {
             addClauseIfRequired(query,preparedStmtList);

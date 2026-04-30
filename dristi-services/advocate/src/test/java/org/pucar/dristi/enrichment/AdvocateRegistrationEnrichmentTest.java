@@ -1,6 +1,6 @@
 package org.pucar.dristi.enrichment;
 
-import org.egov.common.contract.models.AuditDetails;
+import org.pucar.dristi.web.models.AuditDetails;
 import org.egov.common.contract.models.Document;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
@@ -15,11 +15,15 @@ import org.pucar.dristi.util.IdgenUtil;
 import org.pucar.dristi.web.models.Advocate;
 import org.pucar.dristi.web.models.AdvocateRequest;
 
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 class AdvocateRegistrationEnrichmentTest {
 
@@ -80,7 +84,7 @@ class AdvocateRegistrationEnrichmentTest {
         AdvocateRequest advocateRequest = new AdvocateRequest();
         Advocate advocate = new Advocate();
         advocate.setTenantId("tenantId");
-        AuditDetails auditDetails = AuditDetails.builder().createdBy("user-uuid-1").createdTime(System.currentTimeMillis()).lastModifiedBy("user-uuid-1").lastModifiedTime(System.currentTimeMillis()).build();
+        AuditDetails auditDetails = AuditDetails.builder().createdBy("user-uuid-1").createdTime(OffsetDateTime.now()).lastModifiedBy("user-uuid-1").lastModifiedTime(OffsetDateTime.now()).build();
         advocate.setAuditDetails(auditDetails);
         advocateRequest.setAdvocate(advocate);
         RequestInfo requestInfo = new RequestInfo();
@@ -104,7 +108,7 @@ class AdvocateRegistrationEnrichmentTest {
         AdvocateRequest advocateRequest = new AdvocateRequest();
         Advocate advocate = new Advocate();
         advocate.setTenantId("tenantId");
-        AuditDetails auditDetails = AuditDetails.builder().createdBy("user-uuid-1").createdTime(System.currentTimeMillis()).lastModifiedBy("user-uuid-1").lastModifiedTime(System.currentTimeMillis()).build();
+        AuditDetails auditDetails = AuditDetails.builder().createdBy("user-uuid-1").createdTime(OffsetDateTime.now()).lastModifiedBy("user-uuid-1").lastModifiedTime(OffsetDateTime.now()).build();
         advocate.setAuditDetails(auditDetails);
         advocateRequest.setAdvocate(null);
         RequestInfo requestInfo = new RequestInfo();

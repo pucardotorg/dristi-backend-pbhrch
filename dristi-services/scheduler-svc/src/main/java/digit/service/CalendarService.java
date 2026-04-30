@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
 import java.util.*;
@@ -72,7 +73,7 @@ public class CalendarService {
         log.info("operation = getJudgeAvailability, result = IN_PROGRESS, judgeId = {},tenantId ={}, courtId = {}", criteria.getJudgeId(), criteria.getTenantId(), criteria.getCourtId());
 
         List<AvailabilityDTO> resultList = new ArrayList<>();
-        HashMap<String, Double> dateMap = new HashMap<>();
+        HashMap<String, Double> dateMap = new HashMap<>();  // Key format: yyyy-MM-dd
 
         // retrieve type of hearings from master data
         List<MdmsSlot> defaultSlots = helper.getDataFromMDMS(MdmsSlot.class, serviceConstants.DEFAULT_SLOTTING_MASTER_NAME, serviceConstants.DEFAULT_COURT_MODULE_NAME);
@@ -104,7 +105,7 @@ public class CalendarService {
         int hearingLength = availableDateForHearing.size();
 
         int loopLength = Math.max(Math.max(calendarLength, hearingLength), court000334.size());
-        Long lastDateInDefaultCalendar = null;
+        OffsetDateTime lastDateInDefaultCalendar = null;
         for (int i = 0; i < loopLength; i++) {
 
             if (i < hearingLength)
@@ -114,36 +115,46 @@ public class CalendarService {
                 if (map.containsKey("date")) {
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
                     String date = String.valueOf(map.get("date"));
-                    dateMap.put(dateUtil.getEPochFromLocalDate(LocalDate.parse(date, formatter)).toString(), -1.0);
-
-                    lastDateInDefaultCalendar = dateUtil.getEPochFromLocalDate(LocalDate.parse(date, formatter));
+                    LocalDate localDate = LocalDate.parse(date, formatter);
+                    String dateKey = localDate.toString();  // yyyy-MM-dd format
+                    dateMap.put(dateKey, -1.0);
+                    lastDateInDefaultCalendar = dateUtil.getOffsetDateTimeFromLocalDate(localDate);
                 }
 
             }
-            if (i < calendarLength) dateMap.put(judgeCalendarRule.get(i).getDate().toString(), -1.0);
+            if (i < calendarLength) {
+                OffsetDateTime ruleDate = judgeCalendarRule.get(i).getDate();
+                String dateKey = ruleDate != null ? dateUtil.getLocalDateFromOffsetDateTime(ruleDate).toString() : null;
+                dateMap.put(dateKey, -1.0);
+            }
         }
 
         // calculating date after 6 month from provided date
-        Long dateAfterSixMonths = dateUtil.getEPochFromLocalDate(dateUtil.getLocalDateFromEpoch(criteria.getFromDate()).plusDays(30 * 6));// configurable?
+        OffsetDateTime criteriaFromDate = criteria.getFromDate();
+        LocalDate startLocalDate = criteriaFromDate != null ? dateUtil.getLocalDateFromOffsetDateTime(criteriaFromDate) : LocalDate.now();
+        LocalDate dateAfterSixMonths = startLocalDate.plusDays(30 * 6);  // configurable?
 
+        //last date which is store in default calendar - use the later of last calendar date or 6 months from start
+        LocalDate lastCalendarLocalDate = lastDateInDefaultCalendar != null ? dateUtil.getLocalDateFromOffsetDateTime(lastDateInDefaultCalendar) : null;
+        LocalDate endLocalDate = (lastCalendarLocalDate != null && lastCalendarLocalDate.isAfter(dateAfterSixMonths)) 
+                ? lastCalendarLocalDate 
+                : dateAfterSixMonths;
 
-        //last date which is store in default calendar
-        Long endDate = lastDateInDefaultCalendar == null ? lastDateInDefaultCalendar : dateAfterSixMonths;
+        LocalDate fromLocalDate = startLocalDate;
 
-        Long fromDate = dateUtil.getStartOfTheDayForEpoch(criteria.getFromDate());
-//         check startDate in date map if its exits and value is true then add to the result list
-        Stream.iterate(fromDate, startDate -> startDate < (endDate), startDate -> dateUtil.getEPochFromLocalDate(dateUtil.getLocalDateFromEpoch(startDate).plusDays(1)))
-                .takeWhile(startDate -> resultList.size() < criteria.getNumberOfSuggestedDays()).forEach(startDate -> {
-
-                    if (dateMap.containsKey(startDate.toString()) && dateMap.get(startDate.toString()) != -1.0 && dateMap.get(startDate.toString()) < totalHrs)
+        // iterate through dates and check availability
+        Stream.iterate(fromLocalDate, date -> !date.isAfter(endLocalDate), date -> date.plusDays(1))
+                .takeWhile(date -> resultList.size() < criteria.getNumberOfSuggestedDays()).forEach(date -> {
+                    String dateKey = date.toString();  // yyyy-MM-dd format
+                    if (dateMap.containsKey(dateKey) && dateMap.get(dateKey) != -1.0 && dateMap.get(dateKey) < totalHrs)
                         resultList.add(AvailabilityDTO.builder()
-                                .date(startDate.toString())
-                                .occupiedBandwidth(dateMap.get(startDate.toString())).build());
+                                .date(dateKey)
+                                .occupiedBandwidth(dateMap.get(dateKey)).build());
 
                     // this case will cover no holiday,no leave and no hearing for day
-                    if (!dateMap.containsKey(startDate.toString()))
+                    if (!dateMap.containsKey(dateKey))
                         resultList.add(AvailabilityDTO.builder()
-                                .date(startDate.toString())
+                                .date(dateKey)
                                 .occupiedBandwidth(0.0).build());
                 });
 
@@ -182,7 +193,7 @@ public class CalendarService {
 
         // getting from date and to date and assigning it to criteria
         if (criteria.getPeriodType() != null) {
-            Pair<Long, Long> fromDateToDate = getFromAndToDateFromPeriodType(criteria.getPeriodType());
+            Pair<java.time.OffsetDateTime, java.time.OffsetDateTime> fromDateToDate = getFromAndToDateFromPeriodType(criteria.getPeriodType());
             criteria.setFromDate(fromDateToDate.getKey());
             criteria.setToDate(fromDateToDate.getValue());
         }
@@ -198,8 +209,11 @@ public class CalendarService {
         int loopLength = Math.max(judgeCalendarRule.size(), court000334.size());
         for (int i = 0; i < loopLength; i++) {
 
-            if (i < judgeCalendarRule.size())
-                leaveMap.put(dateUtil.getLocalDateFromEpoch(judgeCalendarRule.get(i).getDate()), judgeCalendarRule.get(i));
+            if (i < judgeCalendarRule.size()) {
+                OffsetDateTime ruleDate = judgeCalendarRule.get(i).getDate();
+                LocalDate localDate = ruleDate != null ? dateUtil.getLocalDateFromOffsetDateTime(ruleDate) : null;
+                leaveMap.put(localDate, judgeCalendarRule.get(i));
+            }
             if (i < court000334.size()) {
                 LinkedHashMap map = (LinkedHashMap) court000334.get(i);
                 if (map.containsKey("date")) {
@@ -223,11 +237,14 @@ public class CalendarService {
         }
 
         hearings.forEach((hearing) -> {
-            dayHearingMap.computeIfAbsent(dateUtil.getLocalDateFromEpoch(hearing.getStartTime()), k -> new ArrayList<>()).add(hearing);
+            if (hearing.getStartTime() != null) {
+                LocalDate hearingDate = dateUtil.getLocalDateFromOffsetDateTime(hearing.getStartTime());
+                dayHearingMap.computeIfAbsent(hearingDate, k -> new ArrayList<>()).add(hearing);
+            }
         });
 
-        LocalDate startDate = dateUtil.getLocalDateFromEpoch(scheduleHearingSearchCriteria.getStartDateTime());
-        LocalDate endDate = dateUtil.getLocalDateFromEpoch(scheduleHearingSearchCriteria.getEndDateTime());
+        LocalDate startDate = scheduleHearingSearchCriteria.getStartDateTime() != null ? dateUtil.getLocalDateFromOffsetDateTime(scheduleHearingSearchCriteria.getStartDateTime()) : LocalDate.now();
+        LocalDate endDate = scheduleHearingSearchCriteria.getEndDateTime() != null ? dateUtil.getLocalDateFromOffsetDateTime(scheduleHearingSearchCriteria.getEndDateTime()) : startDate.plusDays(30);
 
         for (LocalDate start = startDate; !start.isAfter(endDate); start = start.plusDays(1)) {
 
@@ -240,7 +257,7 @@ public class CalendarService {
                     .isOnLeave(leaveMap.containsKey(start) && leaveMap.get(start) instanceof JudgeCalendarRule)
                     .isHoliday(leaveMap.containsKey(start) && leaveMap.get(start) instanceof LinkedHashMap<?, ?>)
                     .notes("note")
-                    .date(dateUtil.getEPochFromLocalDate(start))
+                    .date(dateUtil.getOffsetDateTimeFromLocalDate(start))
                     .description("description")
                     .hearings(hearingOfaDay).build();
             calendar.add(calendarOfDay);
@@ -283,7 +300,7 @@ public class CalendarService {
     private ScheduleHearingSearchCriteria getHearingSearchCriteriaFromJudgeSearch(CalendarSearchCriteria criteria) {
         log.info("operation = getHearingSearchCriteriaFromJudgeSearch, result = IN_PROGRESS, CalendarSearchCriteria = {}", criteria);
 
-        Long fromDate = null, toDate = null;
+        java.time.OffsetDateTime fromDate = null, toDate = null;
 
         if (criteria.getFromDate() != null && criteria.getToDate() != null) {
             fromDate = criteria.getFromDate();
@@ -308,9 +325,9 @@ public class CalendarService {
      * @param periodType enum
      * @return Pair Object with from date in key and to date in value
      */
-    public Pair<Long, Long> getFromAndToDateFromPeriodType(PeriodType periodType) {
+    public Pair<java.time.OffsetDateTime, java.time.OffsetDateTime> getFromAndToDateFromPeriodType(PeriodType periodType) {
         log.info("operation = getFromAndToDateFromPeriodType, result = IN_PROGRESS, PeriodType = {}", periodType);
-        Pair<Long, Long> pair = new Pair<>();
+        Pair<java.time.OffsetDateTime, java.time.OffsetDateTime> pair = new Pair<>();
 
         LocalDate fromDate = null, toDate = null;
         LocalDate currentDate = LocalDate.now();
@@ -340,8 +357,8 @@ public class CalendarService {
             }
         }
 
-        pair.setKey(dateUtil.getEPochFromLocalDate(fromDate));
-        pair.setValue(dateUtil.getEPochFromLocalDate(toDate));
+        pair.setKey(fromDate != null ? dateUtil.getOffsetDateTimeFromLocalDate(fromDate) : null);
+        pair.setValue(toDate != null ? dateUtil.getOffsetDateTimeFromLocalDate(toDate) : null);
 
         log.info("operation = getFromAndToDateFromPeriodType, result = SUCCESS, fromDate = {} , toDate = {}", fromDate, toDate);
         return pair;

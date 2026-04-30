@@ -11,23 +11,38 @@ import org.pucar.dristi.web.models.CourtCase;
 import org.pucar.dristi.web.models.NatureOfDisposal;
 import org.pucar.dristi.web.models.PendingAdvocateRequest;
 import org.pucar.dristi.web.models.v2.WitnessDetails;
+import org.pucar.dristi.util.DateUtil;
 import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.*;
 
 import static org.pucar.dristi.config.ServiceConstants.ROW_MAPPER_EXCEPTION;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Component
 @Slf4j
 public class CaseRowMapper implements ResultSetExtractor<List<CourtCase>> {
     private final ObjectMapper objectMapper = new ObjectMapper();
+    
+    private final DateUtil dateUtil;
+    
+    @Autowired
+    public CaseRowMapper(DateUtil dateUtil) {
+        this.dateUtil = dateUtil;
+    }
 
     public List<CourtCase> extractData(ResultSet rs) {
         Map<String, CourtCase> caseMap = new LinkedHashMap<>();
@@ -39,17 +54,14 @@ public class CaseRowMapper implements ResultSetExtractor<List<CourtCase>> {
                 CourtCase courtCase = caseMap.get(uuid);
 
                 if (courtCase == null) {
-                    Long lastModifiedTime = rs.getLong("lastmodifiedtime");
-                    if (rs.wasNull()) {
-                        lastModifiedTime = null;
-                    }
-
+                    Timestamp lastModifiedTimeTs = rs.getTimestamp("lastmodifiedtime");
+                    Timestamp createdTimeTs = rs.getTimestamp("createdtime");
 
                     AuditDetails auditdetails = AuditDetails.builder()
                             .createdBy(rs.getString("createdby"))
-                            .createdTime(rs.getLong("createdtime"))
+                            .createdTime(createdTimeTs != null ? createdTimeTs.getTime() : null)
                             .lastModifiedBy(rs.getString("lastmodifiedby"))
-                            .lastModifiedTime(lastModifiedTime)
+                            .lastModifiedTime(lastModifiedTimeTs != null ? lastModifiedTimeTs.getTime() : null)
                             .build();
                     courtCase = CourtCase.builder()
                             .id(UUID.fromString(rs.getString("id")))
@@ -73,9 +85,9 @@ public class CaseRowMapper implements ResultSetExtractor<List<CourtCase>> {
                             .isActive(rs.getBoolean("isactive"))
                             .substage(rs.getString("substage"))
                             .advocateCount(rs.getInt("advocatecount"))
-                            .filingDate(parseDateToLong(rs.getString("filingdate")))
-                            .judgementDate(parseDateToLong(rs.getString("judgementdate")))
-                            .registrationDate(parseDateToLong(rs.getString("registrationdate")))
+                            .filingDate(tsToOffsetDateTime(rs.getTimestamp("filingdate")))
+                            .judgementDate(tsToOffsetDateTime(rs.getTimestamp("judgementdate")))
+                            .registrationDate(tsToOffsetDateTime(rs.getTimestamp("registrationdate")))
                             .caseCategory(rs.getString("casecategory"))
                             .natureOfPleading(rs.getString("natureofpleading"))
                             .pendingAdvocateRequests(getObjectListFromJson(rs.getString("pendingadvocaterequests"), new TypeReference<List<PendingAdvocateRequest>>() {}))
@@ -180,6 +192,10 @@ public class CaseRowMapper implements ResultSetExtractor<List<CourtCase>> {
         return localDate;
     }
 
+
+    private OffsetDateTime tsToOffsetDateTime(java.sql.Timestamp ts) {
+        return ts != null ? ts.toInstant().atOffset(java.time.ZoneOffset.UTC) : null;
+    }
 
     private Long parseDateToLong(String dateStr) {
         if (dateStr == null || dateStr.trim().isEmpty()) {

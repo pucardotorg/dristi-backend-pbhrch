@@ -8,6 +8,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.OffsetDateTime;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
+
 @Embeddable
 @Data
 @AllArgsConstructor
@@ -24,9 +29,9 @@ public class AuditDetails {
 
     @Column(name = "createdTime")
     @JsonProperty("createdTime")
-    private Long createdTime = null;
+    private OffsetDateTime createdTime = null;
 
     @Column(name = "lastModifiedTime")
     @JsonProperty("lastModifiedTime")
-    private Long lastModifiedTime = null;
+    private OffsetDateTime lastModifiedTime = null;
 }

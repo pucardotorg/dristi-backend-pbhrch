@@ -3,7 +3,7 @@ package org.pucar.dristi.repository.rowmapper;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.egov.common.contract.models.AuditDetails;
+import org.pucar.dristi.web.models.AuditDetails;
 import org.egov.tracer.model.CustomException;
 import org.postgresql.util.PGobject;
 import org.pucar.dristi.web.models.Attendee;
@@ -15,9 +15,15 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.*;
 
 import static org.pucar.dristi.config.ServiceConstants.ROW_MAPPER_EXCEPTION;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Component
 @Slf4j
@@ -42,17 +48,14 @@ public class HearingRowMapper implements ResultSetExtractor<List<Hearing>> {
                 Hearing hearing = hearingMap.get(uuid);
 
                 if (hearing == null) {
-                    Long lastModifiedTime = rs.getLong("lastmodifiedtime");
-                    if (rs.wasNull()) {
-                        lastModifiedTime = null;
-                    }
-
+                    Timestamp createdTs = rs.getTimestamp("createdtime");
+                    Timestamp lastModifiedTs = rs.getTimestamp("lastmodifiedtime");
 
                     AuditDetails auditdetails = AuditDetails.builder()
                             .createdBy(rs.getString("createdby"))
-                            .createdTime(rs.getLong("createdtime"))
+                            .createdTime(createdTs != null ? createdTs.toInstant().atOffset(ZoneOffset.UTC) : null)
                             .lastModifiedBy(rs.getString("lastmodifiedby"))
-                            .lastModifiedTime(lastModifiedTime)
+                            .lastModifiedTime(lastModifiedTs != null ? lastModifiedTs.toInstant().atOffset(ZoneOffset.UTC) : null)
                             .build();
 
                     hearing = Hearing.builder()
@@ -61,8 +64,8 @@ public class HearingRowMapper implements ResultSetExtractor<List<Hearing>> {
                             .hearingId(rs.getString("hearingid"))
                             .hearingType(rs.getString("hearingtype"))
                             .status(rs.getString("status"))
-                            .startTime(rs.getLong("starttime"))
-                            .endTime(rs.getLong("endtime"))
+                            .startTime(tsToOffsetDateTime(rs.getTimestamp("starttime")))
+                            .endTime(tsToOffsetDateTime(rs.getTimestamp("endtime")))
                             .vcLink(rs.getString("vclink"))
                             .isActive(rs.getBoolean("isactive"))
                             .notes(rs.getString("notes"))
@@ -92,6 +95,10 @@ public class HearingRowMapper implements ResultSetExtractor<List<Hearing>> {
         }
         return new ArrayList<>(hearingMap.values());
     }
+    private OffsetDateTime tsToOffsetDateTime(Timestamp ts) {
+        return ts != null ? ts.toInstant().atOffset(ZoneOffset.UTC) : null;
+    }
+
     public List<String> getListFromJson(String json) {
         if (json == null || json.trim().isEmpty()) {
             return Collections.emptyList();

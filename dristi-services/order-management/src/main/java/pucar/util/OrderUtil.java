@@ -223,8 +223,8 @@ public class OrderUtil {
             // Next Hearing Date
             if (order.getNextHearingDate() != null) {
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-                String dateStr = Instant.ofEpochMilli(order.getNextHearingDate())
-                        .atZone(ZoneId.of(configuration.getZoneId()))
+                String dateStr = order.getNextHearingDate()
+                        .atZoneSameInstant(ZoneId.of(configuration.getZoneId()))
                         .toLocalDate()
                         .format(formatter);
                 sb.append("Date of Next Hearing: ")

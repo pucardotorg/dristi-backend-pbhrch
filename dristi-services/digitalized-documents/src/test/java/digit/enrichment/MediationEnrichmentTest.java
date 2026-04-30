@@ -12,11 +12,16 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 class MediationEnrichmentTest {
 
@@ -31,16 +36,16 @@ class MediationEnrichmentTest {
 
     private DigitalizedDocumentRequest request;
     private String userId;
-    private long currentTime;
+    private OffsetDateTime currentTime;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
         
         userId = UUID.randomUUID().toString();
-        currentTime = System.currentTimeMillis();
+        currentTime = OffsetDateTime.now(ZoneOffset.UTC);
         
-        when(digitalizedDocumentUtil.getCurrentTimeInMilliSec()).thenReturn(currentTime);
+        when(digitalizedDocumentUtil.getCurrentTimeOffset()).thenReturn(currentTime);
         when(digitalizedDocumentUtil.generateUUID()).thenReturn(UUID.randomUUID());
         
         request = DigitalizedDocumentRequest.builder()
@@ -75,12 +80,12 @@ class MediationEnrichmentTest {
     @Test
     void testEnrichUpdateMediationDocument() {
         // Setup existing audit details
-        long createdTime = currentTime - 10000; // 10 seconds ago
+        OffsetDateTime createdTime = currentTime.minusSeconds(10);
         AuditDetails existingAudit = AuditDetails.builder()
                 .createdBy("creator")
                 .createdTime(createdTime)
                 .lastModifiedBy("old-modifier")
-                .lastModifiedTime(createdTime + 5000) // 5 seconds after creation
+                .lastModifiedTime(createdTime.plusSeconds(5))
                 .build();
         request.getDigitalizedDocument().setAuditDetails(existingAudit);
         

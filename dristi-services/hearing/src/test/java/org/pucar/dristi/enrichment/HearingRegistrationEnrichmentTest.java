@@ -1,6 +1,6 @@
 package org.pucar.dristi.enrichment;
 
-import org.egov.common.contract.models.AuditDetails;
+import org.pucar.dristi.web.models.AuditDetails;
 import org.egov.common.contract.models.Workflow;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
@@ -11,6 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.pucar.dristi.config.Configuration;
+import org.pucar.dristi.util.DateUtil;
 import org.pucar.dristi.util.IdgenUtil;
 import org.pucar.dristi.util.WorkflowUtil;
 import org.pucar.dristi.web.models.*;
@@ -23,6 +24,9 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static org.pucar.dristi.config.ServiceConstants.CLOSE;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 class HearingRegistrationEnrichmentTest {
 
@@ -38,9 +42,13 @@ class HearingRegistrationEnrichmentTest {
     @Mock
     private WorkflowUtil workflowUtil;
 
+    @Mock
+    private DateUtil dateUtil;
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+        lenient().when(dateUtil.getCurrentOffsetDateTime()).thenReturn(OffsetDateTime.now(ZoneId.of("UTC")));
     }
 
     // Helper method to create a mock HearingRequest

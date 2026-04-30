@@ -14,7 +14,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import java.sql.ResultSet;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.sql.SQLException;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -38,8 +44,8 @@ public class EmployeeRowMapper implements ResultSetExtractor<List<Employee>> {
 			String currentid = rs.getString("employee_uuid");
 			Employee currentEmployee = employeeMap.get(currentid);
 			if(null == currentEmployee) {
-				AuditDetails auditDetails = AuditDetails.builder().createdBy(rs.getString("employee_createdby")).createdDate(rs.getLong("employee_createddate"))
-						.lastModifiedBy(rs.getString("employee_lastmodifiedby")).lastModifiedDate(rs.getLong("employee_lastmodifieddate")).build();
+				AuditDetails auditDetails = AuditDetails.builder().createdBy(rs.getString("employee_createdby")).createdDate(convertOffsetDate(rs.getLong("employee_createddate")))
+						.lastModifiedBy(rs.getString("employee_lastmodifiedby")).lastModifiedDate(convertOffsetDate(rs.getLong("employee_lastmodifieddate"))).build();
 				currentEmployee = Employee.builder().id(rs.getLong("employee_id")).uuid(rs.getString("employee_uuid")).tenantId(rs.getString("employee_tenantid"))
 						.code(rs.getString("employee_code")).dateOfAppointment(null == rs.getObject("employee_doa")? null : rs.getLong("employee_doa")).IsActive(rs.getBoolean("employee_active"))
 						.employeeStatus(rs.getString("employee_status")).employeeType(rs.getString("employee_type")).auditDetails(auditDetails).reActivateEmployee(rs.getBoolean("employee_reactive"))
@@ -87,8 +93,8 @@ public class EmployeeRowMapper implements ResultSetExtractor<List<Employee>> {
 			
 			List<String> ids = assignments.stream().map(Assignment::getId).collect(Collectors.toList());
 			if(!StringUtils.isEmpty(rs.getString("assignment_uuid")) && !ids.contains(rs.getString("assignment_uuid"))) {
-				AuditDetails auditDetails = AuditDetails.builder().createdBy(rs.getString("assignment_createdby")).createdDate(rs.getLong("assignment_createddate"))
-						.lastModifiedBy(rs.getString("assignment_lastmodifiedby")).lastModifiedDate(rs.getLong("assignment_lastmodifieddate")).build();
+				AuditDetails auditDetails = AuditDetails.builder().createdBy(rs.getString("assignment_createdby")).createdDate(convertOffsetDate(rs.getLong("assignment_createddate")))
+						.lastModifiedBy(rs.getString("assignment_lastmodifiedby")).lastModifiedDate(convertOffsetDate(rs.getLong("assignment_lastmodifieddate"))).build();
 				
 				Assignment assignment = Assignment.builder().id(rs.getString("assignment_uuid")).position(rs.getLong("assignment_position")).courtEstablishment(rs.getString("assignment_courtestablishment")).courtroom(rs.getString("assignment_courtroom"))
 				.designation(rs.getString("assignment_designation")).fromDate(rs.getLong("assignment_fromdate")).toDate(null == rs.getObject("assignment_todate")? null : rs.getLong("assignment_todate"))
@@ -122,8 +128,8 @@ public class EmployeeRowMapper implements ResultSetExtractor<List<Employee>> {
 			List<String> ids = jurisdictions.stream().map(Jurisdiction::getId).collect(Collectors.toList());
 			Boolean isActive =  rs.getBoolean("jurisdiction_isactive") !=false;
 			if(isActive && !StringUtils.isEmpty(rs.getString("jurisdiction_uuid")) && !ids.contains(rs.getString("jurisdiction_uuid"))) {
-				AuditDetails auditDetails = AuditDetails.builder().createdBy(rs.getString("jurisdiction_createdby")).createdDate(rs.getLong("jurisdiction_createddate"))
-						.lastModifiedBy(rs.getString("jurisdiction_lastmodifiedby")).lastModifiedDate(rs.getLong("jurisdiction_lastmodifieddate")).build();
+				AuditDetails auditDetails = AuditDetails.builder().createdBy(rs.getString("jurisdiction_createdby")).createdDate(convertOffsetDate(rs.getLong("jurisdiction_createddate")))
+						.lastModifiedBy(rs.getString("jurisdiction_lastmodifiedby")).lastModifiedDate(convertOffsetDate(rs.getLong("jurisdiction_lastmodifieddate"))).build();
 				
 				Jurisdiction jurisdiction = Jurisdiction.builder().id(rs.getString("jurisdiction_uuid")).hierarchy(rs.getString("jurisdiction_hierarchy"))
 						.boundary(rs.getString("jurisdiction_boundary")).boundaryType(rs.getString("jurisdiction_boundarytype"))
@@ -156,8 +162,8 @@ public class EmployeeRowMapper implements ResultSetExtractor<List<Employee>> {
 			List<String> ids = educationDetails.stream().map(EducationalQualification::getId).collect(Collectors.toList());
 			Boolean isActive =rs.getBoolean("education_isactive") !=false;
 			if( isActive &&!StringUtils.isEmpty( rs.getString("education_uuid")) && !ids.contains(rs.getString("education_uuid"))) {
-				AuditDetails auditDetails = AuditDetails.builder().createdBy(rs.getString("education_createdby")).createdDate(rs.getLong("education_createddate"))
-						.lastModifiedBy(rs.getString("education_lastmodifiedby")).lastModifiedDate(rs.getLong("education_lastmodifieddate")).build();
+				AuditDetails auditDetails = AuditDetails.builder().createdBy(rs.getString("education_createdby")).createdDate(convertOffsetDate(rs.getLong("education_createddate")))
+						.lastModifiedBy(rs.getString("education_lastmodifiedby")).lastModifiedDate(convertOffsetDate(rs.getLong("education_lastmodifieddate"))).build();
 				EducationalQualification education = EducationalQualification.builder().id(rs.getString("education_uuid")).qualification(rs.getString("education_qualification")).stream(rs.getString("education_stream"))
 						.yearOfPassing(rs.getLong("education_yearofpassing")).university(rs.getString("education_university")).remarks(rs.getString("education_remarks"))
 						.tenantId(rs.getString("education_tenantid"))
@@ -190,8 +196,8 @@ public class EmployeeRowMapper implements ResultSetExtractor<List<Employee>> {
 			List<String> ids = tests.stream().map(DepartmentalTest::getId).collect(Collectors.toList());
 			Boolean isActive = rs.getBoolean("depttest_isactive") !=false;
 			if(isActive  && !StringUtils.isEmpty(rs.getString("depttest_uuid")) && !ids.contains(rs.getString("depttest_uuid"))) {
-				AuditDetails auditDetails = AuditDetails.builder().createdBy(rs.getString("depttest_createdby")).createdDate(rs.getLong("depttest_createddate"))
-						.lastModifiedBy(rs.getString("depttest_lastmodifiedby")).lastModifiedDate(rs.getLong("depttest_lastmodifieddate")).build();
+				AuditDetails auditDetails = AuditDetails.builder().createdBy(rs.getString("depttest_createdby")).createdDate(convertOffsetDate(rs.getLong("depttest_createddate")))
+						.lastModifiedBy(rs.getString("depttest_lastmodifiedby")).lastModifiedDate(convertOffsetDate(rs.getLong("depttest_lastmodifieddate"))).build();
 				
 				DepartmentalTest test = DepartmentalTest.builder().id(rs.getString("depttest_uuid")).test(rs.getString("depttest_test")).yearOfPassing(rs.getLong("depttest_yearofpassing"))
 						.remarks(rs.getString("depttest_remarks")).tenantId(rs.getString("depttest_tenantid"))
@@ -223,8 +229,8 @@ public class EmployeeRowMapper implements ResultSetExtractor<List<Employee>> {
 			
 			List<String> ids = history.stream().map(ServiceHistory::getId).collect(Collectors.toList());
 			if(!StringUtils.isEmpty(rs.getString("history_uuid")) && !ids.contains(rs.getString("history_uuid"))) {
-				AuditDetails auditDetails = AuditDetails.builder().createdBy(rs.getString("history_createdby")).createdDate(rs.getLong("history_createddate"))
-						.lastModifiedBy(rs.getString("history_lastmodifiedby")).lastModifiedDate(rs.getLong("history_lastmodifieddate")).build();
+				AuditDetails auditDetails = AuditDetails.builder().createdBy(rs.getString("history_createdby")).createdDate(convertOffsetDate(rs.getLong("history_createddate")))
+						.lastModifiedBy(rs.getString("history_lastmodifiedby")).lastModifiedDate(convertOffsetDate(rs.getLong("history_lastmodifieddate"))).build();
 				
 				ServiceHistory service = ServiceHistory.builder().id(rs.getString("history_uuid")).serviceStatus(rs.getString("history_servicestatus")).serviceFrom(rs.getLong("history_servicefrom"))
 						.serviceTo(null == rs.getObject("history_serviceto")? null :rs.getLong("history_serviceto")).orderNo(rs.getString("history_ordernumber")).isCurrentPosition(rs.getBoolean("history_iscurrentposition"))
@@ -256,8 +262,8 @@ public class EmployeeRowMapper implements ResultSetExtractor<List<Employee>> {
 			
 			List<String> ids = documents.stream().map(EmployeeDocument::getId).collect(Collectors.toList());
 			if(!StringUtils.isEmpty(rs.getString("docs_uuid")) && !ids.contains(rs.getString("docs_uuid")) ) {
-				AuditDetails auditDetails = AuditDetails.builder().createdBy(rs.getString("docs_createdby")).createdDate(rs.getLong("docs_createddate"))
-						.lastModifiedBy(rs.getString("docs_lastmodifiedby")).lastModifiedDate(rs.getLong("docs_lastmodifieddate")).build();
+				AuditDetails auditDetails = AuditDetails.builder().createdBy(rs.getString("docs_createdby")).createdDate(convertOffsetDate(rs.getLong("docs_createddate")))
+						.lastModifiedBy(rs.getString("docs_lastmodifiedby")).lastModifiedDate(convertOffsetDate(rs.getLong("docs_lastmodifieddate"))).build();
 				EmployeeDocument document = EmployeeDocument.builder().id(rs.getString("docs_uuid")).documentId(rs.getString("docs_documentid"))
 						.documentName(rs.getString("docs_documentname")).referenceType(rs.getString("docs_referencetype") != null ? EmployeeDocumentReferenceType.valueOf(rs.getString("docs_referencetype")): null)
 						.referenceId(rs.getString("docs_referenceid")).tenantId(rs.getString("docs_tenantid")).auditDetails(auditDetails).build();
@@ -289,8 +295,8 @@ public class EmployeeRowMapper implements ResultSetExtractor<List<Employee>> {
 			List<String> ids = deactDetails.stream().map(DeactivationDetails::getId).collect(Collectors.toList());
 			if(!StringUtils.isEmpty(rs.getString("deact_uuid")) && !ids.contains(rs.getString("deact_uuid")) ) {
 				if(rs.getString("deact_uuid")!=null){
-					AuditDetails auditDetails = AuditDetails.builder().createdBy(rs.getString("deact_createdby")).createdDate(rs.getLong("deact_createddate"))
-							.lastModifiedBy(rs.getString("deact_lastmodifiedby")).lastModifiedDate(rs.getLong("deact_lastmodifieddate")).build();
+					AuditDetails auditDetails = AuditDetails.builder().createdBy(rs.getString("deact_createdby")).createdDate(convertOffsetDate(rs.getLong("deact_createddate")))
+							.lastModifiedBy(rs.getString("deact_lastmodifiedby")).lastModifiedDate(convertOffsetDate(rs.getLong("deact_lastmodifieddate"))).build();
 
 					DeactivationDetails deactDetail = DeactivationDetails.builder().id(rs.getString("deact_uuid")).reasonForDeactivation(rs.getString("deact_reasonfordeactivation"))
 							.effectiveFrom(rs.getLong("deact_effectivefrom")).orderNo(rs.getString("deact_ordernumber")).remarks(rs.getString("deact_remarks")!= null ? (rs.getString("deact_remarks")) : null)
@@ -318,8 +324,8 @@ public class EmployeeRowMapper implements ResultSetExtractor<List<Employee>> {
 			List<String> ids = reactDetails.stream().map(ReactivationDetails::getId).collect(Collectors.toList());
 			if(!StringUtils.isEmpty(rs.getString("react_uuid")) && !ids.contains(rs.getString("react_uuid")) ) {
 				if(rs.getString("react_uuid")!=null){
-					AuditDetails auditDetails = AuditDetails.builder().createdBy(rs.getString("react_createdby")).createdDate(rs.getLong("react_createddate"))
-							.lastModifiedBy(rs.getString("react_lastmodifiedby")).lastModifiedDate(rs.getLong("react_lastmodifieddate")).build();
+					AuditDetails auditDetails = AuditDetails.builder().createdBy(rs.getString("react_createdby")).createdDate(convertOffsetDate(rs.getLong("react_createddate")))
+							.lastModifiedBy(rs.getString("react_lastmodifiedby")).lastModifiedDate(convertOffsetDate(rs.getLong("react_lastmodifieddate"))).build();
 
 					ReactivationDetails reactDetail = ReactivationDetails.builder().id(rs.getString("react_uuid")).reasonForReactivation(rs.getString("react_reasonforreactivation"))
 							.effectiveFrom(rs.getLong("react_effectivefrom")).orderNo(rs.getString("react_ordernumber")).remarks(rs.getString("react_remarks")!= null ? (rs.getString("react_remarks")) : null)
@@ -336,4 +342,11 @@ public class EmployeeRowMapper implements ResultSetExtractor<List<Employee>> {
 		}
 	}
 
+
+    private OffsetDateTime convertOffsetDate(Long epochMillis) {
+        if (epochMillis == null || epochMillis == 0) {
+            return null;
+        }
+        return OffsetDateTime.ofInstant(Instant.ofEpochMilli(epochMillis), ZoneId.systemDefault());
+    }
 }

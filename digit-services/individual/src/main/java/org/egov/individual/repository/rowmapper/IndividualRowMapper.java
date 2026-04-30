@@ -16,6 +16,9 @@ import org.springframework.stereotype.Component;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Component
 public class IndividualRowMapper implements RowMapper<Individual> {
@@ -80,6 +83,16 @@ public class IndividualRowMapper implements RowMapper<Individual> {
                     .build();
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
+
         }
+
+    }
+
+
+    private OffsetDateTime convertToOffsetDateTime(Long epochMillis) {
+        if (epochMillis == null || epochMillis == 0) {
+            return null;
+        }
+        return OffsetDateTime.ofInstant(Instant.ofEpochMilli(epochMillis), ZoneId.systemDefault());
     }
 }

@@ -2,7 +2,7 @@ package org.pucar.dristi.repository.rowmapper;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.egov.common.contract.models.AuditDetails;
+import org.pucar.dristi.web.models.AuditDetails;
 import org.egov.tracer.model.CustomException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,6 +16,10 @@ import org.pucar.dristi.web.models.PresidedBy;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -57,15 +61,15 @@ public class HearingRowMapperTest {
         when(rs.getString("hearingid")).thenReturn("hearing1");
         when(rs.getString("hearingtype")).thenReturn("type1");
         when(rs.getString("status")).thenReturn("status1");
-        when(rs.getLong("starttime")).thenReturn(1625140800000L);
-        when(rs.getLong("endtime")).thenReturn(1625144400000L);
+        when(rs.getTimestamp("starttime")).thenReturn(new Timestamp(1625140800000L));
+        when(rs.getTimestamp("endtime")).thenReturn(new Timestamp(1625144400000L));
         when(rs.getString("vclink")).thenReturn("link1");
         when(rs.getBoolean("isactive")).thenReturn(true);
         when(rs.getString("notes")).thenReturn("note1");
         when(rs.getString("createdby")).thenReturn("user1");
-        when(rs.getLong("createdtime")).thenReturn(1625140800000L);
+        when(rs.getTimestamp("createdtime")).thenReturn(new Timestamp(1625140800000L));
         when(rs.getString("lastmodifiedby")).thenReturn("user2");
-        when(rs.getLong("lastmodifiedtime")).thenReturn(1625144400000L);
+        when(rs.getTimestamp("lastmodifiedtime")).thenReturn(new Timestamp(1625144400000L));
         when(rs.getString("cnrnumbers")).thenReturn(cnrNumbersJson);
         when(rs.getString("filingnumber")).thenReturn(filingNumberJson);
         when(rs.getString("courtcasenumber")).thenReturn(" ");
@@ -80,19 +84,21 @@ public class HearingRowMapperTest {
         pgObject.setValue(additionalDetailsJson);
         when(rs.getObject("additionalDetails")).thenReturn(pgObject);
 
+        OffsetDateTime startTime = new Timestamp(1625140800000L).toInstant().atOffset(ZoneOffset.UTC);
+        OffsetDateTime endTime = new Timestamp(1625144400000L).toInstant().atOffset(ZoneOffset.UTC);
         Hearing hearing = Hearing.builder()
                 .tenantId("tenant1")
                 .id(UUID.fromString(uuid))
                 .hearingId("hearing1")
                 .hearingType("type1")
                 .status("status1")
-                .startTime(1625140800000L)
-                .endTime(1625144400000L)
+                .startTime(startTime)
+                .endTime(endTime)
                 .vcLink("link1")
                 .isActive(true)
                 .notes("note1")
                 .hearingSummary("hearingSummary")
-                .auditDetails(AuditDetails.builder().createdBy("user1").createdTime(1625140800000L).lastModifiedBy("user2").lastModifiedTime(1625144400000L).build())
+                .auditDetails(AuditDetails.builder().createdBy("user1").createdTime(OffsetDateTime.ofInstant(Instant.ofEpochMilli(1625140800000L), ZoneOffset.UTC)).lastModifiedBy("user2").lastModifiedTime(OffsetDateTime.ofInstant(Instant.ofEpochMilli(1625144400000L), ZoneOffset.UTC)).build())
                 .cnrNumbers(Collections.singletonList("cnr1"))
                 .filingNumber(Collections.singletonList("file1"))
                 .applicationNumbers(Collections.singletonList("app1"))
@@ -124,15 +130,15 @@ public class HearingRowMapperTest {
         when(rs.getString("hearingid")).thenReturn("hearing1");
         when(rs.getString("hearingtype")).thenReturn("type1");
         when(rs.getString("status")).thenReturn("status1");
-        when(rs.getLong("starttime")).thenReturn(0L);
-        when(rs.getLong("endtime")).thenReturn(1625140800000L);
+        when(rs.getTimestamp("starttime")).thenReturn(null);
+        when(rs.getTimestamp("endtime")).thenReturn(new Timestamp(1625140800000L));
         when(rs.getString("vclink")).thenReturn("link1");
         when(rs.getBoolean("isactive")).thenReturn(true);
         when(rs.getString("notes")).thenReturn("note1");
         when(rs.getString("createdby")).thenReturn("user1");
-        when(rs.getLong("createdtime")).thenReturn(1625140800000L);
+        when(rs.getTimestamp("createdtime")).thenReturn(new Timestamp(1625140800000L));
         when(rs.getString("lastmodifiedby")).thenReturn("user2");
-        when(rs.getLong("lastmodifiedtime")).thenReturn(1625144400000L);
+        when(rs.getTimestamp("lastmodifiedtime")).thenReturn(new Timestamp(1625144400000L));
         when(rs.getString("cnrnumbers")).thenReturn(null);
         when(rs.getString("filingnumber")).thenReturn("");
         when(rs.getString("applicationnumbers")).thenReturn(" ");
@@ -156,13 +162,13 @@ public class HearingRowMapperTest {
                 .caseReferenceNumber("casereferencenumber")
                 .cmpNumber("cmpNumber")
                 .status("status1")
-                .startTime(0L)
-                .endTime(1625140800000L)
+                .startTime(null)
+                .endTime(new Timestamp(1625140800000L).toInstant().atOffset(ZoneOffset.UTC))
                 .vcLink("link1")
                 .hearingSummary("hearingSummary")
                 .isActive(true)
                 .notes("note1")
-                .auditDetails(AuditDetails.builder().createdBy("user1").createdTime(1625140800000L).lastModifiedBy("user2").lastModifiedTime(1625144400000L).build())
+                .auditDetails(AuditDetails.builder().createdBy("user1").createdTime(OffsetDateTime.ofInstant(Instant.ofEpochMilli(1625140800000L), ZoneOffset.UTC)).lastModifiedBy("user2").lastModifiedTime(OffsetDateTime.ofInstant(Instant.ofEpochMilli(1625144400000L), ZoneOffset.UTC)).build())
                 .cnrNumbers(Collections.emptyList())
                 .filingNumber(Collections.emptyList())
                 .applicationNumbers(Collections.emptyList())
@@ -194,9 +200,9 @@ public class HearingRowMapperTest {
         when(rs.getBoolean("isactive")).thenReturn(true);
         when(rs.getString("notes")).thenReturn("note1");
         when(rs.getString("createdby")).thenReturn("user1");
-        when(rs.getLong("createdtime")).thenReturn(1625140800000L);
+        when(rs.getTimestamp("createdtime")).thenReturn(new Timestamp(1625140800000L));
         when(rs.getString("lastmodifiedby")).thenReturn("user2");
-        when(rs.getLong("lastmodifiedtime")).thenReturn(1625144400000L);
+        when(rs.getTimestamp("lastmodifiedtime")).thenReturn(new Timestamp(1625144400000L));
         when(rs.getString("cnrnumbers")).thenReturn("[invalid_json");
 
         // Act & Assert

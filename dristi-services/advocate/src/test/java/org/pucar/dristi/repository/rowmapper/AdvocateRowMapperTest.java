@@ -19,6 +19,9 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @ExtendWith(MockitoExtension.class)
  class AdvocateRowMapperTest {
@@ -84,9 +87,9 @@ import static org.mockito.Mockito.when;
         when(resultSetMock.next()).thenReturn(true, false); // simulate one row
         when(resultSetMock.getString("applicationnumber")).thenReturn("sample_uuid");
         when(resultSetMock.getString("createdby")).thenReturn("user");
-        when(resultSetMock.getLong("createdtime")).thenReturn(123456789L);
+        when(resultSetMock.getTimestamp("createdtime")).thenReturn(null);
         when(resultSetMock.getString("lastmodifiedby")).thenReturn("admin");
-        when(resultSetMock.getLong("lastmodifiedtime")).thenReturn(0L); // simulate wasNull condition
+        when(resultSetMock.getTimestamp("lastmodifiedtime")).thenReturn(null); // simulate wasNull condition
         when(resultSetMock.getString("id")).thenReturn(UUID.randomUUID().toString());
         when(resultSetMock.getString("tenantid")).thenReturn("tenant");
         when(resultSetMock.getString("barregistrationnumber")).thenReturn("bar123");
@@ -103,7 +106,7 @@ import static org.mockito.Mockito.when;
 
         // Assertions
         assertEquals(1, advocates.size());
-        assertEquals(0, advocates.get(0).getAuditDetails().getLastModifiedTime()); // Verify lastModifiedTime is null
+        assertNull(advocates.get(0).getAuditDetails().getLastModifiedTime()); // Verify lastModifiedTime is null
     }
 
     @Test
@@ -113,9 +116,9 @@ import static org.mockito.Mockito.when;
         when(resultSetMock.next()).thenReturn(true, false); // simulate one row
         when(resultSetMock.getString("applicationnumber")).thenReturn("sample_uuid");
         when(resultSetMock.getString("createdby")).thenReturn("user");
-        when(resultSetMock.getLong("createdtime")).thenReturn(123456789L);
+        when(resultSetMock.getTimestamp("createdtime")).thenReturn(null);
         when(resultSetMock.getString("lastmodifiedby")).thenReturn("admin");
-        when(resultSetMock.getLong("lastmodifiedtime")).thenReturn(123456789L);
+        when(resultSetMock.getTimestamp("lastmodifiedtime")).thenReturn(null);
         when(resultSetMock.getString("id")).thenReturn(UUID.randomUUID().toString());
         when(resultSetMock.getString("tenantid")).thenReturn("tenant");
         when(resultSetMock.getString("barregistrationnumber")).thenReturn("bar123");

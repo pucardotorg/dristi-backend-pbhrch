@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.OffsetDateTime;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -22,10 +24,10 @@ public class IssueCtcDocument {
     private String ctcApplicationNumber;
 
     @JsonProperty("createdTime")
-    private Long createdTime;
+    private OffsetDateTime createdTime;
 
     @JsonProperty("lastModifiedTime")
-    private Long lastModifiedTime;
+    private OffsetDateTime lastModifiedTime;
 
     @JsonProperty("docTitle")
     private String docTitle;
@@ -58,8 +60,8 @@ public class IssueCtcDocument {
     private String nameOfApplicant;
 
     @JsonProperty("dateOfApplication")
-    private Long dateOfApplication;
+    private OffsetDateTime dateOfApplication;
 
     @JsonProperty("dateOfApplicationApproval")
-    private Long dateOfApplicationApproval;
+    private OffsetDateTime dateOfApplicationApproval;
 }

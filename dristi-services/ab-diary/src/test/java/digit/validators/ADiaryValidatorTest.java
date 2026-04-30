@@ -13,6 +13,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.UUID;
@@ -48,8 +50,8 @@ class ADiaryValidatorTest {
         validDiaryEntry = CaseDiaryEntry.builder()
                 .id(UUID.randomUUID())
                 .tenantId("default")
-                .hearingDate(1L)
-                .entryDate(1L)
+                .hearingDate(OffsetDateTime.now(ZoneOffset.UTC))
+                .entryDate(OffsetDateTime.now(ZoneOffset.UTC))
                 .build();
 
         validRequest = CaseDiaryEntryRequest.builder()
@@ -59,7 +61,7 @@ class ADiaryValidatorTest {
 
         validDiary = CaseDiary.builder()
                 .tenantId("default")
-                .diaryDate(1L)
+                .diaryDate(OffsetDateTime.now(ZoneOffset.UTC).minusDays(1))
                 .courtId("COURT123")
                 .build();
 
@@ -258,7 +260,7 @@ class ADiaryValidatorTest {
     // Generate Request Tests
     @Test
     void validateGenerateRequest_FutureDiaryDate_ThrowsException() {
-        CaseDiary diary = CaseDiary.builder().diaryDate(System.currentTimeMillis() + 100000L).build();
+        CaseDiary diary = CaseDiary.builder().diaryDate(OffsetDateTime.now(ZoneOffset.UTC).plusDays(1)).build();
         CaseDiaryGenerateRequest generateRequest = CaseDiaryGenerateRequest.builder().diary(diary).build();
 
         CustomException exception = assertThrows(CustomException.class,

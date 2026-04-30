@@ -18,10 +18,14 @@ import org.pucar.dristi.web.models.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.time.OffsetDateTime;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @ExtendWith(MockitoExtension.class)
 public class HearingApiControllerTest {
@@ -49,8 +53,8 @@ public class HearingApiControllerTest {
         hearing = new Hearing();
         hearing.setId(UUID.randomUUID());
         hearing.setHearingId("12345");
-        hearing.setStartTime(new Date().getTime());
-        hearing.setEndTime(new Date().getTime());
+        hearing.setStartTime(OffsetDateTime.now());
+        hearing.setEndTime(OffsetDateTime.now());
 
         hearingList = new ArrayList<>();
         hearingList.add(hearing);
@@ -102,8 +106,8 @@ public class HearingApiControllerTest {
                 .cnrNumber("cnrNumber")
                 .filingNumber("filingNumber")
                 .tenantId("tenantId")
-                .fromDate(System.currentTimeMillis())
-                .toDate(System.currentTimeMillis())
+                .fromDate(OffsetDateTime.now())
+                .toDate(OffsetDateTime.now())
                 .build();
 
         User user = new User();
@@ -135,8 +139,8 @@ public class HearingApiControllerTest {
                 .cnrNumber("cnrNumber")
                 .filingNumber("filingNumber")
                 .tenantId("tenantId")
-                .fromDate(System.currentTimeMillis())
-                .toDate(System.currentTimeMillis())
+                .fromDate(OffsetDateTime.now())
+                .toDate(OffsetDateTime.now())
                 .build();
 
         User user = new User();

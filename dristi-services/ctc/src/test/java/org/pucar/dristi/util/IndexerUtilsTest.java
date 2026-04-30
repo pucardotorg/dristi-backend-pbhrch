@@ -13,11 +13,15 @@ import org.pucar.dristi.web.models.*;
 import org.springframework.http.HttpEntity;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.OffsetDateTime;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @ExtendWith(MockitoExtension.class)
 class IndexerUtilsTest {
@@ -62,7 +66,7 @@ class IndexerUtilsTest {
                         .lastModifiedBy("user-1")
                         .lastModifiedTime(5000L)
                         .build())
-                .dateOfApplicationApproval(6000L)
+                .dateOfApplicationApproval(OffsetDateTime.now().minusSeconds(6000))
                 .build();
     }
 
@@ -74,8 +78,8 @@ class IndexerUtilsTest {
                 .id("uuid-1")
                 .docId("doc-1")
                 .ctcApplicationNumber("CA-001")
-                .createdTime(1000L)
-                .lastModifiedTime(2000L)
+                .createdTime(Instant.ofEpochMilli(1000L).atOffset(java.time.ZoneOffset.UTC))
+                .lastModifiedTime(Instant.ofEpochMilli(2000L).atOffset(java.time.ZoneOffset.UTC))
                 .docTitle("Complaint")
                 .status("PENDING")
                 .caseTitle("Case Title")
@@ -85,8 +89,8 @@ class IndexerUtilsTest {
                 .tenantId("pb")
                 .fileStoreId("fs-1")
                 .nameOfApplicant("John")
-                .dateOfApplication(3000L)
-                .dateOfApplicationApproval(4000L)
+                .dateOfApplication(Instant.ofEpochMilli(3000L).atOffset(java.time.ZoneOffset.UTC))
+                .dateOfApplicationApproval(Instant.ofEpochMilli(4000L).atOffset(java.time.ZoneOffset.UTC))
                 .build();
 
         String payload = indexerUtils.buildPayload(doc);
@@ -124,10 +128,10 @@ class IndexerUtilsTest {
     void pushIssueCtcDocuments_shouldPostBulkPayload() throws Exception {
         IssueCtcDocument doc = IssueCtcDocument.builder()
                 .id("uuid-1").docId("doc-1").ctcApplicationNumber("CA-001")
-                .createdTime(1000L).lastModifiedTime(2000L).docTitle("Title")
+                .createdTime(OffsetDateTime.now().minusSeconds(1000)).lastModifiedTime(OffsetDateTime.now().minusSeconds(2000)).docTitle("Title")
                 .status("PENDING").caseTitle("Case").caseNumber("CC/1/2025")
                 .filingNumber("FIL-1").courtId("KLKM52").tenantId("pb").fileStoreId("fs-1")
-                .nameOfApplicant("John").dateOfApplication(3000L).dateOfApplicationApproval(4000L)
+                .nameOfApplicant("John").dateOfApplication(OffsetDateTime.now().minusSeconds(3000)).dateOfApplicationApproval(OffsetDateTime.now().minusSeconds(4000))
                 .build();
 
         when(restTemplate.postForObject(anyString(), any(HttpEntity.class), eq(String.class)))
@@ -227,7 +231,7 @@ class IndexerUtilsTest {
         CtcApplicationTracker tracker = CtcApplicationTracker.builder()
                 .id("tracker-1").tenantId("pb").courtId("KLKM52")
                 .filingNumber("FIL-1").ctcApplicationNumber("CA-001")
-                .status("PENDING_JUDGE_APPROVAL").dateRaised(1000L)
+                .status("PENDING_JUDGE_APPROVAL").dateRaised(OffsetDateTime.now().minusSeconds(1000))
                 .applicantName("John").caseTitle("State vs John")
                 .caseNumber("CC/1/2025")
                 .searchableFields(List.of("State vs John", "CC/1/2025"))
@@ -251,7 +255,7 @@ class IndexerUtilsTest {
         CtcApplicationTracker tracker = CtcApplicationTracker.builder()
                 .id("tracker-1").tenantId("pb").courtId("KLKM52")
                 .filingNumber("FIL-1").ctcApplicationNumber("CA-001")
-                .status("PENDING").dateRaised(1000L)
+                .status("PENDING").dateRaised(OffsetDateTime.now().minusSeconds(1000))
                 .applicantName("John").caseTitle("Title")
                 .caseNumber("CC/1")
                 .searchableFields(null)
@@ -273,7 +277,7 @@ class IndexerUtilsTest {
     void pushCtcApplicationTracker_shouldThrowCustomExceptionOnError() {
         CtcApplicationTracker tracker = CtcApplicationTracker.builder()
                 .id("t1").tenantId("pb").courtId("C1").filingNumber("F1")
-                .ctcApplicationNumber("CA-001").status("S").dateRaised(1L)
+                .ctcApplicationNumber("CA-001").status("S").dateRaised(OffsetDateTime.now().minusSeconds(1))
                 .applicantName("A").caseTitle("T").caseNumber("N")
                 .searchableFields(List.of())
                 .build();

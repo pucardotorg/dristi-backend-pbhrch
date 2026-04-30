@@ -69,13 +69,14 @@ public class HearingProcessor {
             List<String> fillingNumbers = hearing.getFilingNumber();
 
             log.debug("calculating start time and end time for hearing");
-            Pair<Long, Long> startTimeAndEndTime = getStartTimeAndEndTime(hearing.getStartTime());
+            long hearingStartEpoch = hearing.getStartTime() != null ? hearing.getStartTime().toInstant().toEpochMilli() : 0L;
+            Pair<Long, Long> startTimeAndEndTime = getStartTimeAndEndTime(hearingStartEpoch);
 
             ScheduleHearing scheduleHearing = customMapper.hearingToScheduleHearingConversion(hearing);
             enrichCaseDetails(hearingRequest.getRequestInfo(), scheduleHearing, fillingNumbers);
-            scheduleHearing.setStartTime(startTimeAndEndTime.getKey());
-            scheduleHearing.setEndTime(startTimeAndEndTime.getValue());
-            scheduleHearing.setHearingDate(startTimeAndEndTime.getKey());
+            scheduleHearing.setStartTime(java.time.Instant.ofEpochMilli(startTimeAndEndTime.getKey()).atOffset(java.time.ZoneOffset.UTC));
+            scheduleHearing.setEndTime(java.time.Instant.ofEpochMilli(startTimeAndEndTime.getValue()).atOffset(java.time.ZoneOffset.UTC));
+            scheduleHearing.setHearingDate(java.time.Instant.ofEpochMilli(startTimeAndEndTime.getKey()).atOffset(java.time.ZoneOffset.UTC));
 
             // currently one judge only if there are other judge then we need to block all judge calendar and remove default judge id
             String judgeId = (presidedBy.getJudgeID().isEmpty()) ? "JUDGE_ID" : presidedBy.getJudgeID().get(0);

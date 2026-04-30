@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 
 /**
@@ -48,19 +49,19 @@ public class CaseCriteria {
 
     @JsonProperty("filingFromDate")
     @Valid
-    private Long filingFromDate = null;
+    private OffsetDateTime filingFromDate = null;
 
     @JsonProperty("filingToDate")
     @Valid
-    private Long filingToDate = null;
+    private OffsetDateTime filingToDate = null;
 
     @JsonProperty("registrationFromDate")
     @Valid
-    private Long registrationFromDate = null;
+    private OffsetDateTime registrationFromDate = null;
 
     @JsonProperty("registrationToDate")
     @Valid
-    private Long registrationToDate = null;
+    private OffsetDateTime registrationToDate = null;
     //todo judgeid, stage, substage
 
     @JsonProperty("judgeId")

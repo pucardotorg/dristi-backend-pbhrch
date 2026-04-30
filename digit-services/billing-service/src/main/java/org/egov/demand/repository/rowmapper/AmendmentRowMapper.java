@@ -2,6 +2,9 @@ package org.egov.demand.repository.rowmapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -52,20 +55,22 @@ public class AmendmentRowMapper implements ResultSetExtractor<List<Amendment>> {
 				}
 
 				Long createdTime = rs.getLong("createdTime");
-				if (rs.wasNull()) {
-					createdTime = null;
+				OffsetDateTime createdTimeOdt = null;
+				if (!rs.wasNull() && createdTime != 0) {
+					createdTimeOdt = OffsetDateTime.ofInstant(Instant.ofEpochMilli(createdTime), ZoneId.systemDefault());
 				}
 
 				Long lastModifiedTime = rs.getLong("lastModifiedTime");
-				if (rs.wasNull()) {
-					lastModifiedTime = null;
+				OffsetDateTime lastModifiedTimeOdt = null;
+				if (!rs.wasNull() && lastModifiedTime != 0) {
+					lastModifiedTimeOdt = OffsetDateTime.ofInstant(Instant.ofEpochMilli(lastModifiedTime), ZoneId.systemDefault());
 				}
-				
+
 				AuditDetails auditDetails = AuditDetails.builder()
 						.lastModifiedBy(rs.getString("lastModifiedBy"))
 						.createdBy(rs.getString("createdBy"))
-						.lastModifiedTime(lastModifiedTime)
-						.createdTime(createdTime)
+						.lastModifiedTime(lastModifiedTimeOdt)
+						.createdTime(createdTimeOdt)
 						.build();
 				
 				amendment = Amendment.builder()

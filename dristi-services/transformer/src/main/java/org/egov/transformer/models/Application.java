@@ -15,6 +15,7 @@ import org.springframework.validation.annotation.Validated;
 
 import java.text.ParseException;
 import java.time.Instant;
+import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -60,7 +61,7 @@ public class Application {
     private UUID referenceId = null;
 
     @NotNull
-    private Long createdDate = null;
+    private OffsetDateTime createdDate = null;
 
     @JsonProperty("createdBy")
 
@@ -156,24 +157,22 @@ public class Application {
 
     @JsonProperty("createdDate")
     public String getCreatedDate() {
-        String formattedDate = "";
         if (null != this.createdDate) {
-            if (this.createdDate > 0) {
-                formattedDate = Instant.ofEpochMilli(this.createdDate)
-                        .atZone(ZoneId.of("Asia/Kolkata"))
-                        .toLocalDate()
-                        .format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-            }
+            return this.createdDate
+                    .atZoneSameInstant(java.time.ZoneOffset.UTC)
+                    .toLocalDate()
+                    .format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
         }
-        return formattedDate;
+        return "";
     }
 
     @JsonProperty("createdDate")
     public void setCreatedDate(String date) throws ParseException {
+        if (date == null) return;
         try {
-            this.createdDate = Long.parseLong(date);
+            this.createdDate = Instant.ofEpochMilli(Long.parseLong(date)).atOffset(java.time.ZoneOffset.UTC);
         } catch (NumberFormatException e) {
-            this.createdDate = new java.text.SimpleDateFormat("dd/MM/yyyy").parse(date).getTime();
+            this.createdDate = Instant.ofEpochMilli(new java.text.SimpleDateFormat("dd/MM/yyyy").parse(date).getTime()).atOffset(java.time.ZoneOffset.UTC);
         }
     }
 

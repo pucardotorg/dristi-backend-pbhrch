@@ -2,6 +2,8 @@ package digit.web.models;
 
 
 
+import java.time.OffsetDateTime;
+
 public interface SearchCriteria {
 
     String getTenantId();
@@ -10,7 +12,7 @@ public interface SearchCriteria {
 
     String getCourtId();
 
-    Long getFromDate();
+    OffsetDateTime getFromDate();
 
-    Long getToDate();
+    OffsetDateTime getToDate();
 }

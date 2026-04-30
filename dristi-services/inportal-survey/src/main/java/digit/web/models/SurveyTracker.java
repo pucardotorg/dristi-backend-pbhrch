@@ -10,6 +10,11 @@ import lombok.NoArgsConstructor;
 import org.egov.common.contract.models.AuditDetails;
 import org.springframework.validation.annotation.Validated;
 
+import java.time.OffsetDateTime;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
+
 /**
  * SurveyTracker
  */
@@ -41,7 +46,7 @@ public class SurveyTracker {
 
     @JsonProperty("lastTriggeredDate")
     @Valid
-    private Long lastTriggeredDate = null;
+    private OffsetDateTime lastTriggeredDate = null;
 
     @JsonProperty("attempts")
     @Valid

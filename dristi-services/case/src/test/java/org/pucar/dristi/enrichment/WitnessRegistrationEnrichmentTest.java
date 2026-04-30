@@ -10,18 +10,30 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.pucar.dristi.config.Configuration;
 import org.pucar.dristi.web.models.Witness;
 import org.pucar.dristi.web.models.WitnessRequest;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
+@ExtendWith(MockitoExtension.class)
 public class WitnessRegistrationEnrichmentTest {
 
-    @InjectMocks
+    @Mock
+    private Configuration config;
+
     private WitnessRegistrationEnrichment witnessRegistrationEnrichment;
 
     @BeforeEach
     public void setUp() {
-        witnessRegistrationEnrichment = new WitnessRegistrationEnrichment();
+        MockitoAnnotations.openMocks(this);
+        org.mockito.Mockito.lenient().when(config.getZoneId()).thenReturn("UTC");
+        witnessRegistrationEnrichment = new WitnessRegistrationEnrichment(config);
     }
 
     @Test

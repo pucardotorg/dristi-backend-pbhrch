@@ -15,5 +15,6 @@ public interface CustomMapper {
     @Mapping(source = "hearingType", target = "hearingType")
     @Mapping(source = "presidedBy.courtID", target = "courtId")
     @Mapping(source = "status", target = "status")
+    @Mapping(target = "auditDetails", ignore = true)
     ScheduleHearing hearingToScheduleHearingConversion(Hearing hearing);
 }

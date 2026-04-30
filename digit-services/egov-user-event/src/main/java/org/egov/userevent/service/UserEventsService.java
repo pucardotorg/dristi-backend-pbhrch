@@ -61,6 +61,7 @@ import org.egov.userevent.utils.ErrorConstants;
 import org.egov.userevent.utils.ResponseInfoFactory;
 import org.egov.userevent.utils.UserEventsConstants;
 import org.egov.userevent.utils.UserEventsUtils;
+import org.egov.userevent.util.DateUtil;
 import org.egov.userevent.web.contract.Event;
 import org.egov.userevent.web.contract.EventRequest;
 import org.egov.userevent.web.contract.EventResponse;
@@ -73,6 +74,9 @@ import org.springframework.util.CollectionUtils;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Data
 @Slf4j
@@ -96,6 +100,9 @@ public class UserEventsService {
 
 	@Autowired
 	private UserEventsUtils utils;
+
+	@Autowired
+	private DateUtil dateUtil;
 
 	@Autowired
 	private LocalizationService localizationService;
@@ -511,9 +518,9 @@ public class UserEventsService {
 			}
 
 			AuditDetails auditDetails = AuditDetails.builder()
-					.createdBy(request.getRequestInfo().getUserInfo().getUuid()).createdTime(new Date().getTime())
+					.createdBy(request.getRequestInfo().getUserInfo().getUuid()).createdTime(dateUtil.getCurrentOffsetDateTime())
 					.lastModifiedBy(request.getRequestInfo().getUserInfo().getUuid())
-					.lastModifiedTime(new Date().getTime()).build();
+					.lastModifiedTime(dateUtil.getCurrentOffsetDateTime()).build();
 
 			event.setAuditDetails(auditDetails);
 
@@ -560,11 +567,11 @@ public class UserEventsService {
 					auditDetails = event.getAuditDetails();
 				}else {
 					auditDetails.setLastModifiedBy(request.getRequestInfo().getUserInfo().getUuid());
-					auditDetails.setLastModifiedTime(new Date().getTime());
+					auditDetails.setLastModifiedTime(dateUtil.getCurrentOffsetDateTime());
 				}
 			}else {
 				auditDetails.setLastModifiedBy(request.getRequestInfo().getUserInfo().getUuid());
-				auditDetails.setLastModifiedTime(new Date().getTime());
+				auditDetails.setLastModifiedTime(dateUtil.getCurrentOffsetDateTime());
 			}
 			
 

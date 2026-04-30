@@ -11,8 +11,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.egov.common.contract.models.AuditDetails;
 import org.egov.common.models.individual.*;
+import pucar.web.models.AuditDetails;
 import org.egov.common.models.individual.BloodGroup;
 import org.egov.common.models.individual.Gender;
 import org.egov.common.models.individual.Identifier;
@@ -21,6 +21,9 @@ import org.egov.common.models.individual.Identifier;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Data
 @NoArgsConstructor

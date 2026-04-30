@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.springframework.validation.annotation.Validated;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @Validated
@@ -38,7 +39,7 @@ public class TaskCaseSearchCriteria {
     private String deliveryChanel = null;
 
     @JsonProperty("hearingDate")
-    private Long hearingDate = null;
+    private OffsetDateTime hearingDate = null;
 
     @JsonProperty("isPendingCollection")
     private Boolean isPendingCollection;

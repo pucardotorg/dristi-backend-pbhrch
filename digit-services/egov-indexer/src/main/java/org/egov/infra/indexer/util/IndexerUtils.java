@@ -42,6 +42,9 @@ import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Service
 @Slf4j
@@ -667,7 +670,7 @@ public class IndexerUtils {
 	 * @return
 	 */
 	public AuditDetails getAuditDetails(String by, Boolean isCreate) {
-		Long dt = new Date().getTime();
+		java.time.OffsetDateTime dt = java.time.OffsetDateTime.now();
 		if (isCreate)
 			return AuditDetails.builder().createdBy(by).createdTime(dt).lastModifiedBy(by).lastModifiedTime(dt).build();
 		else

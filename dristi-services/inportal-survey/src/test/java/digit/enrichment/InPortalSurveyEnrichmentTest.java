@@ -14,6 +14,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.UUID;
@@ -33,10 +36,12 @@ public class InPortalSurveyEnrichmentTest {
     private RequestInfo requestInfo;
     private User user;
     private Long currentTime;
+    private OffsetDateTime currentTimeOffset;
 
     @BeforeEach
     public void setUp() {
         currentTime = 1634567890000L;
+        currentTimeOffset = OffsetDateTime.ofInstant(Instant.ofEpochMilli(currentTime), ZoneOffset.UTC);
 
         user = User.builder()
                 .uuid("test-user-uuid")
@@ -258,7 +263,7 @@ public class InPortalSurveyEnrichmentTest {
         // Assert
         assertNotNull(result);
         assertTrue(result.getRemindMeLater());
-        assertEquals(currentTime, result.getLastTriggeredDate());
+        assertEquals(currentTimeOffset, result.getLastTriggeredDate());
         assertEquals(0, result.getAttempts());
         assertEquals("test-user-uuid", result.getAuditDetails().getLastModifiedBy());
 
@@ -286,7 +291,7 @@ public class InPortalSurveyEnrichmentTest {
         // Assert
         assertTrue(result.getRemindMeLater());
         assertEquals(0, result.getAttempts());
-        assertEquals(currentTime, result.getLastTriggeredDate());
+        assertEquals(currentTimeOffset, result.getLastTriggeredDate());
     }
 
     // ==================== enrichSurveyTrackerForFeedBack Tests ====================
@@ -326,7 +331,7 @@ public class InPortalSurveyEnrichmentTest {
         // Assert
         assertNotNull(result);
         assertFalse(result.getRemindMeLater());
-        assertEquals(currentTime, result.getLastTriggeredDate());
+        assertEquals(currentTimeOffset, result.getLastTriggeredDate());
 
         // Check feedback enrichment
         assertEquals(feedbackUuid.toString(), request.getFeedBack().getUuid());

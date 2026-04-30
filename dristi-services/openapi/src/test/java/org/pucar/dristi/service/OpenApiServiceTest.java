@@ -196,7 +196,7 @@ public class OpenApiServiceTest {
 
         Hearing scheduledHearing = new Hearing();
         scheduledHearing.setStatus("Scheduled");
-        scheduledHearing.setStartTime(1672531200L); // Example timestamp
+        scheduledHearing.setStartTime(java.time.Instant.ofEpochMilli(1672531200L).atOffset(java.time.ZoneOffset.UTC));
 
         HearingListResponse hearingListResponse = new HearingListResponse();
         hearingListResponse.setHearingList(List.of(scheduledHearing));
@@ -211,10 +211,11 @@ public class OpenApiServiceTest {
                 .thenReturn(hearingListResponse);
 
         // Act
-        Long nextHearingDate = openApiService.enrichNextHearingDate(filingNumber);
+        java.time.OffsetDateTime nextHearingDate = openApiService.enrichNextHearingDate(filingNumber);
 
         // Assert
-        assertEquals(1672531200L, nextHearingDate);
+        assertNotNull(nextHearingDate);
+        assertEquals(1672531200L, nextHearingDate.toInstant().toEpochMilli());
 
         // Verify interactions
         verify(serviceRequestRepository).fetchResult(any(StringBuilder.class), any(HearingSearchRequest.class));
@@ -227,11 +228,11 @@ public class OpenApiServiceTest {
 
         Hearing hearing1 = new Hearing();
         hearing1.setStatus("Scheduled");
-        hearing1.setStartTime(1672531200L);
+        hearing1.setStartTime(java.time.Instant.ofEpochMilli(1672531200L).atOffset(java.time.ZoneOffset.UTC));
 
         Hearing hearing2 = new Hearing();
         hearing2.setStatus("Scheduled");
-        hearing2.setStartTime(1672617600L);
+        hearing2.setStartTime(java.time.Instant.ofEpochMilli(1672617600L).atOffset(java.time.ZoneOffset.UTC));
 
         HearingListResponse hearingListResponse = new HearingListResponse();
         hearingListResponse.setHearingList(List.of(hearing1, hearing2));
@@ -269,7 +270,7 @@ public class OpenApiServiceTest {
                 .thenReturn(hearingListResponse);
 
         // Act
-        Long nextHearingDate = openApiService.enrichNextHearingDate(filingNumber);
+        java.time.OffsetDateTime nextHearingDate = openApiService.enrichNextHearingDate(filingNumber);
 
         // Assert
         assertNull(nextHearingDate);

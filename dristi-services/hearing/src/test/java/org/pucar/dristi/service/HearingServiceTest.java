@@ -1,7 +1,7 @@
 package org.pucar.dristi.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.egov.common.contract.models.AuditDetails;
+import org.pucar.dristi.web.models.AuditDetails;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
 import org.egov.tracer.model.CustomException;
@@ -27,6 +27,9 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static org.pucar.dristi.config.ServiceConstants.HEARING_UPDATE_EXCEPTION;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @ExtendWith(MockitoExtension.class)
 public class HearingServiceTest {
@@ -61,6 +64,9 @@ public class HearingServiceTest {
     @Mock
     private FileStoreUtil fileStoreUtil;
 
+    @Mock
+    private org.pucar.dristi.util.DateUtil dateUtil;
+
     @InjectMocks
     private HearingService hearingService;
 
@@ -75,8 +81,8 @@ public class HearingServiceTest {
         hearing = new Hearing();
         hearing.setId(UUID.randomUUID());
         hearing.setHearingId("12345");
-        hearing.setStartTime(new Date().getTime());
-        hearing.setEndTime(new Date().getTime());
+        hearing.setStartTime(java.time.OffsetDateTime.now());
+        hearing.setEndTime(java.time.OffsetDateTime.now());
 
         hearingList = new ArrayList<>();
         hearingList.add(hearing);
@@ -132,8 +138,8 @@ public class HearingServiceTest {
                 .cnrNumber("cnrNumber")
                 .filingNumber("filingNumber")
                 .tenantId("tenantId")
-                .fromDate(LocalDate.now().atStartOfDay().toEpochSecond(ZoneOffset.UTC))
-                .toDate(LocalDate.now().atStartOfDay().toEpochSecond(ZoneOffset.UTC))
+                .fromDate(LocalDate.now().atStartOfDay(ZoneOffset.UTC).toOffsetDateTime())
+                .toDate(LocalDate.now().atStartOfDay(ZoneOffset.UTC).toOffsetDateTime())
                 .build();
 
         User user = new User();
@@ -162,8 +168,8 @@ public class HearingServiceTest {
                 .cnrNumber("cnrNumber")
                 .filingNumber("filingNumber")
                 .tenantId("tenantId")
-                .fromDate(LocalDate.now().atStartOfDay().toEpochSecond(ZoneOffset.UTC))
-                .toDate(LocalDate.now().atStartOfDay().toEpochSecond(ZoneOffset.UTC))
+                .fromDate(LocalDate.now().atStartOfDay(ZoneOffset.UTC).toOffsetDateTime())
+                .toDate(LocalDate.now().atStartOfDay(ZoneOffset.UTC).toOffsetDateTime())
                 .build();
 
         User user = new User();
@@ -350,6 +356,7 @@ public class HearingServiceTest {
         existingHearing.setAuditDetails(new AuditDetails());
 
         when(validator.validateHearingExistence(requestInfo, hearing)).thenReturn(existingHearing);
+        when(dateUtil.getCurrentOffsetDateTime()).thenReturn(java.time.OffsetDateTime.now(java.time.ZoneId.of("UTC")));
 
         // Act
         hearingService.updateStartAndTime(updateTimeRequest);

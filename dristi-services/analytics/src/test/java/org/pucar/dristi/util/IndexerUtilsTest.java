@@ -25,6 +25,9 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.Clock;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -105,7 +108,7 @@ public class IndexerUtilsTest {
         pendingTask.setAdditionalDetails(Map.of("key", "value"));
         pendingTask.setCourtId("KLKM52");
         pendingTask.setSectionAndSubSection("NIA S138");
-        pendingTask.setFilingDate(1000000000L);
+        pendingTask.setFilingDate(OffsetDateTime.ofInstant(Instant.ofEpochMilli(1000000000L), ZoneOffset.UTC));
         return pendingTask;
     }
 

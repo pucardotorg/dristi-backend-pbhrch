@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +15,9 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Data;
 import lombok.Builder;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 /**
  * Bail
@@ -75,10 +79,10 @@ public class Bail {
     private BailTypeEnum bailType = null;
 
     @JsonProperty("startDate")
-    private Long startDate = null;
+    private OffsetDateTime startDate = null;
 
     @JsonProperty("endDate")
-    private Long endDate = null;
+    private OffsetDateTime endDate = null;
 
     @JsonProperty("isActive")
     private Boolean isActive = true;

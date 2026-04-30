@@ -10,6 +10,10 @@ import org.postgresql.util.PGobject;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.UUID;
 
@@ -40,7 +44,7 @@ class DiaryWithDocumentRowMapperTest {
         when(resultSet.getString("id")).thenReturn(diaryId.toString());
         when(resultSet.getString("tenantId")).thenReturn("tenant-123");
         when(resultSet.getString("caseNumber")).thenReturn("case-456");
-        when(resultSet.getLong("diaryDate")).thenReturn(1672348800000L);
+        when(resultSet.getTimestamp("diaryDate")).thenReturn(new Timestamp(1672348800000L));
         when(resultSet.getString("diaryType")).thenReturn("TypeA");
         when(resultSet.getString("judgeId")).thenReturn("judge-789");
         when(resultSet.getString("diaryCreateBy")).thenReturn("user1");
@@ -75,7 +79,7 @@ class DiaryWithDocumentRowMapperTest {
         assertEquals(diaryId, caseDiary.getId());
         assertEquals("tenant-123", caseDiary.getTenantId());
         assertEquals("case-456", caseDiary.getCaseNumber());
-        assertEquals(1672348800000L, caseDiary.getDiaryDate());
+        assertEquals(OffsetDateTime.ofInstant(Instant.ofEpochMilli(1672348800000L), ZoneOffset.UTC), caseDiary.getDiaryDate());
         assertEquals("TypeA", caseDiary.getDiaryType());
 
         // Verify documents

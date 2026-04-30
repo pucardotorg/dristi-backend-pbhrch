@@ -1,5 +1,6 @@
 package org.pucar.dristi.web.models.courtcase;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 
 import org.pucar.dristi.web.models.Pagination;
@@ -47,19 +48,19 @@ public class CaseSummaryListCriteria {
 
     @JsonProperty("filingFromDate")
     @Valid
-    private Long filingFromDate = null;
+    private OffsetDateTime filingFromDate = null;
 
     @JsonProperty("filingToDate")
     @Valid
-    private Long filingToDate = null;
+    private OffsetDateTime filingToDate = null;
 
     @JsonProperty("registrationFromDate")
     @Valid
-    private Long registrationFromDate = null;
+    private OffsetDateTime registrationFromDate = null;
 
     @JsonProperty("registrationToDate")
     @Valid
-    private Long registrationToDate = null;
+    private OffsetDateTime registrationToDate = null;
 
     @JsonProperty("judgeId")
     private String judgeId = null;

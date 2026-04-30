@@ -16,6 +16,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.*;
 import java.util.*;
 
 import static digit.config.ServiceConstants.ACTIVE;
@@ -164,11 +165,13 @@ public class OptOutProcessorTest {
     }
 
     private ReScheduleHearing createReScheduleHearing() {
+        OffsetDateTime d1 = OffsetDateTime.of(2021, 7, 1, 0, 0, 0, 0, ZoneOffset.UTC);
+        OffsetDateTime d2 = OffsetDateTime.of(2021, 7, 2, 0, 0, 0, 0, ZoneOffset.UTC);
         return ReScheduleHearing.builder()
                 .rescheduledRequestId("test-reschedule-id")
                 .tenantId("test-tenant-id")
-                .suggestedDates(Arrays.asList(1625126400000L, 1625212800000L))
-                .availableDates(Arrays.asList(1625212800000L))
+                .suggestedDates(Arrays.asList(d1, d2))
+                .availableDates(Arrays.asList(d2))
                 .litigants(Set.of("litigant-1"))
                 .representatives(Set.of("representative-1"))
                 .build();
@@ -180,7 +183,7 @@ public class OptOutProcessorTest {
 
     private List<ScheduleHearing> createScheduleHearings() {
         ScheduleHearing scheduleHearing = ScheduleHearing.builder()
-                .hearingDate(1625126400000L)
+                .hearingDate(OffsetDateTime.of(2021, 7, 1, 0, 0, 0, 0, ZoneOffset.UTC))
                 .status(ACTIVE)
                 .build();
 

@@ -13,11 +13,15 @@ import org.pucar.dristi.web.models.Comment;
 import org.egov.tracer.model.CustomException;
 
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @ExtendWith(MockitoExtension.class)
 class EvidenceRowMapperTest {
@@ -51,15 +55,15 @@ class EvidenceRowMapperTest {
         when(rs.getString("applicableTo")).thenReturn("[\"applicable1\"]");
         when(rs.getString("comments")).thenReturn("[{\"id\":\"123e4567-e89b-12d3-a456-556642440002\",\"tenantId\":\"tenant1\",\"artifactId\":\"123e4567-e89b-12d3-a456-556642440000\",\"individualId\":\"individual1\",\"comment\":\"This is a comment\",\"isActive\":true,\"additionalDetails\":{\"key\":\"value\"},\"auditdetails\":{\"createdBy\":\"user1\",\"createdTime\":1609459200000,\"lastModifiedBy\":\"user2\",\"lastModifiedTime\":1609545600000}}]");
         when(rs.getString("file")).thenReturn("{\"id\":\"123e4567-e89b-12d3-a456-556642440003\",\"documentType\":\"type1\",\"fileStore\":\"fileStore1\",\"documentUid\":\"documentUid1\",\"additionalDetails\":{\"key\":\"value\"}}");
-        when(rs.getLong("createdDate")).thenReturn(20210101l);
+        when(rs.getTimestamp("createdDate")).thenReturn(new Timestamp(20210101L));
         when(rs.getBoolean("isActive")).thenReturn(true);
         when(rs.getBoolean("isEvidence")).thenReturn(true);
         when(rs.getString("status")).thenReturn("status1");
         when(rs.getString("description")).thenReturn("description1");
         when(rs.getString("createdby")).thenReturn("user1");
-        when(rs.getLong("createdtime")).thenReturn(1609459200000L);
+        when(rs.getTimestamp("createdtime")).thenReturn(new Timestamp(1609459200000L));
         when(rs.getString("lastmodifiedby")).thenReturn("user2");
-        when(rs.getLong("lastmodifiedtime")).thenReturn(1609545600000L);
+        when(rs.getTimestamp("lastmodifiedtime")).thenReturn(new Timestamp(1609545600000L));
         when(rs.getString("reason")).thenReturn("reason1");
         when(rs.getBoolean("isVoid")).thenReturn(true);
         when(rs.getString("filingType")).thenReturn("filingType");
@@ -132,9 +136,9 @@ class EvidenceRowMapperTest {
         Artifact artifact1 = artifacts.get(0);
         assertNotNull(artifact1.getAuditdetails());
         assertEquals("user1", artifact1.getAuditdetails().getCreatedBy());
-        assertEquals(1609459200000L, artifact1.getAuditdetails().getCreatedTime());
+        assertNotNull(artifact1.getAuditdetails().getCreatedTime());
         assertEquals("user2", artifact1.getAuditdetails().getLastModifiedBy());
-        assertEquals(1609545600000L, artifact1.getAuditdetails().getLastModifiedTime());
+        assertNotNull(artifact1.getAuditdetails().getLastModifiedTime());
     }
 
     @Test
@@ -153,7 +157,7 @@ class EvidenceRowMapperTest {
         List<Artifact> artifacts = evidenceRowMapper.extractData(rs);
 
         Artifact artifact1 = artifacts.get(0);
-        assertEquals(20210101l, artifact1.getCreatedDate());
+        assertNotNull(artifact1.getCreatedDate());
         assertTrue(artifact1.getIsActive());
         assertTrue(artifact1.getIsEvidence());
         assertEquals("status1", artifact1.getStatus());

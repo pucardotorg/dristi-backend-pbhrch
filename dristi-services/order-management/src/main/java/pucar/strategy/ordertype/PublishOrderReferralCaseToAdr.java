@@ -278,29 +278,29 @@ public class PublishOrderReferralCaseToAdr implements OrderUpdateStrategy {
             }
         }
 
-        Long hearingDate = adrDetails.hasNonNull("hearingDate")
-                ? adrDetails.get("hearingDate").asLong()
+        java.time.OffsetDateTime hearingDate = adrDetails.hasNonNull("hearingDate")
+                ? java.time.Instant.ofEpochMilli(adrDetails.get("hearingDate").asLong()).atOffset(java.time.ZoneOffset.UTC)
                 : null;
 
         String mediationCentre = adrDetails.hasNonNull("mediationCentre")
                 ? adrDetails.get("mediationCentre").asText()
                 : null;
 
-        Long dateOfInstitution = adrDetails.hasNonNull("dateOfInstitution")
-                ? adrDetails.get("dateOfInstitution").asLong()
+        java.time.OffsetDateTime dateOfInstitution = adrDetails.hasNonNull("dateOfInstitution")
+                ? java.time.Instant.ofEpochMilli(adrDetails.get("dateOfInstitution").asLong()).atOffset(java.time.ZoneOffset.UTC)
                 : null;
 
         String caseStage = adrDetails.hasNonNull("caseStage")
                 ? adrDetails.get("caseStage").asText()
                 : null;
 
-        Long dateOfEndADR = adrDetails.hasNonNull("dateOfEndADR")
-                ? adrDetails.get("dateOfEndADR").asLong()
+        java.time.OffsetDateTime dateOfEndADR = adrDetails.hasNonNull("dateOfEndADR")
+                ? java.time.Instant.ofEpochMilli(adrDetails.get("dateOfEndADR").asLong()).atOffset(java.time.ZoneOffset.UTC)
                 : null;
 
         return MediationDetails.builder()
                 .hearingDate(hearingDate)
-                .pdfCreatedDate(System.currentTimeMillis())
+                .pdfCreatedDate(java.time.OffsetDateTime.now())
                 .mediationCentre(mediationCentre)
                 .dateOfInstitution(dateOfInstitution)
                 .dateOfEndADR(dateOfEndADR)

@@ -1,6 +1,7 @@
 package digit.enrichment;
 
 import digit.config.Configuration;
+import digit.util.DateUtil;
 import digit.util.IdgenUtil;
 import digit.util.TaskManagementUtil;
 import digit.web.models.*;
@@ -8,17 +9,20 @@ import digit.web.models.cases.PartyAddress;
 import digit.web.models.taskdetails.ProcessDeliveryDetailsStatus;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.egov.common.contract.models.AuditDetails;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import static digit.config.ServiceConstants.WARRANT;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Slf4j
 @Component
@@ -27,12 +31,14 @@ public class TaskManagementEnrichment {
     private final TaskManagementUtil taskManagementUtil;
     private final IdgenUtil idgenUtil;
     private final Configuration configuration;
+    private final DateUtil dateUtil;
 
     @Autowired
-    public TaskManagementEnrichment(TaskManagementUtil taskManagementUtil, IdgenUtil idgenUtil, Configuration configuration) {
+    public TaskManagementEnrichment(TaskManagementUtil taskManagementUtil, IdgenUtil idgenUtil, Configuration configuration, DateUtil dateUtil) {
         this.taskManagementUtil = taskManagementUtil;
         this.idgenUtil = idgenUtil;
         this.configuration = configuration;
+        this.dateUtil = dateUtil;
     }
 
     public void enrichCreateRequest(TaskManagementRequest request) {
@@ -62,22 +68,22 @@ public class TaskManagementEnrichment {
     }
 
     private AuditDetails getAuditDetailsForCreate(RequestInfo requestinfo) {
-
         User user = requestinfo.getUserInfo();
-
-        return AuditDetails.builder().createdBy(user.getUuid()).lastModifiedBy(user.getUuid())
-                .createdTime(taskManagementUtil.getCurrentTimeInMilliSec()).lastModifiedTime(taskManagementUtil.getCurrentTimeInMilliSec())
+        OffsetDateTime now = dateUtil.getCurrentOffsetDateTime();
+        return AuditDetails.builder()
+                .createdBy(user.getUuid())
+                .lastModifiedBy(user.getUuid())
+                .createdTime(now)
+                .lastModifiedTime(now)
                 .build();
-
     }
 
-    private @Valid AuditDetails getAuditDetailsForUpdate(RequestInfo requestInfo) {
-
+    private AuditDetails getAuditDetailsForUpdate(RequestInfo requestInfo) {
         User user = requestInfo.getUserInfo();
-
-        return AuditDetails.builder().lastModifiedBy(user.getUuid()).lastModifiedTime(taskManagementUtil.getCurrentTimeInMilliSec())
+        return AuditDetails.builder()
+                .lastModifiedBy(user.getUuid())
+                .lastModifiedTime(dateUtil.getCurrentOffsetDateTime())
                 .build();
-
     }
 
     public void enrichWarrantUpfrontData(TaskManagementRequest request) {

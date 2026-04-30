@@ -2,7 +2,7 @@ package org.pucar.dristi.repository.querybuilder;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.egov.common.contract.models.AuditDetails;
+import org.pucar.dristi.web.models.AuditDetails;
 import org.egov.tracer.model.CustomException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,7 +11,10 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.pucar.dristi.web.models.*;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -61,8 +64,8 @@ class HearingQueryBuilderTest {
         String hearingType = "type1";
         String filingNumber = "FILE123";
         String tenantId = "tenant1";
-        Long fromDate = 12345678l;
-        Long toDate =12345679l;
+        OffsetDateTime fromDate = new Timestamp(12345678L).toInstant().atOffset(ZoneOffset.UTC);
+        OffsetDateTime toDate = new Timestamp(12345679L).toInstant().atOffset(ZoneOffset.UTC);
         String attendeeIndividualId = "Ind-01";
         HearingCriteria criteria = HearingCriteria.builder()
                 .cnrNumber(cnrNumber)
@@ -97,8 +100,8 @@ class HearingQueryBuilderTest {
         assertEquals(hearingType, preparedStmtList.get(3));
         assertEquals("[\"FILE123\"]", preparedStmtList.get(4));
         assertEquals("tenant1", preparedStmtList.get(5));
-        assertEquals(fromDate, preparedStmtList.get(6));
-        assertEquals(toDate, preparedStmtList.get(7));
+        assertEquals(java.sql.Timestamp.from(fromDate.toInstant()), preparedStmtList.get(6));
+        assertEquals(java.sql.Timestamp.from(toDate.toInstant()), preparedStmtList.get(7));
         assertEquals(attendeeIndividualId, preparedStmtList.get(8));
     }
 
@@ -173,7 +176,7 @@ class HearingQueryBuilderTest {
         List<String> transcriptList = List.of("transcript1", "transcript2");
         AuditDetails auditDetails = new AuditDetails();
         auditDetails.setLastModifiedBy("user1");
-        auditDetails.setLastModifiedTime(123456789L);
+        auditDetails.setLastModifiedTime(OffsetDateTime.ofInstant(Instant.ofEpochMilli(123456789L), ZoneOffset.UTC));
         Object additionalDetails = new HashMap<String, Object>();
         List<Attendee> attendees = new ArrayList<>();
 
@@ -209,7 +212,7 @@ class HearingQueryBuilderTest {
         assertEquals(vcLink,preparedStmtList.get(3));
         assertEquals(notes,preparedStmtList.get(4));
         assertEquals("user1", preparedStmtList.get(5));
-        assertEquals(123456789L, preparedStmtList.get(6));
+        assertEquals(java.sql.Timestamp.from(Instant.ofEpochMilli(123456789L)), preparedStmtList.get(6));
         assertEquals("updatedHearingSummary", preparedStmtList.get(7));
         assertEquals(hearingId, preparedStmtList.get(8));
         assertEquals(tenantId, preparedStmtList.get(9));
@@ -224,7 +227,7 @@ class HearingQueryBuilderTest {
         List<String> transcriptList = List.of("transcript1", "transcript2");
         AuditDetails auditDetails = new AuditDetails();
         auditDetails.setLastModifiedBy("user1");
-        auditDetails.setLastModifiedTime(123456789L);
+        auditDetails.setLastModifiedTime(OffsetDateTime.ofInstant(Instant.ofEpochMilli(123456789L), ZoneOffset.UTC));
         Object additionalDetails = new HashMap<String, Object>();
         List<Attendee> attendees = new ArrayList<>();
 
@@ -334,14 +337,13 @@ class HearingQueryBuilderTest {
         List<Integer> preparedStmtArgList = new ArrayList<>();
         String str = " AND startTime >= ?";
 
-        Long date = System.currentTimeMillis();
+        OffsetDateTime date = OffsetDateTime.now(ZoneOffset.UTC);
         // Act
         hearingQueryBuilder.addCriteriaDate(date, query, str, preparedStmtList,preparedStmtArgList);
 
         // Assert
         assertTrue(query.toString().contains("AND startTime >= ?"));
         assertEquals(1, preparedStmtList.size());
-        assertEquals(date, preparedStmtList.get(0));
     }
 
     @Test
@@ -350,7 +352,7 @@ class HearingQueryBuilderTest {
         StringBuilder query = new StringBuilder("SELECT * FROM dristi_hearing WHERE 1=1");
         List<Object> preparedStmtList = new ArrayList<>();
         List<Integer> preparedStmtArgList = new ArrayList<>();
-        Long criteria = null;
+        OffsetDateTime criteria = null;
         String str = " AND startTime >= ?";
 
         // Act

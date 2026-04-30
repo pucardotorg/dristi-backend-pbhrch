@@ -72,12 +72,11 @@ public class ScheduledTask {
         LocalDate startOfMonth = previousMonth.withDayOfMonth(1);
         LocalDate endOfMonth = previousMonth.withDayOfMonth(previousMonth.lengthOfMonth());
 
-        // Convert to epoch milliseconds (start of day and end of day in Asia/Kolkata timezone)
-        Long bookingDateStartTime = startOfMonth.atStartOfDay(kolkataZone).toInstant().toEpochMilli();
-        Long bookingDateEndTime = endOfMonth.atTime(23, 59, 59, 999_999_999)
+        // Convert to OffsetDateTime (start of day and end of day in Asia/Kolkata timezone)
+        java.time.OffsetDateTime bookingDateStartTime = startOfMonth.atStartOfDay(kolkataZone).toOffsetDateTime();
+        java.time.OffsetDateTime bookingDateEndTime = endOfMonth.atTime(23, 59, 59, 999_999_999)
                 .atZone(kolkataZone)
-                .toInstant()
-                .toEpochMilli();
+                .toOffsetDateTime();
 
         String monthName = previousMonth.getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
         String excelFileName = String.format("%d_%s_Epost_Report.xlsx", previousMonth.getYear(), monthName);

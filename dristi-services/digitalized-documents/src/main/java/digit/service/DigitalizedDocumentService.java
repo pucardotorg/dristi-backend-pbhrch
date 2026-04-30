@@ -16,6 +16,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.*;
@@ -40,6 +41,9 @@ import static digit.config.ServiceConstants.TXN;
 import static digit.config.ServiceConstants.TYPE;
 import static digit.config.ServiceConstants.UPDATE_DIGITALIZED_DOCUMENT_FAILED;
 import static digit.config.ServiceConstants.VALUE;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Service
 @Slf4j
@@ -237,8 +241,8 @@ public class DigitalizedDocumentService {
                     document.setDocuments(documents);
 
                     // Update audit details
-                    Long currentTime = System.currentTimeMillis();
-                    document.getAuditDetails().setLastModifiedTime(currentTime);
+                    OffsetDateTime now = OffsetDateTime.now(java.time.ZoneOffset.UTC);
+                    document.getAuditDetails().setLastModifiedTime(now);
                     document.getAuditDetails().setLastModifiedBy(request.getRequestInfo().getUserInfo().getUuid());
 
                     WorkflowObject workflowObject = new WorkflowObject();

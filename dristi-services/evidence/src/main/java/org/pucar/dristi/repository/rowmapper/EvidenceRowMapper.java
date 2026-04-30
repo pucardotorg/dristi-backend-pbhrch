@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import lombok.extern.slf4j.Slf4j;
-import org.egov.common.contract.models.AuditDetails;
+import org.pucar.dristi.web.models.AuditDetails;
 import org.egov.common.contract.models.Document;
 import org.egov.tracer.model.CustomException;
 import org.postgresql.util.PGobject;
@@ -15,7 +15,13 @@ import org.pucar.dristi.web.models.Artifact;
 
 import java.io.IOException;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.*;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Component
 @Slf4j
@@ -26,22 +32,20 @@ public class EvidenceRowMapper implements ResultSetExtractor<List<Artifact>> {
         Map<String, Artifact> artifactMap = new LinkedHashMap<>();
 
         try {
-            ObjectMapper objectMapper = new ObjectMapper();
+            ObjectMapper objectMapper = new ObjectMapper().registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
             while (rs.next()) {
                 String id = rs.getString("id");
                 Artifact artifact = artifactMap.get(id);
 
                 if (artifact == null) {
-                    Long lastModifiedTime = rs.getLong("lastmodifiedtime");
-                    if (rs.wasNull()) {
-                        lastModifiedTime = null;
-                    }
+                    Timestamp createdTs = rs.getTimestamp("createdtime");
+                    Timestamp lastModifiedTs = rs.getTimestamp("lastmodifiedtime");
 
                     AuditDetails auditDetails = AuditDetails.builder()
                             .createdBy(rs.getString("createdby"))
-                            .createdTime(rs.getLong("createdtime"))
+                            .createdTime(createdTs != null ? createdTs.toInstant().atOffset(ZoneOffset.UTC) : null)
                             .lastModifiedBy(rs.getString("lastmodifiedby"))
-                            .lastModifiedTime(lastModifiedTime)
+                            .lastModifiedTime(lastModifiedTs != null ? lastModifiedTs.toInstant().atOffset(ZoneOffset.UTC) : null)
                             .build();
 
                     artifact = Artifact.builder()
@@ -70,13 +74,13 @@ public class EvidenceRowMapper implements ResultSetExtractor<List<Artifact>> {
                             .reason(rs.getString("reason"))
                             .filingType(rs.getString("filingType"))
                             .file(getObjectFromJson(rs.getString("file"), new TypeReference<Document>(){}))
-                            .createdDate(rs.getLong("createdDate"))
+                            .createdDate(tsToOffsetDateTime(rs.getTimestamp("createdDate")))
                             .isActive(rs.getBoolean("isActive"))
                             .isEvidence(rs.getBoolean("isEvidence"))
                             .status(rs.getString("status"))
                             .description(rs.getString("description"))
                             .auditdetails(auditDetails)
-                            .publishedDate(rs.getLong("publishedDate"))
+                            .publishedDate(tsToOffsetDateTime(rs.getTimestamp("publishedDate")))
                             .shortenedUrl(rs.getString("shortenedUrl"))
                             .seal(getObjectFromJson(rs.getString("seal"), new TypeReference<Document>(){}))
                             .witnessMobileNumbers(getObjectFromJson(rs.getString("witnessMobileNumbers"), new TypeReference<>() {
@@ -107,8 +111,12 @@ public class EvidenceRowMapper implements ResultSetExtractor<List<Artifact>> {
         }
         return new ArrayList<>(artifactMap.values());
     }
+    private OffsetDateTime tsToOffsetDateTime(Timestamp ts) {
+        return ts != null ? ts.toInstant().atOffset(ZoneOffset.UTC) : null;
+    }
+
     public <T> T getObjectFromJson(String json, TypeReference<T> typeRef) {
-        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectMapper objectMapper = new ObjectMapper().registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
         log.info("Converting JSON to type: {}", typeRef.getType());
         log.info("JSON content: {}", json);
 

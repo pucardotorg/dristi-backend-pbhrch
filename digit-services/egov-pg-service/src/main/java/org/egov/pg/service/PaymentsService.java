@@ -23,6 +23,9 @@ import org.springframework.util.CollectionUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Slf4j
 @Service
@@ -39,7 +42,8 @@ public class PaymentsService {
 	
 	public CollectionPayment registerPayment(TransactionRequest request) {
 		CollectionPayment payment = getPaymentFromTransaction(request);
-		payment.setInstrumentDate(request.getTransaction().getAuditDetails().getCreatedTime());
+		payment.setInstrumentDate(request.getTransaction().getAuditDetails().getCreatedTime() != null
+				? request.getTransaction().getAuditDetails().getCreatedTime().toInstant().toEpochMilli() : null);
 		payment.setInstrumentNumber(request.getTransaction().getTxnId());
 		payment.setTransactionNumber(request.getTransaction().getTxnId());
 		payment.setAdditionalDetails((JsonNode) request.getTransaction().getAdditionalDetails());

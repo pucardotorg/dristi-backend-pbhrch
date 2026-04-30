@@ -30,7 +30,10 @@ import org.egov.tracer.model.CustomException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.time.Instant;
+import java.time.OffsetDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -282,10 +285,11 @@ public class TaskCreationService {
             hearingDateStr = extractHearingDateFromCompositeItemAdditionalDetails(order, itemId);
         }
         Long hearingDateEpoch = hearingDateStr != null ? dateUtil.getEpochFromDateString(hearingDateStr, "yyyy-MM-dd") : null;
+        OffsetDateTime hearingDate = hearingDateEpoch != null ? Instant.ofEpochMilli(hearingDateEpoch).atOffset(ZoneOffset.UTC) : null;
 
         return CaseDetails.builder()
                 .caseTitle(courtCase.getCaseTitle())
-                .hearingDate(hearingDateEpoch)
+                .hearingDate(hearingDate)
                 .courtName((String) courtDetails.get("name"))
                 .courtAddress((String) courtDetails.get("address"))
                 .courtId((String) courtDetails.get("code"))
@@ -918,7 +922,7 @@ public class TaskCreationService {
                 .caseId(courtCase.getId().toString())
                 .caseTitle(courtCase.getCaseTitle())
                 .taskType(task.getTaskType())
-                .createdDate(dateUtil.getCurrentTimeInMilis())
+                .createdDate(OffsetDateTime.now())
                 .amount(Amount.builder().type("FINE").status("DONE").amount("0").build())
                 .additionalDetails(additionalDetails)
                 .workflow(getCreateWithOutPayment())

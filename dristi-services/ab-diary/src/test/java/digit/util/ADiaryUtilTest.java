@@ -1,30 +1,36 @@
 package digit.util;
 
+import digit.config.Configuration;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.OffsetDateTime;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@ExtendWith(MockitoExtension.class)
 public class ADiaryUtilTest {
 
+    @Mock
+    private Configuration config;
+
+    @InjectMocks
     private ADiaryUtil aDiaryUtil;
 
-    @BeforeEach
-    void setUp() {
-        aDiaryUtil = new ADiaryUtil();
-    }
-
     @Test
-    void testGetCurrentTimeInMilliSec() {
-        Long currentTime = aDiaryUtil.getCurrentTimeInMilliSec();
+    void testGetCurrentTimeOffset() {
+        OffsetDateTime before = OffsetDateTime.now().minusSeconds(1);
+        OffsetDateTime currentTime = aDiaryUtil.getCurrentTimeOffset();
+        OffsetDateTime after = OffsetDateTime.now().plusSeconds(1);
 
         assertNotNull(currentTime);
-        assertTrue(currentTime > 0);
-
-        long systemTime = System.currentTimeMillis();
-        assertTrue(Math.abs(systemTime - currentTime) < 1000);
+        assertTrue(currentTime.isAfter(before));
+        assertTrue(currentTime.isBefore(after));
     }
 
     @Test

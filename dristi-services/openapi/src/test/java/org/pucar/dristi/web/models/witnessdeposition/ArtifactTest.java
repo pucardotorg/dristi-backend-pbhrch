@@ -5,6 +5,9 @@ import org.egov.common.contract.models.Document;
 import org.junit.jupiter.api.Test;
 import org.pucar.dristi.web.models.WorkflowObject;
 
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -58,8 +61,8 @@ class ArtifactTest {
                 "srcId",
                 "srcName",
                 applicableTo,
-                123456789L,
-                987654321L,
+                Instant.ofEpochMilli(123456789L).atOffset(ZoneOffset.UTC),
+                Instant.ofEpochMilli(987654321L).atOffset(ZoneOffset.UTC),
                 true,
                 true,
                 "IN_PROGRESS",

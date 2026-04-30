@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,13 +29,13 @@ public class MediationDetails {
     private String natureOfComplainant = null;
 
     @JsonProperty("dateOfInstitution")
-    private Long dateOfInstitution = null;
+    private OffsetDateTime dateOfInstitution = null;
 
     @JsonProperty("caseStage")
     private String caseStage = null;
 
     @JsonProperty("hearingDate")
-    private Long hearingDate = null;
+    private OffsetDateTime hearingDate = null;
 
     @JsonProperty("mediationCentre")
     private String mediationCentre = null;

@@ -2,6 +2,7 @@ package digit.web.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import digit.web.models.enums.PeriodType;
+import java.time.OffsetDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,10 +25,10 @@ public class CalendarSearchCriteria implements SearchCriteria {
     private String courtId;             // required field
 
     @JsonProperty("fromDate")
-    private Long fromDate;
+    private OffsetDateTime fromDate;
 
     @JsonProperty("toDate")
-    private Long toDate;
+    private OffsetDateTime toDate;
 
     @JsonProperty("periodType")
     private PeriodType periodType;

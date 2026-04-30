@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.List;
@@ -80,7 +81,7 @@ public class SmsNotificationService {
         uri.append(config.getHearingHost()).append(config.getHearingSearchPath());
         ZoneId zoneId = ZoneId.of(config.getZoneId());
         LocalDate currentDate = LocalDate.now(zoneId);
-        Long fromDate = dateUtil.getEPochFromLocalDate(currentDate);
+        java.time.OffsetDateTime fromDate = currentDate.atStartOfDay(zoneId).toOffsetDateTime();
         HearingCriteria criteria = HearingCriteria.builder()
                 .filingNumber(filingNumber)
                 .status(SCHEDULED)
@@ -148,7 +149,7 @@ public class SmsNotificationService {
                 .contentType("TEXT")
                 .category("NOTIFICATION")
                 .locale(ENG_LOCALE_CODE)
-                .expiryTime(System.currentTimeMillis() + 60 * 60 * 1000)
+                .expiryTime(OffsetDateTime.now(ZoneId.of(config.getZoneId())).plusHours(1).toInstant().toEpochMilli())
                 .message(message).build();
         log.info("push message {}", smsRequest);
 

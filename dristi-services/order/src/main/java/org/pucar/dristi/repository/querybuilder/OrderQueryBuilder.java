@@ -142,12 +142,12 @@ public class OrderQueryBuilder {
         return firstCriteria;
     }
 
-    boolean addCriteriaDate(Long criteria, StringBuilder query, boolean firstCriteria, String str, List<Object> preparedStmtList, List<Integer> preparedStmtArgList) {
+    boolean addCriteriaDate(java.time.OffsetDateTime criteria, StringBuilder query, boolean firstCriteria, String str, List<Object> preparedStmtList, List<Integer> preparedStmtArgList) {
         if (criteria != null) {
             addClauseIfRequired(query, firstCriteria);
             query.append(str);
-            preparedStmtList.add(criteria);
-            preparedStmtArgList.add(Types.BIGINT);
+            preparedStmtList.add(java.sql.Timestamp.from(criteria.toInstant()));
+            preparedStmtArgList.add(Types.TIMESTAMP);
             firstCriteria = false;
         }
         return firstCriteria;

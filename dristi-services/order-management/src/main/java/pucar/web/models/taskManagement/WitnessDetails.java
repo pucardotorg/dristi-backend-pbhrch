@@ -3,6 +3,7 @@ package pucar.web.models.taskManagement;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -53,7 +54,7 @@ public class WitnessDetails {
     private String ownerType;
 
     @JsonProperty("createdTime")
-    private Long createdTime;
+    private OffsetDateTime createdTime;
 
     @EqualsAndHashCode.Exclude
     @ToString.Exclude

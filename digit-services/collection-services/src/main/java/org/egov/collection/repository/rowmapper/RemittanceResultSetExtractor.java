@@ -20,6 +20,9 @@ import org.egov.collection.web.contract.RemittanceReceipt;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Service;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Service
 public class RemittanceResultSetExtractor implements ResultSetExtractor<List<Remittance>> {
@@ -37,11 +40,15 @@ public class RemittanceResultSetExtractor implements ResultSetExtractor<List<Rem
             Set<RemittanceReceipt> remittanceReceipts;
             if (!remittances.containsKey(id)) {
 
+                Long createdTime = resultSet.getLong("rem_createdDate");
+                Long lastModifiedTime = resultSet.getLong("rem_lastModifiedDate");
                 AuditDetails auditDetails = AuditDetails.builder()
                         .createdBy(resultSet.getString("rem_createdBy"))
-                        .createdTime(resultSet.getLong("rem_createdDate"))
+                        .createdTime(createdTime != 0 && !resultSet.wasNull() ?
+                                OffsetDateTime.ofInstant(Instant.ofEpochMilli(createdTime), ZoneId.systemDefault()) : null)
                         .lastModifiedBy(resultSet.getString("rem_lastModifiedBy"))
-                        .lastModifiedTime(resultSet.getLong("rem_lastModifiedDate"))
+                        .lastModifiedTime(lastModifiedTime != 0 && !resultSet.wasNull() ?
+                                OffsetDateTime.ofInstant(Instant.ofEpochMilli(lastModifiedTime), ZoneId.systemDefault()) : null)
                         .build();
 
                 BigDecimal creditAmount = getBigDecimalValue(resultSet.getBigDecimal("remDet_creditAmount"));

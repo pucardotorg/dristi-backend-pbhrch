@@ -35,6 +35,9 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static org.pucar.dristi.config.ServiceConstants.*;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Service
 @Slf4j
@@ -59,13 +62,14 @@ public class TaskService {
     private final CipherUtil cipherUtil;
     private final XmlRequestGenerator xmlRequestGenerator;
     private final UserUtil userUtil;
+    private final DateUtil dateUtil;
     @Autowired
     public TaskService(TaskRegistrationValidator validator,
                        TaskRegistrationEnrichment enrichmentUtil,
                        TaskRepository taskRepository,
                        WorkflowUtil workflowUtil,
                        Configuration config,
-                       Producer producer, CaseUtil caseUtil, ObjectMapper objectMapper, SmsNotificationService notificationService, IndividualService individualService, TopicBasedOnStatus topicBasedOnStatus, SummonUtil summonUtil, FileStoreUtil fileStoreUtil, EtreasuryUtil etreasuryUtil, PendingTaskUtil pendingTaskUtil, ESignUtil eSignUtil, CipherUtil cipherUtil, XmlRequestGenerator xmlRequestGenerator, UserUtil userUtil) {
+                       Producer producer, CaseUtil caseUtil, ObjectMapper objectMapper, SmsNotificationService notificationService, IndividualService individualService, TopicBasedOnStatus topicBasedOnStatus, SummonUtil summonUtil, FileStoreUtil fileStoreUtil, EtreasuryUtil etreasuryUtil, PendingTaskUtil pendingTaskUtil, ESignUtil eSignUtil, CipherUtil cipherUtil, XmlRequestGenerator xmlRequestGenerator, UserUtil userUtil, DateUtil dateUtil) {
         this.validator = validator;
         this.enrichmentUtil = enrichmentUtil;
         this.taskRepository = taskRepository;
@@ -85,6 +89,7 @@ public class TaskService {
         this.cipherUtil = cipherUtil;
         this.xmlRequestGenerator = xmlRequestGenerator;
         this.userUtil = userUtil;
+        this.dateUtil = dateUtil;
     }
 
     @Autowired
@@ -1073,7 +1078,7 @@ public class TaskService {
             Object taskDetails = task.getTaskDetails();
             taskDetailsDTO.setAuditDetails(task.getAuditDetails());
 
-            taskDetailsDTO.getAuditDetails().setLastModifiedTime(System.currentTimeMillis());
+            taskDetailsDTO.getAuditDetails().setLastModifiedTime(dateUtil.getCurrentOffsetDateTime());
             taskDetailsDTO.getAuditDetails().setLastModifiedBy(request.getRequestInfo().getUserInfo().getUuid());
             
             // Log the taskDetails

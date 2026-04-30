@@ -98,7 +98,7 @@ public class PublishOrderCheckoutAcceptance implements OrderUpdateStrategy {
                 .criteria(HearingCriteria.builder().hearingId(hearingNumber).tenantId(order.getTenantId()).build()).build());
         Hearing hearing = hearings.get(0);
 
-        Long newHearingDate = hearingUtil.getCreateStartAndEndTime(order.getAdditionalDetails(), Arrays.asList("formdata", "newHearingDate"));
+        java.time.OffsetDateTime newHearingDate = hearingUtil.getCreateStartAndEndTime(order.getAdditionalDetails(), Arrays.asList("formdata", "newHearingDate"));
         log.info("newHearingDate:{}", newHearingDate);
         if (newHearingDate != null) {
             hearing.setStartTime(newHearingDate);

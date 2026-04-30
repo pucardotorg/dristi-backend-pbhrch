@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.postgresql.util.PGobject;
@@ -26,6 +27,9 @@ class TaskManagementRowMapperTest {
     @Spy
     private ObjectMapper objectMapper = new ObjectMapper();
 
+    @Mock
+    private digit.util.DateUtil dateUtil;
+
     @InjectMocks
     private TaskManagementRowMapper rowMapper;
 
@@ -34,6 +38,7 @@ class TaskManagementRowMapperTest {
     @BeforeEach
     void setUp() {
         resultSet = mock(ResultSet.class);
+        lenient().when(dateUtil.timestampToOffsetDateTime(any())).thenReturn(java.time.OffsetDateTime.now());
     }
 
     @Test
@@ -52,9 +57,9 @@ class TaskManagementRowMapperTest {
         when(resultSet.getString("documents")).thenReturn("[]");
         when(resultSet.getString("task_management_number")).thenReturn("TM-001");
         when(resultSet.getString("created_by")).thenReturn("user-123");
-        when(resultSet.getLong("created_time")).thenReturn(1704067200000L);
+        when(resultSet.getTimestamp("created_time")).thenReturn(new java.sql.Timestamp(1704067200000L));
         when(resultSet.getString("last_modified_by")).thenReturn("user-456");
-        when(resultSet.getLong("last_modified_time")).thenReturn(1704153600000L);
+        when(resultSet.getTimestamp("last_modified_time")).thenReturn(new java.sql.Timestamp(1704153600000L));
         when(resultSet.getObject("additional_details")).thenReturn(null);
 
         List<TaskManagement> result = rowMapper.extractData(resultSet);
@@ -83,9 +88,9 @@ class TaskManagementRowMapperTest {
         when(resultSet.getString("documents")).thenReturn("[]");
         when(resultSet.getString("task_management_number")).thenReturn("TM-001", "TM-002");
         when(resultSet.getString("created_by")).thenReturn("user-123");
-        when(resultSet.getLong("created_time")).thenReturn(1704067200000L);
+        when(resultSet.getTimestamp("created_time")).thenReturn(new java.sql.Timestamp(1704067200000L));
         when(resultSet.getString("last_modified_by")).thenReturn("user-456");
-        when(resultSet.getLong("last_modified_time")).thenReturn(1704153600000L);
+        when(resultSet.getTimestamp("last_modified_time")).thenReturn(new java.sql.Timestamp(1704153600000L));
         when(resultSet.getObject("additional_details")).thenReturn(null);
 
         List<TaskManagement> result = rowMapper.extractData(resultSet);
@@ -122,9 +127,9 @@ class TaskManagementRowMapperTest {
         when(resultSet.getString("documents")).thenReturn("[]");
         when(resultSet.getString("task_management_number")).thenReturn("TM-001");
         when(resultSet.getString("created_by")).thenReturn("user-123");
-        when(resultSet.getLong("created_time")).thenReturn(1704067200000L);
+        when(resultSet.getTimestamp("created_time")).thenReturn(new java.sql.Timestamp(1704067200000L));
         when(resultSet.getString("last_modified_by")).thenReturn("user-456");
-        when(resultSet.getLong("last_modified_time")).thenReturn(1704153600000L);
+        when(resultSet.getTimestamp("last_modified_time")).thenReturn(new java.sql.Timestamp(1704153600000L));
         when(resultSet.getObject("additional_details")).thenReturn(pgObject);
 
         List<TaskManagement> result = rowMapper.extractData(resultSet);
@@ -152,9 +157,9 @@ class TaskManagementRowMapperTest {
         when(resultSet.getString("documents")).thenReturn("[]");
         when(resultSet.getString("task_management_number")).thenReturn("TM-001");
         when(resultSet.getString("created_by")).thenReturn("user-123");
-        when(resultSet.getLong("created_time")).thenReturn(1704067200000L);
+        when(resultSet.getTimestamp("created_time")).thenReturn(new java.sql.Timestamp(1704067200000L));
         when(resultSet.getString("last_modified_by")).thenReturn("user-456");
-        when(resultSet.getLong("last_modified_time")).thenReturn(1704153600000L);
+        when(resultSet.getTimestamp("last_modified_time")).thenReturn(new java.sql.Timestamp(1704153600000L));
         when(resultSet.getObject("additional_details")).thenReturn(null);
 
         List<TaskManagement> result = rowMapper.extractData(resultSet);
@@ -213,9 +218,9 @@ class TaskManagementRowMapperTest {
         when(resultSet.getString("documents")).thenReturn("[]");
         when(resultSet.getString("task_management_number")).thenReturn("TM-001");
         when(resultSet.getString("created_by")).thenReturn("user-123");
-        when(resultSet.getLong("created_time")).thenReturn(1704067200000L);
+        when(resultSet.getTimestamp("created_time")).thenReturn(new java.sql.Timestamp(1704067200000L));
         when(resultSet.getString("last_modified_by")).thenReturn("user-456");
-        when(resultSet.getLong("last_modified_time")).thenReturn(1704153600000L);
+        when(resultSet.getTimestamp("last_modified_time")).thenReturn(new java.sql.Timestamp(1704153600000L));
         when(resultSet.getObject("additional_details")).thenReturn(null);
 
         List<TaskManagement> result = rowMapper.extractData(resultSet);

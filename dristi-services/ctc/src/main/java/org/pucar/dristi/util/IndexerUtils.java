@@ -75,8 +75,8 @@ public class IndexerUtils {
                 doc.getId(),
                 doc.getDocId(),
                 doc.getCtcApplicationNumber(),
-                doc.getCreatedTime(),
-                doc.getLastModifiedTime(),
+                toEpochMilli(doc.getCreatedTime()),
+                toEpochMilli(doc.getLastModifiedTime()),
                 docName,
                 doc.getStatus(),
                 doc.getCaseTitle(),
@@ -86,10 +86,14 @@ public class IndexerUtils {
                 doc.getTenantId(),
                 doc.getFileStoreId(),
                 doc.getNameOfApplicant(),
-                doc.getDateOfApplication(),
-                doc.getDateOfApplicationApproval(),
+                toEpochMilli(doc.getDateOfApplication()),
+                toEpochMilli(doc.getDateOfApplicationApproval()),
                 searchableFieldsJson
         );
+    }
+
+    private long toEpochMilli(java.time.OffsetDateTime odt) {
+        return odt == null ? 0L : odt.toInstant().toEpochMilli();
     }
 
     public void updateDocStatus(String docId, String ctcApplicationNumber, String status, List<Document> documents) throws Exception {
@@ -183,7 +187,7 @@ public class IndexerUtils {
                     tracker.getFilingNumber(),
                     tracker.getCtcApplicationNumber(),
                     tracker.getStatus(),
-                    tracker.getDateRaised(),
+                    toEpochMilli(tracker.getDateRaised()),
                     tracker.getApplicantName(),
                     tracker.getCaseTitle(),
                     tracker.getCaseNumber(),
@@ -203,7 +207,7 @@ public class IndexerUtils {
     public void pushIssueCtcDocumentsToIndex(CtcApplication application) {
         try {
             List<IssueCtcDocument> documents = new ArrayList<>();
-            Long currentTime = System.currentTimeMillis();
+            java.time.OffsetDateTime currentTime = java.time.OffsetDateTime.now();
 
             // Build fileStoreId lookup from caseBundles (for when selectedCaseBundle has null fileStoreId)
             Map<String, String> fileStoreIdMap = new HashMap<>();
@@ -251,7 +255,7 @@ public class IndexerUtils {
     }
 
     private void collectDocuments(CaseBundleNode prevNode,CaseBundleNode node, CtcApplication application,
-                                  Long currentTime, List<IssueCtcDocument> documents,
+                                  java.time.OffsetDateTime currentTime, List<IssueCtcDocument> documents,
                                   Map<String, String> fileStoreIdMap,Map<String, String> messagesMap) {
         if (node == null) return;
 
@@ -308,7 +312,7 @@ public class IndexerUtils {
                     .tenantId(application.getTenantId())
                     .fileStoreId(fileStoreId)
                     .nameOfApplicant(application.getApplicantName())
-                    .dateOfApplication(application.getAuditDetails().getCreatedTime())
+                    .dateOfApplication(application.getAuditDetails().getCreatedTime() != null ? java.time.Instant.ofEpochMilli(application.getAuditDetails().getCreatedTime()).atOffset(java.time.ZoneOffset.UTC) : null)
                     .dateOfApplicationApproval(application.getDateOfApplicationApproval())
                     .build();
             documents.add(doc);

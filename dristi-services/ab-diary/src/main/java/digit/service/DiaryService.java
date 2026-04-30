@@ -22,6 +22,9 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 import static digit.config.ServiceConstants.*;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Service
 @Slf4j
@@ -146,14 +149,14 @@ public class DiaryService {
             }
             caseDiaryEntries.forEach(entry -> {
                 if (entry.getHearingDate() != null) {
-                    entry.setDate(dateTimeUtil.formatEpochMillis(entry.getHearingDate(), DOB_FORMAT_D_M_Y));
+                    entry.setDate(dateTimeUtil.formatOffsetDateTime(entry.getHearingDate(), DOB_FORMAT_D_M_Y));
                 }
             });
 
             CaseDiary caseDiary = generateRequest.getDiary();
 
             caseDiary.setCaseDiaryEntries(caseDiaryEntries);
-            caseDiary.setDate(dateTimeUtil.formatEpochMillis(caseDiary.getDiaryDate(), DOB_FORMAT_D_M_Y));
+            caseDiary.setDate(dateTimeUtil.formatOffsetDateTime(caseDiary.getDiaryDate(), DOB_FORMAT_D_M_Y));
             generateRequest.setDiary(caseDiary);
 
             ByteArrayResource byteArrayResource = generateCaseDiary(caseDiary, generateRequest.getRequestInfo());
@@ -190,7 +193,7 @@ public class DiaryService {
                         .caseId(caseId)
                         .tenantId(generateRequest.getDiary().getTenantId())
                         .diaryType(generateRequest.getDiary().getDiaryType())
-                        .date(generateRequest.getDiary().getDiaryDate())
+                        .date(generateRequest.getDiary().getDiaryDate() != null ? generateRequest.getDiary().getDiaryDate().toInstant().toEpochMilli() : null)
                         .courtId(generateRequest.getDiary().getCourtId())
                         .build())
                 .build();

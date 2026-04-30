@@ -9,8 +9,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.egov.common.contract.models.AuditDetails;
 
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Data
 @Builder
@@ -84,7 +88,7 @@ public class CtcApplication {
     private String status;
 
     @JsonProperty("dateOfApplicationApproval")
-    private Long dateOfApplicationApproval;
+    private OffsetDateTime dateOfApplicationApproval;
 
     @JsonProperty("judgeComments")
     private String judgeComments;

@@ -14,6 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 
 import java.util.*;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @org.springframework.stereotype.Service
 public class PGRService {
@@ -99,12 +102,13 @@ public class PGRService {
         List<ServiceWrapper> enrichedServiceWrappers = workflowService.enrichWorkflow(requestInfo,serviceWrappers);
         Map<Long, List<ServiceWrapper>> sortedWrappers = new TreeMap<>(Collections.reverseOrder());
         for(ServiceWrapper svc : enrichedServiceWrappers){
-            if(sortedWrappers.containsKey(svc.getService().getAuditDetails().getCreatedTime())){
-                sortedWrappers.get(svc.getService().getAuditDetails().getCreatedTime()).add(svc);
+            Long createdTime = svc.getService().getAuditDetails().getCreatedTime().toInstant().toEpochMilli();
+            if(sortedWrappers.containsKey(createdTime)){
+                sortedWrappers.get(createdTime).add(svc);
             }else{
                 List<ServiceWrapper> serviceWrapperList = new ArrayList<>();
                 serviceWrapperList.add(svc);
-                sortedWrappers.put(svc.getService().getAuditDetails().getCreatedTime(), serviceWrapperList);
+                sortedWrappers.put(createdTime, serviceWrapperList);
             }
         }
         List<ServiceWrapper> sortedServiceWrappers = new ArrayList<>();
@@ -168,12 +172,13 @@ public class PGRService {
 
         Map<Long, List<ServiceWrapper>> sortedWrappers = new TreeMap<>(Collections.reverseOrder());
         for(ServiceWrapper svc : enrichedServiceWrappers){
-            if(sortedWrappers.containsKey(svc.getService().getAuditDetails().getCreatedTime())){
-                sortedWrappers.get(svc.getService().getAuditDetails().getCreatedTime()).add(svc);
+            Long createdTime = svc.getService().getAuditDetails().getCreatedTime().toInstant().toEpochMilli();
+            if(sortedWrappers.containsKey(createdTime)){
+                sortedWrappers.get(createdTime).add(svc);
             }else{
                 List<ServiceWrapper> serviceWrapperList = new ArrayList<>();
                 serviceWrapperList.add(svc);
-                sortedWrappers.put(svc.getService().getAuditDetails().getCreatedTime(), serviceWrapperList);
+                sortedWrappers.put(createdTime, serviceWrapperList);
             }
         }
         List<ServiceWrapper> sortedServiceWrappers = new ArrayList<>();

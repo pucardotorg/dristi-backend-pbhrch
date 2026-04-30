@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.OffsetDateTime;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -27,10 +29,10 @@ public class TreasuryMapping {
     private Calculation calculation;
 
     @JsonProperty("createdTime")
-    private Long createdTime;
+    private OffsetDateTime createdTime;
 
     @JsonProperty("lastModifiedTime")
-    private Long lastModifiedTime;
+    private OffsetDateTime lastModifiedTime;
 
     @JsonProperty("finalCalcPostResubmission")
     private Calculation finalCalcPostResubmission;

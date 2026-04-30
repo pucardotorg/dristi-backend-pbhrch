@@ -113,7 +113,8 @@ public class PublishOrderInitiatingReschedulingOfHearingDate implements OrderUpd
         String dateValue = Optional.ofNullable(changedHearingDate)
                 .orElse(originalHearingDate);
         log.info("date value :{}", dateValue);
-        Long newHearingDate = dateValue == null ? dateUtil.getCurrentTimeInMilis() : dateUtil.getEpochFromDateString(dateValue, "yyyy-MM-dd");
+        Long newHearingDateEpoch = dateValue == null ? dateUtil.getCurrentTimeInMilis() : dateUtil.getEpochFromDateString(dateValue, "yyyy-MM-dd");
+        java.time.OffsetDateTime newHearingDate = java.time.Instant.ofEpochMilli(newHearingDateEpoch).atOffset(java.time.ZoneOffset.UTC);
 
         log.info("new hearing time:{}", newHearingDate);
         if (referenceId == null) {
@@ -136,8 +137,9 @@ public class PublishOrderInitiatingReschedulingOfHearingDate implements OrderUpd
         String availableAfter = Optional.ofNullable(changedHearingDate)
                 .orElse(originalHearingDate);
 
-        Long scheduleAfter = availableAfter == null ? dateUtil.getCurrentTimeInMilis() : dateUtil.getEpochFromDateString(availableAfter, "yyyy-MM-dd");
-        log.info("creating reschedule entry with scheduleAfter:{}", scheduleAfter);
+        Long scheduleAfterEpoch = availableAfter == null ? dateUtil.getCurrentTimeInMilis() : dateUtil.getEpochFromDateString(availableAfter, "yyyy-MM-dd");
+        java.time.OffsetDateTime scheduleAfterOdt = java.time.Instant.ofEpochMilli(scheduleAfterEpoch).atOffset(java.time.ZoneOffset.UTC);
+        log.info("creating reschedule entry with scheduleAfter:{}", scheduleAfterOdt);
 
         // call case here
         log.info("case search for filingNumber:{}", order.getFilingNumber());
@@ -157,7 +159,7 @@ public class PublishOrderInitiatingReschedulingOfHearingDate implements OrderUpd
                         .judgeId(courtCase.getJudgeId())  ///  this need to come from order
                         .caseId(order.getFilingNumber())
                         .reason(order.getComments())
-                        .availableAfter(scheduleAfter)
+                        .availableAfter(scheduleAfterOdt)
                         .build()))
                 .requestInfo(requestInfo).build());
 

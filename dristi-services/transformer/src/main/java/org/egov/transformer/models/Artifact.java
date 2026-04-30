@@ -12,9 +12,13 @@ import org.egov.common.contract.models.AuditDetails;
 import org.egov.common.contract.models.Document;
 import org.springframework.validation.annotation.Validated;
 
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Validated
 @jakarta.annotation.Generated(value = "org.egov.codegen.SpringBootCodegen", date = "2024-05-16T15:17:16.225735+05:30[Asia/Kolkata]")
@@ -116,10 +120,10 @@ public class Artifact {
 
     @JsonProperty("createdDate")
 
-    private Long createdDate = null;
+    private OffsetDateTime createdDate = null;
 
     @JsonProperty("publishedDate")
-    private Long publishedDate = null;
+    private OffsetDateTime publishedDate = null;
 
     @JsonProperty("isActive")
 

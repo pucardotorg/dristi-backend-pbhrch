@@ -7,6 +7,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Component
 @Slf4j
@@ -29,7 +32,7 @@ public class MediationEnrichment {
 
         String id = digitalizedDocumentUtil.generateUUID().toString();
 
-        Long currentTime = digitalizedDocumentUtil.getCurrentTimeInMilliSec();
+        java.time.OffsetDateTime currentTime = digitalizedDocumentUtil.getCurrentTimeOffset();
         String userUuid = requestInfo.getUserInfo().getUuid();
 
         AuditDetails auditDetails = AuditDetails.builder()
@@ -51,7 +54,7 @@ public class MediationEnrichment {
     public void enrichUpdateMediationDocument(DigitalizedDocumentRequest documentRequest) {
         log.info("operation = enrichUpdateMediationDocument ,  result = IN_PROGRESS");
 
-        Long currentTime = digitalizedDocumentUtil.getCurrentTimeInMilliSec();
+        java.time.OffsetDateTime currentTime = digitalizedDocumentUtil.getCurrentTimeOffset();
         String userUuid = documentRequest.getRequestInfo().getUserInfo().getUuid();
 
         AuditDetails auditDetails = documentRequest.getDigitalizedDocument().getAuditDetails();

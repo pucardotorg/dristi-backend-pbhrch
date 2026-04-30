@@ -8,12 +8,15 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.egov.common.contract.models.AuditDetails;
 import org.egov.common.contract.models.Document;
 
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Data
 @AllArgsConstructor
@@ -69,12 +72,12 @@ public class Hearing {
     @JsonProperty("startTime")
 
     @Valid
-    private Long startTime = null;
+    private OffsetDateTime startTime = null;
 
     @JsonProperty("endTime")
 
     @Valid
-    private Long endTime = null;
+    private OffsetDateTime endTime = null;
 
     @JsonProperty("presidedBy")
     @Valid

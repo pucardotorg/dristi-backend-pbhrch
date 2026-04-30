@@ -7,6 +7,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.time.OffsetDateTime;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
+
 
 @AllArgsConstructor
 @Builder
@@ -18,9 +23,9 @@ public class AuditDetails {
 
     private String createdBy;
 
-    private Long createdTime;
+    private OffsetDateTime createdTime;
 
     private String lastModifiedBy;
 
-    private Long lastModifiedTime;
+    private OffsetDateTime lastModifiedTime;
 }

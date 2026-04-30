@@ -61,7 +61,7 @@ public class OrderImpl implements EventListener<Order, RequestInfo> {
                 .courtId(courtCase.getCourtId())  // no court id
                 .parties(getParties(event))
                 .status(event.getStatus())
-                .date((event.getCreatedDate() == null) ? null : Long.valueOf(event.getCreatedDate()))
+                .date(event.getCreatedDate())
                 .entityType("Order")
                 .title(event.getOrderTitle())
                 .businessOfTheDay(businessOfTheDay)
@@ -70,8 +70,8 @@ public class OrderImpl implements EventListener<Order, RequestInfo> {
                 .caseNumbers(event.getFilingNumber() != null ? Collections.singletonList(event.getFilingNumber()) : new ArrayList<>())
                 .judgeIds(new ArrayList<>())/// there is judge id in issued by but its UUID
                 .documents(event.getDocuments())
-                .createdTime(event.getAuditDetails().getCreatedTime())
-                .lastModifiedTime(event.getAuditDetails().getLastModifiedTime())
+                .createdTime(event.getAuditDetails().getCreatedTime() != null ? java.time.Instant.ofEpochMilli(event.getAuditDetails().getCreatedTime()).atOffset(java.time.ZoneOffset.UTC) : null)
+                .lastModifiedTime(event.getAuditDetails().getLastModifiedTime() != null ? java.time.Instant.ofEpochMilli(event.getAuditDetails().getLastModifiedTime()).atOffset(java.time.ZoneOffset.UTC) : null)
                 .caseTitle(enrichCaseTitle(courtCase))
                 .caseSTNumber(enrichCaseSTNumber(courtCase))
                 .build();
@@ -222,8 +222,8 @@ public class OrderImpl implements EventListener<Order, RequestInfo> {
             // Next Hearing Date
             if (order.getNextHearingDate() != null) {
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-                String dateStr = Instant.ofEpochMilli(order.getNextHearingDate())
-                        .atZone(ZoneId.of(properties.getApplicationZoneId()))
+                String dateStr = order.getNextHearingDate()
+                        .atZoneSameInstant(ZoneId.of(properties.getApplicationZoneId()))
                         .toLocalDate()
                         .format(formatter);
                 sb.append("Date of Next Hearing: ")

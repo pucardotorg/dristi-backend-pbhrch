@@ -9,6 +9,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Component
 @Slf4j
@@ -24,9 +27,9 @@ public class PleaEnrichment {
         DigitalizedDocument digitalizedDocument = request.getDigitalizedDocument();
         digitalizedDocument.setAuditDetails(new AuditDetails());
         digitalizedDocument.getAuditDetails().setCreatedBy(request.getRequestInfo().getUserInfo().getUuid());
-        digitalizedDocument.getAuditDetails().setCreatedTime(digitalizedDocumentUtil.getCurrentTimeInMilliSec());
+        digitalizedDocument.getAuditDetails().setCreatedTime(digitalizedDocumentUtil.getCurrentTimeOffset());
         digitalizedDocument.getAuditDetails().setLastModifiedBy(request.getRequestInfo().getUserInfo().getUuid());
-        digitalizedDocument.getAuditDetails().setLastModifiedTime(digitalizedDocumentUtil.getCurrentTimeInMilliSec());
+        digitalizedDocument.getAuditDetails().setLastModifiedTime(digitalizedDocumentUtil.getCurrentTimeOffset());
 
         enrichDocuments(request);
 
@@ -35,7 +38,7 @@ public class PleaEnrichment {
     public void enrichDocumentOnUpdate(DigitalizedDocumentRequest request){
         DigitalizedDocument digitalizedDocument = request.getDigitalizedDocument();
         digitalizedDocument.getAuditDetails().setLastModifiedBy(request.getRequestInfo().getUserInfo().getUuid());
-        digitalizedDocument.getAuditDetails().setLastModifiedTime(digitalizedDocumentUtil.getCurrentTimeInMilliSec());
+        digitalizedDocument.getAuditDetails().setLastModifiedTime(digitalizedDocumentUtil.getCurrentTimeOffset());
 
         enrichDocuments(request);
 

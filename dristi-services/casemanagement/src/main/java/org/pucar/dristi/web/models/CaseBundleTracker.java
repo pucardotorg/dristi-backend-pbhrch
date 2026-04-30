@@ -1,5 +1,6 @@
 package org.pucar.dristi.web.models;
 
+import java.time.OffsetDateTime;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -13,6 +14,9 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Data;
 import lombok.Builder;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 /**
  * CaseBundleTracker
@@ -29,11 +33,11 @@ public class CaseBundleTracker   {
     private String id;
 
     @JsonProperty("startTime")
-    private Long startTime = null;
+    private OffsetDateTime startTime = null;
 
     @JsonProperty("endTime")
 
-    private Long endTime = null;
+    private OffsetDateTime endTime = null;
 
     @JsonProperty("pageCount")
 

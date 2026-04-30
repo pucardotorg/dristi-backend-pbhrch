@@ -9,7 +9,11 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
+import java.time.OffsetDateTime;
 import java.util.List;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Data
 @NoArgsConstructor
@@ -39,14 +43,14 @@ public class Payment {
     private String transactionNumber;
 
     @JsonProperty("transactionDate")
-    private Long transactionDate;
+    private OffsetDateTime transactionDate;
 
     @NotNull
     @JsonProperty("paymentMode")
     private String paymentMode;
 
     @JsonProperty("instrumentDate")
-    private Long instrumentDate;
+    private OffsetDateTime instrumentDate;
 
     @Size(max = 128)
     @JsonProperty("instrumentNumber")

@@ -79,6 +79,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Data
 @Slf4j
@@ -329,7 +332,7 @@ public class EmployeeService {
 
 		AuditDetails auditDetails = AuditDetails.builder()
 				.createdBy(requestInfo.getUserInfo().getUuid())
-				.createdDate(new Date().getTime())
+				.createdDate(OffsetDateTime.now())
 				.build();
 		
 		employee.getJurisdictions().stream().forEach(jurisdiction -> {
@@ -442,7 +445,7 @@ public class EmployeeService {
 	private void enrichUpdateRequest(Employee employee, RequestInfo requestInfo, List<Employee> existingEmployeesData) {
 		AuditDetails auditDetails = AuditDetails.builder()
 				.createdBy(requestInfo.getUserInfo().getUserName())
-				.createdDate(new Date().getTime())
+				.createdDate(OffsetDateTime.now())
 				.build();
 		Employee existingEmpData = existingEmployeesData.stream().filter(existingEmployee -> existingEmployee.getUuid().equals(employee.getUuid())).findFirst().get();
 
@@ -465,7 +468,7 @@ public class EmployeeService {
 						.findFirst().orElse(null)
 						.equals(jurisdiction)){
 					jurisdiction.getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getUserName());
-					jurisdiction.getAuditDetails().setLastModifiedDate(new Date().getTime());
+					jurisdiction.getAuditDetails().setLastModifiedDate(OffsetDateTime.now());
 				}
 			}
 		});
@@ -479,7 +482,7 @@ public class EmployeeService {
 						.findFirst().orElse(null)
 						.equals(assignment)){
 					assignment.getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getUserName());
-					assignment.getAuditDetails().setLastModifiedDate(new Date().getTime());
+					assignment.getAuditDetails().setLastModifiedDate(OffsetDateTime.now());
 				}
 			}
 		});
@@ -497,7 +500,7 @@ public class EmployeeService {
 							.findFirst().orElse(null)
 							.equals(serviceHistory)){
 						serviceHistory.getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getUserName());
-						serviceHistory.getAuditDetails().setLastModifiedDate(new Date().getTime());
+						serviceHistory.getAuditDetails().setLastModifiedDate(OffsetDateTime.now());
 					}
 				}
 			});
@@ -518,7 +521,7 @@ public class EmployeeService {
 							.findFirst().orElse(null)
 							.equals(educationalQualification)){
 						educationalQualification.getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getUserName());
-						educationalQualification.getAuditDetails().setLastModifiedDate(new Date().getTime());
+						educationalQualification.getAuditDetails().setLastModifiedDate(OffsetDateTime.now());
 					}
 				}
 			});
@@ -539,7 +542,7 @@ public class EmployeeService {
 							.findFirst().orElse(null)
 							.equals(departmentalTest)){
 						departmentalTest.getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getUserName());
-						departmentalTest.getAuditDetails().setLastModifiedDate(new Date().getTime());
+						departmentalTest.getAuditDetails().setLastModifiedDate(OffsetDateTime.now());
 					}
 				}
 			});
@@ -557,7 +560,7 @@ public class EmployeeService {
 							.findFirst().orElse(null)
 							.equals(document)){
 						document.getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getUserName());
-						document.getAuditDetails().setLastModifiedDate(new Date().getTime());
+						document.getAuditDetails().setLastModifiedDate(OffsetDateTime.now());
 					}
 				}
 			});
@@ -578,7 +581,7 @@ public class EmployeeService {
 							.findFirst().orElse(null)
 							.equals(deactivationDetails)){
 						deactivationDetails.getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getUserName());
-						deactivationDetails.getAuditDetails().setLastModifiedDate(new Date().getTime());
+						deactivationDetails.getAuditDetails().setLastModifiedDate(OffsetDateTime.now());
 					}
 				}
 			});
@@ -599,7 +602,7 @@ public class EmployeeService {
 							.findFirst().orElse(null)
 							.equals(reactivationDetails)){
 						reactivationDetails.getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getUserName());
-						reactivationDetails.getAuditDetails().setLastModifiedDate(new Date().getTime());
+						reactivationDetails.getAuditDetails().setLastModifiedDate(OffsetDateTime.now());
 					}
 				}
 			});

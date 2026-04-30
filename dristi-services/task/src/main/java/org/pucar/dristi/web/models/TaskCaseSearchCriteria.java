@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.validation.annotation.Validated;
 
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,7 +44,7 @@ public class TaskCaseSearchCriteria {
     private String deliveryChanel = null;
 
     @JsonProperty("hearingDate")
-    private Long hearingDate = null;
+    private OffsetDateTime hearingDate = null;
 
     @JsonProperty("isPendingCollection")
     private Boolean isPendingCollection;

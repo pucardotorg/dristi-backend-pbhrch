@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 
 
@@ -24,10 +25,10 @@ public class BulkReschedulingOfHearings {
     private String judgeId;
 
     @JsonProperty("startTime")
-    private Long startTime;
+    private OffsetDateTime startTime;
 
     @JsonProperty("endTime")
-    private Long endTime;
+    private OffsetDateTime endTime;
 
     @JsonProperty("tenantId")
     @NotNull
@@ -38,5 +39,5 @@ public class BulkReschedulingOfHearings {
 
     @JsonProperty("scheduleAfter")
     @NotNull
-    private Long scheduleAfter;
+    private OffsetDateTime scheduleAfter;
 }

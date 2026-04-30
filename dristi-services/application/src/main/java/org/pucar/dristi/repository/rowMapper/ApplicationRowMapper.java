@@ -4,28 +4,42 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import lombok.extern.slf4j.Slf4j;
-import org.egov.common.contract.models.AuditDetails;
+import org.pucar.dristi.web.models.AuditDetails;
 import org.egov.tracer.model.CustomException;
 import org.postgresql.util.PGobject;
 import org.pucar.dristi.web.models.Application;
 import org.pucar.dristi.web.models.Comment;
 import org.pucar.dristi.web.models.IssuedBy;
 import org.pucar.dristi.web.models.StatuteSection;
+import org.pucar.dristi.util.DateUtil;
 import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.OffsetDateTime;
 import java.util.*;
 
 import static org.pucar.dristi.config.ServiceConstants.JSON_PARSE_ERROR;
 import static org.pucar.dristi.config.ServiceConstants.ROW_MAPPER_EXCEPTION;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Component
 @Slf4j
 public class ApplicationRowMapper implements ResultSetExtractor<List<Application>> {
     private final ObjectMapper objectMapper = new ObjectMapper();
+    
+    private final DateUtil dateUtil;
+    
+    @Autowired
+    public ApplicationRowMapper(DateUtil dateUtil) {
+        this.dateUtil = dateUtil;
+    }
 
     public List<Application> extractData(ResultSet rs) throws SQLException {
         Map<String, Application> applicationMap = new LinkedHashMap<>();
@@ -37,15 +51,15 @@ public class ApplicationRowMapper implements ResultSetExtractor<List<Application
                 Application application = applicationMap.get(uuid);
 
                 if (application == null) {
-                    Long lastModifiedTime = rs.getLong("lastmodifiedtime");
-                    if (rs.wasNull()) {
-                        lastModifiedTime = null;
-                    }
+                    Timestamp lastModifiedTimeTs = rs.getTimestamp("lastmodifiedtime");
+                    OffsetDateTime lastModifiedTime = lastModifiedTimeTs != null ? dateUtil.timestampToOffsetDateTime(lastModifiedTimeTs) : null;
+                    Timestamp createdTimeTs = rs.getTimestamp("createdtime");
+                    OffsetDateTime createdTime = createdTimeTs != null ? dateUtil.timestampToOffsetDateTime(createdTimeTs) : null;
 
 
                     AuditDetails auditdetails = AuditDetails.builder()
                             .createdBy(rs.getString("createdby"))
-                            .createdTime(rs.getLong("createdtime"))
+                            .createdTime(createdTime)
                             .lastModifiedBy(rs.getString("lastmodifiedby"))
                             .lastModifiedTime(lastModifiedTime)
                             .build();
@@ -57,7 +71,7 @@ public class ApplicationRowMapper implements ResultSetExtractor<List<Application
                             .caseId(rs.getString("caseid"))
                             .filingNumber(rs.getString("filingnumber"))
                             .referenceId(toUUID(rs.getString("referenceid")))
-                            .createdDate(rs.getLong("createddate"))
+                            .createdDate(rs.getTimestamp("createddate") != null ? dateUtil.timestampToOffsetDateTime(rs.getTimestamp("createddate")) : null)
                             .createdBy(toUUID(rs.getString("applicationcreatedby")))
                             .tenantId(rs.getString("tenantid"))
                             .courtId(rs.getString("courtId"))

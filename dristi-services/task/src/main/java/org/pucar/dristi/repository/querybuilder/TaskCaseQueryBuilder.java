@@ -154,7 +154,7 @@ public class TaskCaseQueryBuilder {
         if (taskCaseSearchCriteria.getHearingDate() != null) {
             addClauseIfRequired(query, preparedStmtList);
             query.append(" (task.taskDetails -> 'caseDetails' ->> 'hearingDate')::bigint = ? ");
-            preparedStmtList.add(taskCaseSearchCriteria.getHearingDate());
+            preparedStmtList.add(taskCaseSearchCriteria.getHearingDate().toInstant().toEpochMilli());
         }
 
         if (taskCaseSearchCriteria.getIsPendingCollection() != null) {

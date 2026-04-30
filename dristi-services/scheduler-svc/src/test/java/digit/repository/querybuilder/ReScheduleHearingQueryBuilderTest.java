@@ -8,6 +8,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +41,7 @@ public class ReScheduleHearingQueryBuilderTest {
         searchCriteria.setHearingBookingId("booking1");
         searchCriteria.setRequesterId("requester1");
         searchCriteria.setStatus("RESCHEDULE");
-        searchCriteria.setDueDate(2L);
+        searchCriteria.setDueDate(OffsetDateTime.of(2023, 1, 2, 0, 0, 0, 0, ZoneOffset.UTC));
 
         List<Object> preparedStmtList = new ArrayList<>();
         List<Integer> preparedStmtArgList = new ArrayList<>();

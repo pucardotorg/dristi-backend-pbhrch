@@ -1,6 +1,9 @@
 package org.pucar.dristi.repository.rowmapper;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -12,16 +15,28 @@ import org.egov.tracer.model.CustomException;
 import org.postgresql.util.PGobject;
 import org.pucar.dristi.web.models.AdvocateMapping;
 import org.pucar.dristi.web.models.Advocate;
+import org.pucar.dristi.util.DateUtil;
 import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Component
 @Slf4j
 public class RepresentativeRowMapper implements ResultSetExtractor<Map<UUID, List<AdvocateMapping>>> {
+    
+    private final DateUtil dateUtil;
+    
+    @Autowired
+    public RepresentativeRowMapper(DateUtil dateUtil) {
+        this.dateUtil = dateUtil;
+    }
     public Map<UUID, List<AdvocateMapping>> extractData(ResultSet rs) {
         Map<UUID, List<AdvocateMapping>> advocateMap = new LinkedHashMap<>();
 
@@ -31,13 +46,14 @@ public class RepresentativeRowMapper implements ResultSetExtractor<Map<UUID, Lis
                 String id = rs.getString("case_id");
                 UUID uuid = UUID.fromString(id != null ? id : "00000000-0000-0000-0000-000000000000");
 
-                Long lastModifiedTime = rs.getLong("lastmodifiedtime");
+                Timestamp lastModifiedTimeTs = rs.getTimestamp("lastmodifiedtime");
+                Timestamp createdTimeTs = rs.getTimestamp("createdtime");
 
                 AuditDetails auditdetails = AuditDetails.builder()
                         .createdBy(rs.getString("createdby"))
-                        .createdTime(rs.getLong("createdtime"))
+                        .createdTime(createdTimeTs != null ? createdTimeTs.getTime() : null)
                         .lastModifiedBy(rs.getString("lastmodifiedby"))
-                        .lastModifiedTime(lastModifiedTime)
+                        .lastModifiedTime(lastModifiedTimeTs != null ? lastModifiedTimeTs.getTime() : null)
                         .build();
                 AdvocateMapping advocateMapping = AdvocateMapping.builder()
                         .id(rs.getString("id"))

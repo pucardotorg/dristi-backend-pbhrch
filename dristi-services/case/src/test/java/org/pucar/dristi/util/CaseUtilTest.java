@@ -6,14 +6,21 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.pucar.dristi.config.Configuration;
 
 public class CaseUtilTest {
+
+    @Mock
+    private Configuration config;
 
     private CaseUtil caseUtil;
 
     @BeforeEach
     public void setup() {
-        caseUtil = new CaseUtil();
+        MockitoAnnotations.openMocks(this);
+        caseUtil = new CaseUtil(config);
     }
     @Test
     public void getCNRNumber_returnsExpectedFormat() {

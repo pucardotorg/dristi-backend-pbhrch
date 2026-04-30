@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.validation.annotation.Validated;
 
+import java.time.OffsetDateTime;
+
 @Validated
 @jakarta.annotation.Generated(value = "org.egov.codegen.SpringBootCodegen", date = "2024-04-15T11:31:40.281899+05:30[Asia/Kolkata]")
 @Getter
@@ -32,10 +34,10 @@ public class HearingCriteria {
     private String applicationNumber;
 
     @JsonProperty("fromDate")
-    private Long fromDate;
+    private OffsetDateTime fromDate;
 
     @JsonProperty("toDate")
-    private Long toDate;
+    private OffsetDateTime toDate;
 
     @JsonProperty("attendeeIndividualId")
     private String attendeeIndividualId;

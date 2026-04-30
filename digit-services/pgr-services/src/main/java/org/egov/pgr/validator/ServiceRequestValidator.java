@@ -15,6 +15,9 @@ import org.springframework.util.StringUtils;
 import java.util.*;
 
 import static org.egov.pgr.util.PGRConstants.*;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Component
 public class ServiceRequestValidator {
@@ -186,7 +189,7 @@ public class ServiceRequestValidator {
 
         Service service = request.getService();
         RequestInfo requestInfo = request.getRequestInfo();
-        Long lastModifiedTime = service.getAuditDetails().getLastModifiedTime();
+        Long lastModifiedTime = service.getAuditDetails().getLastModifiedTime().toInstant().toEpochMilli();
 
         if(requestInfo.getUserInfo().getType().equalsIgnoreCase(USERTYPE_CITIZEN)){
             if(!requestInfo.getUserInfo().getUuid().equalsIgnoreCase(service.getAccountId()))

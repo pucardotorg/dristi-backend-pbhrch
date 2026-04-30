@@ -47,6 +47,9 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.SafeHtml;
 import org.springframework.validation.annotation.Validated;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Validated
 @EqualsAndHashCode(exclude = {"auditDetails"})

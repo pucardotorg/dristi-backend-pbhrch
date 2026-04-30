@@ -3,6 +3,7 @@ package digit.web.models.demand;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
+import digit.web.models.AuditDetails;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -11,12 +12,15 @@ import lombok.Builder;
 import lombok.Builder.Default;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.egov.common.contract.models.AuditDetails;
 import org.egov.common.contract.request.User;
 
 import java.math.BigDecimal;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 /**
  * A Object which holds the basic info about the revenue assessment for which the demand is generated like module name, consumercode, owner, etc.
@@ -53,11 +57,11 @@ public class Demand {
 
     @NotNull
     @JsonProperty("taxPeriodFrom")
-    private Long taxPeriodFrom;
+    private OffsetDateTime taxPeriodFrom;
 
     @NotNull
     @JsonProperty("taxPeriodTo")
-    private Long taxPeriodTo;
+    private OffsetDateTime taxPeriodTo;
 
     @Default
     @JsonProperty("demandDetails")
@@ -70,10 +74,10 @@ public class Demand {
     private AuditDetails auditDetails;
 
     @JsonProperty("fixedBillExpiryDate")
-    private Long fixedBillExpiryDate;
+    private OffsetDateTime fixedBillExpiryDate;
 
     @JsonProperty("billExpiryTime")
-    private Long billExpiryTime;
+    private OffsetDateTime billExpiryTime;
 
     @JsonProperty("additionalDetails")
     private Object additionalDetails;

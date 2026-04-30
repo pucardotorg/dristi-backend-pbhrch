@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @Data
@@ -36,7 +37,7 @@ public class ReScheduleHearingReqSearchCriteria {
 
 
     @JsonProperty("dueDate")
-    private Long dueDate;
+    private OffsetDateTime dueDate;
 
     @JsonProperty("status")
     private String status;

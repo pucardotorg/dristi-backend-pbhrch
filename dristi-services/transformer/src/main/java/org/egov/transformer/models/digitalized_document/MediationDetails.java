@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,19 +24,19 @@ public class MediationDetails {
     private String natureOfComplainant = null;
 
     @JsonProperty("dateOfInstitution")
-    private Long dateOfInstitution = null;
+    private OffsetDateTime dateOfInstitution = null;
 
     @JsonProperty("caseStage")
     private String caseStage = null;
 
     @JsonProperty("pdfCreatedDate")
-    private Long pdfCreatedDate = null;
+    private OffsetDateTime pdfCreatedDate = null;
 
     @JsonProperty("hearingDate")
-    private Long hearingDate = null;
+    private OffsetDateTime hearingDate = null;
 
     @JsonProperty("dateOfEndADR")
-    private Long dateOfEndADR = null;
+    private OffsetDateTime dateOfEndADR = null;
 
     @JsonProperty("mediationCentre")
     private String mediationCentre = null;

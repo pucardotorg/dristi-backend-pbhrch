@@ -13,7 +13,13 @@ import org.springframework.jdbc.core.RowMapper;
 
 import java.io.IOException;
 import java.sql.ResultSet;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.sql.SQLException;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
 import static java.util.Objects.isNull;
@@ -28,11 +34,13 @@ public class TransactionRowMapper implements RowMapper<Transaction> {
     @Override
     public Transaction mapRow(ResultSet resultSet, int i) throws SQLException {
 
+        Long createdTime = resultSet.getLong("created_time");
+        Long lastModifiedTime = resultSet.getLong("last_modified_time");
         AuditDetails auditDetails = new AuditDetails(
                 resultSet.getString("created_by"),
-                resultSet.getLong("created_time"),
+                createdTime != null && createdTime != 0 ? java.time.OffsetDateTime.ofInstant(java.time.Instant.ofEpochMilli(createdTime), java.time.ZoneId.systemDefault()) : null,
                 resultSet.getString("last_modified_by"),
-                resultSet.getLong("last_modified_time"));
+                lastModifiedTime != null && lastModifiedTime != 0 ? java.time.OffsetDateTime.ofInstant(java.time.Instant.ofEpochMilli(lastModifiedTime), java.time.ZoneId.systemDefault()) : null);
 
         User user = User.builder()
                 .uuid(resultSet.getString("user_uuid"))

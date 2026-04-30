@@ -15,6 +15,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.pucar.dristi.config.ServiceConstants.*;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Component
 @Slf4j
@@ -42,8 +45,8 @@ public class HearingQueryBuilder {
             String hearingType = criteria.getHearingType();
             String filingNumber = criteria.getFilingNumber();
             String tenantId = criteria.getTenantId();
-            Long fromDate = criteria.getFromDate();
-            Long toDate = criteria.getToDate();
+            java.time.OffsetDateTime fromDate = criteria.getFromDate();
+            java.time.OffsetDateTime toDate = criteria.getToDate();
             String attendeeIndividualId = criteria.getAttendeeIndividualId();
             String courtId = criteria.getCourtId();
             String status = criteria.getStatus();
@@ -76,11 +79,11 @@ public class HearingQueryBuilder {
         }
     }
 
-    void addCriteriaDate(Long criteria, StringBuilder query, String str, List<Object> preparedStmtList, List<Integer> preparedStmtArgList) {
+    void addCriteriaDate(java.time.OffsetDateTime criteria, StringBuilder query, String str, List<Object> preparedStmtList, List<Integer> preparedStmtArgList) {
         if (criteria != null) {
             query.append(str);
-            preparedStmtList.add(criteria);
-            preparedStmtArgList.add(Types.BIGINT);
+            preparedStmtList.add(java.sql.Timestamp.from(criteria.toInstant()));
+            preparedStmtArgList.add(Types.TIMESTAMP_WITH_TIMEZONE);
         }
     }
     public String addOrderByQuery(String query, Pagination pagination) {
@@ -135,7 +138,7 @@ public class HearingQueryBuilder {
         preparedStmtList.add(hearing.getVcLink());
         preparedStmtList.add(hearing.getNotes());
         preparedStmtList.add(hearing.getAuditDetails().getLastModifiedBy());
-        preparedStmtList.add(hearing.getAuditDetails().getLastModifiedTime());
+        preparedStmtList.add(hearing.getAuditDetails().getLastModifiedTime() != null ? java.sql.Timestamp.from(hearing.getAuditDetails().getLastModifiedTime().toInstant()) : null);
         preparedStmtList.add(hearing.getHearingSummary());
         preparedStmtList.add(hearing.getHearingId());
         preparedStmtList.add(hearing.getTenantId());

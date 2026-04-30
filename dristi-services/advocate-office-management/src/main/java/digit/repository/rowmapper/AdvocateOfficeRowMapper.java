@@ -15,6 +15,9 @@ import java.util.*;
 
 import static digit.config.ServiceConstants.ROW_MAPPER_ERROR;
 import static digit.config.ServiceConstants.ROW_MAPPER_ERROR_MESSAGE;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Component
 @Slf4j
@@ -58,27 +61,38 @@ public class AdvocateOfficeRowMapper implements ResultSetExtractor<List<AddMembe
                             .build();
 
                     memberMap.put(id, member);
+
                 }
+
             }
         } catch (Exception e) {
             log.error("Error occurred while processing AddMember ResultSet", e);
             throw new CustomException(ROW_MAPPER_ERROR, ROW_MAPPER_ERROR_MESSAGE + e.getMessage());
+
         }
-
         return new ArrayList<>(memberMap.values());
-    }
 
+    }
     private MemberType getMemberType(ResultSet rs) throws SQLException {
         String type = rs.getString("member_type");
         return type == null ? null : MemberType.valueOf(type);
-    }
 
+    }
     private AccessType getAccessType(ResultSet rs) throws SQLException {
         String type = rs.getString("access_type");
         return type == null ? AccessType.ALL_CASES : AccessType.valueOf(type);
-    }
 
+    }
     private UUID getUuidFromString(String uuidStr) {
         return uuidStr == null ? null : UUID.fromString(uuidStr);
+
+    }
+
+
+    private OffsetDateTime convertToOffsetDateTime(Long epochMillis) {
+        if (epochMillis == null || epochMillis == 0) {
+            return null;
+        }
+        return OffsetDateTime.ofInstant(Instant.ofEpochMilli(epochMillis), ZoneId.systemDefault());
     }
 }

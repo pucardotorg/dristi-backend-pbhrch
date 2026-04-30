@@ -14,6 +14,8 @@ import org.egov.common.contract.request.RequestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -116,7 +118,7 @@ public class NotificationService {
                 .contentType("TEXT")
                 .category("NOTIFICATION")
                 .locale(NOTIFICATION_ENG_LOCALE_CODE)
-                .expiryTime(System.currentTimeMillis() + 60 * 60 * 1000)
+                .expiryTime(OffsetDateTime.now(ZoneId.of(config.getZoneId())).plusHours(1).toInstant().toEpochMilli())
                 .message(message).build();
         log.info("push message {}", smsRequest);
 

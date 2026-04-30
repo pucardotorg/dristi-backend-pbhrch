@@ -24,6 +24,7 @@ import pucar.web.models.courtCase.CourtCase;
 import pucar.web.models.task.*;
 
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -142,7 +143,7 @@ public class TaskUtil {
                 .orderId(order.getId())
                 .filingNumber(order.getFilingNumber())
                 .cnrNumber(order.getCnrNumber())
-                .createdDate(dateUtil.getCurrentTimeInMilis())
+                .createdDate(OffsetDateTime.now())
                 .taskType(order.getOrderType())
                 .caseId(courtCase.getId().toString())
                 .caseTitle(courtCase.getCaseTitle())
@@ -201,7 +202,7 @@ public class TaskUtil {
             }
             deliveryChannels.put("isPendingCollection", false);
             if (hasUpfrontPayment) {
-                LocalDate feePaidDate = dateUtil.getLocalDateFromEpoch(courtCase.getFilingDate());
+                LocalDate feePaidDate = courtCase.getFilingDate() != null ? courtCase.getFilingDate().toLocalDate() : LocalDate.now();
                 deliveryChannels.put("feePaidDate", feePaidDate.format(DateTimeFormatter.ofPattern(LOCAL_DATE_FORMAT)));
                 if (RPAD.equalsIgnoreCase(channel)) {
                     deliveryChannels.put("isPendingCollection", true);
@@ -220,7 +221,7 @@ public class TaskUtil {
                 .orderId(order.getId())
                 .filingNumber(order.getFilingNumber())
                 .cnrNumber(order.getCnrNumber())
-                .createdDate(dateUtil.getCurrentTimeInMilis())
+                .createdDate(OffsetDateTime.now())
                 .taskType(order.getOrderType())
                 .caseId(courtCase.getId().toString())
                 .caseTitle(courtCase.getCaseTitle())

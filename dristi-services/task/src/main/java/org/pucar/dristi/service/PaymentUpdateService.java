@@ -38,6 +38,9 @@ import java.util.stream.Collectors;
 import org.pucar.dristi.web.models.order.Order;
 
 import static org.pucar.dristi.config.ServiceConstants.*;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Slf4j
 @Service
@@ -57,11 +60,12 @@ public class PaymentUpdateService {
     private final AdvocateUtil advocateUtil;
     private final JsonUtil jsonUtil;
     private final OrderUtil orderUtil;
+    private final DateUtil dateUtil;
 
     private ServiceRequestRepository serviceRequestRepository;
 
     @Autowired
-    public PaymentUpdateService(WorkflowUtil workflowUtil, ObjectMapper mapper, TaskRepository repository, Producer producer, Configuration config, MdmsUtil mdmsUtil, ObjectMapper objectMapper, ServiceRequestRepository serviceRequestRepository, DemandUtil demandUtil, EtreasuryUtil etreasuryUtil, PendingTaskUtil pendingTaskUtil, CaseUtil caseUtil, AdvocateUtil advocateUtil, JsonUtil jsonUtil, OrderUtil orderUtil) {
+    public PaymentUpdateService(WorkflowUtil workflowUtil, ObjectMapper mapper, TaskRepository repository, Producer producer, Configuration config, MdmsUtil mdmsUtil, ObjectMapper objectMapper, ServiceRequestRepository serviceRequestRepository, DemandUtil demandUtil, EtreasuryUtil etreasuryUtil, PendingTaskUtil pendingTaskUtil, CaseUtil caseUtil, AdvocateUtil advocateUtil, JsonUtil jsonUtil, OrderUtil orderUtil, DateUtil dateUtil) {
         this.workflowUtil = workflowUtil;
         this.mapper = mapper;
         this.repository = repository;
@@ -77,6 +81,7 @@ public class PaymentUpdateService {
         this.advocateUtil = advocateUtil;
         this.jsonUtil = jsonUtil;
         this.orderUtil = orderUtil;
+        this.dateUtil = dateUtil;
     }
 
     public void process(Map<String, Object> record) {
@@ -213,7 +218,7 @@ public class PaymentUpdateService {
                     task.setStatus(status);
                     updateDeliveryChannels(task);
                     createPendingTaskForRPAD(task, requestInfo);
-                    task.getAuditDetails().setLastModifiedTime(System.currentTimeMillis());
+                    task.getAuditDetails().setLastModifiedTime(dateUtil.getCurrentOffsetDateTime());
                     task.getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getUuid());
 
                     TaskRequest taskRequest = TaskRequest.builder().requestInfo(requestInfo).task(task).build();
@@ -228,7 +233,7 @@ public class PaymentUpdateService {
                     task.setStatus(status);
                     updateDeliveryChannels(task);
                     createPendingTaskForRPAD(task, requestInfo);
-                    task.getAuditDetails().setLastModifiedTime(System.currentTimeMillis());
+                    task.getAuditDetails().setLastModifiedTime(dateUtil.getCurrentOffsetDateTime());
                     task.getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getUuid());
 
                     TaskRequest taskRequest = TaskRequest.builder().requestInfo(requestInfo).task(task).build();
@@ -243,7 +248,7 @@ public class PaymentUpdateService {
                     task.setStatus(status);
                     updateDeliveryChannels(task);
                     createPendingTaskForRPAD(task, requestInfo);
-                    task.getAuditDetails().setLastModifiedTime(System.currentTimeMillis());
+                    task.getAuditDetails().setLastModifiedTime(dateUtil.getCurrentOffsetDateTime());
                     task.getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getUuid());
 
                     TaskRequest taskRequest = TaskRequest.builder().requestInfo(requestInfo).task(task).build();

@@ -121,7 +121,7 @@ public class OrderUtil {
         // get orders which are created after this hearing scheduled
         OrderCriteria orderCriteria = OrderCriteria.builder()
                 .fromPublishedDate(response.getList().get(0).getCreatedDate())
-                .toPublishedDate(System.currentTimeMillis())
+                .toPublishedDate(java.time.OffsetDateTime.now())
                 .filingNumber(response.getList().get(0).getFilingNumber())
                 .status(PUBLISHED)
                 .tenantId(tenantId)
@@ -143,8 +143,8 @@ public class OrderUtil {
         Order nextScheduleOrder = orderListResponse.getList().stream().filter(order -> order.getScheduledHearingNumber() != null && !order.getScheduledHearingNumber().equals(hearingId)).findFirst().orElse(null);
         if (nextScheduleOrder != null) {
             log.info("Found next schedule order for hearingId: {}", hearingId);
-            Long createdDate = nextScheduleOrder.getCreatedDate();
-            orderListResponse.getList().removeIf(order -> order.getCreatedDate() >= createdDate);
+            java.time.OffsetDateTime createdDate = nextScheduleOrder.getCreatedDate();
+            orderListResponse.getList().removeIf(order -> order.getCreatedDate() != null && !order.getCreatedDate().isBefore(createdDate));
         }
 
         List<Order> filteredOrders = orderListResponse.getList().stream()

@@ -1,6 +1,7 @@
 package digit.web.models.advocate;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import digit.web.models.AuditDetails;
 import digit.web.models.Document;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -9,12 +10,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.egov.common.contract.models.AuditDetails;
 import org.egov.common.contract.models.Workflow;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 
 @Data

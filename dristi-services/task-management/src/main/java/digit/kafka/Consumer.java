@@ -181,8 +181,8 @@ public class Consumer {
 
     private void addFeePaidDate(TaskManagement taskManagement, RequestInfo requestInfo) {
         CourtCase courtCase = fetchCase(requestInfo, taskManagement.getFilingNumber());
-        Long filingDate = courtCase.getFilingDate();
-        LocalDate feePaidDate = dateUtil.getLocalDateFromEpoch(filingDate);
+        java.time.OffsetDateTime filingDate = courtCase.getFilingDate();
+        LocalDate feePaidDate = filingDate != null ? filingDate.toLocalDate() : java.time.LocalDate.now();
         for(PartyDetails partyDetail : taskManagement.getPartyDetails()) {
             partyDetail.getDeliveryChannels().forEach(deliveryChannel -> {
                 deliveryChannel.setFeePaidDate(feePaidDate.format(DateTimeFormatter.ofPattern(DATE_FORMAT)));

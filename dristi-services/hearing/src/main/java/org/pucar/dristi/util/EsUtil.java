@@ -45,8 +45,8 @@ public class EsUtil {
         String caseNumber = openHearing.getCaseNumber();
         String stage = openHearing.getStage();
         String status = openHearing.getStatus();
-        Long fromDate = openHearing.getFromDate();
-        Long toDate = openHearing.getToDate();
+        Long fromDate = openHearing.getFromDate() != null ? openHearing.getFromDate().toInstant().toEpochMilli() : null;
+        Long toDate = openHearing.getToDate() != null ? openHearing.getToDate().toInstant().toEpochMilli() : null;
         String subStage = openHearing.getSubStage();
         String courtId = openHearing.getCourtId();
         Advocate advocate = openHearing.getAdvocate();
@@ -57,7 +57,7 @@ public class EsUtil {
         List<String> searchableFields = openHearing.getSearchableFields();
         String searchableFieldsString = new JSONArray(searchableFields).toString();
         String hearingType = openHearing.getHearingType();
-        Long caseFilingDate = openHearing.getCaseFilingDate();
+        Long caseFilingDate = openHearing.getCaseFilingDate() != null ? openHearing.getCaseFilingDate().toInstant().toEpochMilli() : null;
         Integer statusOrder = openHearing.getStatusOrder();
         Integer hearingTypeOrder = openHearing.getHearingTypeOrder();
         int serialNumber = openHearing.getSerialNumber();

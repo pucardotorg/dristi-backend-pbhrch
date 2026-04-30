@@ -22,7 +22,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.io.ByteArrayResource;
 
+import java.time.OffsetDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.*;
 
 import static digit.config.ServiceConstants.*;
@@ -86,7 +88,7 @@ public class DiaryServiceTest {
         diary.setId(UUID.randomUUID());
         diary.setTenantId("tenant1");
         diary.setDiaryType("ADiary");
-        diary.setDiaryDate(2L);
+        diary.setDiaryDate(OffsetDateTime.now(ZoneOffset.UTC).minusDays(1));
         diary.setDocuments(new ArrayList<>());
         caseDiaryRequest.setDiary(diary);
         caseDiaryRequest.setRequestInfo(new RequestInfo());
@@ -175,7 +177,7 @@ public class DiaryServiceTest {
         generateRequest.getDiary().setDocuments(Collections.singletonList(caseDiaryDocument));
 
         List<CaseDiaryEntry> caseDiaryEntries = Collections.singletonList(CaseDiaryEntry.builder()
-                        .hearingDate(2L)
+                        .hearingDate(OffsetDateTime.now(ZoneOffset.UTC))
                 .build());
 
         when(diaryEntryService.searchDiaryEntries(any())).thenReturn(caseDiaryEntries);

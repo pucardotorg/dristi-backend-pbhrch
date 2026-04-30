@@ -2,7 +2,7 @@ package org.pucar.dristi.enrichment;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.extern.slf4j.Slf4j;
-import org.egov.common.contract.models.AuditDetails;
+import org.pucar.dristi.util.DateUtil;
 import org.egov.common.contract.models.Document;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.model.CustomException;
@@ -14,10 +14,14 @@ import org.pucar.dristi.web.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 
 import static org.pucar.dristi.config.ServiceConstants.*;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Component
 @Slf4j
@@ -26,13 +30,15 @@ public class EvidenceEnrichment {
     private Configuration configuration;
     private final CaseUtil caseUtil;
     private final EvidenceRepository evidenceRepository;
+    private final DateUtil dateUtil;
 
     @Autowired
-    public EvidenceEnrichment(IdgenUtil idgenUtil, Configuration configuration, CaseUtil caseUtil, EvidenceRepository evidenceRepository) {
+    public EvidenceEnrichment(IdgenUtil idgenUtil, Configuration configuration, CaseUtil caseUtil, EvidenceRepository evidenceRepository, DateUtil dateUtil) {
         this.idgenUtil = idgenUtil;
         this.configuration = configuration;
         this.caseUtil = caseUtil;
         this.evidenceRepository = evidenceRepository;
+        this.dateUtil = dateUtil;
     }
 
     public void enrichEvidenceRegistration(EvidenceRequest evidenceRequest) {
@@ -53,11 +59,12 @@ public class EvidenceEnrichment {
 
             evidenceRequest.getArtifact().setArtifactNumber(evidenceRequest.getArtifact().getFilingNumber()+"-"+artifactNumberList.get(0));
 
+            OffsetDateTime now = dateUtil.getCurrentOffsetDateTime();
             AuditDetails auditDetails = AuditDetails.builder()
                     .createdBy(evidenceRequest.getRequestInfo().getUserInfo().getUuid())
-                    .createdTime(System.currentTimeMillis())
+                    .createdTime(now)
                     .lastModifiedBy(evidenceRequest.getRequestInfo().getUserInfo().getUuid())
-                    .lastModifiedTime(System.currentTimeMillis())
+                    .lastModifiedTime(now)
                     .build();
 
             evidenceRequest.getArtifact().setAuditdetails(auditDetails);
@@ -68,7 +75,7 @@ public class EvidenceEnrichment {
 
             evidenceRequest.getArtifact().setCourtId(getCourtId(evidenceRequest));
             evidenceRequest.getArtifact().setIsActive(true);
-            evidenceRequest.getArtifact().setCreatedDate(System.currentTimeMillis());
+            evidenceRequest.getArtifact().setCreatedDate(now);
 
             if (evidenceRequest.getArtifact().getFile() != null) {
                 evidenceRequest.getArtifact().getFile().setId(String.valueOf(UUID.randomUUID()));
@@ -156,7 +163,7 @@ public class EvidenceEnrichment {
                     false
             );
 
-            evidenceRequest.getArtifact().setPublishedDate(System.currentTimeMillis());
+            evidenceRequest.getArtifact().setPublishedDate(dateUtil.getCurrentOffsetDateTime());
             evidenceRequest.getArtifact().setEvidenceNumber(evidenceRequest.getArtifact().getFilingNumber()+"-"+evidenceNumberList.get(0));
             evidenceRequest.getArtifact().setIsEvidence(true);
         } catch (Exception e) {
@@ -181,7 +188,7 @@ public class EvidenceEnrichment {
     public void enrichEvidenceRegistrationUponUpdate(EvidenceRequest evidenceRequest) {
         try {
             // Enrich lastModifiedTime and lastModifiedBy in case of update
-            evidenceRequest.getArtifact().getAuditdetails().setLastModifiedTime(System.currentTimeMillis());
+            evidenceRequest.getArtifact().getAuditdetails().setLastModifiedTime(dateUtil.getCurrentOffsetDateTime());
             evidenceRequest.getArtifact().getAuditdetails().setLastModifiedBy(evidenceRequest.getRequestInfo().getUserInfo().getUuid());
             Document seal = evidenceRequest.getArtifact().getSeal();
             if(seal != null && seal.getId() == null){

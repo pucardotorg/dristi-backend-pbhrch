@@ -9,6 +9,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 
+import java.time.OffsetDateTime;
+
 @Schema(description = "This object holds information about the hearingList response")
 @Validated
 @jakarta.annotation.Generated(value = "org.egov.codegen.SpringBootCodegen", date = "2024-04-18T11:14:11.072458+05:30[Asia/Calcutta]")
@@ -24,10 +26,10 @@ public class HearingResponse {
 
     @JsonProperty("hearingStartTime")
     @Valid
-    private Long hearingStartTime = null;
+    private OffsetDateTime hearingStartTime = null;
 
     @JsonProperty("hearingEndTime")
     @Valid
-    private Long hearingEndTime = null;
+    private OffsetDateTime hearingEndTime = null;
 
 }

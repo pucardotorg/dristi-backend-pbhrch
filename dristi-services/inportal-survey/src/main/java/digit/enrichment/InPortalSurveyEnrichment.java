@@ -30,7 +30,7 @@ public class InPortalSurveyEnrichment {
 
     public SurveyTracker enrichCreateSurveyTracker(EligibilityRequest eligibilityRequest) {
 
-        Long currentTime = inPortalSurveyUtil.getCurrentTimeInMilliSec();
+        long currentTime = inPortalSurveyUtil.getCurrentTimeInMilliSec();
         String userUuid = eligibilityRequest.getRequestInfo().getUserInfo().getUuid();
 
         AuditDetails auditDetails = AuditDetails.builder()
@@ -63,10 +63,10 @@ public class InPortalSurveyEnrichment {
 
     public SurveyTracker enrichSurveyTrackerForRemindMeLater(RemindMeLaterRequest request, SurveyTracker surveyTracker) {
 
-        Long currentTime = inPortalSurveyUtil.getCurrentTimeInMilliSec();
+        long currentTime = inPortalSurveyUtil.getCurrentTimeInMilliSec();
 
         surveyTracker.setRemindMeLater(true);
-        surveyTracker.setLastTriggeredDate(currentTime);
+        surveyTracker.setLastTriggeredDate(java.time.Instant.ofEpochMilli(currentTime).atOffset(java.time.ZoneOffset.UTC));
         surveyTracker.setAttempts(0);
         
         AuditDetails auditDetails = surveyTracker.getAuditDetails();
@@ -81,7 +81,7 @@ public class InPortalSurveyEnrichment {
 
     public SurveyTracker enrichSurveyTrackerForFeedBack(FeedBackRequest request, SurveyTracker surveyTracker) {
 
-        Long currentTime = inPortalSurveyUtil.getCurrentTimeInMilliSec();
+        long currentTime = inPortalSurveyUtil.getCurrentTimeInMilliSec();
         String userUuid = request.getRequestInfo().getUserInfo().getUuid();
 
         request.getFeedBack().setUuid(inPortalSurveyUtil.generateUUID().toString());
@@ -109,7 +109,7 @@ public class InPortalSurveyEnrichment {
         surveyTracker.setRemindMeLater(false);
 
         // update last triggered date to current time
-        surveyTracker.setLastTriggeredDate(currentTime);
+        surveyTracker.setLastTriggeredDate(java.time.Instant.ofEpochMilli(currentTime).atOffset(java.time.ZoneOffset.UTC));
 
         return surveyTracker;
     }

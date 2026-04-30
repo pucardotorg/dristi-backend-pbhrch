@@ -7,6 +7,8 @@ import lombok.Data;
 import org.egov.common.contract.models.Address;
 import org.springframework.validation.annotation.Validated;
 
+import java.time.OffsetDateTime;
+
 @Validated
 @jakarta.annotation.Generated(value = "org.egov.codegen.SpringBootCodegen", date = "2024-05-29T13:38:04.562296+05:30[Asia/Calcutta]")
 @Data
@@ -29,7 +31,7 @@ public class CaseDetails {
     private String caseCharge;
 
     @JsonProperty("hearingDate")
-    private Long hearingDate;
+    private OffsetDateTime hearingDate;
 
     @JsonProperty("judgeName")
     private String judgeName;

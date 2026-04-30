@@ -81,7 +81,7 @@ public class OrderService {
             throw new CustomException("ERROR", "Error occurred while processing json");
         }
         LocalDate today = LocalDate.now(ZoneId.of(configuration.getZoneId()));
-        Long now = dateUtil.getEPochFromLocalDate(today);
+        java.time.OffsetDateTime now = today.atStartOfDay().atOffset(java.time.ZoneOffset.UTC);
         request.getOrder().setCreatedDate(now);
         OrderResponse orderResponse = orderUtil.createOrder(request);
         log.info("created order, result= SUCCESS");

@@ -74,18 +74,20 @@ public class RequestOptOutScheduleTask {
             }
 
             // due date for opt out
-            Long dueDate = dateUtil.getEpochFromLocalDateTime(LocalDateTime.now().minusHours(unit));
+            java.time.OffsetDateTime dueDate = java.time.Instant.ofEpochMilli(dateUtil.getEpochFromLocalDateTime(LocalDateTime.now().minusHours(unit))).atOffset(java.time.ZoneOffset.UTC);
             List<ReScheduleHearing> reScheduleHearings = reScheduleRepository.getReScheduleRequest(ReScheduleHearingReqSearchCriteria.builder().tenantId(config.getEgovStateTenantId()).dueDate(dueDate).build(), null, null);
 
             for (ReScheduleHearing reScheduleHearing : reScheduleHearings) {
                 List<OptOut> optOuts = requestOptOutRepository.getOptOut(OptOutSearchCriteria.builder().judgeId(reScheduleHearing.getJudgeId()).caseId(reScheduleHearing.getCaseId()).rescheduleRequestId(reScheduleHearing.getRescheduledRequestId()).tenantId(reScheduleHearing.getTenantId()).build(), null, null);
 
 
-                List<Long> suggestedDays = new ArrayList<>(reScheduleHearing.getSuggestedDates());
-                List<Long> availableDates = new ArrayList<>(suggestedDays);
+                List<java.time.OffsetDateTime> suggestedDays = new ArrayList<>(reScheduleHearing.getSuggestedDates());
+                List<java.time.OffsetDateTime> availableDates = new ArrayList<>(suggestedDays);
 
                 for (OptOut optOut : optOuts) {
-                    List<Long> optOutDates = optOut.getOptoutDates();
+                    List<java.time.OffsetDateTime> optOutDates = optOut.getOptoutDates() != null
+                            ? optOut.getOptoutDates().stream().map(e -> java.time.Instant.ofEpochMilli(e).atOffset(java.time.ZoneOffset.UTC)).toList()
+                            : java.util.Collections.emptyList();
                     availableDates.removeAll(optOutDates);
                 }
 

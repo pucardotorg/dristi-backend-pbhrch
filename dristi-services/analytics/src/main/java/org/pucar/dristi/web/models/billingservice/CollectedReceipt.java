@@ -2,9 +2,14 @@ package org.pucar.dristi.web.models.billingservice;
 
 import org.egov.common.contract.models.AuditDetails;
 
+import java.time.OffsetDateTime;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Data
 @NoArgsConstructor
@@ -19,7 +24,7 @@ public class CollectedReceipt {
 
 	private Double receiptAmount;
 
-	private Long receiptDate;
+	private OffsetDateTime receiptDate;
 
 	private Status status;
 

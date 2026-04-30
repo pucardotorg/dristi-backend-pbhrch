@@ -71,9 +71,9 @@ public class PaymentUpdateServiceTest {
         paymentDetail.setTenantId("tenantId");
         AuditDetails auditDetails = new AuditDetails();
         auditDetails.setCreatedBy("createdBy");
-        auditDetails.setCreatedTime(123456789L);
+        auditDetails.setCreatedTime(java.time.Instant.ofEpochMilli(123456789L).atOffset(java.time.ZoneOffset.UTC));
         auditDetails.setLastModifiedBy("lastModifiedBy");
-        auditDetails.setLastModifiedTime(123456789L);
+        auditDetails.setLastModifiedTime(java.time.Instant.ofEpochMilli(123456789L).atOffset(java.time.ZoneOffset.UTC));
         paymentDetail.setAuditDetails(auditDetails);
         paymentRequest.getPayment().setPaymentDetails(Collections.singletonList(paymentDetail));
         Bill bill = new Bill();

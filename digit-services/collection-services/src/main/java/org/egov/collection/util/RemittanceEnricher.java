@@ -12,6 +12,9 @@ import org.egov.collection.web.contract.RemittanceRequest;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Service
 @Slf4j
@@ -22,11 +25,12 @@ public class RemittanceEnricher {
 
         remittance.setId(UUID.randomUUID().toString().replace("-", ""));
         remittance.setStatus(RemittanceStatus.APPROVED.name());
+        OffsetDateTime nowOffset = OffsetDateTime.now();
         AuditDetails auditDetails = AuditDetails.builder().createdBy(remittanceRequest.getRequestInfo().getUserInfo() != null
                 ? remittanceRequest.getRequestInfo().getUserInfo().getId().toString() : null)
-                .createdTime(System.currentTimeMillis()).lastModifiedBy(remittanceRequest.getRequestInfo().getUserInfo() != null
+                .createdTime(nowOffset).lastModifiedBy(remittanceRequest.getRequestInfo().getUserInfo() != null
                         ? remittanceRequest.getRequestInfo().getUserInfo().getId().toString() : null)
-                .lastModifiedTime(System.currentTimeMillis()).build();
+                .lastModifiedTime(nowOffset).build();
         remittance.setAuditDetails(auditDetails);
 
         for (RemittanceDetail rd : remittance.getRemittanceDetails()) {

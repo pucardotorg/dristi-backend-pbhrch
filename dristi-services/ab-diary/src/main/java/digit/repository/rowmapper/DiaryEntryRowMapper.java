@@ -1,9 +1,9 @@
 package digit.repository.rowmapper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import digit.web.models.AuditDetails;
 import digit.web.models.CaseDiaryEntry;
 import lombok.extern.slf4j.Slf4j;
-import org.egov.common.contract.models.AuditDetails;
 import org.egov.tracer.model.CustomException;
 import org.postgresql.util.PGobject;
 import org.springframework.jdbc.core.ResultSetExtractor;
@@ -11,9 +11,15 @@ import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.*;
 
 import static digit.config.ServiceConstants.ROW_MAPPER_EXCEPTION;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Component
 @Slf4j
@@ -36,18 +42,18 @@ public class DiaryEntryRowMapper implements ResultSetExtractor<List<CaseDiaryEnt
                 CaseDiaryEntry caseDiaryEntry = CaseDiaryEntry.builder()
                         .id(UUID.fromString(rs.getString("id")))
                         .tenantId(rs.getString("tenantId"))
-                        .entryDate(rs.getLong("entryDate"))
+                        .entryDate(rs.getTimestamp("entryDate") != null ? rs.getTimestamp("entryDate").toInstant().atOffset(java.time.ZoneOffset.UTC) : null)
                         .caseNumber(rs.getString("caseNumber"))
                         .courtId(rs.getString("courtId"))
                         .businessOfDay(rs.getString("businessOfDay"))
                         .referenceId(rs.getString("referenceId"))
                         .referenceType(rs.getString("referenceType"))
-                        .hearingDate(parseDateToLong(rs.getString("hearingDate")))
+                        .hearingDate(rs.getTimestamp("hearingDate") != null ? rs.getTimestamp("hearingDate").toInstant().atOffset(java.time.ZoneOffset.UTC) : null)
                         .caseId(rs.getString("caseId"))
                         .auditDetails(AuditDetails.builder()
-                                .createdTime(rs.getLong("createdTime"))
+                                .createdTime(getOffsetDateTime(rs.getTimestamp("createdTime")))
                                 .createdBy(rs.getString("createdBy"))
-                                .lastModifiedTime(rs.getLong("lastModifiedTime"))
+                                .lastModifiedTime(getOffsetDateTime(rs.getTimestamp("lastModifiedTime")))
                                 .lastModifiedBy(rs.getString("lastModifiedBy"))
                                 .build())
                         .build();
@@ -77,6 +83,13 @@ public class DiaryEntryRowMapper implements ResultSetExtractor<List<CaseDiaryEnt
             throw new CustomException("INVALID_DATE_FORMAT",
                     "Date must be a valid timestamp: " + dateStr);
         }
+    }
+
+    private OffsetDateTime getOffsetDateTime(Timestamp timestamp) {
+        if (timestamp == null) {
+            return null;
+        }
+        return timestamp.toInstant().atOffset(ZoneOffset.UTC);
     }
 
 }

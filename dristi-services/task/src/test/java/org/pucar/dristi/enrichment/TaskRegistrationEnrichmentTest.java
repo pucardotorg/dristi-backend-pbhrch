@@ -1,6 +1,6 @@
 package org.pucar.dristi.enrichment;
 
-import org.egov.common.contract.models.AuditDetails;
+import org.pucar.dristi.web.models.AuditDetails;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
 import org.egov.tracer.model.CustomException;
@@ -21,6 +21,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 class TaskRegistrationEnrichmentTest {
 
@@ -36,9 +39,13 @@ class TaskRegistrationEnrichmentTest {
     @Mock
     private CaseUtil caseUtil;
 
+    @Mock
+    private org.pucar.dristi.util.DateUtil dateUtil;
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+        org.mockito.Mockito.lenient().when(dateUtil.getCurrentOffsetDateTime()).thenReturn(OffsetDateTime.now());
     }
 
     // Helper method to create a mock TaskRequest
@@ -77,6 +84,7 @@ class TaskRegistrationEnrichmentTest {
         String mockTaskId = "TASK123";
         String mockTaskNumber = "FIL-123-TASK123";
 
+        when(configuration.getZoneId()).thenReturn("Asia/Kolkata");
         when(configuration.getTaskConfig()).thenReturn("taskConfigValue");
         when(configuration.getTaskFormat()).thenReturn("taskFormatValue");
         when(idgenUtil.getIdList(any(), eq(mockTenantId), eq("taskConfigValue"), eq("taskFormatValue"), eq(1), eq(false)))

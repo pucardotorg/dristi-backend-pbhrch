@@ -24,6 +24,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.postgresql.util.PGobject;
 import org.pucar.dristi.web.models.Party;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @ExtendWith(MockitoExtension.class)
 class RepresentingRowMapperTest {
@@ -35,7 +38,7 @@ class RepresentingRowMapperTest {
 
     @BeforeEach
     void setUp() {
-        rowMapper = new RepresentingRowMapper();
+        rowMapper = new RepresentingRowMapper(null);
     }
 
     @Test
@@ -49,9 +52,9 @@ class RepresentingRowMapperTest {
         when(rs.getString("individualid")).thenReturn("322");
         when(rs.getString("organisationid")).thenReturn("123");
         when(rs.getString("partytype")).thenReturn("party");
-        when(rs.getLong("createdtime")).thenReturn(1000000L);
+        when(rs.getTimestamp("createdtime")).thenReturn(null);
         when(rs.getString("lastmodifiedby")).thenReturn("User2");
-        when(rs.getLong("lastmodifiedtime")).thenReturn(1000001L);
+        when(rs.getTimestamp("lastmodifiedtime")).thenReturn(null);
         when(rs.getString("case_id")).thenReturn("case_id");
         when(rs.getBoolean("isactive")).thenReturn(true);
 

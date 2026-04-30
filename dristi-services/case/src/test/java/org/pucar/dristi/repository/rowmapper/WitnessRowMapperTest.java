@@ -7,6 +7,9 @@ import static org.mockito.Mockito.when;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.UUID;
 
@@ -18,6 +21,9 @@ import org.mockito.Mock;
 import org.pucar.dristi.web.models.Witness;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 public class WitnessRowMapperTest {
 
@@ -29,7 +35,7 @@ public class WitnessRowMapperTest {
 
     @BeforeEach
     public void setUp() {
-        witnessRowMapper = new WitnessRowMapper();
+        witnessRowMapper = new WitnessRowMapper(null);
         resultSet = mock(ResultSet.class);
     }
 
@@ -46,9 +52,11 @@ public class WitnessRowMapperTest {
         when(resultSet.getString("remarks")).thenReturn("remark123");
         when(resultSet.getBoolean("isactive")).thenReturn(true);
         when(resultSet.getString("createdby")).thenReturn("user123");
-        when(resultSet.getLong("createdtime")).thenReturn(System.currentTimeMillis());
+        Timestamp createdTimestamp = Timestamp.from(OffsetDateTime.now(ZoneId.of("UTC")).toInstant());
+        when(resultSet.getTimestamp("createdtime")).thenReturn(createdTimestamp);
         when(resultSet.getString("lastmodifiedby")).thenReturn("user456");
-        when(resultSet.getLong("lastmodifiedtime")).thenReturn(System.currentTimeMillis());
+        Timestamp lastModifiedTimestamp = Timestamp.from(OffsetDateTime.now(ZoneId.of("UTC")).toInstant());
+        when(resultSet.getTimestamp("lastmodifiedtime")).thenReturn(lastModifiedTimestamp);
 
         // Mocking additionalDetails as PGObject
         ObjectMapper objectMapper = new ObjectMapper();

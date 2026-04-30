@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.OffsetDateTime;
+
 
 
 @Data
@@ -28,9 +30,9 @@ public class JudgeAvailabilitySearchCriteria implements SearchCriteria {
     private Integer numberOfSuggestedDays = 5;
 
     @JsonProperty("fromDate")
-    private Long fromDate;
+    private OffsetDateTime fromDate;
 
     @JsonProperty("toDate")
-    private Long toDate;
+    private OffsetDateTime toDate;
 
 }

@@ -1,19 +1,23 @@
 package org.pucar.dristi.enrichment;
 
 import lombok.extern.slf4j.Slf4j;
-import org.egov.common.contract.models.AuditDetails;
 import org.egov.tracer.model.CustomException;
 import org.pucar.dristi.config.Configuration;
 import org.pucar.dristi.util.IdgenUtil;
 import org.pucar.dristi.web.models.Advocate;
 import org.pucar.dristi.web.models.AdvocateRequest;
+import org.pucar.dristi.web.models.AuditDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 
 import static org.pucar.dristi.config.ServiceConstants.ENRICHMENT_EXCEPTION;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Component
 @Slf4j
@@ -44,7 +48,8 @@ public class AdvocateRegistrationEnrichment {
             log.info("Advocate Application Number :: {}",advocateApplicationNumbers);
 
             Advocate advocate =  advocateRequest.getAdvocate();
-            AuditDetails auditDetails = AuditDetails.builder().createdBy(advocateRequest.getRequestInfo().getUserInfo().getUuid()).createdTime(System.currentTimeMillis()).lastModifiedBy(advocateRequest.getRequestInfo().getUserInfo().getUuid()).lastModifiedTime(System.currentTimeMillis()).build();
+            OffsetDateTime now = OffsetDateTime.now();
+            AuditDetails auditDetails = AuditDetails.builder().createdBy(advocateRequest.getRequestInfo().getUserInfo().getUuid()).createdTime(now).lastModifiedBy(advocateRequest.getRequestInfo().getUserInfo().getUuid()).lastModifiedTime(now).build();
             advocate.setAuditDetails(auditDetails);
             advocate.setId(UUID.randomUUID());
             //setting false unless the application is approved
@@ -73,7 +78,8 @@ public class AdvocateRegistrationEnrichment {
         try {
             // Enrich lastModifiedTime and lastModifiedBy in case of update
             Advocate advocate =  advocateRequest.getAdvocate();
-            advocate.getAuditDetails().setLastModifiedTime(System.currentTimeMillis());
+            OffsetDateTime now = OffsetDateTime.now();
+            advocate.getAuditDetails().setLastModifiedTime(now);
             advocate.getAuditDetails().setLastModifiedBy(advocateRequest.getRequestInfo().getUserInfo().getUuid());
         } catch (Exception e) {
             log.error("Error enriching advocate application upon update :: {}", e.toString());

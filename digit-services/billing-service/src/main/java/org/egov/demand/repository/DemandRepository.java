@@ -70,6 +70,9 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.extern.slf4j.Slf4j;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Repository
 @Slf4j
@@ -217,8 +220,8 @@ public class DemandRepository {
 				ps.setBigDecimal(8, demand.getMinimumAmountPayable());
 				ps.setString(9, auditDetail.getCreatedBy());
 				ps.setString(10, auditDetail.getLastModifiedBy());
-				ps.setLong(11, auditDetail.getCreatedTime());
-				ps.setLong(12, auditDetail.getLastModifiedTime());
+				ps.setLong(11, auditDetail.getCreatedTime().toInstant().toEpochMilli());
+				ps.setLong(12, auditDetail.getLastModifiedTime().toInstant().toEpochMilli());
 				ps.setString(13, demand.getTenantId());
 				ps.setString(14, status);
 				ps.setObject(15, util.getPGObject(demand.getAdditionalDetails()));
@@ -252,8 +255,8 @@ public class DemandRepository {
 				ps.setBigDecimal(5, demandDetail.getCollectionAmount());
 				ps.setString(6, auditDetail.getCreatedBy());
 				ps.setString(7, auditDetail.getLastModifiedBy());
-				ps.setLong(8, auditDetail.getCreatedTime());
-				ps.setLong(9, auditDetail.getLastModifiedTime());
+				ps.setLong(8, auditDetail.getCreatedTime().toInstant().toEpochMilli());
+				ps.setLong(9, auditDetail.getLastModifiedTime().toInstant().toEpochMilli());
 				ps.setString(10, demandDetail.getTenantId());
 				ps.setObject(11, util.getPGObject(demandDetail.getAdditionalDetails()));
 			}
@@ -291,7 +294,7 @@ public class DemandRepository {
 				ps.setLong(3, demand.getTaxPeriodTo());
 				ps.setBigDecimal(4, demand.getMinimumAmountPayable());
 				ps.setString(5, auditDetail.getLastModifiedBy());
-				ps.setLong(6, auditDetail.getLastModifiedTime());
+				ps.setLong(6, auditDetail.getLastModifiedTime().toInstant().toEpochMilli());
 				ps.setString(7, demand.getTenantId());
 				ps.setString(8, status);
 				ps.setObject(9, util.getPGObject(demand.getAdditionalDetails()));
@@ -328,7 +331,7 @@ public class DemandRepository {
 				ps.setBigDecimal(1, demandDetail.getTaxAmount());
 				ps.setBigDecimal(2, demandDetail.getCollectionAmount());
 				ps.setString(3, auditDetail.getLastModifiedBy());
-				ps.setLong(4, auditDetail.getLastModifiedTime());
+				ps.setLong(4, auditDetail.getLastModifiedTime().toInstant().toEpochMilli());
 				ps.setObject(5, util.getPGObject(demandDetail.getAdditionalDetails()));
 				ps.setString(6, demandDetail.getId());
 				ps.setString(7, demandDetail.getDemandId());
@@ -376,7 +379,7 @@ public class DemandRepository {
 				ps.setLong(7, demand.getTaxPeriodTo());
 				ps.setBigDecimal(8, demand.getMinimumAmountPayable());
 				ps.setString(9, auditDetail.getLastModifiedBy());
-				ps.setLong(10, auditDetail.getLastModifiedTime());
+				ps.setLong(10, auditDetail.getLastModifiedTime().toInstant().toEpochMilli());
 				ps.setString(11, demand.getTenantId());
 				ps.setString(12, status);
 				ps.setObject(13, util.getPGObject(demand.getAdditionalDetails()));
@@ -412,7 +415,7 @@ public class DemandRepository {
 						ps.setBigDecimal(4, demandDetail.getTaxAmount());
 						ps.setBigDecimal(5, demandDetail.getCollectionAmount());
 						ps.setString(6, auditDetail.getLastModifiedBy());
-						ps.setLong(7, auditDetail.getLastModifiedTime());
+						ps.setLong(7, auditDetail.getLastModifiedTime().toInstant().toEpochMilli());
 						ps.setString(8, demandDetail.getTenantId());
 						ps.setObject(9, util.getPGObject(demandDetail.getAdditionalDetails()));
 						ps.setString(10, UUID.randomUUID().toString());

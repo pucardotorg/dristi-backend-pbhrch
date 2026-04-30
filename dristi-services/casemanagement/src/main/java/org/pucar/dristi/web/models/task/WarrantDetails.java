@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import org.springframework.validation.annotation.Validated;
 
+import java.time.OffsetDateTime;
+
 @Validated
 @Data
 @Builder
@@ -14,10 +16,10 @@ public class WarrantDetails {
     private String warrantId = null;
 
     @JsonProperty("issueDate")
-    private Long issueDate;
+    private OffsetDateTime issueDate;
 
     @JsonProperty("caseFilingDate")
-    private Long caseFilingDate;
+    private OffsetDateTime caseFilingDate;
 
     @JsonProperty("docType")
     private String docType;

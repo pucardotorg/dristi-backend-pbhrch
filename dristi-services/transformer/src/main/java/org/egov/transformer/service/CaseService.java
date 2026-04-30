@@ -33,6 +33,9 @@ import java.util.Optional;
 import static org.egov.transformer.config.ServiceConstants.COURT_CASE_JSON_PATH;
 import static org.egov.transformer.config.ServiceConstants.HEARING_COMPLETED_STATUS;
 import static org.egov.transformer.config.ServiceConstants.HEARING_SCHEDULED_STATUS;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Slf4j
 @Service
@@ -180,7 +183,7 @@ public class CaseService {
         }
         caseSearch.setNextHearingDate(latestScheduledHearing!=null? latestScheduledHearing.getStartTime(): null);
         caseSearch.setCaseStatus(courtCase.getStatus());
-        caseSearch.setYearOfFiling(dateUtil.getYearFromDate(courtCase.getFilingDate()));
+        caseSearch.setYearOfFiling(dateUtil.getYearFromDate(courtCase.getFilingDate() != null ? courtCase.getFilingDate().toInstant().toEpochMilli() : null));
         caseSearch.setHearingType(latestScheduledHearing!=null? latestScheduledHearing.getHearingType(): null);
         caseSearch.setCaseSubStage(courtCase.getSubstage());
         caseSearch.setOutcome(courtCase.getOutcome());

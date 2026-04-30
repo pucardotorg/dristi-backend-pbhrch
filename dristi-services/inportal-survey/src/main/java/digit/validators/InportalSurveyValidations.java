@@ -58,9 +58,9 @@ public class InportalSurveyValidations {
 
     public boolean validateEligibility(SurveyTracker surveyTracker, RequestInfo requestInfo) {
         Integer attempts = surveyTracker.getAttempts();
-        Long lastTriggeredDate = surveyTracker.getLastTriggeredDate();
+        java.time.OffsetDateTime lastTriggeredDate = surveyTracker.getLastTriggeredDate();
         Boolean remindMeLater = surveyTracker.getRemindMeLater();
-        Long currentTime = inPortalSurveyUtil.getCurrentTimeInMilliSec();
+        long currentTime = inPortalSurveyUtil.getCurrentTimeInMilliSec();
 
         SurveyConfig config = mdmsDataConfig.fetchSurveyConfig(requestInfo);
         Integer maxAttempts = config.getMaxNoOfAttempts();
@@ -68,9 +68,11 @@ public class InportalSurveyValidations {
         // Case 1: Never performed any action (remindMeLater or feedback) → eligible
         if (lastTriggeredDate == null) return true;
 
+        long lastTriggeredMillis = lastTriggeredDate.toInstant().toEpochMilli();
+
         if (Boolean.TRUE.equals(remindMeLater)) {
             Long waitPeriod = config.getNoOfDaysForRemindMeLater();
-            Long expiryDate = lastTriggeredDate + waitPeriod;
+            Long expiryDate = lastTriggeredMillis + waitPeriod;
 
             surveyTracker.setAttempts(attempts + 1);
 
@@ -78,7 +80,7 @@ public class InportalSurveyValidations {
             return (attempts + 1) > maxAttempts && currentTime > expiryDate;
         } else {
             Long waitPeriod = config.getNoOfDaysForExpiryAfterFeedBack();
-            Long expiryDate = lastTriggeredDate + waitPeriod;
+            Long expiryDate = lastTriggeredMillis + waitPeriod;
 
             // Eligible only if enough time passed since last feedback
             return currentTime > expiryDate;

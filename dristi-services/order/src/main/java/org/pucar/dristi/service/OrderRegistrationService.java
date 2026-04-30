@@ -22,12 +22,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static org.pucar.dristi.config.ServiceConstants.*;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Service
 @Slf4j
@@ -364,7 +369,8 @@ public class OrderRegistrationService {
             Hearing hearing = hearingUtil.getHearings(hearingSearchRequest)
                     .getHearingList()
                     .get(0);
-            long oldHearingStartTime = hearing.getStartTime();
+            java.time.OffsetDateTime startTimeOdt = hearing.getStartTime();
+            long oldHearingStartTime = startTimeOdt != null ? startTimeOdt.toInstant().toEpochMilli() : 0L;
             String oldHearingDate = dateUtil.getFormattedDateFromEpoch(oldHearingStartTime, YYYY_MM_DD);
 
             SmsTemplateData smsTemplateData = SmsTemplateData.builder()
@@ -430,7 +436,7 @@ public class OrderRegistrationService {
                 workflow, config.getOrderBusinessName());
         order.setStatus(status);
         if (PUBLISHED.equalsIgnoreCase(status))
-            order.setCreatedDate(System.currentTimeMillis());
+            order.setCreatedDate(OffsetDateTime.now(ZoneId.of(config.getZoneId())));
     }
 
     private Set<String> callIndividualService(RequestInfo requestInfo, Set<String> ids) {
@@ -535,7 +541,7 @@ public class OrderRegistrationService {
             Order order = orders.get(0);
             orderDetailsDTO.setAuditDetails(order.getAuditDetails());
 
-            orderDetailsDTO.getAuditDetails().setLastModifiedTime(System.currentTimeMillis());
+            orderDetailsDTO.getAuditDetails().setLastModifiedTime(dateUtil.getCurrentOffsetDateTime());
             orderDetailsDTO.getAuditDetails().setLastModifiedBy(request.getRequestInfo().getUserInfo().getUuid());
             
             // Log the order details

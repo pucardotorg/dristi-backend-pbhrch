@@ -3,7 +3,7 @@ package org.pucar.dristi.repository.rowmapper;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.egov.common.contract.models.AuditDetails;
+import org.pucar.dristi.web.models.AuditDetails;
 import org.egov.tracer.model.CustomException;
 import org.postgresql.util.PGobject;
 import org.pucar.dristi.web.models.AssignedTo;
@@ -14,9 +14,15 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.*;
 
 import static org.pucar.dristi.config.ServiceConstants.ROW_MAPPER_EXCEPTION;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Component
 @Slf4j
@@ -38,16 +44,14 @@ public class TaskRowMapper implements ResultSetExtractor<List<Task>> {
                 Task task = taskMap.get(uuid);
 
                 if (task == null) {
-                    Long lastModifiedTime = rs.getLong("lastmodifiedtime");
-                    if (rs.wasNull()) {
-                        lastModifiedTime = null;
-                    }
+                    Timestamp createdTs = rs.getTimestamp("createdtime");
+                    Timestamp lastModifiedTs = rs.getTimestamp("lastmodifiedtime");
 
                     AuditDetails auditdetails = AuditDetails.builder()
                             .createdBy(rs.getString("createdby"))
-                            .createdTime(rs.getLong("createdtime"))
+                            .createdTime(createdTs != null ? createdTs.toInstant().atOffset(ZoneOffset.UTC) : null)
                             .lastModifiedBy(rs.getString("lastmodifiedby"))
-                            .lastModifiedTime(lastModifiedTime)
+                            .lastModifiedTime(lastModifiedTs != null ? lastModifiedTs.toInstant().atOffset(ZoneOffset.UTC) : null)
                             .build();
 
                     task = Task.builder()
@@ -60,16 +64,16 @@ public class TaskRowMapper implements ResultSetExtractor<List<Task>> {
                             .caseId(rs.getString("caseId"))
                             .caseTitle(rs.getString("caseTitle"))
                             .cnrNumber(rs.getString("cnrnumber"))
-                            .createdDate(rs.getLong("createddate"))
-                            .dateCloseBy(rs.getLong("datecloseby"))
-                            .dateClosed(rs.getLong("dateclosed"))
+                            .createdDate(tsToOdt(rs.getTimestamp("createddate")))
+                            .dateCloseBy(tsToOdt(rs.getTimestamp("datecloseby")))
+                            .dateClosed(tsToOdt(rs.getTimestamp("dateclosed")))
                             .taskDescription(rs.getString("taskdescription"))
                             .taskDetails(objectMapper.readValue(rs.getString("taskdetails"), Object.class))
                             .taskType(rs.getString("tasktype"))
                             .status(rs.getString("status"))
                             .referenceId(rs.getString("referenceId"))
                             .state(rs.getString("state"))
-                            .duedate(parseDateToLong(rs.getString("duedate")))
+                            .duedate(tsToOdt(parseDateToTimestamp(rs.getString("duedate"))))
                             .assignedTo(getListFromJson(rs.getString("assignedto"), new TypeReference<List<AssignedTo>>(){}))
                             .isActive(Boolean.valueOf(rs.getString("isactive")))
                             .auditDetails(auditdetails)
@@ -118,12 +122,16 @@ public class TaskRowMapper implements ResultSetExtractor<List<Task>> {
         }
     }
 
-    private Long parseDateToLong(String dateStr) {
+    private OffsetDateTime tsToOdt(Timestamp ts) {
+        return ts != null ? ts.toInstant().atOffset(ZoneOffset.UTC) : null;
+    }
+
+    private Timestamp parseDateToTimestamp(String dateStr) {
         if (dateStr == null || dateStr.trim().isEmpty()) {
             return null;
         }
         try {
-            return Long.valueOf(dateStr);
+            return new Timestamp(Long.parseLong(dateStr));
         } catch (NumberFormatException e) {
             log.error("Invalid date format: {}", dateStr);
             throw new CustomException("INVALID_DATE_FORMAT",

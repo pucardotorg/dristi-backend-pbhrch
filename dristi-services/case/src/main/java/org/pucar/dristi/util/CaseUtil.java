@@ -1,11 +1,15 @@
 package org.pucar.dristi.util;
 
+import org.pucar.dristi.config.Configuration;
 import org.pucar.dristi.web.models.CourtCase;
 import org.pucar.dristi.web.models.POAHolder;
 import org.pucar.dristi.web.models.Party;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.security.SecureRandom;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -13,6 +17,12 @@ import java.util.stream.Collectors;
 public class CaseUtil {
     private static final String CHARACTERS = "0123456789";
     private static final SecureRandom random = new SecureRandom();
+    private final Configuration config;
+
+    @Autowired
+    public CaseUtil(Configuration config) {
+        this.config = config;
+    }
 
     public static String generateAccessCode(int length) {
         StringBuilder sb = new StringBuilder(length);
@@ -36,8 +46,8 @@ public class CaseUtil {
         return cnrNumber;
     }
 
-    public Long getCurrentTimeMil() {
-        return System.currentTimeMillis();
+    public OffsetDateTime getCurrentTimeOffset() {
+        return OffsetDateTime.now(ZoneId.of(config.getZoneId()));
     }
 
 

@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.pucar.dristi.web.models.demand.enums.Status;
 
+import java.time.OffsetDateTime;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,7 +20,7 @@ public class CollectedReceipt {
 
     private Double receiptAmount;
 
-    private Long receiptDate;
+    private OffsetDateTime receiptDate;
 
     private Status status;
 

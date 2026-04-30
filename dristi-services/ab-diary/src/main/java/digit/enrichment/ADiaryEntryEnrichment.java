@@ -1,16 +1,22 @@
 package digit.enrichment;
 
 import digit.util.ADiaryUtil;
+import digit.util.DateTimeUtil;
+import digit.web.models.AuditDetails;
 import digit.web.models.CaseDiaryEntry;
 import digit.web.models.CaseDiaryEntryRequest;
 import lombok.extern.slf4j.Slf4j;
-import org.egov.common.contract.models.AuditDetails;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
 import org.egov.tracer.model.CustomException;
 import org.springframework.stereotype.Component;
 
+import java.time.OffsetDateTime;
+
 import static digit.config.ServiceConstants.ENRICHMENT_EXCEPTION;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Component
 @Slf4j
@@ -18,8 +24,11 @@ public class ADiaryEntryEnrichment {
 
     private final ADiaryUtil aDiaryUtil;
 
-    public ADiaryEntryEnrichment(ADiaryUtil aDiaryUtil) {
+    private final DateTimeUtil dateTimeUtil;
+
+    public ADiaryEntryEnrichment(ADiaryUtil aDiaryUtil, DateTimeUtil dateTimeUtil) {
         this.aDiaryUtil = aDiaryUtil;
+        this.dateTimeUtil = dateTimeUtil;
     }
 
     public void enrichCreateDiaryEntry(CaseDiaryEntryRequest caseDiaryEntryRequest) {
@@ -34,8 +43,9 @@ public class ADiaryEntryEnrichment {
 
             caseDiaryEntry.setId(aDiaryUtil.generateUUID());
 
-            AuditDetails auditDetails = AuditDetails.builder().createdBy(user.getUuid()).createdTime(aDiaryUtil.getCurrentTimeInMilliSec())
-                    .lastModifiedBy(user.getUuid()).lastModifiedTime(aDiaryUtil.getCurrentTimeInMilliSec()).build();
+            OffsetDateTime now = dateTimeUtil.getCurrentOffsetDateTime();
+            AuditDetails auditDetails = AuditDetails.builder().createdBy(user.getUuid()).createdTime(now)
+                    .lastModifiedBy(user.getUuid()).lastModifiedTime(now).build();
 
             caseDiaryEntry.setAuditDetails(auditDetails);
 
@@ -58,7 +68,7 @@ public class ADiaryEntryEnrichment {
             RequestInfo requestInfo = caseDiaryEntryRequest.getRequestInfo();
             User user = requestInfo.getUserInfo();
 
-            caseDiaryEntry.getAuditDetails().setLastModifiedTime(aDiaryUtil.getCurrentTimeInMilliSec());
+            caseDiaryEntry.getAuditDetails().setLastModifiedTime(dateTimeUtil.getCurrentOffsetDateTime());
             caseDiaryEntry.getAuditDetails().setLastModifiedBy(user.getUuid());
 
         } catch (Exception e) {

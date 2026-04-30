@@ -8,9 +8,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.egov.common.contract.models.AuditDetails;
 
+import java.time.OffsetDateTime;
 import java.util.UUID;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Data
 @AllArgsConstructor
@@ -30,7 +33,7 @@ public class CaseDiaryEntry {
     @JsonProperty("entryDate")
     @NotNull
 
-    private Long entryDate = null;
+    private OffsetDateTime entryDate = null;
 
     @JsonProperty("caseNumber")
 
@@ -60,7 +63,7 @@ public class CaseDiaryEntry {
 
     @JsonProperty("hearingDate")
 
-    private Long hearingDate = null;
+    private OffsetDateTime hearingDate = null;
 
     @JsonProperty("additionalDetails")
 

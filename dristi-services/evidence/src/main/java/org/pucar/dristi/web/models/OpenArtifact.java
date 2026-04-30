@@ -8,13 +8,16 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.egov.common.contract.models.AuditDetails;
 import org.egov.common.contract.models.Document;
 import org.springframework.validation.annotation.Validated;
 
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Validated
 @Data
@@ -115,10 +118,10 @@ public class OpenArtifact {
 
     @JsonProperty("createdDate")
 
-    private Long createdDate = null;
+    private OffsetDateTime createdDate = null;
 
     @JsonProperty("publishedDate")
-    private Long publishedDate = null;
+    private OffsetDateTime publishedDate = null;
 
     @JsonProperty("isActive")
 

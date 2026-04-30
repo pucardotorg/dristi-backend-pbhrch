@@ -271,12 +271,12 @@ public class HearingService {
         }
     }
 
-    private Long getFromDate() {
-        return dateUtil.getEpochFromLocalDateTime(LocalDate.now(ZoneId.of(config.getZoneId())).minusDays(1).atStartOfDay());
+    private java.time.OffsetDateTime getFromDate() {
+        return LocalDate.now(ZoneId.of(config.getZoneId())).minusDays(1).atStartOfDay(ZoneId.of(config.getZoneId())).toOffsetDateTime();
     }
 
-    private Long getToDate() {
-        return dateUtil.getEpochFromLocalDateTime(LocalDate.now(ZoneId.of(config.getZoneId())).minusDays(1).atTime(LocalTime.MAX));
+    private java.time.OffsetDateTime getToDate() {
+        return LocalDate.now(ZoneId.of(config.getZoneId())).minusDays(1).atTime(LocalTime.MAX).atZone(ZoneId.of(config.getZoneId())).toOffsetDateTime();
     }
 
     public void updateHearingsToAbondenState(List<Hearing> hearings, RequestInfo requestInfo) {

@@ -3,17 +3,21 @@ package org.egov.userevent.repository.rowmappers;
 import java.lang.reflect.Type;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.userevent.model.AuditDetails;
 import org.egov.userevent.model.enums.Source;
 import org.egov.userevent.model.enums.Status;
+import org.egov.userevent.util.DateUtil;
 import org.egov.userevent.web.contract.Action;
 import org.egov.userevent.web.contract.Event;
 import org.egov.userevent.web.contract.EventDetails;
 import org.egov.userevent.web.contract.Recepient;
 import org.postgresql.util.PGobject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Service;
@@ -22,10 +26,20 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import lombok.extern.slf4j.Slf4j;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Service
 @Slf4j
 public class UserEventRowMapper implements ResultSetExtractor <List<Event>> {
+
+	private final DateUtil dateUtil;
+
+	@Autowired
+	public UserEventRowMapper(DateUtil dateUtil) {
+		this.dateUtil = dateUtil;
+	}
 
 	@Override
 	public List<Event> extractData(ResultSet resultSet) throws SQLException, DataAccessException {
@@ -77,11 +91,16 @@ public class UserEventRowMapper implements ResultSetExtractor <List<Event>> {
 				log.error("Error while adding jsonb fields: ", e);
 				continue;
 			}
+			Timestamp createdTimeTs = resultSet.getTimestamp("createdtime");
+			OffsetDateTime createdTime = createdTimeTs != null ? dateUtil.timestampToOffsetDateTime(createdTimeTs) : null;
+			Timestamp lastModifiedTimeTs = resultSet.getTimestamp("lastmodifiedtime");
+			OffsetDateTime lastModifiedTime = lastModifiedTimeTs != null ? dateUtil.timestampToOffsetDateTime(lastModifiedTimeTs) : null;
+			
 			AuditDetails audit = AuditDetails.builder()
 					.createdBy(resultSet.getString("createdby"))
-					.createdTime(resultSet.getLong("createdtime"))
+					.createdTime(createdTime)
 					.lastModifiedBy(resultSet.getString("lastmodifiedby"))
-					.lastModifiedTime(resultSet.getLong("lastmodifiedtime")).build();
+					.lastModifiedTime(lastModifiedTime).build();
 			
 			event.setAuditDetails(audit);
 			

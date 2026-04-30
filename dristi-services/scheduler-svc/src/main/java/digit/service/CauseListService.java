@@ -142,7 +142,11 @@ public class CauseListService {
     public void generateCauseList(String courtId, List<CauseList> causeLists, String hearingDate, String uuid) {
         log.info("operation = generateCauseListForJudge, result = IN_PROGRESS, judgeId = {}", courtId);
         try {
-            InboxRequest inboxRequest = inboxUtil.getInboxRequestForOpenHearing(courtId, getFromDate(hearingDate),getToDate(hearingDate) );
+            OffsetDateTime fromDate = getFromDate(hearingDate);
+            OffsetDateTime toDate = getToDate(hearingDate);
+            InboxRequest inboxRequest = inboxUtil.getInboxRequestForOpenHearing(courtId, 
+                    fromDate != null ? fromDate.toInstant().toEpochMilli() : null,
+                    toDate != null ? toDate.toInstant().toEpochMilli() : null);
             log.info("inboxRequest = {}", inboxRequest.toString());
             List<OpenHearing> openHearings = inboxUtil.getOpenHearings(inboxRequest);
 
@@ -160,8 +164,8 @@ public class CauseListService {
                     .tenantId(config.getEgovStateTenantId())
                     .judgeId(causeList.get(0).getJudgeId())
                     .fileStoreId(document.getFileStore())
-                    .date(dateUtil.getLocalDateFromEpoch(causeList.get(0).getStartTime()).toString())
-                    .createdTime(dateUtil.getEpochFromLocalDateTime(LocalDateTime.now(ZoneId.of(config.getZoneId()))))
+                    .date(causeList.get(0).getStartTime() != null ? dateUtil.getLocalDateFromOffsetDateTime(causeList.get(0).getStartTime()).toString() : "")
+                    .createdTime(dateUtil.getCurrentOffsetDateTime())
                     .createdBy(uuid == null ? serviceConstants.SYSTEM_ADMIN : uuid)
                     .build();
 
@@ -170,7 +174,7 @@ public class CauseListService {
 
             producer.push(config.getCauseListPdfTopic(), causeListPdfRequest);
 
-            LocalDate causeListDate = dateUtil.getLocalDateFromEpoch(causeList.get(0).getStartTime());
+            LocalDate causeListDate = causeList.get(0).getStartTime() != null ? dateUtil.getLocalDateFromOffsetDateTime(causeList.get(0).getStartTime()) : LocalDate.now();
             try {
 
                 causeListEmailService.sendCauseListEmail(
@@ -194,7 +198,8 @@ public class CauseListService {
             log.info("Update open hearing index with serialNumber");
             esUtil.updateOpenHearingSerialNumber(openHearings);
             try {
-                esUtil.updateOpenHearingInCache(openHearings, getFromDate(hearingDate));
+                OffsetDateTime cacheFromDate = getFromDate(hearingDate);
+                esUtil.updateOpenHearingInCache(openHearings, cacheFromDate != null ? cacheFromDate.toInstant().toEpochMilli() : null);
             } catch (Exception e) {
                 log.error("Failed to update open hearing in cache for date: {}, error: {}", causeListDate.toString(), e.getMessage(), e);
             }
@@ -204,16 +209,18 @@ public class CauseListService {
         }
     }
 
-    private Long getToDate(String hearingDate) {
-        return hearingDate == null
-                ? dateUtil.getEpochFromLocalDateTime(LocalDateTime.now(ZoneId.of(config.getZoneId())).toLocalDate().plusDays(1).atTime(LocalTime.MAX))
-                : dateUtil.getEpochFromLocalDateTime(LocalDate.parse(hearingDate).atTime(LocalTime.MAX));
+    private OffsetDateTime getToDate(String hearingDate) {
+        LocalDate targetDate = hearingDate == null
+                ? LocalDate.now(ZoneId.of(config.getZoneId())).plusDays(1)
+                : LocalDate.parse(hearingDate);
+        return targetDate.atTime(LocalTime.MAX).atZone(ZoneId.of(config.getZoneId())).toOffsetDateTime();
     }
 
-    private Long getFromDate(String hearingDate) {
-        return hearingDate == null
-                ? dateUtil.getEpochFromLocalDateTime(LocalDateTime.now(ZoneId.of(config.getZoneId())).toLocalDate().plusDays(1).atStartOfDay())
-                : dateUtil.getEpochFromLocalDateTime(LocalDate.parse(hearingDate).atStartOfDay());
+    private OffsetDateTime getFromDate(String hearingDate) {
+        LocalDate targetDate = hearingDate == null
+                ? LocalDate.now(ZoneId.of(config.getZoneId())).plusDays(1)
+                : LocalDate.parse(hearingDate);
+        return dateUtil.getOffsetDateTimeFromLocalDate(targetDate);
     }
 
 
@@ -313,9 +320,13 @@ public class CauseListService {
     }
 
     private void getCauseListFromHearingAndSlot(CauseList causeList, MdmsSlot mdmsSlot, int accumulatedTime) {
-        Long slotStartTime = dateUtil.getEpochFromLocalDateTime(LocalDateTime.of(dateUtil.getLocalDateFromEpoch(causeList.getStartTime()), LocalTime.parse(mdmsSlot.getSlotStartTime())));
-        long startTime = slotStartTime + ((long) accumulatedTime * 60 * 1000);
-        Long endTime = startTime + (causeList.getHearingTimeInMinutes() * 60 * 1000);
+        LocalDate hearingDate = causeList.getStartTime() != null 
+                ? dateUtil.getLocalDateFromOffsetDateTime(causeList.getStartTime()) 
+                : LocalDate.now(ZoneId.of(config.getZoneId()));
+        OffsetDateTime slotStartTime = LocalDateTime.of(hearingDate, LocalTime.parse(mdmsSlot.getSlotStartTime()))
+                .atZone(ZoneId.of(config.getZoneId())).toOffsetDateTime();
+        OffsetDateTime startTime = slotStartTime.plusMinutes(accumulatedTime);
+        OffsetDateTime endTime = startTime.plusMinutes(causeList.getHearingTimeInMinutes());
         causeList.setSlot(mdmsSlot.getSlotName());
         causeList.setStartTime(startTime);
         causeList.setEndTime(endTime);
@@ -498,7 +509,9 @@ public class CauseListService {
                     .courtId(config.getCourtId())
                     .judgeName(config.getJudgeName())
                     .judgeDesignation(config.getJudgeDesignation())
-                    .hearingDate(dateUtil.getLocalDateFromEpoch(hearing.getFromDate()).format(DateTimeFormatter.ofPattern(DATE_FORMAT)))
+                    .hearingDate(hearing.getFromDate() != null 
+                            ? dateUtil.getLocalDateFromOffsetDateTime(hearing.getFromDate()).format(DateTimeFormatter.ofPattern(DATE_FORMAT))
+                            : "")
                     .build();
 
             causeLists.add(causeList);
@@ -536,7 +549,7 @@ public class CauseListService {
                 causeList.setCaseTitle(caseList.get(0).get("caseTitle").isNull() ? null : caseList.get(0).get("caseTitle").asText());
 
                 long registrationDate = caseList.get(0).get("registrationDate").asLong();
-                causeList.setCaseRegistrationDate(registrationDate);
+                causeList.setCaseRegistrationDate(java.time.Instant.ofEpochMilli(registrationDate).atOffset(java.time.ZoneOffset.UTC));
 
                 List<AdvocateMapping> advocateMappings;
                 List<Party> litigantsList;

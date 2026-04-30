@@ -6,6 +6,8 @@ import static org.pucar.dristi.config.ServiceConstants.TAX_HEADMASTER_CODE;
 import static org.pucar.dristi.config.ServiceConstants.TAX_PERIOD_FROM;
 import static org.pucar.dristi.config.ServiceConstants.TAX_PERIOD_TO;
 
+import java.time.Instant;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -45,8 +47,8 @@ public class BillingUtil {
 		demand.setTenantId(caseRequest.getCases().getTenantId());
 		demand.setConsumerCode(caseRequest.getCases().getFilingNumber());
 		demand.setPayer(caseRequest.getRequestInfo().getUserInfo());
-		demand.setTaxPeriodFrom(TAX_PERIOD_FROM);
-		demand.setTaxPeriodTo(TAX_PERIOD_TO);
+		demand.setTaxPeriodFrom(Instant.ofEpochMilli(TAX_PERIOD_FROM).atOffset(ZoneOffset.UTC));
+		demand.setTaxPeriodTo(Instant.ofEpochMilli(TAX_PERIOD_TO).atOffset(ZoneOffset.UTC));
 		demand.setBusinessService(configs.getCaseBusinessServiceName());
 		demand.setConsumerType(configs.getCaseBusinessServiceName());
 		demand.setAuditDetails(caseRequest.getCases().getAuditdetails());
@@ -97,8 +99,8 @@ public class BillingUtil {
 		demand.setTenantId(joinCaseRequest.getRequestInfo().getUserInfo().getTenantId());
 		demand.setConsumerCode(consumerCode);
 		demand.setPayer(joinCaseRequest.getRequestInfo().getUserInfo());
-		demand.setTaxPeriodFrom(TAX_PERIOD_FROM);
-		demand.setTaxPeriodTo(TAX_PERIOD_TO);
+		demand.setTaxPeriodFrom(Instant.ofEpochMilli(TAX_PERIOD_FROM).atOffset(ZoneOffset.UTC));
+		demand.setTaxPeriodTo(Instant.ofEpochMilli(TAX_PERIOD_TO).atOffset(ZoneOffset.UTC));
 		demand.setBusinessService("task-default");
 		demand.setConsumerType("task-default");
 		demand.setAuditDetails(joinCaseRequest.getAuditDetails());

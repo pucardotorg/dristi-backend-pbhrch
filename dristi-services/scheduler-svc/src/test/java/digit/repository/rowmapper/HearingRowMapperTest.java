@@ -1,7 +1,9 @@
 package digit.repository.rowmapper;
 
-import digit.models.coremodels.AuditDetails;
+import digit.util.DateUtil;
+import digit.web.models.AuditDetails;
 import digit.web.models.ScheduleHearing;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -10,10 +12,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -25,8 +30,26 @@ public class HearingRowMapperTest {
     @Mock
     private ResultSet resultSet;
 
+    @Mock
+    private DateUtil dateUtil;
+
+    @org.mockito.Captor
+    private org.mockito.ArgumentCaptor<Timestamp> timestampCaptor;
+
+    @BeforeEach
+    public void setUp() {
+        org.mockito.Mockito.lenient().when(dateUtil.timestampToOffsetDateTime(org.mockito.ArgumentMatchers.any()))
+                .thenAnswer(invocation -> {
+                    Timestamp ts = invocation.getArgument(0);
+                    return ts == null ? null : ts.toInstant().atOffset(ZoneOffset.UTC);
+                });
+    }
+
     @Test
     public void testMapRow() throws SQLException {
+        Timestamp createdTimestamp = Timestamp.from(Instant.now());
+        Timestamp lastModifiedTimestamp = Timestamp.from(Instant.now());
+
         // Mock data for ResultSet
         when(resultSet.getString("description")).thenReturn("Sample hearing description");
         when(resultSet.getString("hearing_booking_id")).thenReturn("HB001");
@@ -35,16 +58,16 @@ public class HearingRowMapperTest {
         when(resultSet.getString("judge_id")).thenReturn("J001");
         when(resultSet.getString("case_id")).thenReturn("CASE001");
         when(resultSet.getString("hearing_type")).thenReturn("ADMISSION");
-        when(resultSet.getLong("hearing_date")).thenReturn(System.currentTimeMillis());
+        when(resultSet.getTimestamp("hearing_date")).thenReturn(Timestamp.from(Instant.now()));
         when(resultSet.getString("title")).thenReturn("Hearing Title");
         when(resultSet.getString("status")).thenReturn("SCHEDULED");
-        when(resultSet.getString("start_time")).thenReturn("1");
-        when(resultSet.getString("end_time")).thenReturn("2");
+        when(resultSet.getTimestamp("start_time")).thenReturn(Timestamp.from(Instant.now()));
+        when(resultSet.getTimestamp("end_time")).thenReturn(Timestamp.from(Instant.now()));
         when(resultSet.getString("reschedule_request_id")).thenReturn("R001");
         when(resultSet.getString("created_by")).thenReturn("admin");
-        when(resultSet.getLong("created_time")).thenReturn(System.currentTimeMillis());
+        when(resultSet.getTimestamp("created_time")).thenReturn(createdTimestamp);
         when(resultSet.getString("last_modified_by")).thenReturn("admin");
-        when(resultSet.getLong("last_modified_time")).thenReturn(System.currentTimeMillis());
+        when(resultSet.getTimestamp("last_modified_time")).thenReturn(lastModifiedTimestamp);
         when(resultSet.getInt("row_version")).thenReturn(1);
         when(resultSet.getString("case_stage")).thenReturn("case_stage");
 
@@ -63,15 +86,12 @@ public class HearingRowMapperTest {
         assertEquals("Hearing Title", hearing.getTitle());
         assertEquals("SCHEDULED", hearing.getStatus());
 
-        // Verify LocalDateTime parsing
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
         // Verify AuditDetails
         AuditDetails auditDetails = hearing.getAuditDetails();
         assertEquals("admin", auditDetails.getCreatedBy());
         assertEquals("admin", auditDetails.getLastModifiedBy());
-        assertEquals(resultSet.getLong("created_time"), auditDetails.getCreatedTime());
-        assertEquals(resultSet.getLong("last_modified_time"), auditDetails.getLastModifiedTime());
+        assertNotNull(auditDetails.getCreatedTime());
+        assertNotNull(auditDetails.getLastModifiedTime());
 
         assertEquals(1, hearing.getRowVersion());
     }

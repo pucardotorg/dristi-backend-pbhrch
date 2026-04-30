@@ -9,6 +9,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.OffsetDateTime;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -28,12 +30,12 @@ public class OpenAPiHearingRequest {
     @JsonProperty("fromDate")
     @NotNull
     @Valid
-    private Long fromDate;
+    private OffsetDateTime fromDate;
 
     @JsonProperty("toDate")
     @NotNull
     @Valid
-    private Long toDate;
+    private OffsetDateTime toDate;
 
     @JsonProperty("isHearingSerialNumberSorting")
     private Boolean isHearingSerialNumberSorting = false;

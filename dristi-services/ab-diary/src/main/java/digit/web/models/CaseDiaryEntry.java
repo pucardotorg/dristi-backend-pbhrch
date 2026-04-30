@@ -3,9 +3,9 @@ package digit.web.models;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 
+import java.time.OffsetDateTime;
 import java.util.UUID;
 
-import org.egov.common.contract.models.AuditDetails;
 import org.springframework.validation.annotation.Validated;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
@@ -13,6 +13,9 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Data;
 import lombok.Builder;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 /**
  * individual diary line item i.e. business of the day. A set of these are picked up to create the final A or B diary. If items are picked up using tenant, courtId and date, then it forms A diary. If they are picked up using tenant, courtId and caseId, then it forms B diary
@@ -38,7 +41,7 @@ public class CaseDiaryEntry {
     @JsonProperty("entryDate")
     @NotNull
 
-    private Long entryDate = null;
+    private OffsetDateTime entryDate = null;
 
     @JsonProperty("caseNumber")
 
@@ -67,7 +70,7 @@ public class CaseDiaryEntry {
 
     @JsonProperty("hearingDate")
 
-    private Long hearingDate = null;
+    private OffsetDateTime hearingDate = null;
 
     @JsonProperty("additionalDetails")
 

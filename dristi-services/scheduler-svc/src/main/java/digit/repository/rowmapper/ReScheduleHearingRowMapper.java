@@ -3,7 +3,8 @@ package digit.repository.rowmapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import digit.models.coremodels.AuditDetails;
+import digit.util.DateUtil;
+import digit.web.models.AuditDetails;
 import digit.web.models.ReScheduleHearing;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,11 @@ import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.OffsetDateTime;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 
 @Component
@@ -19,10 +25,12 @@ import java.sql.SQLException;
 public class ReScheduleHearingRowMapper implements RowMapper<ReScheduleHearing> {
 
     private final ObjectMapper objectMapper;
+    private final DateUtil dateUtil;
 
     @Autowired
-    public ReScheduleHearingRowMapper(ObjectMapper objectMapper) {
+    public ReScheduleHearingRowMapper(ObjectMapper objectMapper, DateUtil dateUtil) {
         this.objectMapper = objectMapper;
+        this.dateUtil = dateUtil;
     }
 
     @Override
@@ -49,14 +57,18 @@ public class ReScheduleHearingRowMapper implements RowMapper<ReScheduleHearing> 
                     }))
                     .auditDetails(AuditDetails.builder()
                             .createdBy(resultSet.getString("created_by"))
-                            .createdTime(resultSet.getLong("created_time"))
+                            .createdTime(getOffsetDateTime(resultSet.getTimestamp("created_time")))
                             .lastModifiedBy(resultSet.getString("last_modified_by"))
-                            .lastModifiedTime(resultSet.getLong("last_modified_time"))
+                            .lastModifiedTime(getOffsetDateTime(resultSet.getTimestamp("last_modified_time")))
                             .build())
                     .rowVersion(resultSet.getInt("row_version")).build();
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
         return reScheduleHearing;
+    }
+
+    private OffsetDateTime getOffsetDateTime(Timestamp timestamp) {
+        return timestamp != null ? dateUtil.timestampToOffsetDateTime(timestamp) : null;
     }
 }

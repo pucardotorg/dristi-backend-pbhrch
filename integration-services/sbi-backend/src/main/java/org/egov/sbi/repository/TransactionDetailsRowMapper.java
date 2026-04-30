@@ -14,6 +14,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Component
 @Slf4j
@@ -24,8 +27,8 @@ public class TransactionDetailsRowMapper implements RowMapper<TransactionDetails
     @Autowired
     public TransactionDetailsRowMapper(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
-    }
 
+    }
     @Override
     public TransactionDetails mapRow(ResultSet rs, int rowNum) throws SQLException {
 
@@ -34,12 +37,13 @@ public class TransactionDetailsRowMapper implements RowMapper<TransactionDetails
         try {
             if (amountDetailsString != null) {
                 amountDetails = objectMapper.readValue(amountDetailsString, new TypeReference<List<AmountDetails>>() {});
+
             }
         } catch (Exception e) {
             log.error("Error deserializing 'amount_details' field: {}", amountDetailsString, e);
             throw new SQLException("Error deserializing 'amount_details' field: " + amountDetailsString, e);
-        }
 
+        }
         AuditDetails auditdetails = AuditDetails.builder()
                 .createdBy(rs.getString("created_by"))
                 .createdTime(rs.getLong("created_time"))
@@ -89,5 +93,14 @@ public class TransactionDetailsRowMapper implements RowMapper<TransactionDetails
                 .mobileNumber(rs.getString("mobile_number"))
                 .amountDetails(amountDetails)
                 .build();
+
+    }
+
+
+    private OffsetDateTime convertToOffsetDateTime(Long epochMillis) {
+        if (epochMillis == null || epochMillis == 0) {
+            return null;
+        }
+        return OffsetDateTime.ofInstant(Instant.ofEpochMilli(epochMillis), ZoneId.systemDefault());
     }
 }

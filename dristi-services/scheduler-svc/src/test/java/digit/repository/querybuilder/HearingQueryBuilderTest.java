@@ -9,6 +9,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,8 +44,8 @@ public class HearingQueryBuilderTest {
         status.add("SCHEDULED");
         status.add("RESCHEDULED");
         searchCriteria.setStatus(status);
-        searchCriteria.setStartDateTime(Long.valueOf(LocalDate.of(2023, 1, 1).atStartOfDay().toEpochSecond(ZoneOffset.UTC)));
-        searchCriteria.setEndDateTime(Long.valueOf(LocalDate.of(2023, 1, 2).atStartOfDay().toEpochSecond(ZoneOffset.UTC)));
+        searchCriteria.setStartDateTime(LocalDate.of(2023, 1, 1).atStartOfDay(ZoneOffset.UTC).toOffsetDateTime());
+        searchCriteria.setEndDateTime(LocalDate.of(2023, 1, 2).atStartOfDay(ZoneOffset.UTC).toOffsetDateTime());
         List<Object> preparedStmtList = new ArrayList<>();
         List<Integer> preparedStmtArgList = new ArrayList<>();
 

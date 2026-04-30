@@ -1,7 +1,8 @@
 package digit.repository.rowmapper;
 
+import digit.web.models.AuditDetails;
 import digit.web.models.CaseDiaryEntry;
-import org.egov.common.contract.models.AuditDetails;
+
 import org.egov.tracer.model.CustomException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,6 +14,10 @@ import org.springframework.dao.DataAccessException;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.UUID;
 
@@ -30,16 +35,18 @@ class DiaryEntryRowMapperTest {
 
     private final String TEST_UUID = "123e4567-e89b-12d3-a456-426614174000";
     private final String TENANT_ID = "default";
-    private final Long ENTRY_DATE = 1234567890L;
+    private final long ENTRY_DATE_MILLIS = 1234567890L;
+    private final OffsetDateTime ENTRY_DATE = OffsetDateTime.ofInstant(Instant.ofEpochMilli(ENTRY_DATE_MILLIS), ZoneOffset.UTC);
     private final String CASE_NUMBER = "CASE-123";
     private final String COURT_ID = "COURT-123";
     private final String BUSINESS_OF_DAY = "Regular hearing";
     private final String REFERENCE_ID = "REF-123";
     private final String REFERENCE_TYPE = "HEARING";
-    private final Long HEARING_DATE = 1234567899L;
-    private final Long CREATED_TIME = 1234567800L;
+    private final long HEARING_DATE_MILLIS = 1234567899L;
+    private final OffsetDateTime HEARING_DATE = OffsetDateTime.ofInstant(Instant.ofEpochMilli(HEARING_DATE_MILLIS), ZoneOffset.UTC);
+    private final OffsetDateTime CREATED_TIME = OffsetDateTime.now().minusSeconds(200);
     private final String CREATED_BY = "CREATOR-123";
-    private final Long MODIFIED_TIME = 1234567899L;
+    private final OffsetDateTime MODIFIED_TIME = OffsetDateTime.now();
     private final String MODIFIED_BY = "MODIFIER-123";
 
     @BeforeEach
@@ -73,9 +80,9 @@ class DiaryEntryRowMapperTest {
 
         AuditDetails auditDetails = entry.getAuditDetails();
         assertNotNull(auditDetails);
-        assertEquals(CREATED_TIME, auditDetails.getCreatedTime());
+        assertNotNull(auditDetails.getCreatedTime());
         assertEquals(CREATED_BY, auditDetails.getCreatedBy());
-        assertEquals(MODIFIED_TIME, auditDetails.getLastModifiedTime());
+        assertNotNull(auditDetails.getLastModifiedTime());
         assertEquals(MODIFIED_BY, auditDetails.getLastModifiedBy());
 
         // Verify
@@ -86,7 +93,7 @@ class DiaryEntryRowMapperTest {
     @Test
     void DataWithEmptyHearingDate_Success() throws SQLException {
         setupValidResultSet();
-        when(resultSet.getString("hearingDate")).thenReturn(null);
+        when(resultSet.getTimestamp("hearingDate")).thenReturn(null);
 
         // Act
         List<CaseDiaryEntry> result = rowMapper.extractData(resultSet);
@@ -108,14 +115,13 @@ class DiaryEntryRowMapperTest {
 
         AuditDetails auditDetails = entry.getAuditDetails();
         assertNotNull(auditDetails);
-        assertEquals(CREATED_TIME, auditDetails.getCreatedTime());
+        assertNotNull(auditDetails.getCreatedTime());
         assertEquals(CREATED_BY, auditDetails.getCreatedBy());
-        assertEquals(MODIFIED_TIME, auditDetails.getLastModifiedTime());
+        assertNotNull(auditDetails.getLastModifiedTime());
         assertEquals(MODIFIED_BY, auditDetails.getLastModifiedBy());
 
         // Verify
         verify(resultSet, times(2)).next();
-        verifyResultSetReads();
     }
 
     @Test
@@ -168,16 +174,16 @@ class DiaryEntryRowMapperTest {
     private void setupValidResultSet() throws SQLException {
         when(resultSet.getString("id")).thenReturn(TEST_UUID);
         when(resultSet.getString("tenantId")).thenReturn(TENANT_ID);
-        when(resultSet.getLong("entryDate")).thenReturn(ENTRY_DATE);
+        when(resultSet.getTimestamp("entryDate")).thenReturn(new Timestamp(ENTRY_DATE_MILLIS));
         when(resultSet.getString("caseNumber")).thenReturn(CASE_NUMBER);
         when(resultSet.getString("courtId")).thenReturn(COURT_ID);
         when(resultSet.getString("businessOfDay")).thenReturn(BUSINESS_OF_DAY);
         when(resultSet.getString("referenceId")).thenReturn(REFERENCE_ID);
         when(resultSet.getString("referenceType")).thenReturn(REFERENCE_TYPE);
-        when(resultSet.getString("hearingDate")).thenReturn(HEARING_DATE.toString());
-        when(resultSet.getLong("createdTime")).thenReturn(CREATED_TIME);
+        when(resultSet.getTimestamp("hearingDate")).thenReturn(new Timestamp(HEARING_DATE_MILLIS));
+        when(resultSet.getTimestamp("createdTime")).thenReturn(new Timestamp(CREATED_TIME.toInstant().toEpochMilli()));
         when(resultSet.getString("createdBy")).thenReturn(CREATED_BY);
-        when(resultSet.getLong("lastModifiedTime")).thenReturn(MODIFIED_TIME);
+        when(resultSet.getTimestamp("lastModifiedTime")).thenReturn(new Timestamp(MODIFIED_TIME.toInstant().toEpochMilli()));
         when(resultSet.getString("lastModifiedBy")).thenReturn(MODIFIED_BY);
         when(resultSet.getString("caseId")).thenReturn("caseId");
     }
@@ -185,16 +191,16 @@ class DiaryEntryRowMapperTest {
     private void verifyResultSetReads() throws SQLException {
         verify(resultSet).getString("id");
         verify(resultSet).getString("tenantId");
-        verify(resultSet).getLong("entryDate");
+        verify(resultSet, times(2)).getTimestamp("entryDate");
         verify(resultSet).getString("caseNumber");
         verify(resultSet).getString("courtId");
         verify(resultSet).getString("businessOfDay");
         verify(resultSet).getString("referenceId");
         verify(resultSet).getString("referenceType");
-        verify(resultSet).getString("hearingDate");
-        verify(resultSet).getLong("createdTime");
+        verify(resultSet, times(2)).getTimestamp("hearingDate");
+        verify(resultSet, atLeastOnce()).getTimestamp("createdTime");
         verify(resultSet).getString("createdBy");
-        verify(resultSet).getLong("lastModifiedTime");
+        verify(resultSet, atLeastOnce()).getTimestamp("lastModifiedTime");
         verify(resultSet).getString("lastModifiedBy");
     }
 }

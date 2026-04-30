@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.util.List;
 
@@ -33,12 +34,12 @@ public class HearingsEnrichmentTest {
 
     @Test
     public void testEnrichHearings_normalDate() {
-        long startTime = LocalDate.now().atStartOfDay(ZoneId.of("Asia/Kolkata")).toInstant().toEpochMilli();
+        OffsetDateTime startTime = LocalDate.now().atStartOfDay(ZoneId.of("Asia/Kolkata")).toOffsetDateTime();
 
         Hearing hearing = Hearing.builder()
                 .hearingType("TYPE1")
                 .startTime(startTime)
-                .endTime(startTime + 3600000)
+                .endTime(startTime.plusHours(1))
                 .build();
 
         when(mdmsDataConfig.getCourtHolidays()).thenReturn(List.of());
@@ -55,12 +56,12 @@ public class HearingsEnrichmentTest {
     public void testEnrichHearings_courtHoliday() {
         String today = LocalDate.now().toString();
 
-        long startTime = LocalDate.now().atStartOfDay(ZoneId.of("Asia/Kolkata")).toInstant().toEpochMilli();
+        OffsetDateTime startTime = LocalDate.now().atStartOfDay(ZoneId.of("Asia/Kolkata")).toOffsetDateTime();
 
         Hearing hearing = Hearing.builder()
                 .hearingType("TYPE1")
                 .startTime(startTime)
-                .endTime(startTime + 3600000)
+                .endTime(startTime.plusHours(1))
                 .build();
 
         when(mdmsDataConfig.getCourtHolidays()).thenReturn(List.of(today));

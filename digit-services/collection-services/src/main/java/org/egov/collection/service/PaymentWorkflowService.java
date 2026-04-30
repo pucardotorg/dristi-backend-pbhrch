@@ -41,6 +41,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.jayway.jsonpath.JsonPath;
 
 import lombok.extern.slf4j.Slf4j;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Service
 @Slf4j
@@ -316,7 +319,7 @@ public class PaymentWorkflowService {
      * @param requestInfo info about the request
      */
     public static void updateAuditDetails(Payment payment, RequestInfo requestInfo){
-        Long currentTime = System.currentTimeMillis();
+        java.time.OffsetDateTime currentTime = java.time.OffsetDateTime.now();
         payment.getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getId().toString());
         payment.getAuditDetails().setLastModifiedTime(currentTime);
 

@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.egov.common.contract.request.User;
 
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -85,6 +86,6 @@ public class PendingTask {
     private String screenType = null;
 
     @JsonProperty("createdTime")
-    private Long createdTime = null;
+    private OffsetDateTime createdTime = null;
 
 }

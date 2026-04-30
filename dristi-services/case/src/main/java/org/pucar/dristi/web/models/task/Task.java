@@ -15,9 +15,13 @@ import org.pucar.dristi.web.models.AssignedTo;
 import org.pucar.dristi.web.models.WorkflowObject;
 import org.springframework.validation.annotation.Validated;
 
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 /**
  * A task is created as part of an Order. It will always be linked to an order
@@ -56,15 +60,15 @@ public class Task {
     @JsonProperty("createdDate")
     @NotNull
     @Valid
-     private Long createdDate = null;
+     private OffsetDateTime createdDate = null;
 
     @JsonProperty("dateCloseBy")
     @Valid
-    private Long dateCloseBy = null;
+    private OffsetDateTime dateCloseBy = null;
 
     @JsonProperty("dateClosed")
     @Valid
-    private Long dateClosed = null;
+    private OffsetDateTime dateClosed = null;
 
     @JsonProperty("taskDescription")
     private String taskDescription = null;

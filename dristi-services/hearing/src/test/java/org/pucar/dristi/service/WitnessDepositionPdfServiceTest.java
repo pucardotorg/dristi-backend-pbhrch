@@ -183,16 +183,17 @@ class WitnessDepositionPdfServiceTest {
 
     @Test
     void testFormatDateFromMillis() throws Exception {
-        Method formatDateFromMillisMethod = WitnessDepositionPdfService.class.getDeclaredMethod("formatDateFromMillis", long.class);
-        formatDateFromMillisMethod.setAccessible(true);
+        Method formatDateMethod = WitnessDepositionPdfService.class.getDeclaredMethod("formatDateFromOffsetDateTime", java.time.OffsetDateTime.class);
+        formatDateMethod.setAccessible(true);
 
-        long millis = System.currentTimeMillis();
-        String result = (String) formatDateFromMillisMethod.invoke(service, millis);
+        java.time.OffsetDateTime now = java.time.OffsetDateTime.now();
+        String result = (String) formatDateMethod.invoke(service, now);
         assertNotNull(result);
         assertFalse(result.isEmpty());
 
-        // Test error case
-        assertEquals("1 day of January 1970", formatDateFromMillisMethod.invoke(service, -1L));
+        // Test null case
+        String nullResult = (String) formatDateMethod.invoke(service, (Object) null);
+        assertEquals("", nullResult);
     }
 
     @Test
@@ -267,7 +268,7 @@ class WitnessDepositionPdfServiceTest {
         return Hearing.builder()
                 .hearingId(UUID.randomUUID().toString())
                 .filingNumber(Collections.singletonList("CASE-2023-001"))
-                .endTime(System.currentTimeMillis())
+                .endTime(java.time.OffsetDateTime.now())
                 .build();
     }
 

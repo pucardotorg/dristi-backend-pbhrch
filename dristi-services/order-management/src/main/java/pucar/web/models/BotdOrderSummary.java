@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 
+import java.time.OffsetDateTime;
+
 @Validated
 @Data
 @AllArgsConstructor
@@ -30,7 +32,7 @@ public class BotdOrderSummary {
     private String status = null;
 
     @JsonProperty("createdDate")
-    private Long createdDate = null;
+    private OffsetDateTime createdDate = null;
 
     @JsonProperty("tenantId")
     private String tenantId = null;
@@ -51,7 +53,7 @@ public class BotdOrderSummary {
     private String purposeOfNextHearing = null;
 
     @JsonProperty("nextHearingDate")
-    private Long nextHearingDate = null;
+    private OffsetDateTime nextHearingDate = null;
 
     @JsonProperty("businessOfTheDay")
     private String businessOfTheDay = null;

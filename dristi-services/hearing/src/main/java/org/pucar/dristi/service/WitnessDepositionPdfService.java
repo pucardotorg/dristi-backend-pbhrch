@@ -142,7 +142,7 @@ public class WitnessDepositionPdfService {
                 .fatherName(individual.getFatherName())
                 .age(individual.getDateOfBirth() != null ? calculateAge(individual.getDateOfBirth()) : null)
                 .gender(individual.getGender() != null ? individual.getGender() : null)
-                .hearingDate(formatDateFromMillis(hearing.getEndTime()))
+                .hearingDate(formatDateFromOffsetDateTime(hearing.getEndTime()))
                 .village(individual.getAddress().get(0).getCity())
                 .taluk(individual.getAddress().get(0).getAddressLine1())
                 .build();
@@ -175,7 +175,7 @@ public class WitnessDepositionPdfService {
                 .name(firstName + " " + lastName)
                 .mobileNumber(mobileNumber)
                 .deposition(deposition)
-                .hearingDate(formatDateFromMillis(hearing.getEndTime()))
+                .hearingDate(formatDateFromOffsetDateTime(hearing.getEndTime()))
                 .taluk(locality)
                 .village(city)
                 .build();
@@ -226,10 +226,10 @@ public class WitnessDepositionPdfService {
         }
     }
 
-    private String formatDateFromMillis(long millis) {
+    private String formatDateFromOffsetDateTime(OffsetDateTime offsetDateTime) {
         try {
-            ZonedDateTime dateTime = Instant.ofEpochMilli(millis)
-                    .atZone(ZoneId.of(config.getZoneId()));
+            if (offsetDateTime == null) return "";
+            ZonedDateTime dateTime = offsetDateTime.toInstant().atZone(ZoneId.of(config.getZoneId()));
 
             String day = String.valueOf(dateTime.getDayOfMonth());
 
@@ -238,7 +238,7 @@ public class WitnessDepositionPdfService {
 
             return String.format("%s day of %s", day, formattedMonthYear);
         } catch (Exception e) {
-            log.error("Failed to get Date in String format from : {}", millis);
+            log.error("Failed to get Date in String format from : {}", offsetDateTime);
             return "";
         }
     }

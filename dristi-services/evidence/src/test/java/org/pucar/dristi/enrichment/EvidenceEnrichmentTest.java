@@ -1,7 +1,7 @@
 package org.pucar.dristi.enrichment;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import org.egov.common.contract.models.AuditDetails;
+import org.pucar.dristi.web.models.AuditDetails;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
 import org.egov.tracer.model.CustomException;
@@ -12,11 +12,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.pucar.dristi.config.Configuration;
+import org.pucar.dristi.repository.EvidenceRepository;
 import org.pucar.dristi.util.CaseUtil;
 import org.pucar.dristi.util.IdgenUtil;
 import org.pucar.dristi.web.models.Artifact;
 import org.pucar.dristi.web.models.Comment;
 import org.pucar.dristi.web.models.EvidenceRequest;
+
+import java.time.OffsetDateTime;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -27,6 +30,9 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @ExtendWith(MockitoExtension.class)
 public class EvidenceEnrichmentTest {
@@ -40,6 +46,12 @@ public class EvidenceEnrichmentTest {
     @Mock
     private CaseUtil caseUtil;
 
+    @Mock
+    private EvidenceRepository evidenceRepository;
+
+    @Mock
+    private org.pucar.dristi.util.DateUtil dateUtil;
+
     @InjectMocks
     private EvidenceEnrichment evidenceEnrichment;
 
@@ -47,6 +59,8 @@ public class EvidenceEnrichmentTest {
 
     @BeforeEach
     void setUp() {
+        lenient().when(configuration.getZoneId()).thenReturn("UTC");
+        lenient().when(dateUtil.getCurrentOffsetDateTime()).thenReturn(java.time.OffsetDateTime.now());
         evidenceRequest = new EvidenceRequest();
         RequestInfo requestInfo = new RequestInfo();
         User userInfo = new User();
@@ -115,7 +129,7 @@ public class EvidenceEnrichmentTest {
     @Test
     void testEnrichEvidenceRegistrationUponUpdate() {
         // Arrange
-        AuditDetails auditDetails = AuditDetails.builder().lastModifiedTime(0L).lastModifiedBy("oldUuid").build();
+        AuditDetails auditDetails = AuditDetails.builder().lastModifiedTime(OffsetDateTime.now()).lastModifiedBy("oldUuid").build();
         evidenceRequest.getArtifact().setAuditdetails(auditDetails);
 
         // Act
@@ -123,7 +137,7 @@ public class EvidenceEnrichmentTest {
 
         // Assert
         assertNotNull(evidenceRequest.getArtifact().getAuditdetails());
-        assertTrue(evidenceRequest.getArtifact().getAuditdetails().getLastModifiedTime() > 0);
+        assertTrue(evidenceRequest.getArtifact().getAuditdetails().getLastModifiedTime().toInstant().toEpochMilli() > 0);
         assertEquals(evidenceRequest.getRequestInfo().getUserInfo().getUuid(), evidenceRequest.getArtifact().getAuditdetails().getLastModifiedBy());
     }
 

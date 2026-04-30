@@ -10,6 +10,9 @@ import org.egov.common.contract.models.AuditDetails;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 /**
  * AdvocateMapping
@@ -63,5 +66,8 @@ public class AdvocateMapping {
 
     @JsonProperty("advocateFilingStatus")
     private String advocateFilingStatus = null;
+
+    @JsonProperty("advocate")
+    private Advocate advocate = null;
 
 }

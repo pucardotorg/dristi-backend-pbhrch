@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.OffsetDateTime;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -13,7 +15,7 @@ public class AuditDetail {
 
 	private String lastModifiedBy;
 
-	private Long createdTime;
+	private OffsetDateTime createdTime;
 
-	private Long lastModifiedTime;
+	private OffsetDateTime lastModifiedTime;
 }

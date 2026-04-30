@@ -7,17 +7,24 @@ import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.OffsetDateTime;
+
 import static org.egov.pgr.util.PGRConstants.SCHEMA_REPLACE_STRING;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Component
 public class PGRUtils {
 
 
     private MultiStateInstanceUtil multiStateInstanceUtil;
+    private DateUtil dateUtil;
 
     @Autowired
-    public PGRUtils(MultiStateInstanceUtil multiStateInstanceUtil) {
+    public PGRUtils(MultiStateInstanceUtil multiStateInstanceUtil, DateUtil dateUtil) {
         this.multiStateInstanceUtil = multiStateInstanceUtil;
+        this.dateUtil = dateUtil;
     }
 
     /**
@@ -28,7 +35,7 @@ public class PGRUtils {
      * @return AuditDetails
      */
     public AuditDetails getAuditDetails(String by, Service service, Boolean isCreate) {
-        Long time = System.currentTimeMillis();
+        OffsetDateTime time = dateUtil.getCurrentOffsetDateTime();
         if(isCreate)
             return AuditDetails.builder().createdBy(by).lastModifiedBy(by).createdTime(time).lastModifiedTime(time).build();
         else

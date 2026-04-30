@@ -24,10 +24,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
 
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.*;
 
 import static org.pucar.dristi.config.ServiceConstants.*;
 import static org.pucar.dristi.config.ServiceConstants.FSO_VALIDATED;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Slf4j
 @Service
@@ -111,11 +116,12 @@ public class PaymentUpdateService {
                         .filingNumber(courtCase.getFilingNumber())
                         .build();
 
+                long now = OffsetDateTime.now(ZoneId.of(configuration.getZoneId())).toInstant().toEpochMilli();
                 AuditDetails auditDetails = AuditDetails.builder()
                         .createdBy(requestInfo.getUserInfo().getUuid())
-                        .createdTime(System.currentTimeMillis())
+                        .createdTime(now)
                         .lastModifiedBy(requestInfo.getUserInfo().getUuid())
-                        .lastModifiedTime(System.currentTimeMillis()).build();
+                        .lastModifiedTime(now).build();
                 AdvocateMapping existingRepresentative = caseService.validateAdvocateAlreadyRepresenting(courtCase, joinCaseData);
                 caseService.joinCaseAdvocate(joinCaseRequest, courtCase, caseObj, auditDetails, existingRepresentative);
             }
@@ -162,7 +168,8 @@ public class PaymentUpdateService {
             enrichmentUtil.enrichCaseRegistrationFillingDate(courtCase);
             AuditDetails auditDetails = courtCase.getAuditdetails();
             auditDetails.setLastModifiedBy(paymentDetail.getAuditDetails().getLastModifiedBy());
-            auditDetails.setLastModifiedTime(paymentDetail.getAuditDetails().getLastModifiedTime());
+            java.time.OffsetDateTime lmtOdt = paymentDetail.getAuditDetails().getLastModifiedTime();
+            auditDetails.setLastModifiedTime(lmtOdt != null ? lmtOdt.toInstant().toEpochMilli() : null);
             courtCase.setAuditdetails(auditDetails);
             CourtCase decryptedCourtCase = encryptionDecryptionUtil.decryptObject(courtCase, configuration.getCaseDecryptSelf(), CourtCase.class, requestInfo);
 

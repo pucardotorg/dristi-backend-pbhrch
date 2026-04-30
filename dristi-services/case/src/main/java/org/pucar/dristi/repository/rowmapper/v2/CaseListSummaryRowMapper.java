@@ -15,6 +15,9 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.*;
 
 @Component
@@ -56,8 +59,8 @@ public class CaseListSummaryRowMapper implements ResultSetExtractor<List<CaseSum
                         .id(caseId)
                         .tenantId(rs.getString("tenantid"))
                         .caseTitle(rs.getString("casetitle"))
-                        .filingDate(rs.getLong("filingdate"))
-                        .createdTime(rs.getLong("createdtime"))
+                        .filingDate(tsToOffsetDateTime(rs.getTimestamp("filingdate")))
+                        .createdTime(tsToOffsetDateTime(rs.getTimestamp("createdtime")))
                         .outcome(rs.getString("outcome"))
                         .status(rs.getString("status"))
                         .natureOfDisposal(getNatureOfDisposal(rs))
@@ -69,7 +72,7 @@ public class CaseListSummaryRowMapper implements ResultSetExtractor<List<CaseSum
                         .pendingAdvocateRequests(getObjectListFromJson(rs.getString("pendingadvocaterequests"), new TypeReference<List<PendingAdvocateRequest>>() {}))
                         .courtId(rs.getString("courtid"))
                         .filingNumber(rs.getString("filingnumber"))
-                        .lastModifiedTime(rs.getLong("lastmodifiedtime"))
+                        .lastModifiedTime(tsToOffsetDateTime(rs.getTimestamp("lastmodifiedtime")))
                         .isLPRCase(rs.getBoolean("isLPRCase"))
                         .lprNumber(rs.getString("lprNumber"))
                         .build();
@@ -94,5 +97,9 @@ public class CaseListSummaryRowMapper implements ResultSetExtractor<List<CaseSum
         } catch (Exception e) {
             throw new CustomException("Failed to convert JSON to " + typeRef.getType(), e.getMessage());
         }
+    }
+
+    private OffsetDateTime tsToOffsetDateTime(Timestamp ts) {
+        return ts != null ? ts.toInstant().atOffset(ZoneOffset.UTC) : null;
     }
 }

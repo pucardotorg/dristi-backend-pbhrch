@@ -1,6 +1,6 @@
 package org.pucar.dristi.enrichment;
 
-import org.egov.common.contract.models.AuditDetails;
+import org.pucar.dristi.web.models.AuditDetails;
 import org.egov.common.contract.models.Document;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
@@ -15,12 +15,16 @@ import org.pucar.dristi.util.IdgenUtil;
 import org.pucar.dristi.web.models.AdvocateClerk;
 import org.pucar.dristi.web.models.AdvocateClerkRequest;
 
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 class AdvocateClerkRegistrationEnrichmentTest {
 
@@ -81,7 +85,7 @@ class AdvocateClerkRegistrationEnrichmentTest {
         AdvocateClerkRequest advocateClerkRequest = new AdvocateClerkRequest();
         AdvocateClerk clerk = new AdvocateClerk();
         clerk.setTenantId("tenantId");
-        AuditDetails auditDetails = AuditDetails.builder().createdBy("user-uuid-1").createdTime(System.currentTimeMillis()).lastModifiedBy("user-uuid-1").lastModifiedTime(System.currentTimeMillis()).build();
+        AuditDetails auditDetails = AuditDetails.builder().createdBy("user-uuid-1").createdTime(OffsetDateTime.now()).lastModifiedBy("user-uuid-1").lastModifiedTime(OffsetDateTime.now()).build();
         clerk.setAuditDetails(auditDetails);
         advocateClerkRequest.setClerk(clerk);
         RequestInfo requestInfo = new RequestInfo();
@@ -105,7 +109,7 @@ class AdvocateClerkRegistrationEnrichmentTest {
         AdvocateClerkRequest advocateClerkRequest = new AdvocateClerkRequest();
         AdvocateClerk clerk = new AdvocateClerk();
         clerk.setTenantId("tenantId");
-        AuditDetails auditDetails = AuditDetails.builder().createdBy("user-uuid-1").createdTime(System.currentTimeMillis()).lastModifiedBy("user-uuid-1").lastModifiedTime(System.currentTimeMillis()).build();
+        AuditDetails auditDetails = AuditDetails.builder().createdBy("user-uuid-1").createdTime(OffsetDateTime.now()).lastModifiedBy("user-uuid-1").lastModifiedTime(OffsetDateTime.now()).build();
         clerk.setAuditDetails(auditDetails);
         advocateClerkRequest.setClerk(null);
         RequestInfo requestInfo = new RequestInfo();
@@ -183,7 +187,7 @@ class AdvocateClerkRegistrationEnrichmentTest {
         AdvocateClerkRequest advocateClerkRequest = new AdvocateClerkRequest();
         AdvocateClerk clerk = new AdvocateClerk();
         clerk.setTenantId("tenantId");
-        AuditDetails auditDetails = AuditDetails.builder().createdBy("user-uuid-1").createdTime(System.currentTimeMillis()).lastModifiedBy("user-uuid-1").lastModifiedTime(System.currentTimeMillis()).build();
+        AuditDetails auditDetails = AuditDetails.builder().createdBy("user-uuid-1").createdTime(OffsetDateTime.now()).lastModifiedBy("user-uuid-1").lastModifiedTime(OffsetDateTime.now()).build();
         clerk.setAuditDetails(auditDetails);
         advocateClerkRequest.setClerk(null);
         RequestInfo requestInfo = new RequestInfo();

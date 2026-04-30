@@ -1,19 +1,25 @@
 package digit.repository.rowmapper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import digit.web.models.AuditDetails;
 import digit.web.models.CaseDiary;
 import digit.web.models.CaseDiaryDocument;
 import lombok.extern.slf4j.Slf4j;
-import org.egov.common.contract.models.AuditDetails;
 import org.egov.tracer.model.CustomException;
 import org.postgresql.util.PGobject;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
+import java.sql.Timestamp;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.*;
 
 import static digit.config.ServiceConstants.ROW_MAPPER_EXCEPTION;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Component
 @Slf4j
@@ -40,15 +46,15 @@ public class DiaryWithDocumentRowMapper implements ResultSetExtractor<List<CaseD
                                 .id(id)
                                 .tenantId(rs.getString("tenantId"))
                                 .caseNumber(rs.getString("caseNumber"))
-                                .diaryDate(rs.getLong("diaryDate"))
+                                .diaryDate(rs.getTimestamp("diaryDate") != null ? rs.getTimestamp("diaryDate").toInstant().atOffset(java.time.ZoneOffset.UTC) : null)
                                 .diaryType(rs.getString("diaryType"))
                                 .courtId(rs.getString("courtId"))
                                 .documents(new ArrayList<>())
                                 .auditDetails(AuditDetails.builder()
                                         .createdBy(rs.getString("diaryCreateBy"))
-                                        .createdTime(rs.getLong("diaryCreatedTime"))
+                                        .createdTime(getOffsetDateTime(rs.getTimestamp("diaryCreatedTime")))
                                         .lastModifiedBy(rs.getString("diaryLastModifiedBy"))
-                                        .lastModifiedTime(rs.getLong("diaryLastModifiedTime"))
+                                        .lastModifiedTime(getOffsetDateTime(rs.getTimestamp("diaryLastModifiedTime")))
                                         .build())
                                 .build();
 
@@ -74,9 +80,9 @@ public class DiaryWithDocumentRowMapper implements ResultSetExtractor<List<CaseD
                                 .isActive(rs.getBoolean("documentIsActive"))
                                 .auditDetails(AuditDetails.builder()
                                         .createdBy(rs.getString("documentCreatedBy"))
-                                        .createdTime(rs.getLong("documentCreatedTime"))
+                                        .createdTime(getOffsetDateTime(rs.getTimestamp("documentCreatedTime")))
                                         .lastModifiedBy(rs.getString("documentLastModifiedBy"))
-                                        .lastModifiedTime(rs.getLong("documentLastModifiedTime"))
+                                        .lastModifiedTime(getOffsetDateTime(rs.getTimestamp("documentLastModifiedTime")))
                                         .build())
                                 .build()
                 );
@@ -87,5 +93,12 @@ public class DiaryWithDocumentRowMapper implements ResultSetExtractor<List<CaseD
             log.error("Error occurred while processing document ResultSet: {}", e.getMessage());
             throw new CustomException(ROW_MAPPER_EXCEPTION, "Error occurred while processing document ResultSet: " + e.getMessage());
         }
+    }
+
+    private OffsetDateTime getOffsetDateTime(Timestamp timestamp) {
+        if (timestamp == null) {
+            return null;
+        }
+        return timestamp.toInstant().atOffset(ZoneOffset.UTC);
     }
 }

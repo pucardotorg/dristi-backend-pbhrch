@@ -1,6 +1,8 @@
 package digit.web.models.demand;
 
 import digit.web.models.demand.enums.Status;
+
+import java.time.OffsetDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,7 +20,7 @@ public class CollectedReceipt {
 
     private Double receiptAmount;
 
-    private Long receiptDate;
+    private OffsetDateTime receiptDate;
 
     private Status status;
 

@@ -8,6 +8,9 @@ import org.springframework.stereotype.Component;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Component
 public class BusinessServiceRowMapper implements ResultSetExtractor<List<BusinessService>> {
@@ -19,15 +22,15 @@ public class BusinessServiceRowMapper implements ResultSetExtractor<List<Busines
             String uuid = rs.getString("bs_uuid");
             BusinessService businessService = businessServiceMap.get(uuid);
             if(businessService==null){
-                Long lastModifiedTime = rs.getLong("bs_lastModifiedTime");
-                if (rs.wasNull()) {
-                    lastModifiedTime = null;
-                }
+                java.sql.Timestamp bsLastModTs = rs.getTimestamp("bs_lastModifiedTime");
+                java.time.OffsetDateTime bsLastModifiedTime = bsLastModTs != null ? bsLastModTs.toInstant().atOffset(java.time.ZoneOffset.UTC) : null;
+                java.sql.Timestamp bsCreatedTs = rs.getTimestamp("bs_createdTime");
+                java.time.OffsetDateTime bsCreatedTime = bsCreatedTs != null ? bsCreatedTs.toInstant().atOffset(java.time.ZoneOffset.UTC) : null;
                 AuditDetails auditdetails = AuditDetails.builder()
                         .createdBy(rs.getString("bs_createdBy"))
-                        .createdTime(rs.getLong("bs_createdTime"))
+                        .createdTime(bsCreatedTime)
                         .lastModifiedBy(rs.getString("bs_lastModifiedBy"))
-                        .lastModifiedTime(lastModifiedTime)
+                        .lastModifiedTime(bsLastModifiedTime)
                         .build();
                 businessService = BusinessService.builder()
                         .tenantId(rs.getString("bs_tenantId"))
@@ -60,16 +63,16 @@ public class BusinessServiceRowMapper implements ResultSetExtractor<List<Busines
         String stateUuid = rs.getString("st_uuid");
         String actionUuid = rs.getString("ac_uuid");
 
-        Long lastModifiedTime = rs.getLong("st_lastModifiedTime");
-        if (rs.wasNull()) {
-            lastModifiedTime = null;
-        }
+        java.sql.Timestamp stLastModTs = rs.getTimestamp("st_lastModifiedTime");
+        java.time.OffsetDateTime lastModifiedTime = stLastModTs != null ? stLastModTs.toInstant().atOffset(java.time.ZoneOffset.UTC) : null;
 
         State state;
         if(businessService.getStateFromUuid(stateUuid)==null){
+            java.sql.Timestamp stCreatedTs = rs.getTimestamp("st_createdTime");
+            java.time.OffsetDateTime stCreatedTime = stCreatedTs != null ? stCreatedTs.toInstant().atOffset(java.time.ZoneOffset.UTC) : null;
             AuditDetails auditdetails = AuditDetails.builder()
                     .createdBy(rs.getString("st_createdBy"))
-                    .createdTime(rs.getLong("st_createdTime"))
+                    .createdTime(stCreatedTime)
                     .lastModifiedBy(rs.getString("st_lastModifiedBy"))
                     .lastModifiedTime(lastModifiedTime)
                     .build();
@@ -100,14 +103,14 @@ public class BusinessServiceRowMapper implements ResultSetExtractor<List<Busines
         }
 
         if(actionUuid!=null){
-            Long actionLastModifiedTime = rs.getLong("ac_lastModifiedTime");
-            if (rs.wasNull()) {
-                actionLastModifiedTime = null;
-            }
+            java.sql.Timestamp acLastModTs = rs.getTimestamp("ac_lastModifiedTime");
+            java.time.OffsetDateTime actionLastModifiedTime = acLastModTs != null ? acLastModTs.toInstant().atOffset(java.time.ZoneOffset.UTC) : null;
+            java.sql.Timestamp acCreatedTs = rs.getTimestamp("ac_createdTime");
+            java.time.OffsetDateTime acCreatedTime = acCreatedTs != null ? acCreatedTs.toInstant().atOffset(java.time.ZoneOffset.UTC) : null;
 
             AuditDetails actionAuditdetails = AuditDetails.builder()
                     .createdBy(rs.getString("ac_createdBy"))
-                    .createdTime(rs.getLong("ac_createdTime"))
+                    .createdTime(acCreatedTime)
                     .lastModifiedBy(rs.getString("ac_lastModifiedBy"))
                     .lastModifiedTime(actionLastModifiedTime)
                     .build();

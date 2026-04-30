@@ -7,8 +7,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 
 @Data
@@ -48,20 +52,20 @@ public class ScheduleHearing {
     private String status;
 
     @JsonProperty("hearingDate")
-    private long hearingDate;
+    private OffsetDateTime hearingDate;
 
     @JsonProperty("startTime")
-    private long startTime;
+    private OffsetDateTime startTime;
 
     @JsonProperty("endTime")
-    private long endTime;
+    private OffsetDateTime endTime;
 
 
     @JsonProperty("originalHearingDate")
-    private long originalHearingDate;
+    private OffsetDateTime originalHearingDate;
 
     @JsonProperty("expiryTime")
-    private Long expiryTime;
+    private OffsetDateTime expiryTime;
 
     @JsonProperty("auditDetails")
     private AuditDetails auditDetails;

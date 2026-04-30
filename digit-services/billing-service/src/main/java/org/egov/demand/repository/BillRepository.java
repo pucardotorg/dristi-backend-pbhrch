@@ -2,6 +2,7 @@ package org.egov.demand.repository;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -96,7 +97,7 @@ public class BillRepository {
 					status = BillStatus.CANCELLED;
 				
 				AuditDetails auditDetails = bill.getAuditDetails();
-				
+
 				ps.setString(1, bill.getId());
 				ps.setString(2, bill.getTenantId());
 				ps.setString(3, bill.getPayerName());
@@ -105,9 +106,9 @@ public class BillRepository {
 				ps.setObject(6, bill.getIsActive());
 				ps.setObject(7, bill.getIsCancelled());
 				ps.setString(8, auditDetails.getCreatedBy());
-				ps.setLong(9, auditDetails.getCreatedTime());
+				ps.setLong(9, auditDetails.getCreatedTime().toInstant().toEpochMilli());
 				ps.setString(10, auditDetails.getLastModifiedBy());
-				ps.setLong(11, auditDetails.getLastModifiedTime());
+				ps.setLong(11, auditDetails.getLastModifiedTime().toInstant().toEpochMilli());
 				ps.setString(12, bill.getMobileNumber());
 				ps.setString(13, status.toString());
 				ps.setObject(14, util.getPGObject(bill.getAdditionalDetails()));
@@ -169,9 +170,9 @@ public class BillRepository {
 				ps.setString(18, collectionModesNotAllowed);
 				
 				ps.setString(19, auditDetails.getCreatedBy());
-				ps.setLong(20, auditDetails.getCreatedTime());
+				ps.setLong(20, auditDetails.getCreatedTime().toInstant().toEpochMilli());
 				ps.setString(21, auditDetails.getLastModifiedBy());
-				ps.setLong(22, auditDetails.getLastModifiedTime());
+				ps.setLong(22, auditDetails.getLastModifiedTime().toInstant().toEpochMilli());
 				ps.setBoolean(23, billDetail.getIsAdvanceAllowed());
 				ps.setLong(24, billDetail.getExpiryDate());
 				
@@ -204,9 +205,9 @@ public class BillRepository {
 				ps.setObject(8, null);
 				ps.setString(9, null);
 				ps.setString(10, auditDetails.getCreatedBy());
-				ps.setLong(11, auditDetails.getCreatedTime());
+				ps.setLong(11, auditDetails.getCreatedTime().toInstant().toEpochMilli());
 				ps.setString(12, auditDetails.getLastModifiedBy());
-				ps.setLong(13, auditDetails.getLastModifiedTime());
+				ps.setLong(13, auditDetails.getLastModifiedTime().toInstant().toEpochMilli());
 				ps.setString(14, billAccountDetail.getTaxHeadCode());
 			}
 				

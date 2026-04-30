@@ -24,6 +24,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -130,7 +132,7 @@ public class ReScheduleHearingServiceTest {
         hearing.setTenantId("tenant1");
         hearing.setCaseId("case1");
         hearing.setJudgeId("judge1");
-        hearing.setAvailableAfter(1L);
+        hearing.setAvailableAfter(OffsetDateTime.now(ZoneOffset.UTC));
         hearing.setHearingBookingId("booking1");
         hearingList.add(hearing);
         request.setReScheduleHearing(hearingList);
@@ -159,9 +161,9 @@ public class ReScheduleHearingServiceTest {
         availabilityDTO.setDate("2023-10-10");
         availabilityDTOs.add(availabilityDTO);
         when(calendarService.getJudgeAvailability(any())).thenReturn(availabilityDTOs);
-        when(dateUtil.getLocalDateFromEpoch(anyLong())).thenReturn(LocalDate.of(2023, 9, 5));
+        lenient().when(dateUtil.getLocalDateFromEpoch(anyLong())).thenReturn(LocalDate.of(2023, 9, 5));
 
-        when(dateUtil.getEPochFromLocalDate(any())).thenReturn(1693800000000L);
+        lenient().when(dateUtil.getEPochFromLocalDate(any())).thenReturn(1693800000000L);
 
         // Mock hearing search
         ScheduleHearing scheduleHearing = new ScheduleHearing();

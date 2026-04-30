@@ -14,6 +14,9 @@ import pucar.web.models.Lock;
 
 import java.util.Optional;
 import java.util.UUID;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Slf4j
 @Service
@@ -51,8 +54,8 @@ public class LockServiceImpl implements LockService {
         }
 
         lockDetails.setId(UUID.randomUUID().toString());
-        lockDetails.setLockReleaseTime(System.currentTimeMillis() + configuration.getLockDurationMillis());
-        lockDetails.setLockDate(System.currentTimeMillis());
+        lockDetails.setLockReleaseTime(java.time.OffsetDateTime.now().plus(configuration.getLockDurationMillis(), java.time.temporal.ChronoUnit.MILLIS));
+        lockDetails.setLockDate(java.time.OffsetDateTime.now());
         String individualId = individualUtil.getIndividualId(requestInfo);
         lockDetails.setIndividualId(individualId);
         lockDetails.setIsLocked(true);
@@ -131,10 +134,10 @@ public class LockServiceImpl implements LockService {
             Lock existingLock = lock.get();
             log.info("method:getLock, result=InProgress, lockId={}", existingLock.getId());
 
-            Long expiryTime = existingLock.getLockReleaseTime();
-            Long currentTime = System.currentTimeMillis();
+            java.time.OffsetDateTime expiryTime = existingLock.getLockReleaseTime();
+            java.time.OffsetDateTime currentTime = java.time.OffsetDateTime.now();
 
-            if (expiryTime < currentTime) {
+            if (expiryTime != null && expiryTime.isBefore(currentTime)) {
                 log.info("method:getLock, result=InProgress, lock is expired, removing lock with lockId={}", existingLock.getId());
 
                 // Lock is expired, delete it
@@ -154,16 +157,17 @@ public class LockServiceImpl implements LockService {
 
 
     private AuditDetails getCreateAuditDetails(RequestInfo requestInfo) {
+        java.time.OffsetDateTime now = java.time.OffsetDateTime.now();
         return AuditDetails.builder()
                 .createdBy(requestInfo.getUserInfo().getUuid())
-                .createdTime(System.currentTimeMillis())
+                .createdTime(now)
                 .lastModifiedBy(requestInfo.getUserInfo().getUuid())
-                .lastModifiedTime(System.currentTimeMillis()).build();
+                .lastModifiedTime(now).build();
     }
 
     private AuditDetails getUpdateAuditDetails(RequestInfo requestInfo, AuditDetails auditDetails) {
         auditDetails.setLastModifiedBy(requestInfo.getUserInfo().getUuid());
-        auditDetails.setLastModifiedTime(System.currentTimeMillis());
+        auditDetails.setLastModifiedTime(java.time.OffsetDateTime.now());
         return auditDetails;
     }
 }

@@ -23,7 +23,13 @@ import org.springframework.util.CollectionUtils;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.sql.SQLException;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.*;
 
 @Service
@@ -81,8 +87,10 @@ public class PaymentRowMapper implements ResultSetExtractor<List<Payment>> {
                 if(rs.wasNull()){lastModifiedTime = null;}
 
 
-                AuditDetails auditDetails = AuditDetails.builder().createdBy(createdBy).createdTime(createdDate)
-                        .lastModifiedBy(lastModifiedBy).lastModifiedTime(lastModifiedTime).build();
+                AuditDetails auditDetails = AuditDetails.builder().createdBy(createdBy)
+                        .createdTime(convertToOffsetDateTime(createdDate))
+                        .lastModifiedBy(lastModifiedBy)
+                        .lastModifiedTime(convertToOffsetDateTime(lastModifiedTime)).build();
 
                 currentPayment = Payment.builder()
                         .id(id)
@@ -111,18 +119,15 @@ public class PaymentRowMapper implements ResultSetExtractor<List<Payment>> {
                 PGobject obj = (PGobject) rs.getObject("py_additionalDetails");
                 currentPayment.setAdditionalDetails(getJsonValue(obj));
                 idToPaymentMap.put(currentPayment.getId(),currentPayment);
-            }
 
+            }
             addChildrenToPayment(rs,currentPayment);
 
+
         }
-
         return new ArrayList<>(idToPaymentMap.values());
+
     }
-
-
-
-
     private void addChildrenToPayment(ResultSet rs, Payment payment) throws SQLException{
 
         PaymentDetail paymentDetail = null;
@@ -134,10 +139,12 @@ public class PaymentRowMapper implements ResultSetExtractor<List<Payment>> {
                 if(detail.getId().equalsIgnoreCase(paymentDetailId)){
                     paymentDetail = detail;
                     break;
-                }
-            }
-        }
 
+                }
+
+            }
+
+        }
         if(paymentDetail == null){
 
             String id = rs.getString("pyd_id");
@@ -157,8 +164,10 @@ public class PaymentRowMapper implements ResultSetExtractor<List<Payment>> {
             String lastModifiedBy = rs.getString("pyd_lastModifiedBy");
             Long lastModifiedTime = rs.getLong("pyd_lastModifiedTime");
 
-            AuditDetails auditDetails = AuditDetails.builder().createdBy(createdBy).createdTime(createdTime)
-                    .lastModifiedBy(lastModifiedBy).lastModifiedTime(lastModifiedTime).build();
+            AuditDetails auditDetails = AuditDetails.builder().createdBy(createdBy)
+                    .createdTime(convertToOffsetDateTime(createdTime))
+                    .lastModifiedBy(lastModifiedBy)
+                    .lastModifiedTime(convertToOffsetDateTime(lastModifiedTime)).build();
 
             paymentDetail = PaymentDetail.builder()
                     .id(id)
@@ -181,9 +190,9 @@ public class PaymentRowMapper implements ResultSetExtractor<List<Payment>> {
             if(rs.wasNull()){billDate = null;}
 
             AuditDetails billAuditDetails = AuditDetails.builder().createdBy(rs.getString("bill_createdby"))
-                    .createdTime(rs.getLong("bill_createdTime"))
+                    .createdTime(convertToOffsetDateTime(rs.getLong("bill_createdTime")))
                     .lastModifiedBy("bill_lastmodifiedby")
-                    .lastModifiedTime(rs.getLong("bill_lastModifiedTime"))
+                    .lastModifiedTime(convertToOffsetDateTime(rs.getLong("bill_lastModifiedTime")))
                     .build();*/
 
             /*List<String> collectionModesAllowedList = new LinkedList<>();
@@ -199,8 +208,8 @@ public class PaymentRowMapper implements ResultSetExtractor<List<Payment>> {
 
 
             payment.addpaymentDetailsItem(paymentDetail);
-        }
 
+        }
         /*PGobject billAccountDetailAdditionalObj = (PGobject) rs.getObject("bacdt_additionalDetails");
 
         Integer order = rs.getInt("order");
@@ -250,9 +259,8 @@ public class PaymentRowMapper implements ResultSetExtractor<List<Payment>> {
         paymentDetail.getBill().addBillDetail(billDetail);*/
 
 
+
     }
-
-
     private JsonNode getJsonValue(PGobject pGobject){
         try {
             if(Objects.isNull(pGobject) || Objects.isNull(pGobject.getValue()))
@@ -262,13 +270,16 @@ public class PaymentRowMapper implements ResultSetExtractor<List<Payment>> {
         } catch (IOException e) {
             throw new CustomException("SERVER_ERROR","Exception occurred while parsing the additionalDetail json : "+ e
                     .getMessage());
+
         }
+
     }
 
 
-
-
-
-
-
+    private OffsetDateTime convertToOffsetDateTime(Long epochMillis) {
+        if (epochMillis == null || epochMillis == 0) {
+            return null;
+        }
+        return OffsetDateTime.ofInstant(Instant.ofEpochMilli(epochMillis), ZoneId.systemDefault());
+    }
 }

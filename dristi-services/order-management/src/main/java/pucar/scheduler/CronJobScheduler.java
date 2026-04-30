@@ -144,9 +144,8 @@ public class CronJobScheduler {
         return allPendingTasks;
     }
 
-    private boolean isCreatedToday(long createdTime, LocalDate today) {
-        Instant createdInstant = Instant.ofEpochMilli(createdTime);
-        LocalDate createdDate = createdInstant.atZone(zoneId).toLocalDate();
+    private boolean isCreatedToday(java.time.OffsetDateTime createdTime, LocalDate today) {
+        LocalDate createdDate = createdTime.atZoneSameInstant(zoneId).toLocalDate();
         boolean result = createdDate.equals(today);
 
         if (log.isTraceEnabled()) {
@@ -257,9 +256,8 @@ public class CronJobScheduler {
         return tasks;
     }
 
-    private boolean isMultipleOfThreeDaysSinceCreation(long createdTime) {
-        Instant createdInstant = Instant.ofEpochMilli(createdTime);
-        LocalDate createdDate = createdInstant.atZone(zoneId).toLocalDate();
+    private boolean isMultipleOfThreeDaysSinceCreation(java.time.OffsetDateTime createdTime) {
+        LocalDate createdDate = createdTime.atZoneSameInstant(zoneId).toLocalDate();
         LocalDate today = LocalDate.now(zoneId);
 
         long daysBetween = ChronoUnit.DAYS.between(createdDate, today);

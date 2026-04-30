@@ -14,9 +14,13 @@ import org.egov.common.contract.models.Document;
 import org.egov.common.contract.models.Workflow;
 import org.springframework.validation.annotation.Validated;
 
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 /**
  * a case can have multiple hearings. this represents one of the many hearings related to the case
@@ -69,12 +73,12 @@ public class Hearing {
     @JsonProperty("startTime")
 
     @Valid
-    private Long startTime = null;
+    private OffsetDateTime startTime = null;
 
     @JsonProperty("endTime")
 
     @Valid
-    private Long endTime = null;
+    private OffsetDateTime endTime = null;
 
     @JsonProperty("presidedBy")
 

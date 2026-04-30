@@ -5,28 +5,46 @@ import org.egov.common.contract.models.AuditDetails;
 import org.egov.tracer.model.CustomException;
 import org.pucar.dristi.web.models.advocateofficemember.AdvocateOfficeCaseMember;
 import org.pucar.dristi.web.models.enums.MemberType;
+import org.pucar.dristi.util.DateUtil;
 import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Component
 @Slf4j
 public class AdvocateOfficeCaseMemberRowMapper implements ResultSetExtractor<List<AdvocateOfficeCaseMember>> {
+
+    private final DateUtil dateUtil;
+    
+    @Autowired
+    public AdvocateOfficeCaseMemberRowMapper(DateUtil dateUtil) {
+        this.dateUtil = dateUtil;
+    }
 
     @Override
     public List<AdvocateOfficeCaseMember> extractData(ResultSet rs) {
         List<AdvocateOfficeCaseMember> rows = new ArrayList<>();
         try {
             while (rs.next()) {
+                Timestamp lastModifiedTimeTs = rs.getTimestamp("last_modified_time");
+                Timestamp createdTimeTs = rs.getTimestamp("created_time");
+
                 AuditDetails auditDetails = AuditDetails.builder()
                         .createdBy(rs.getString("created_by"))
-                        .createdTime(rs.getLong("created_time"))
+                        .createdTime(createdTimeTs != null ? createdTimeTs.getTime() : null)
                         .lastModifiedBy(rs.getString("last_modified_by"))
-                        .lastModifiedTime(rs.getLong("last_modified_time"))
+                        .lastModifiedTime(lastModifiedTimeTs != null ? lastModifiedTimeTs.getTime() : null)
                         .build();
 
                 AdvocateOfficeCaseMember row = AdvocateOfficeCaseMember.builder()

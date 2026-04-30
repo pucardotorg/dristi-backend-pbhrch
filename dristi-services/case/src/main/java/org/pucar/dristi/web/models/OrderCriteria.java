@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.OffsetDateTime;
+
 @Getter
 @Setter
 @Builder
@@ -57,10 +59,10 @@ public class OrderCriteria {
 
     @JsonProperty("fromPublishedDate")
     @Valid
-    private Long fromPublishedDate = null;
+    private OffsetDateTime fromPublishedDate = null;
 
     @JsonProperty("toPublishedDate")
     @Valid
-    private Long toPublishedDate = null;
+    private OffsetDateTime toPublishedDate = null;
 
 }

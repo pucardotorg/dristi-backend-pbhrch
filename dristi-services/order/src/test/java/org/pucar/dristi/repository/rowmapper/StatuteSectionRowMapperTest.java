@@ -20,7 +20,7 @@ class StatuteSectionRowMapperTest {
 
     @BeforeEach
     void setUp() {
-        statuteSectionRowMapper = new StatuteSectionRowMapper();
+        statuteSectionRowMapper = new StatuteSectionRowMapper(null);
         resultSet = mock(ResultSet.class);
     }
 
@@ -36,9 +36,9 @@ class StatuteSectionRowMapperTest {
         when(resultSet.getString("strsubsections")).thenReturn("strsubsection1|strsubsection2");
         when(resultSet.getString("statute")).thenReturn("Statute-123");
         when(resultSet.getString("createdby")).thenReturn("user-123");
-        when(resultSet.getLong("createdtime")).thenReturn(1617187200000L);
+        when(resultSet.getTimestamp("createdtime")).thenReturn(null);
         when(resultSet.getString("lastmodifiedby")).thenReturn("user-123");
-        when(resultSet.getLong("lastmodifiedtime")).thenReturn(1617187200000L);
+        when(resultSet.getTimestamp("lastmodifiedtime")).thenReturn(null);
         when(resultSet.wasNull()).thenReturn(false);
 
         PGobject pgObject = new PGobject();
@@ -55,9 +55,9 @@ class StatuteSectionRowMapperTest {
         assertEquals("tenant-123", statuteSection.getTenantId());
         assertNotNull(statuteSection.getAuditdetails());
         assertEquals("user-123", statuteSection.getAuditdetails().getCreatedBy());
-        assertEquals(1617187200000L, statuteSection.getAuditdetails().getCreatedTime());
+        assertNull(statuteSection.getAuditdetails().getCreatedTime());
         assertEquals("user-123", statuteSection.getAuditdetails().getLastModifiedBy());
-        assertEquals(1617187200000L, statuteSection.getAuditdetails().getLastModifiedTime());
+        assertNull(statuteSection.getAuditdetails().getLastModifiedTime());
         assertNotNull(statuteSection.getAdditionalDetails());
     }
 

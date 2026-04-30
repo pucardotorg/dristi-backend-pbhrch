@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import org.egov.common.contract.request.User;
 import org.springframework.validation.annotation.Validated;
 
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -96,13 +97,13 @@ public class PendingTask {
     private String courtId = null;
 
     @JsonProperty("expiryDate")
-    private Long expiryDate = null;
+    private OffsetDateTime expiryDate = null;
 
     @JsonProperty("sectionAndSubSection")
     private String sectionAndSubSection = null;
 
     @JsonProperty("filingDate")
-    private Long filingDate = null;
+    private OffsetDateTime filingDate = null;
 
     @JsonProperty("referenceEntityType")
     private String referenceEntityType = null;
@@ -117,6 +118,6 @@ public class PendingTask {
     private String nextHearingDate = null;
 
     @JsonProperty("createdTime")
-    private Long createdTime = null;
+    private OffsetDateTime createdTime = null;
 
 }

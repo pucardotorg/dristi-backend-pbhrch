@@ -15,6 +15,7 @@ import org.springframework.validation.annotation.Validated;
 
 import java.text.ParseException;
 import java.time.Instant;
+import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -77,9 +78,9 @@ public class Hearing {
 // Hearing workflow state,
     private String status = null;
 
-    private Long startTime = null;
+    private OffsetDateTime startTime = null;
 
-    private Long endTime = null;
+    private OffsetDateTime endTime = null;
 
     @JsonProperty("presidedBy")
 
@@ -123,9 +124,9 @@ public class Hearing {
 
     private String notes = null;
 
-    private Long filingDate = null;
+    private OffsetDateTime filingDate = null;
 
-    private Long registrationDate = null;
+    private OffsetDateTime registrationDate = null;
 
     @JsonProperty("stage")
     private String stage = null;
@@ -177,7 +178,7 @@ public class Hearing {
         if (null != dateTime) {
             if (dateTime > 0) {
                 formattedDateTime = Instant.ofEpochMilli(dateTime)
-                        .atZone(ZoneId.of("Asia/Kolkata"))
+                        .atZone(java.time.ZoneOffset.UTC)
                         .toLocalDateTime()
                         .format(DateTimeFormatter.ofPattern(pattern));
             }

@@ -32,6 +32,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import lombok.extern.slf4j.Slf4j;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Repository
 @Slf4j
@@ -95,9 +98,9 @@ public class BillRepositoryV2 {
 				ps.setObject(6, null);
 				ps.setObject(7, null);
 				ps.setString(8, auditDetails.getCreatedBy());
-				ps.setLong(9, auditDetails.getCreatedTime());
+				ps.setLong(9, auditDetails.getCreatedTime().toInstant().toEpochMilli());
 				ps.setString(10, auditDetails.getLastModifiedBy());
-				ps.setLong(11, auditDetails.getLastModifiedTime());
+				ps.setLong(11, auditDetails.getLastModifiedTime().toInstant().toEpochMilli());
 				ps.setString(12, bill.getMobileNumber());
 				ps.setString(13, bill.getStatus().toString());
 				ps.setObject(14, util.getPGObject(bill.getAdditionalDetails()));
@@ -170,9 +173,9 @@ public class BillRepositoryV2 {
 				ps.setObject(17, null);
 				ps.setString(18, null);
 				ps.setString(19, auditDetails.getCreatedBy());
-				ps.setLong(20, auditDetails.getCreatedTime());
+				ps.setLong(20, auditDetails.getCreatedTime().toInstant().toEpochMilli());
 				ps.setString(21, auditDetails.getLastModifiedBy());
-				ps.setLong(22, auditDetails.getLastModifiedTime());
+				ps.setLong(22, auditDetails.getLastModifiedTime().toInstant().toEpochMilli());
 				ps.setObject(23, null);
 				ps.setLong(24, billDetail.getExpiryDate());
 				ps.setObject(25,util.getPGObject(billDetail.getAdditionalDetails()));
@@ -214,9 +217,9 @@ public class BillRepositoryV2 {
 				ps.setObject(8, null);
 				ps.setString(9, null);
 				ps.setString(10, auditDetails.getCreatedBy());
-				ps.setLong(11, auditDetails.getCreatedTime());
+				ps.setLong(11, auditDetails.getCreatedTime().toInstant().toEpochMilli());
 				ps.setString(12, auditDetails.getLastModifiedBy());
-				ps.setLong(13, auditDetails.getLastModifiedTime());
+				ps.setLong(13, auditDetails.getLastModifiedTime().toInstant().toEpochMilli());
 				ps.setString(14, billAccountDetail.getTaxHeadCode());
 			}
 

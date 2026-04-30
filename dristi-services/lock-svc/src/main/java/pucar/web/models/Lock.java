@@ -16,6 +16,9 @@ import org.springframework.validation.annotation.Validated;
 
 import java.time.OffsetDateTime;
 import java.util.UUID;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 /**
  * Pojo for Lock entity
@@ -45,7 +48,7 @@ public class Lock {
 
     @JsonProperty("lockDate")
     @Valid
-    private Long lockDate = null;
+    private OffsetDateTime lockDate = null;
 
     @JsonProperty("individualId")
     private String individualId = null;
@@ -55,7 +58,7 @@ public class Lock {
     private Boolean isLocked = false;
 
     @JsonProperty("lockReleaseTime")
-    private Long lockReleaseTime = null;
+    private OffsetDateTime lockReleaseTime = null;
 
     @JsonProperty("entity")
     private String entity = null;

@@ -29,6 +29,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 import static org.pucar.dristi.config.ServiceConstants.*;
 import static org.pucar.dristi.web.models.enums.ProcessHandler.UPDATE_BACKUP;
@@ -299,7 +301,7 @@ public class CaseOverallStatusUtil {
 				}
 				AuditDetails auditDetails = new AuditDetails();
 				auditDetails.setLastModifiedBy(requestInfo.getUserInfo().getUuid());
-				auditDetails.setLastModifiedTime(System.currentTimeMillis());
+				auditDetails.setLastModifiedTime(java.time.Instant.now().toEpochMilli());
 				caseOverallStatus.setAuditDetails(auditDetails);
 				String subStage = caseOverallStatus.getSubstage();
 				if(shouldSendSMSForSubStageChange(subStage)){
@@ -408,7 +410,7 @@ public class CaseOverallStatusUtil {
                 }
 				AuditDetails auditDetails = new AuditDetails();
 				auditDetails.setLastModifiedBy(requestInfo.getUserInfo().getUuid());
-				auditDetails.setLastModifiedTime(System.currentTimeMillis());
+				auditDetails.setLastModifiedTime(java.time.Instant.now().toEpochMilli());
 				outcome.setAuditDetails(auditDetails);
 				org.pucar.dristi.web.models.CaseOutcome caseOutcome = new CaseOutcome(requestInfo,outcome);
 				log.info("Publishing to kafka topic: {}, caseOutcome: {}",config.getCaseOutcomeTopic(), caseOutcome);

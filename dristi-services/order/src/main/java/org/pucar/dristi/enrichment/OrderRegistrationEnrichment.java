@@ -9,12 +9,12 @@ import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.spi.json.JacksonJsonNodeJsonProvider;
 import com.jayway.jsonpath.spi.mapper.JacksonMappingProvider;
 import lombok.extern.slf4j.Slf4j;
-import org.egov.common.contract.models.AuditDetails;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.model.CustomException;
 import org.pucar.dristi.config.Configuration;
 import org.pucar.dristi.config.MdmsDataConfig;
 import org.pucar.dristi.util.CaseUtil;
+import org.pucar.dristi.util.DateUtil;
 import org.pucar.dristi.util.IdgenUtil;
 import org.pucar.dristi.util.LocalizationUtil;
 import org.pucar.dristi.web.models.*;
@@ -23,6 +23,7 @@ import org.springframework.stereotype.Component;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -43,14 +44,16 @@ public class OrderRegistrationEnrichment {
     private CaseUtil caseUtil;
     private final MdmsDataConfig mdmsDataConfig;
     private final LocalizationUtil localizationUtil;
+    private final DateUtil dateUtil;
 
-    public OrderRegistrationEnrichment(IdgenUtil idgenUtil, Configuration configuration, ObjectMapper objectMapper, CaseUtil caseUtil, MdmsDataConfig mdmsDataConfig, LocalizationUtil localizationUtil) {
+    public OrderRegistrationEnrichment(IdgenUtil idgenUtil, Configuration configuration, ObjectMapper objectMapper, CaseUtil caseUtil, MdmsDataConfig mdmsDataConfig, LocalizationUtil localizationUtil, DateUtil dateUtil) {
         this.idgenUtil = idgenUtil;
         this.configuration = configuration;
         this.objectMapper = objectMapper;
         this.caseUtil = caseUtil;
         this.mdmsDataConfig = mdmsDataConfig;
         this.localizationUtil = localizationUtil;
+        this.dateUtil = dateUtil;
     }
 
     public void enrichOrderRegistration(OrderRequest orderRequest) {
@@ -61,7 +64,8 @@ public class OrderRegistrationEnrichment {
                 String idFormat = configuration.getOrderFormat();
 
                 List<String> orderRegistrationIdList = idgenUtil.getIdList(orderRequest.getRequestInfo(), tenantId, idName, idFormat, 1, false);
-                AuditDetails auditDetails = AuditDetails.builder().createdBy(orderRequest.getRequestInfo().getUserInfo().getUuid()).createdTime(System.currentTimeMillis()).lastModifiedBy(orderRequest.getRequestInfo().getUserInfo().getUuid()).lastModifiedTime(System.currentTimeMillis()).build();
+                OffsetDateTime now = dateUtil.getCurrentOffsetDateTime();
+                AuditDetails auditDetails = AuditDetails.builder().createdBy(orderRequest.getRequestInfo().getUserInfo().getUuid()).createdTime(now).lastModifiedBy(orderRequest.getRequestInfo().getUserInfo().getUuid()).lastModifiedTime(now).build();
                 orderRequest.getOrder().setAuditDetails(auditDetails);
 
                 orderRequest.getOrder().setId(UUID.randomUUID());
@@ -132,7 +136,7 @@ public class OrderRegistrationEnrichment {
 
     public void enrichAuditDetails(OrderRequest orderRequest) {
         // Enrich lastModifiedTime and lastModifiedBy in case of update
-        orderRequest.getOrder().getAuditDetails().setLastModifiedTime(System.currentTimeMillis());
+        orderRequest.getOrder().getAuditDetails().setLastModifiedTime(dateUtil.getCurrentOffsetDateTime());
         orderRequest.getOrder().getAuditDetails().setLastModifiedBy(orderRequest.getRequestInfo().getUserInfo().getUuid());
     }
 

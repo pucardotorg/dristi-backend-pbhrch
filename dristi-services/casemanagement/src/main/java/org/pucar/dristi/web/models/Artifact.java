@@ -1,5 +1,6 @@
 package org.pucar.dristi.web.models;
 
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -18,6 +19,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 /**
  * Artifact
@@ -100,7 +104,7 @@ public class Artifact {
 
 	@JsonProperty("createdDate")
 
-	private Long createdDate = null;
+	private OffsetDateTime createdDate = null;
 
 	@JsonProperty("isActive")
 

@@ -1,11 +1,12 @@
 package org.pucar.dristi.enrichment;
 
 import lombok.extern.slf4j.Slf4j;
-import org.egov.common.contract.models.AuditDetails;
 import org.egov.tracer.model.CustomException;
 import org.pucar.dristi.config.Configuration;
+import org.pucar.dristi.util.DateUtil;
 import org.pucar.dristi.util.IdgenUtil;
 import org.pucar.dristi.util.WorkflowUtil;
+import org.pucar.dristi.web.models.AuditDetails;
 import org.pucar.dristi.web.models.Attendee;
 import org.pucar.dristi.web.models.Hearing;
 import org.pucar.dristi.web.models.HearingRequest;
@@ -14,6 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,12 +30,14 @@ public class HearingRegistrationEnrichment {
     private IdgenUtil idgenUtil;
     private Configuration configuration;
     private final WorkflowUtil workflowUtil;
+    private final DateUtil dateUtil;
 
     @Autowired
-    public HearingRegistrationEnrichment(IdgenUtil idgenUtil, Configuration configuration, WorkflowUtil workflowUtil) {
+    public HearingRegistrationEnrichment(IdgenUtil idgenUtil, Configuration configuration, WorkflowUtil workflowUtil, DateUtil dateUtil) {
         this.idgenUtil = idgenUtil;
         this.configuration = configuration;
         this.workflowUtil = workflowUtil;
+        this.dateUtil = dateUtil;
     }
 
     /**
@@ -42,7 +48,8 @@ public class HearingRegistrationEnrichment {
     public void enrichHearingRegistration(HearingRequest hearingRequest) {
         try {
             Hearing hearing = hearingRequest.getHearing();
-            AuditDetails auditDetails = AuditDetails.builder().createdBy(hearingRequest.getRequestInfo().getUserInfo().getUuid()).createdTime(System.currentTimeMillis()).lastModifiedBy(hearingRequest.getRequestInfo().getUserInfo().getUuid()).lastModifiedTime(System.currentTimeMillis()).build();
+            OffsetDateTime now = dateUtil.getCurrentOffsetDateTime();
+            AuditDetails auditDetails = AuditDetails.builder().createdBy(hearingRequest.getRequestInfo().getUserInfo().getUuid()).createdTime(now).lastModifiedBy(hearingRequest.getRequestInfo().getUserInfo().getUuid()).lastModifiedTime(now).build();
             hearing.setAuditDetails(auditDetails);
             hearing.setId(UUID.randomUUID());
             //setting false unless the application is approved
@@ -86,7 +93,7 @@ public class HearingRegistrationEnrichment {
         try {
             // Enrich lastModifiedTime and lastModifiedBy in case of update
             Hearing hearing = hearingRequest.getHearing();
-            hearing.getAuditDetails().setLastModifiedTime(System.currentTimeMillis());
+            hearing.getAuditDetails().setLastModifiedTime(dateUtil.getCurrentOffsetDateTime());
             hearing.getAuditDetails().setLastModifiedBy(hearingRequest.getRequestInfo().getUserInfo().getUuid());
 
             if (hearing.getDocuments() != null) {
@@ -147,7 +154,7 @@ public class HearingRegistrationEnrichment {
                                 String otherAction = processInstance.get(j).getAction();
                                 if (PASS_OVER.equalsIgnoreCase(otherAction)) {
                                     Long passOverTime = processInstance.get(j).getAuditDetails().getCreatedTime();
-                                    Long startTime = processInstance.get(i).getAuditDetails().getCreatedTime();
+                                    Long startTime = processInstance.get(i).getAuditDetails().getCreatedTime(); // External API still uses epoch
                                     if(hearingDuration==null)
                                         hearingDuration=0L;
                                     hearingDuration = hearingDuration + (passOverTime - startTime);
@@ -181,7 +188,7 @@ public class HearingRegistrationEnrichment {
             if (hearingDuration != null) {
                 String action = processInstance.get(0).getAction();
                 if (START.equalsIgnoreCase(action)) {
-                    hearingDuration = hearingDuration + (System.currentTimeMillis() - processInstance.get(0).getAuditDetails().getCreatedTime());
+                    hearingDuration = hearingDuration + (Instant.now().toEpochMilli() - processInstance.get(0).getAuditDetails().getCreatedTime()); // External API still uses epoch
                 }
             }
 

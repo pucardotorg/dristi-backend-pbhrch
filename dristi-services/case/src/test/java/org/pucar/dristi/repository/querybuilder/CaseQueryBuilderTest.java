@@ -324,10 +324,10 @@ class CaseQueryBuilderTest {
         criteria.setCnrNumber(null);
         criteria.setFilingNumber(null);
         criteria.setCourtCaseNumber("456");
-        criteria.setFilingFromDate(1223235235l);
-        criteria.setFilingToDate(1223235236l);
-        criteria.setRegistrationFromDate(1223235238l);
-        criteria.setRegistrationToDate(1223235239l);
+        criteria.setFilingFromDate(java.time.Instant.ofEpochMilli(1223235235L).atOffset(java.time.ZoneOffset.UTC));
+        criteria.setFilingToDate(java.time.Instant.ofEpochMilli(1223235236L).atOffset(java.time.ZoneOffset.UTC));
+        criteria.setRegistrationFromDate(java.time.Instant.ofEpochMilli(1223235238L).atOffset(java.time.ZoneOffset.UTC));
+        criteria.setRegistrationToDate(java.time.Instant.ofEpochMilli(1223235239L).atOffset(java.time.ZoneOffset.UTC));
         List<Integer> preparedStmtArgList = new ArrayList<>();
 
         List<Object> preparedStmtList = new ArrayList<>();

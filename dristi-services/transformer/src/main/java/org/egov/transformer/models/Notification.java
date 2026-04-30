@@ -11,8 +11,12 @@ import org.egov.common.contract.models.AuditDetails;
 import org.egov.common.contract.models.Document;
 import org.egov.common.contract.models.Workflow;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Data
 @AllArgsConstructor
@@ -38,7 +42,7 @@ public class Notification {
     private String notificationNumber = null;
 
     @JsonProperty("createdDate")
-    private Long createdDate = null;
+    private OffsetDateTime createdDate = null;
 
     @JsonProperty("issuedBy")
     private String issuedBy = null;

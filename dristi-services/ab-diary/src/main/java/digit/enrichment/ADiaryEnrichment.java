@@ -2,18 +2,22 @@ package digit.enrichment;
 
 import digit.repository.DiaryRepository;
 import digit.util.ADiaryUtil;
+import digit.util.DateTimeUtil;
 import digit.web.models.*;
 import lombok.extern.slf4j.Slf4j;
-import org.egov.common.contract.models.AuditDetails;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
 import org.egov.tracer.model.CustomException;
 import org.springframework.stereotype.Component;
 
+import java.time.OffsetDateTime;
 import java.util.*;
 
 import static digit.config.ServiceConstants.ENRICHMENT_EXCEPTION;
 import static digit.config.ServiceConstants.SIGNED_DOCUMENT_TYPE;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Component
 @Slf4j
@@ -23,9 +27,12 @@ public class ADiaryEnrichment {
 
     private final DiaryRepository diaryRepository;
 
-    public ADiaryEnrichment(ADiaryUtil aDiaryUtil, DiaryRepository diaryRepository) {
+    private final DateTimeUtil dateTimeUtil;
+
+    public ADiaryEnrichment(ADiaryUtil aDiaryUtil, DiaryRepository diaryRepository, DateTimeUtil dateTimeUtil) {
         this.aDiaryUtil = aDiaryUtil;
         this.diaryRepository = diaryRepository;
+        this.dateTimeUtil = dateTimeUtil;
     }
 
     public void enrichUpdateCaseDiary(CaseDiaryRequest caseDiaryRequest) {
@@ -38,7 +45,7 @@ public class ADiaryEnrichment {
 
             AuditDetails auditDetails = AuditDetails.builder()
                     .lastModifiedBy(user.getUuid())
-                    .lastModifiedTime(aDiaryUtil.getCurrentTimeInMilliSec())
+                    .lastModifiedTime(dateTimeUtil.getCurrentOffsetDateTime())
                     .build();
 
             diary.setAuditDetails(auditDetails);
@@ -74,8 +81,9 @@ public class ADiaryEnrichment {
             caseDiaryDocument.setCaseDiaryId(String.valueOf(caseDiaryRequest.getDiary().getId()));
             caseDiaryDocument.setActive(true);
 
+            OffsetDateTime now = dateTimeUtil.getCurrentOffsetDateTime();
             AuditDetails auditDetails = AuditDetails.builder().createdBy(user.getUuid()).lastModifiedBy(user.getUuid())
-                    .createdTime(aDiaryUtil.getCurrentTimeInMilliSec()).lastModifiedTime(aDiaryUtil.getCurrentTimeInMilliSec())
+                    .createdTime(now).lastModifiedTime(now)
                     .build();
 
             caseDiaryDocument.setAuditDetails(auditDetails);
@@ -96,7 +104,7 @@ public class ADiaryEnrichment {
             CaseDiarySearchRequest caseDiaryRequest = CaseDiarySearchRequest.builder()
                     .criteria(CaseDiarySearchCriteria.builder()
                             .courtId(caseDiary.getCourtId())
-                            .date(caseDiary.getDiaryDate())
+                            .date(caseDiary.getDiaryDate() != null ? caseDiary.getDiaryDate().toInstant().toEpochMilli() : null)
                             .diaryType(caseDiary.getDiaryType())
                             .tenantId(caseDiary.getTenantId())
                             .build())
@@ -138,8 +146,9 @@ public class ADiaryEnrichment {
 
         User user = requestinfo.getUserInfo();
 
+        OffsetDateTime now = dateTimeUtil.getCurrentOffsetDateTime();
         return AuditDetails.builder().createdBy(user.getUuid()).lastModifiedBy(user.getUuid())
-                .createdTime(aDiaryUtil.getCurrentTimeInMilliSec()).lastModifiedTime(aDiaryUtil.getCurrentTimeInMilliSec())
+                .createdTime(now).lastModifiedTime(now)
                 .build();
 
     }
@@ -149,7 +158,7 @@ public class ADiaryEnrichment {
         User user = requestInfo.getUserInfo();
 
         return AuditDetails.builder().lastModifiedBy(user.getUuid())
-                .lastModifiedTime(aDiaryUtil.getCurrentTimeInMilliSec())
+                .lastModifiedTime(dateTimeUtil.getCurrentOffsetDateTime())
                 .createdTime(caseDiaryDocument.getAuditDetails().getCreatedTime())
                 .createdBy(caseDiaryDocument.getAuditDetails().getCreatedBy())
                 .build();

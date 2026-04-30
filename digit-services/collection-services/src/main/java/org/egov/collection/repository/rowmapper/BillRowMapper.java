@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -47,9 +50,13 @@ public class BillRowMapper implements ResultSetExtractor<List<Bill>> {
 
 				AuditDetails auditDetails = new AuditDetails();
 				auditDetails.setCreatedBy(rs.getString("b_createdby"));
-				auditDetails.setCreatedTime((Long) rs.getObject("b_createdtime"));
+				Long createdTime = (Long) rs.getObject("b_createdtime");
+				auditDetails.setCreatedTime(createdTime != null ?
+					OffsetDateTime.ofInstant(Instant.ofEpochMilli(createdTime), ZoneId.systemDefault()) : null);
 				auditDetails.setLastModifiedBy(rs.getString("b_lastmodifiedby"));
-				auditDetails.setLastModifiedTime((Long) rs.getObject("b_lastmodifiedtime"));
+				Long lastModifiedTime = (Long) rs.getObject("b_lastmodifiedtime");
+				auditDetails.setLastModifiedTime(lastModifiedTime != null ?
+					OffsetDateTime.ofInstant(Instant.ofEpochMilli(lastModifiedTime), ZoneId.systemDefault()) : null);
 
 				bill = Bill.builder().id(billId).totalAmount(BigDecimal.ZERO).tenantId(rs.getString("b_tenantid"))
 						.status(StatusEnum.fromValue(rs.getString("b_status")))

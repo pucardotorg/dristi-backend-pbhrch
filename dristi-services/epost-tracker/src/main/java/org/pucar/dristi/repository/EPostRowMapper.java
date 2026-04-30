@@ -14,6 +14,9 @@ import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Component
 @Slf4j
@@ -24,9 +27,8 @@ public class EPostRowMapper implements RowMapper<EPostTracker> {
     @Autowired
     public EPostRowMapper(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
+
     }
-
-
     @Override
     public EPostTracker mapRow(ResultSet rs, int rowNum) throws SQLException {
         String deliveryStatusStr = rs.getString("delivery_status");
@@ -40,11 +42,12 @@ public class EPostRowMapper implements RowMapper<EPostTracker> {
             String addressObjString = rs.getString("address_obj");
             if (addressObjString != null) {
                 address = objectMapper.readValue(rs.getString("address_obj"), Address.class);
+
             }
         } catch (JsonProcessingException e) {
             throw new SQLException(e);
-        }
 
+        }
         return EPostTracker.builder()
                 .processNumber(rs.getString("process_number"))
                 .tenantId(rs.getString("tenant_id"))
@@ -57,12 +60,12 @@ public class EPostRowMapper implements RowMapper<EPostTracker> {
                 .remarks(rs.getString("remarks"))
                 .additionalDetails(additionalFields)
                 .rowVersion(rs.getInt("row_version"))
-                .bookingDate(rs.getLong("booking_date") == 0 ? null : rs.getLong("booking_date"))
-                .receivedDate(rs.getLong("received_date") == 0 ? null : rs.getLong("received_date"))
+                .bookingDate(rs.getTimestamp("booking_date") != null ? rs.getTimestamp("booking_date").toInstant().atOffset(java.time.ZoneOffset.UTC) : null)
+                .receivedDate(rs.getTimestamp("received_date") != null ? rs.getTimestamp("received_date").toInstant().atOffset(java.time.ZoneOffset.UTC) : null)
                 .postalHub(rs.getString("postal_hub"))
                 .totalAmount(rs.getString("total_amount"))
                 .speedPostId(rs.getString("speed_post_id"))
-                .statusUpdateDate(rs.getLong("status_update_date") == 0 ? null : rs.getLong("status_update_date"))
+                .statusUpdateDate(rs.getTimestamp("status_update_date") != null ? rs.getTimestamp("status_update_date").toInstant().atOffset(java.time.ZoneOffset.UTC) : null)
                 .taskType(rs.getString("task_type"))
                 .respondentName(rs.getString("respondent_name"))
                 .phone(rs.getString("phone"))
@@ -76,5 +79,14 @@ public class EPostRowMapper implements RowMapper<EPostTracker> {
                                 .build()
                 )
                 .build();
+
+    }
+
+
+    private OffsetDateTime convertToOffsetDateTime(Long epochMillis) {
+        if (epochMillis == null || epochMillis == 0) {
+            return null;
+        }
+        return OffsetDateTime.ofInstant(Instant.ofEpochMilli(epochMillis), ZoneId.systemDefault());
     }
 }

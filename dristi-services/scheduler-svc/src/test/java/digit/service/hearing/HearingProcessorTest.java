@@ -24,6 +24,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -73,8 +75,7 @@ class HearingProcessorTest {
         when(presidedBy.getJudgeID()).thenReturn(Collections.singletonList("judge1"));
         when(presidedBy.getCourtID()).thenReturn("court1");
         when(config.getScheduleHearingTopic()).thenReturn("topic1");
-        Pair<Long, Long> startTimeAndEndTime = new Pair<>(12345L, 67890L);
-        when(hearing.getStartTime()).thenReturn(12345L);
+        when(hearing.getStartTime()).thenReturn(OffsetDateTime.now(ZoneOffset.UTC));
         when(customMapper.hearingToScheduleHearingConversion(any())).thenReturn(new ScheduleHearing());
         when(dateUtil.getLocalDateFromEpoch(anyLong())).thenReturn(LocalDate.now());
         when(dateUtil.getEPochFromLocalDate(any())).thenReturn(12345L, 67890L);

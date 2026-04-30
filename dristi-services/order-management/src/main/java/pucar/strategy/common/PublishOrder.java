@@ -131,14 +131,14 @@ public class PublishOrder implements OrderUpdateStrategy {
         log.info("finding scheduled hearing for order number:{}", order.getOrderNumber());
         Optional<Hearing> scheduledHearing = hearings.stream().filter((hearing) -> SCHEDULED.equalsIgnoreCase(hearing.getStatus())).findFirst();
 
-        Long hearingDate = null;
+        java.time.OffsetDateTime hearingDate = null;
         if (scheduledHearing.isPresent()) {
             hearingDate = scheduledHearing.get().getStartTime();
         }
         log.info("creating case diary entry for order number:{}", order.getOrderNumber());
         return CaseDiaryEntry.builder()
                 .tenantId(order.getTenantId())
-                .entryDate(dateUtil.getStartOfTheDayForEpoch(dateUtil.getCurrentTimeInMilis()))
+                .entryDate(java.time.OffsetDateTime.now())
                 .caseNumber(courtCase.getCourtCaseNumber() != null? courtCase.getCourtCaseNumber() : courtCase.getCmpNumber())
                 .caseId(courtCase.getId().toString())
                 .courtId(courtCase.getCourtId())

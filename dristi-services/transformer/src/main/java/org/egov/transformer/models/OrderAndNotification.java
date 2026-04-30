@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.egov.common.contract.models.Document;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -35,7 +36,7 @@ public class OrderAndNotification {
     private String status;
 
     @JsonProperty("date")
-    private Long date;
+    private OffsetDateTime date;
 
     @JsonProperty("tenantId")
     private String tenantId;
@@ -59,10 +60,10 @@ public class OrderAndNotification {
     private List<Document> documents;
 
     @JsonProperty("createdTime")
-    private Long createdTime = null;
+    private OffsetDateTime createdTime = null;
 
     @JsonProperty("lastModifiedTime")
-    private Long lastModifiedTime = null;
+    private OffsetDateTime lastModifiedTime = null;
 
     @JsonProperty("caseTitle")
     private String caseTitle = null;

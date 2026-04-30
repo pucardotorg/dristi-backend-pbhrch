@@ -1,12 +1,15 @@
 package digit.enrichment;
 
-import digit.models.coremodels.AuditDetails;
+import digit.util.DateUtil;
+import digit.web.models.AuditDetails;
 import digit.web.models.JudgeCalendarRule;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -15,17 +18,23 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @ExtendWith(MockitoExtension.class)
 public class JudgeCalendarEnrichmentTest {
 
+    @InjectMocks
     private JudgeCalendarEnrichment judgeCalendarEnrichment;
+
+    @Mock
+    private DateUtil dateUtil;
+
     private RequestInfo requestInfo;
 
     @BeforeEach
     public void setUp() {
-        judgeCalendarEnrichment = new JudgeCalendarEnrichment();
-
         User user = mock(User.class);
         Mockito.lenient().when(user.getUuid()).thenReturn("test-uuid");
 

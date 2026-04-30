@@ -4,6 +4,8 @@ import org.egov.common.contract.request.User;
 import org.junit.jupiter.api.Test;
 import org.pucar.dristi.web.models.PendingTask;
 
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,9 +36,11 @@ class PendingTaskTest {
         List<User> assignedTo = new ArrayList<>();
         List<String> assignedRole = new ArrayList<>();
         Object additionalDetails = new Object();
+        OffsetDateTime expiryDate = OffsetDateTime.of(2024, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC);
+        OffsetDateTime filingDate = OffsetDateTime.of(2024, 6, 1, 0, 0, 0, 0, ZoneOffset.UTC);
         PendingTask pendingTask = new PendingTask("1", "TaskName", "Ref123", "EntityType1", "Status1",
                 assignedTo, assignedRole, "CNR123", "Filing123","test1","test","test",
-                true, 10L, 20L, additionalDetails, "home", "KLKM52" , 1L,  "NIA S138",1L, "test", null, null, null, null);
+                true, 10L, 20L, additionalDetails, "home", "KLKM52", expiryDate, "NIA S138", filingDate, "test", null, null, null, null);
 
         assertEquals("1", pendingTask.getId());
         assertEquals("TaskName", pendingTask.getName());

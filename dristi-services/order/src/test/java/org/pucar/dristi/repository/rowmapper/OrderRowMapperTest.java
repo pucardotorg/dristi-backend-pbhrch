@@ -14,6 +14,9 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 class OrderRowMapperTest {
 
@@ -26,7 +29,7 @@ class OrderRowMapperTest {
     @BeforeEach
     void setUp() {
         objectMapper = new ObjectMapper();
-        orderRowMapper = new OrderRowMapper(objectMapper);
+        orderRowMapper = new OrderRowMapper(objectMapper, null);
         resultSet = mock(ResultSet.class);
     }
 
@@ -43,15 +46,15 @@ class OrderRowMapperTest {
         when(resultSet.getString("ordercategory")).thenReturn("Category1");
         when(resultSet.getBoolean("isactive")).thenReturn(true);
         when(resultSet.getString("ordertype")).thenReturn("Type1");
-        when(resultSet.getLong("createddate")).thenReturn(1617187100000L);
+        when(resultSet.getTimestamp("createddate")).thenReturn(null);
         when(resultSet.getString("comments")).thenReturn("Test comment");
         when(resultSet.getString("filingnumber")).thenReturn("FILING-123");
         when(resultSet.getString("ordertitle")).thenReturn("Test Order Title");
         when(resultSet.getString("status")).thenReturn("Active");
         when(resultSet.getString("createdby")).thenReturn("user-123");
-        when(resultSet.getLong("createdtime")).thenReturn(1617187200000L);
+        when(resultSet.getTimestamp("createdtime")).thenReturn(null);
         when(resultSet.getString("lastmodifiedby")).thenReturn("user-123");
-        when(resultSet.getLong("lastmodifiedtime")).thenReturn(1617187200000L);
+        when(resultSet.getTimestamp("lastmodifiedtime")).thenReturn(null);
         when(resultSet.wasNull()).thenReturn(false);
 
         // Mock IssuedBy JSON with correct structure
@@ -95,7 +98,7 @@ class OrderRowMapperTest {
         assertEquals("Category1", order.getOrderCategory());
         assertTrue(order.getIsActive());
         assertEquals("Type1", order.getOrderType());
-        assertEquals(1617187100000L, order.getCreatedDate());
+        assertNull(order.getCreatedDate());
         assertEquals("Test comment", order.getComments());
         assertEquals("FILING-123", order.getFilingNumber());
         assertEquals("Test Order Title", order.getOrderTitle());
@@ -116,9 +119,9 @@ class OrderRowMapperTest {
         // Verify AuditDetails
         assertNotNull(order.getAuditDetails());
         assertEquals("user-123", order.getAuditDetails().getCreatedBy());
-        assertEquals(1617187200000L, order.getAuditDetails().getCreatedTime());
+        assertNull(order.getAuditDetails().getCreatedTime());
         assertEquals("user-123", order.getAuditDetails().getLastModifiedBy());
-        assertEquals(1617187200000L, order.getAuditDetails().getLastModifiedTime());
+        assertNull(order.getAuditDetails().getLastModifiedTime());
 
         // Verify the PGObject fields
         assertNotNull(order.getAdditionalDetails());

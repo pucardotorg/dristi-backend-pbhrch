@@ -163,11 +163,12 @@ public class HearingUtil {
                 .orElseGet(List::of);
     }
 
-    public @Valid Long getCreateStartAndEndTime(Object additionalDetails, List<String> paths) {
+    public java.time.OffsetDateTime getCreateStartAndEndTime(Object additionalDetails, List<String> paths) {
 
         String date = jsonUtil.getNestedValue(additionalDetails, paths, String.class);
         if (date == null) return null;
-        return dateUtil.getEpochFromDateString(date, "yyyy-MM-dd");
+        Long epoch = dateUtil.getEpochFromDateString(date, "yyyy-MM-dd");
+        return epoch != null ? java.time.Instant.ofEpochMilli(epoch).atOffset(java.time.ZoneOffset.UTC) : null;
 
     }
 

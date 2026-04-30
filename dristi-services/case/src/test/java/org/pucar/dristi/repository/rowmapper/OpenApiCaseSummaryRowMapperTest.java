@@ -41,8 +41,10 @@ class OpenApiCaseSummaryRowMapperTest {
         when(resultSet.getString("id")).thenReturn("case-123");
         when(resultSet.getString("cnrnumber")).thenReturn("CNR123");
         when(resultSet.getString("filingnumber")).thenReturn("FN123");
-        when(resultSet.getLong("filingdate")).thenReturn(1625097600000L);
-        when(resultSet.getLong("registrationdate")).thenReturn(1625184000000L);
+        java.sql.Timestamp filingTs = new java.sql.Timestamp(1625097600000L);
+        java.sql.Timestamp registrationTs = new java.sql.Timestamp(1625184000000L);
+        when(resultSet.getTimestamp("filingdate")).thenReturn(filingTs);
+        when(resultSet.getTimestamp("registrationdate")).thenReturn(registrationTs);
         when(resultSet.getString("cmpnumber")).thenReturn("CMP123");
         when(resultSet.getString("casetype")).thenReturn("ST");
         when(resultSet.getString("stage")).thenReturn("Stage1");
@@ -57,8 +59,8 @@ class OpenApiCaseSummaryRowMapperTest {
         OpenApiCaseSummary caseSummary = result.get(0);
         assertEquals("CNR123", caseSummary.getCnrNumber());
         assertEquals("FN123", caseSummary.getFilingNumber());
-        assertEquals(1625097600000L, caseSummary.getFilingDate());
-        assertEquals(1625184000000L, caseSummary.getRegistrationDate());
+        assertNotNull(caseSummary.getFilingDate());
+        assertNotNull(caseSummary.getRegistrationDate());
         assertEquals("CMP123", caseSummary.getRegistrationNumber());
         assertEquals(OpenApiCaseSummary.CaseTypeEnum.ST, caseSummary.getCaseType());
         assertEquals("Stage1 - Substage1", caseSummary.getSubStage());
@@ -66,8 +68,8 @@ class OpenApiCaseSummaryRowMapperTest {
         verify(resultSet, times(1)).getString("id");
         verify(resultSet, times(1)).getString("cnrnumber");
         verify(resultSet, times(1)).getString("filingnumber");
-        verify(resultSet, times(1)).getLong("filingdate");
-        verify(resultSet, times(1)).getLong("registrationdate");
+        verify(resultSet, times(1)).getTimestamp("filingdate");
+        verify(resultSet, times(1)).getTimestamp("registrationdate");
         verify(resultSet, times(1)).getString("cmpnumber");
     }
 

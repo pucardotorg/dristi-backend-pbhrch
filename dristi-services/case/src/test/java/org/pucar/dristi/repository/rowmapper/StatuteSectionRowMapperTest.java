@@ -35,7 +35,7 @@ class StatuteSectionRowMapperTest {
 
     @BeforeEach
     void setUp() {
-        rowMapper = new StatuteSectionRowMapper();
+        rowMapper = new StatuteSectionRowMapper(null);
     }
 
     @Test
@@ -45,11 +45,11 @@ class StatuteSectionRowMapperTest {
         when(rs.getString("id")).thenReturn(UUID.randomUUID().toString());
         when(rs.getString("sections")).thenReturn("Section1|Section2");
         when(rs.getString("subsections")).thenReturn("Subsection1|Subsection2");
-        when(rs.getLong("createdtime")).thenReturn(1000000L);
+        when(rs.getTimestamp("createdtime")).thenReturn(null);
         when(rs.getString("createdby")).thenReturn("User2");
         when(rs.getString("tenantid")).thenReturn("tenantid");
         when(rs.getString("lastmodifiedby")).thenReturn("User2");
-        when(rs.getLong("lastmodifiedtime")).thenReturn(1000001L);
+        when(rs.getTimestamp("lastmodifiedtime")).thenReturn(null);
 
         PGobject pgObject = mock(PGobject.class);
         when(pgObject.getValue()).thenReturn("{\"key\":\"value\"}");

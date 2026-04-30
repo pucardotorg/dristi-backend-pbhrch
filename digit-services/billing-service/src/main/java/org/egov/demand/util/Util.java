@@ -10,6 +10,7 @@ import static org.egov.demand.util.Constants.MODULE_NAME;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -49,6 +50,9 @@ import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 
 import lombok.extern.slf4j.Slf4j;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Component
 @Slf4j
@@ -114,17 +118,17 @@ public class Util {
 
 	/**
 	 * Generates the Audit details object for the requested user and current time
-	 * 
+	 *
 	 * @param requestInfo
 	 * @return
 	 */
 	public AuditDetails getAuditDetail(RequestInfo requestInfo) {
 
 		String userId = requestInfo.getUserInfo().getUuid();
-		Long currEpochDate = System.currentTimeMillis();
+		OffsetDateTime currTime = OffsetDateTime.now();
 
-		return AuditDetails.builder().createdBy(userId).createdTime(currEpochDate).lastModifiedBy(userId)
-				.lastModifiedTime(currEpochDate).build();
+		return AuditDetails.builder().createdBy(userId).createdTime(currTime).lastModifiedBy(userId)
+				.lastModifiedTime(currTime).build();
 	}
 
 	public String getStringVal(Set<String> set) {

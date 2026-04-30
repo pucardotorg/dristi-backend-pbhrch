@@ -98,7 +98,7 @@ public class PublishOrderAssigningDateRescheduledHearing implements OrderUpdateS
         order.setHearingNumber(hearing.getHearingId());
         order.setHearingType(hearing.getHearingType());
 
-        Long time = hearingUtil.getCreateStartAndEndTime(order.getAdditionalDetails(), Arrays.asList("formdata", "newHearingDate"));
+        java.time.OffsetDateTime time = hearingUtil.getCreateStartAndEndTime(order.getAdditionalDetails(), Arrays.asList("formdata", "newHearingDate"));
         if (time != null) {
             hearing.setStartTime(time);
             hearing.setEndTime(time);

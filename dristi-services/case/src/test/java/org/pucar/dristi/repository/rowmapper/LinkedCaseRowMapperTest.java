@@ -34,7 +34,7 @@ class LinkedCaseRowMapperTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        rowMapper = new LinkedCaseRowMapper();
+        rowMapper = new LinkedCaseRowMapper(null);
     }
 
     @Test
@@ -43,9 +43,9 @@ class LinkedCaseRowMapperTest {
         when(rs.getString("case_id")).thenReturn("d290f1ee-6c54-4b01-90e6-d701748f0851");
         when(rs.getString("id")).thenReturn(UUID.randomUUID().toString());
         when(rs.getString("createdby")).thenReturn("user1");
-        when(rs.getLong("createdtime")).thenReturn(1609459200000L);
+        when(rs.getTimestamp("createdtime")).thenReturn(null);
         when(rs.getString("lastmodifiedby")).thenReturn("user2");
-        when(rs.getLong("lastmodifiedtime")).thenReturn(1609459300000L);
+        when(rs.getTimestamp("lastmodifiedtime")).thenReturn(null);
         when(rs.getString("relationshiptype")).thenReturn("Sibling");
         when(rs.getString("casenumbers")).thenReturn("Case12345");
         when(rs.getBoolean("isactive")).thenReturn(true);
@@ -72,9 +72,9 @@ class LinkedCaseRowMapperTest {
         when(rs.getString("id")).thenReturn(UUID.randomUUID().toString());
         when(rs.getString("case_id")).thenReturn(null);
         when(rs.getString("createdby")).thenReturn("user1");
-        when(rs.getLong("createdtime")).thenReturn(1609459200000L);
+        when(rs.getTimestamp("createdtime")).thenReturn(null);
         when(rs.getString("lastmodifiedby")).thenReturn("user2");
-        when(rs.getLong("lastmodifiedtime")).thenReturn(1609459300000L);
+        when(rs.getTimestamp("lastmodifiedtime")).thenReturn(null);
         when(rs.getString("relationshiptype")).thenReturn("Sibling");
         when(rs.getString("casenumbers")).thenReturn("Case12345");
         Map<UUID, List<LinkedCase>> result = rowMapper.extractData(rs);

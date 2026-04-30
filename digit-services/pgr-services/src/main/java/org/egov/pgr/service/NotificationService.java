@@ -496,7 +496,7 @@ public class NotificationService {
 
         String localisedComplaint = notificationUtil.getCustomizedMsgForPlaceholder(localizationMessage,"pgr.complaint.category."+request.getService().getServiceCode());
 
-        Long createdTime = serviceWrapper.getService().getAuditDetails().getCreatedTime();
+        Long createdTime = serviceWrapper.getService().getAuditDetails().getCreatedTime().toInstant().toEpochMilli();
         LocalDate date = Instant.ofEpochMilli(createdTime > 10 ? createdTime : createdTime * 1000)
                 .atZone(ZoneId.systemDefault()).toLocalDate();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_PATTERN);

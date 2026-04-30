@@ -12,6 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static digit.config.ServiceConstants.ROW_MAPPER_EXCEPTION;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Component
 @Slf4j
@@ -26,14 +29,14 @@ public class SurveyTrackerRowMapper implements ResultSetExtractor<List<SurveyTra
                 Boolean remindMeLater = null;
                 if (rs.getObject("remind_me_later") != null) {
                     remindMeLater = rs.getBoolean("remind_me_later");
-                }
 
+                }
                 SurveyTracker surveyTracker = SurveyTracker.builder()
                         .userUuid(rs.getString("user_uuid"))
                         .userType(rs.getString("user_type"))
                         .tenantId(rs.getString("tenant_id"))
                         .remindMeLater(remindMeLater)
-                        .lastTriggeredDate(rs.getLong("last_triggered_date") == 0 ? null : rs.getLong("last_triggered_date"))
+                        .lastTriggeredDate(rs.getTimestamp("last_triggered_date") != null ? rs.getTimestamp("last_triggered_date").toInstant().atOffset(java.time.ZoneOffset.UTC) : null)
                         .attempts(rs.getInt("attempts"))
                         .auditDetails(AuditDetails.builder()
                                 .createdBy(rs.getString("created_by"))
@@ -43,12 +46,23 @@ public class SurveyTrackerRowMapper implements ResultSetExtractor<List<SurveyTra
                                 .build())
                         .build();
                 surveyTrackers.add(surveyTracker);
+
             }
             return surveyTrackers;
 
         } catch (Exception e) {
             log.error("Error occurred while processing SurveyTracker ResultSet: {}", e.getMessage());
             throw new CustomException(ROW_MAPPER_EXCEPTION, "Error occurred while processing SurveyTracker ResultSet: " + e.getMessage());
+
         }
+
+    }
+
+
+    private OffsetDateTime convertToOffsetDateTime(Long epochMillis) {
+        if (epochMillis == null || epochMillis == 0) {
+            return null;
+        }
+        return OffsetDateTime.ofInstant(Instant.ofEpochMilli(epochMillis), ZoneId.systemDefault());
     }
 }

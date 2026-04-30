@@ -2,7 +2,7 @@ package org.pucar.dristi.enrichment;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.egov.common.contract.models.AuditDetails;
+import org.pucar.dristi.web.models.AuditDetails;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
 import org.egov.tracer.model.CustomException;
@@ -14,10 +14,13 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.pucar.dristi.config.Configuration;
 import org.pucar.dristi.util.CaseUtil;
+import org.pucar.dristi.util.DateUtil;
 import org.pucar.dristi.util.IdgenUtil;
 import org.pucar.dristi.web.models.Application;
 import org.pucar.dristi.web.models.ApplicationRequest;
 import org.pucar.dristi.web.models.Document;
+
+import java.time.OffsetDateTime;
 import org.pucar.dristi.web.models.StatuteSection;
 
 import java.util.Arrays;
@@ -28,6 +31,9 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static org.pucar.dristi.config.ServiceConstants.ENRICHMENT_EXCEPTION;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @ExtendWith(MockitoExtension.class)
 class ApplicationEnrichmentTest {
@@ -41,6 +47,9 @@ class ApplicationEnrichmentTest {
     @Mock
     private Configuration configuration;
 
+    @Mock
+    private DateUtil dateUtil;
+
     @InjectMocks
     private ApplicationEnrichment applicationEnrichment;
 
@@ -48,6 +57,9 @@ class ApplicationEnrichmentTest {
 
     @BeforeEach
     void setUp() {
+        lenient().when(configuration.getZoneId()).thenReturn("UTC");
+        lenient().when(dateUtil.getCurrentOffsetDateTime()).thenReturn(OffsetDateTime.now(ZoneId.of("UTC")));
+        lenient().when(dateUtil.getCurrentYear()).thenReturn(String.valueOf(java.time.Year.now().getValue()));
         User userInfo = User.builder().uuid("user-uuid").tenantId("tenant-id").build();
         RequestInfo requestInfo = RequestInfo.builder().userInfo(userInfo).build();
         Application application = Application.builder()
@@ -133,9 +145,9 @@ class ApplicationEnrichmentTest {
     void enrichApplicationUponUpdate() {
         AuditDetails auditDetails = AuditDetails.builder()
                 .createdBy("user-uuid")
-                .createdTime(System.currentTimeMillis() - 1000)
+                .createdTime(OffsetDateTime.now().minusSeconds(1000))
                 .lastModifiedBy("user-uuid")
-                .lastModifiedTime(System.currentTimeMillis() - 1000)
+                .lastModifiedTime(OffsetDateTime.now().minusSeconds(1000))
                 .build();
         Application application = applicationRequest.getApplication();
         application.setAuditDetails(auditDetails);
@@ -143,7 +155,7 @@ class ApplicationEnrichmentTest {
         applicationEnrichment.enrichApplicationUponUpdate(applicationRequest);
 
         assertEquals("user-uuid", application.getAuditDetails().getLastModifiedBy());
-        assertTrue(application.getAuditDetails().getLastModifiedTime() > auditDetails.getCreatedTime());
+        assertTrue(application.getAuditDetails().getLastModifiedTime().isAfter(auditDetails.getCreatedTime()));
     }
     @Test
     public void testEnrichApplicationUponUpdateFailure() {

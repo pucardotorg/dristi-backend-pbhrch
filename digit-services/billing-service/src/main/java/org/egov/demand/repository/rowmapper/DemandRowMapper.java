@@ -41,6 +41,9 @@ package org.egov.demand.repository.rowmapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -105,8 +108,14 @@ public class DemandRowMapper implements ResultSetExtractor<List<Demand>> {
 				AuditDetails auditDetail = new AuditDetails();
 				auditDetail.setCreatedBy(rs.getString("dcreatedby"));
 				auditDetail.setLastModifiedBy(rs.getString("dlastModifiedby"));
-				auditDetail.setCreatedTime(rs.getLong("dcreatedtime"));
-				auditDetail.setLastModifiedTime(rs.getLong("dlastModifiedtime"));
+				Long createdTime = rs.getLong("dcreatedtime");
+				if (createdTime != 0) {
+					auditDetail.setCreatedTime(OffsetDateTime.ofInstant(Instant.ofEpochMilli(createdTime), ZoneId.systemDefault()));
+				}
+				Long lastModifiedTime = rs.getLong("dlastModifiedtime");
+				if (lastModifiedTime != 0) {
+					auditDetail.setLastModifiedTime(OffsetDateTime.ofInstant(Instant.ofEpochMilli(lastModifiedTime), ZoneId.systemDefault()));
+				}
 				demand.setAuditDetails(auditDetail);
 
 				demand.setDemandDetails(new ArrayList<>());
@@ -125,9 +134,15 @@ public class DemandRowMapper implements ResultSetExtractor<List<Demand>> {
 
 			AuditDetails dlauditDetail = new AuditDetails();
 			dlauditDetail.setCreatedBy(rs.getString("dlcreatedby"));
-			dlauditDetail.setCreatedTime(rs.getLong("dlcreatedtime"));
+			Long dlCreatedTime = rs.getLong("dlcreatedtime");
+			if (dlCreatedTime != 0) {
+				dlauditDetail.setCreatedTime(OffsetDateTime.ofInstant(Instant.ofEpochMilli(dlCreatedTime), ZoneId.systemDefault()));
+			}
 			dlauditDetail.setLastModifiedBy(rs.getString("dllastModifiedby"));
-			dlauditDetail.setLastModifiedTime(rs.getLong("dllastModifiedtime"));
+			Long dlLastModifiedTime = rs.getLong("dllastModifiedtime");
+			if (dlLastModifiedTime != 0) {
+				dlauditDetail.setLastModifiedTime(OffsetDateTime.ofInstant(Instant.ofEpochMilli(dlLastModifiedTime), ZoneId.systemDefault()));
+			}
 			demandDetail.setAuditDetails(dlauditDetail);
 
 			if (demand.getId().equals(demandDetail.getDemandId()))

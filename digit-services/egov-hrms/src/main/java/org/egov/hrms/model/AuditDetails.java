@@ -4,6 +4,10 @@ import lombok.*;
 
 import javax.validation.constraints.NotNull;
 
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
+
 
 @AllArgsConstructor
 @Builder
@@ -15,11 +19,11 @@ public class AuditDetails {
 
     private String createdBy;
 
-    private Long createdDate;
+    private OffsetDateTime createdDate;
 
     private String lastModifiedBy;
 
-    private Long lastModifiedDate;
+    private OffsetDateTime lastModifiedDate;
 
 
 }

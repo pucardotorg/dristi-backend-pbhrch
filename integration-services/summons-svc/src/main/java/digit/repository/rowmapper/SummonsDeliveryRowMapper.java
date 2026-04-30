@@ -15,6 +15,9 @@ import org.springframework.stereotype.Component;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @Component
 @Slf4j
@@ -25,9 +28,8 @@ public class SummonsDeliveryRowMapper implements RowMapper<SummonsDelivery> {
     @Autowired
     public SummonsDeliveryRowMapper(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
+
     }
-
-
     @Override
     public SummonsDelivery mapRow(ResultSet rs, int rowNum) throws SQLException {
         SummonsDelivery summonsDelivery = new SummonsDelivery();
@@ -57,6 +59,7 @@ public class SummonsDeliveryRowMapper implements RowMapper<SummonsDelivery> {
             additionalFields = objectMapper.readValue(rs.getString("additional_fields"), AdditionalFields.class);
         } catch (JsonProcessingException e) {
             throw new SQLException(e);
+
         }
         summonsDelivery.setAdditionalFields(additionalFields);
 
@@ -70,5 +73,14 @@ public class SummonsDeliveryRowMapper implements RowMapper<SummonsDelivery> {
 
         summonsDelivery.setRowVersion(rs.getInt("row_version"));
         return summonsDelivery;
+
+    }
+
+
+    private OffsetDateTime convertToOffsetDateTime(Long epochMillis) {
+        if (epochMillis == null || epochMillis == 0) {
+            return null;
+        }
+        return OffsetDateTime.ofInstant(Instant.ofEpochMilli(epochMillis), ZoneId.systemDefault());
     }
 }

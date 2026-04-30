@@ -120,15 +120,16 @@ public class ReScheduleHearingService {
                 hearingDetail.setRepresentatives(representativeIds);
                 hearingDetail.setLitigants(litigantIds);
 
-                LocalDate availableAfter = dateUtil.getLocalDateFromEpoch(hearingDetail.getAvailableAfter()).plusDays(1);
+                long availableAfterEpoch = hearingDetail.getAvailableAfter() != null ? hearingDetail.getAvailableAfter().toInstant().toEpochMilli() : 0L;
+                LocalDate availableAfter = dateUtil.getLocalDateFromEpoch(availableAfterEpoch).plusDays(1);
 
-                Long optOutAfterDate = dateUtil.getEPochFromLocalDate(availableAfter);
+                java.time.OffsetDateTime optOutAfterDate = availableAfter.atStartOfDay(java.time.ZoneOffset.UTC).toOffsetDateTime();
 
                 List<AvailabilityDTO> availability = calendarService.getJudgeAvailability(JudgeAvailabilitySearchRequest.builder().requestInfo(requestInfo).criteria(JudgeAvailabilitySearchCriteria.builder().judgeId(hearingDetail.getJudgeId()).fromDate(optOutAfterDate).courtId("0001")  //TODO: need to configure somewhere
                         .numberOfSuggestedDays(numberOfSuggestedDays).tenantId(tenantId).build()).build());
 
                 // update here all the suggestedDay in reschedule hearing day
-                List<Long> suggestedDays = availability.stream().map((suggestedDate) -> Long.valueOf(suggestedDate.getDate())).toList();
+                List<java.time.OffsetDateTime> suggestedDays = availability.stream().map((suggestedDate) -> java.time.Instant.ofEpochMilli(Long.parseLong(suggestedDate.getDate())).atOffset(java.time.ZoneOffset.UTC)).toList();
                 hearingDetail.setSuggestedDates(suggestedDays);
 
 
@@ -149,9 +150,10 @@ public class ReScheduleHearingService {
 
 
                     long blockedDate = Long.parseLong(availabilityDTO.getDate());
-                    scheduleHearing.setHearingDate(blockedDate);
-                    scheduleHearing.setStartTime(blockedDate);
-                    scheduleHearing.setEndTime(blockedDate);
+                    java.time.OffsetDateTime blockedDateOdt = java.time.Instant.ofEpochMilli(blockedDate).atOffset(java.time.ZoneOffset.UTC);
+                    scheduleHearing.setHearingDate(blockedDateOdt);
+                    scheduleHearing.setStartTime(blockedDateOdt);
+                    scheduleHearing.setEndTime(blockedDateOdt);
                     scheduleHearing.setRescheduleRequestId(hearingDetail.getRescheduledRequestId());
                     scheduleHearing.setStatus("BLOCKED");
 
@@ -215,7 +217,7 @@ public class ReScheduleHearingService {
 
             String tenantId = bulkRescheduling.getTenantId();
             String judgeId = bulkRescheduling.getJudgeId();
-            Long fromDate = bulkRescheduling.getScheduleAfter();
+            java.time.OffsetDateTime fromDate = bulkRescheduling.getScheduleAfter();
             String courtId = bulkRescheduling.getCourtId();
 
             ScheduleHearingSearchCriteria criteria = ScheduleHearingSearchCriteria.builder().hearingIds(bulkRescheduling.getHearingIds()).build();
@@ -246,12 +248,12 @@ public class ReScheduleHearingService {
                 Double occupiedBandwidth = availability.get(index).getOccupiedBandwidth();
                 if (totalHrs - occupiedBandwidth > requiredSlot) {
                     Long hearingDate = Long.parseLong(availability.get(index).getDate());
-                    hearing.setHearingDate(hearingDate);
+                    hearing.setHearingDate(java.time.Instant.ofEpochMilli(hearingDate).atOffset(java.time.ZoneOffset.UTC));
                     LocalDate localHearingDate = dateUtil.getLocalDateFromEpoch(hearingDate);
-                    Long startTime = dateUtil.getEPochFromLocalDate(localHearingDate);
-                    Long endTime = dateUtil.getEPochFromLocalDate(localHearingDate.plusDays(1));
-                    hearing.setStartTime(startTime);
-                    hearing.setEndTime(endTime);
+                    Long startTimeEpoch = dateUtil.getEPochFromLocalDate(localHearingDate);
+                    Long endTimeEpoch = dateUtil.getEPochFromLocalDate(localHearingDate.plusDays(1));
+                    hearing.setStartTime(java.time.Instant.ofEpochMilli(startTimeEpoch).atOffset(java.time.ZoneOffset.UTC));
+                    hearing.setEndTime(java.time.Instant.ofEpochMilli(endTimeEpoch).atOffset(java.time.ZoneOffset.UTC));
 
                     availability.get(index).setOccupiedBandwidth(occupiedBandwidth + requiredSlot);  // need to configure
                 } else {

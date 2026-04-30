@@ -5,7 +5,7 @@ import notification.enrichment.NotificationEnrichment;
 import notification.util.IdgenUtil;
 import notification.web.models.Notification;
 import notification.web.models.NotificationRequest;
-import org.egov.common.contract.models.AuditDetails;
+import notification.web.models.AuditDetails;
 import notification.web.models.Document;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
@@ -23,6 +23,9 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 @ExtendWith(MockitoExtension.class)
 class NotificationEnrichmentTest {
@@ -32,6 +35,9 @@ class NotificationEnrichmentTest {
 
     @Mock
     private Configuration config;
+
+    @Mock
+    private notification.util.DateUtil dateUtil;
 
     @InjectMocks
     private NotificationEnrichment notificationEnrichment;
@@ -58,6 +64,7 @@ class NotificationEnrichmentTest {
         when(config.getNotificationIdFormat()).thenReturn("NOTIF-2024");
         when(idgenUtil.getIdList(eq(requestInfo), eq("tenant-001"), anyString(), anyString(), eq(1), eq(true)))
                 .thenReturn(Collections.singletonList("NOTIF-123"));
+        when(dateUtil.getCurrentOffsetDateTime()).thenReturn(java.time.OffsetDateTime.now());
 
         notificationEnrichment.enrichCreateNotificationRequest(request);
 
@@ -67,16 +74,18 @@ class NotificationEnrichmentTest {
         assertNotNull(notification.getAuditDetails());
         assertEquals("user-123", notification.getAuditDetails().getCreatedBy());
         assertEquals("user-123", notification.getAuditDetails().getLastModifiedBy());
-        assertTrue(notification.getAuditDetails().getCreatedTime() > 0);
+        assertNotNull(notification.getAuditDetails().getCreatedTime());
     }
 
     @Test
     void testEnrichUpdateNotificationRequest() {
+        java.time.OffsetDateTime pastTime = java.time.OffsetDateTime.ofInstant(
+                java.time.Instant.ofEpochMilli(1690000000000L), java.time.ZoneId.systemDefault());
         AuditDetails existingAuditDetails = AuditDetails.builder()
                 .createdBy("user-123")
                 .lastModifiedBy("user-123")
-                .createdTime(1690000000000L)
-                .lastModifiedTime(1690000000000L)
+                .createdTime(pastTime)
+                .lastModifiedTime(pastTime)
                 .build();
 
         RequestInfo requestInfo1 = request.getRequestInfo();
@@ -87,11 +96,12 @@ class NotificationEnrichmentTest {
         request = new NotificationRequest();
         request.setRequestInfo(requestInfo1);
         request.setNotification(dbNotification);
+        when(dateUtil.getCurrentOffsetDateTime()).thenReturn(java.time.OffsetDateTime.now());
 
         notificationEnrichment.enrichUpdateNotificationRequest(request, dbNotification);
 
         assertNotNull(request.getNotification().getAuditDetails());
         assertEquals("user-123", request.getNotification().getAuditDetails().getLastModifiedBy());
-        assertTrue(request.getNotification().getAuditDetails().getLastModifiedTime() > 1690000000000L);
+        assertTrue(request.getNotification().getAuditDetails().getLastModifiedTime().isAfter(pastTime));
     }
 }
