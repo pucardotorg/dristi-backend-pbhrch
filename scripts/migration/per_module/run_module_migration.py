@@ -783,6 +783,39 @@ def phase_6_test_migration(manifest: dict) -> int:
     return copied
 
 
+# Profile names that, used as `application-<name>.yml` in a domain
+# module's main resources, indicate misplaced runtime/env config that
+# belongs in dristi-app. Per-subdomain consolidation YAMLs (e.g.
+# `application-cases.yml`) are allowed — they ship in the domain JAR
+# and are activated via spring.profiles.active in dristi-app.
+FORBIDDEN_YML_PROFILES = frozenset({"local", "shared"})
+
+
+def _gate_3_violations(domain_resources: Path) -> list[Path]:
+    """Return application.yml/properties files in a domain module's main
+    resources that are NOT allowed. Allows `application-<subdomain>.yml`;
+    forbids the bare `application.yml`, reserved env profiles, and any
+    `application.properties`."""
+    if not domain_resources.exists():
+        return []
+    bad: list[Path] = []
+    candidates = (
+        list(domain_resources.glob("application*.yml"))
+        + list(domain_resources.glob("application*.yaml"))
+        + list(domain_resources.glob("application*.properties"))
+    )
+    for cfg in candidates:
+        stem = cfg.name.rsplit(".", 1)[0]
+        if stem == "application":
+            bad.append(cfg)
+            continue
+        if stem.startswith("application-"):
+            profile = stem[len("application-") :]
+            if profile in FORBIDDEN_YML_PROFILES:
+                bad.append(cfg)
+    return bad
+
+
 _FLYWAY_VERSION_RE = re.compile(r"^V([0-9][0-9_.]*)__")
 
 
@@ -963,14 +996,31 @@ def phase_7_validate(manifest: dict, target_dir: Path) -> tuple[int, list[str]]:
         suffix = f" ({kept} kept under follow-up review)" if kept else ""
         print(f"PASS Gate 2: no unresolved protected-class duplicates{suffix}")
 
-    # Gate 3: No application.yml in module
-    yml_in_module = list(
-        (MONOLITH_ROOT / f"domain-{manifest['target_module']}" / "src" / "main" / "resources").glob("application*.y*ml")
-    ) if (MONOLITH_ROOT / f"domain-{manifest['target_module']}" / "src" / "main" / "resources").exists() else []
-    if yml_in_module:
-        fails.append(f"Gate 3 (config guard): {len(yml_in_module)} application.yml under module")
+    # Gate 3: only `application-<subdomain>.yml` is allowed in a domain
+    # module's main resources. Pipeline 5 writes one of those per
+    # migrated subdomain (consolidated per-subdomain config), and the
+    # domain JAR ships them on the classpath where dristi-app's
+    # `spring.profiles.active` activates them. The bare `application.yml`
+    # and reserved env profiles (`local`, `shared`) belong in dristi-app
+    # — if they leak into a domain module they silently override
+    # dristi-app's intended config.
+    domain_resources = (
+        MONOLITH_ROOT / f"domain-{manifest['target_module']}" / "src" / "main" / "resources"
+    )
+    yml_violations = _gate_3_violations(domain_resources)
+    if yml_violations:
+        fails.append(
+            f"Gate 3 (config guard): {len(yml_violations)} forbidden config file(s) under module"
+        )
+        for v in yml_violations[:5]:
+            fails.append(f"  - {v.relative_to(REPO_ROOT)}")
     else:
-        print("PASS Gate 3: no module-level application.yml")
+        allowed = [
+            p for p in domain_resources.glob("application-*.y*ml")
+            if domain_resources.exists()
+        ] if domain_resources.exists() else []
+        suffix = f" ({len(allowed)} per-subdomain YAML(s) allowed)" if allowed else ""
+        print(f"PASS Gate 3: no forbidden application config{suffix}")
 
     # Gate 4: All target files declare correct package
     expected_prefix = f"{manifest['target_package']}.internal"

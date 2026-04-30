@@ -98,7 +98,7 @@ Phase 9 (db migrations): copied N SQL file(s) into dristi-monolith/domain-.../<s
 Phase 8: lifted N deps into dristi-monolith/domain-...pom.xml
 PASS Gate 1: no banned-package imports
 PASS Gate 2: no unresolved protected-class duplicates
-PASS Gate 3: no module-level application.yml
+PASS Gate 3: no forbidden application config (N per-subdomain YAML(s) allowed)
 PASS Gate 4: all target files in expected package
 PASS Gate 5: dristi-common compiles
 PASS Gate 6: N SQL file(s) under dristi-monolith/domain-.../<subdomain>/db/migration; Flyway location registered
