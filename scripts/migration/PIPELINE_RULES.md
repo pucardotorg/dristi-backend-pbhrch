@@ -1,16 +1,20 @@
-# Agentic Migration Skills (refined)
+# Per-Module Migration Pipeline Rules
 
-This is the working skill set used by the per-module migration pipeline
+This is the working rule set used by the per-module migration pipeline
 (`scripts/migration/per_module/run_module_migration.py`) and the
 `dristi-common` extraction pipeline (`scripts/migration/dristi_common/`).
 
-It supersedes the original 10-skill list in `agentic_workflow_april_27.md`
+It supersedes the original 10-rule list in `agentic_workflow_april_27.md`
 where reality required adjustments. Every "Refined by" note links the rule
 to the concrete experience that produced it.
 
+> Renamed from `SKILLS.md` to `PIPELINE_RULES.md` to disambiguate from
+> Claude Code "skills" (a runtime feature). These entries are pure
+> documentation — a debug archive — not invocable capabilities.
+
 ---
 
-## Skill 1 — Package Naming Enforcer
+## Rule 1 — Package Naming Enforcer
 
 **Rule.** Every Java file under `dristi-monolith/domain-<module>/` declares
 `org.pucar.dristi.<module>.<subdomain>.internal.*`. Public API types live
@@ -22,7 +26,7 @@ tree and fails if its `package` line doesn't start with the expected
 
 ---
 
-## Skill 2 — Duplicate Elimination Guard
+## Rule 2 — Duplicate Elimination Guard
 
 **Rule.** The 11 protected classes
 (`MdmsUtil`, `IdgenUtil`, `WorkflowUtil`, `FileStoreUtil`, `UserUtil`,
@@ -48,7 +52,7 @@ file appears anywhere under the target tree.
 
 ---
 
-## Skill 3 — Module Boundary Enforcer (Spring Modulith)
+## Rule 3 — Module Boundary Enforcer (Spring Modulith)
 
 **Rule.** Code in `domain-X` may not import from `domain-Y.*.internal.*`.
 Cross-module communication goes through `*Api` interfaces.
@@ -63,7 +67,7 @@ they're libraries-only).
 
 ---
 
-## Skill 4 — REST-to-Method-Call Converter
+## Rule 4 — REST-to-Method-Call Converter
 
 **Rule.** Intra-DRISTI REST calls (`serviceRequestRepository.fetchResult`
 or `RestTemplate.*` aimed at another DRISTI service) become direct
@@ -84,7 +88,7 @@ platform call and *not* flagged.
 
 ---
 
-## Skill 5 — Kafka Topic Hygiene
+## Rule 5 — Kafka Topic Hygiene
 
 **Rule.** Phase 1 keeps every topic that has a producer + consumer in
 the new monolith *and* on the egov-persister side. Phase 2 removes
@@ -101,7 +105,7 @@ explicitly asking. `KafkaProducerService` was extracted alongside
 
 ---
 
-## Skill 6 — Persistence Pattern Guard
+## Rule 6 — Persistence Pattern Guard
 
 **Rule.** Phase 1 — all writes go via `Producer → topic →
 egov-persister`. Phase 2 — migrated modules use `@Repository` +
@@ -111,7 +115,7 @@ egov-persister`. Phase 2 — migrated modules use `@Repository` +
 
 ---
 
-## Skill 7 — Configuration Consolidation Guard
+## Rule 7 — Configuration Consolidation Guard
 
 **Rule.** Only `dristi-app/src/main/resources/application*.yml` exists
 in the monolith. Module subprojects must not contain
@@ -130,7 +134,7 @@ properties. The right split: extract the union of properties used by
 
 ---
 
-## Skill 8 — Import Sanitizer
+## Rule 8 — Import Sanitizer
 
 **Rule.** Inside `dristi-monolith/domain-*/`, banned import prefixes are:
 `digit.`, `pucar.`, `notification.`, `drishti.payment.`,
@@ -141,7 +145,7 @@ properties. The right split: extract the union of properties used by
 
 ---
 
-## Skill 9 — Automated Package Rename Engine
+## Rule 9 — Automated Package Rename Engine
 
 **Phase 3 of the per-module pipeline.** Reads
 `migration_manifest.json`, walks the source service's `src/main/java`,
@@ -176,7 +180,7 @@ has one).
 
 ---
 
-## Skill 10 — Schema Isolation Guard (Phase 2)
+## Rule 10 — Schema Isolation Guard (Phase 2)
 
 **Rule.** Each module's `@Entity`/`@Table` declares an explicit
 `schema=` matching its domain (`case_lifecycle`, `identity`,
@@ -186,7 +190,7 @@ has one).
 
 ---
 
-## Skill 11 — Test Migration & Verification Guard
+## Rule 11 — Test Migration & Verification Guard
 
 **Rule.** `src/test/java` for the migrated service is copied to the
 target module's `src/test/java/.../internal/` with the same package
@@ -200,9 +204,9 @@ pipeline will not undo that work.
 
 ---
 
-## Skill 23 — Per-Controller Context-Path Prefix
+## Rule 23 — Per-Controller Context-Path Prefix
 
-**New skill, learned the moment a second service joined the monolith.**
+**New rule, learned the moment a second service joined the monolith.**
 
 Spring Boot supports exactly **one** `server.servlet.context-path` per
 application. While the monolith hosts only lock-svc the
@@ -227,13 +231,13 @@ Phase 3 of `run_module_migration.py` now does this automatically:
 3. If a controller has no class-level `@RequestMapping`, one is
    inserted above the class declaration.
 
-After this skill, both `/lock-svc/v1/_set` and `/case/v1/_search` work
+After this rule, both `/lock-svc/v1/_set` and `/case/v1/_search` work
 out of the box; the caller URL contract is preserved at every gateway
 remap point (no UI / Postman changes).
 
 ---
 
-## Skill 22 — Config Consolidation Engine (Pipeline 5)
+## Rule 22 — Config Consolidation Engine (Pipeline 5)
 
 **New pipeline phase, learned from the case-svc boot attempt.**
 
@@ -285,9 +289,9 @@ remain at boot.
 
 ---
 
-## Skill 14 — Inline FQN Rewriter (learned from `case`)
+## Rule 14 — Inline FQN Rewriter (learned from `case`)
 
-**New skill, surfaced by the case service test drive.**
+**New rule, surfaced by the case service test drive.**
 
 Some legacy code uses fully-qualified class names inline rather than via
 `import`:
@@ -306,11 +310,11 @@ into other modules pass through unchanged.
 
 ---
 
-## Skill 15 — Arity-Aware Method-Surface Comparison
+## Rule 15 — Arity-Aware Method-Surface Comparison
 
-**New skill, learned from the case service.**
+**New rule, learned from the case service.**
 
-`Skill 13`'s naïve approach compared protected-class method *names*
+`Rule 13`'s naïve approach compared protected-class method *names*
 only. Case's local `IndividualUtil.getIndividualByIndividualId(req, uri)`
 had the same name as the canonical's
 `getIndividualByIndividualId(req, uri, Class<T>)` but a different arity,
@@ -323,9 +327,9 @@ two-arg overload doesn't exist on the canonical.
 
 ---
 
-## Skill 16 — Banned Imports Need a Whitelist
+## Rule 16 — Banned Imports Need a Whitelist
 
-**New skill, surfaced by the case service test drive.**
+**New rule, surfaced by the case service test drive.**
 
 The original "banned import prefixes" list was too coarse — `digit.`
 caught both the legacy DRISTI service-internal `digit.config.*` AND the
@@ -343,9 +347,9 @@ roots (`org.egov.eTreasury.`, `com.egov.icops`, etc.).
 
 ---
 
-## Skill 17 — eGov Platform Skip List Is Repository-Wide
+## Rule 17 — eGov Platform Skip List Is Repository-Wide
 
-**New skill, surfaced by the case service test drive.**
+**New rule, surfaced by the case service test drive.**
 
 Phase 5's intra-DRISTI REST detector skips host-getters whose names
 contain platform tokens (so the eGov platform calls stay as REST). The
@@ -357,9 +361,9 @@ genuine intra-DRISTI candidate will re-emit it after the change.
 
 ---
 
-## Skill 18 — Canonical Method Surface Must Stay Generic Where Service DTOs Diverge
+## Rule 18 — Canonical Method Surface Must Stay Generic Where Service DTOs Diverge
 
-**New skill, learned from the case service test drive.**
+**New rule, learned from the case service test drive.**
 
 The canonical `IndividualUtil` originally took the
 `org.pucar.dristi.common.models.individual.IndividualSearchRequest`
@@ -374,11 +378,11 @@ DTO before adopting the canonical.
 
 ---
 
-## Skill 19 — `kept_classes` Must Suppress BOTH Import-Rewrites AND Auto-Imports
+## Rule 19 — `kept_classes` Must Suppress BOTH Import-Rewrites AND Auto-Imports
 
-**New skill, learned from the case service test drive.**
+**New rule, learned from the case service test drive.**
 
-Skill 13 introduced "keep local protected class as follow-up" but
+Rule 13 introduced "keep local protected class as follow-up" but
 applied that flag only when deciding whether to delete the file.
 Phase 4's import-rewrite block still redirected
 `org.pucar.dristi.caselifecycle.cases.internal.util.FileStoreUtil`
@@ -394,9 +398,9 @@ the file actually has.
 
 ---
 
-## Skill 20 — Phase Order: 6 Before 4
+## Rule 20 — Phase Order: 6 Before 4
 
-**New skill, learned from the case service test drive.**
+**New rule, learned from the case service test drive.**
 
 Phase 4's import-rewrite + auto-import sweep needs to walk both the
 main and test trees. Originally Phase 4 ran before Phase 6, so the
@@ -409,9 +413,9 @@ consistent state.
 
 ---
 
-## Skill 21 — Spring Modulith: Filter Style Violations
+## Rule 21 — Spring Modulith: Filter Style Violations
 
-**New skill, learned from the case service test drive.**
+**New rule, learned from the case service test drive.**
 
 Spring Modulith's `verify()` runs both structural rules (boundaries,
 cycles, named-interface respect) and stylistic rules (e.g.
@@ -426,9 +430,9 @@ separately for cleanup.
 
 ---
 
-## Skill 13 — Service-Augmented Helper Detection
+## Rule 13 — Service-Augmented Helper Detection
 
-**New skill, learned from the lock-svc test drive.**
+**New rule, learned from the lock-svc test drive.**
 
 Some services attach service-specific convenience methods to a protected
 utility class (lock-svc's `IndividualUtil` adds `getIndividualId(RequestInfo)`
@@ -448,9 +452,9 @@ lift the extra methods into dristi-common or rename the local file to
 
 ---
 
-## Skill 12 — Canonical Curation Marker
+## Rule 12 — Canonical Curation Marker
 
-**New skill, learned the hard way.**
+**New rule, learned the hard way.**
 
 After Phase 3 of the dristi-common pipeline picks a "majority variant"
 canonical, a reviewer often refactors it (merging features from the

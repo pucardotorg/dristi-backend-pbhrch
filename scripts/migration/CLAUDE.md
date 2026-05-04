@@ -6,7 +6,7 @@ subtree must follow. Recipes themselves live in slash commands — see
 the bottom of this file.
 
 The companion human docs are [RUNBOOK.md](RUNBOOK.md) (operational guide)
-and [SKILLS.md](SKILLS.md) (debug archive).
+and [PIPELINE_RULES.md](PIPELINE_RULES.md) (debug archive).
 
 ---
 
@@ -60,12 +60,12 @@ Show the diff, explain why, wait. Do not apply.
 ### Tier 3 — Lay out 2-3 options with tradeoffs, wait
 Architectural / cross-service decisions where wrong-answer cost is high.
 
-- Widening a canonical method signature to `Object` (Skill 18).
+- Widening a canonical method signature to `Object` (Rule 18).
 - Lifting a kept helper into `dristi-common` vs. keeping it
-  service-local (Skill 13).
+  service-local (Rule 13).
 - Resolving a CONFLICT-classified config key when behavioral
   divergence matters.
-- Modifying SKILLS.md (writing a new skill, retiring an old one).
+- Modifying PIPELINE_RULES.md (writing a new rule, retiring an old one).
 
 ### Tier 4 — Ask the user
 Domain knowledge Claude can't supply.
@@ -77,10 +77,10 @@ Domain knowledge Claude can't supply.
 
 ---
 
-## 3. SKILLS.md usage
+## 3. PIPELINE_RULES.md usage
 
-[SKILLS.md](SKILLS.md) is a debug archive, not runtime config. Consult
-it **only on failure or ambiguity**, not preemptively.
+[PIPELINE_RULES.md](PIPELINE_RULES.md) is a debug archive, not runtime
+config. Consult it **only on failure or ambiguity**, not preemptively.
 
 ### When to consult
 
@@ -92,28 +92,28 @@ it **only on failure or ambiguity**, not preemptively.
 
 ### How to use
 
-1. **Search** SKILLS.md by gate number, symptom keyword, or class name:
+1. **Search** PIPELINE_RULES.md by gate number, symptom keyword, or class name:
    ```bash
-   grep -ni "Gate 2\|placeholder\|IndividualUtil" scripts/migration/SKILLS.md
+   grep -ni "Gate 2\|placeholder\|IndividualUtil" scripts/migration/PIPELINE_RULES.md
    ```
-2. **Read only the matching skill(s).** Skills are independent.
-3. **Verify against current Python** before acting. Skills describe
+2. **Read only the matching rule(s).** Rules are independent.
+3. **Verify against current Python** before acting. Rules describe
    how the pipeline *was designed*; the code may have drifted.
-4. **Apply per tier rules.** Most skill-driven fixes are Tier 1
+4. **Apply per tier rules.** Most rule-driven fixes are Tier 1
    (input fix) or Tier 2 (extending a list in the pipeline).
-5. **Tell the user which skill applied** in the session summary.
+5. **Tell the user which rule applied** in the session summary.
 
-### When to write a new skill
+### When to write a new rule
 
 If Claude debugs a novel failure that isn't covered by any existing
-skill *and* the fix changes the pipeline:
+rule *and* the fix changes the pipeline:
 
-1. Draft the new skill in chat using the existing template (Rule /
+1. Draft the new rule in chat using the existing template (Rule /
    Refined by reality / Enforcement).
 2. Wait for user confirmation that the framing is correct.
-3. Then add it to SKILLS.md.
+3. Then add it to PIPELINE_RULES.md.
 
-Do not silently append to SKILLS.md mid-session.
+Do not silently append to PIPELINE_RULES.md mid-session.
 
 ---
 
@@ -171,7 +171,7 @@ Pipeline and Maven output can be large. To keep context efficient:
 | Path | Purpose |
 |---|---|
 | [RUNBOOK.md](RUNBOOK.md) | Human-readable operational guide |
-| [SKILLS.md](SKILLS.md) | 23 hard-won lessons, indexed by gate/symptom |
+| [PIPELINE_RULES.md](PIPELINE_RULES.md) | 23 hard-won rules, indexed by gate/symptom |
 | [SERVICE_REGISTRY.md](SERVICE_REGISTRY.md) | Service → module/subdomain mapping |
 | [per_module/run_module_migration.py](per_module/run_module_migration.py) | The 9-phase pipeline |
 | [config_consolidation/run_consolidation.py](config_consolidation/run_consolidation.py) | Pipeline 5 (config) |

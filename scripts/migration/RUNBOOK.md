@@ -226,7 +226,7 @@ the endpoints.
 |---|---|---|
 | `release version 17 not supported` | `mvn` using a JRE not a JDK | `export JAVA_HOME=~/.jdks/corretto-17.0.18` |
 | `cannot find symbol` for a protected class | Phase 4 deleted the local copy but a caller still references it by simple name. | Add the canonical's import. The pipeline already auto-imports for known cases — file a bug if it missed yours. |
-| `ConflictingBeanDefinitionException` for `xxx` | Two `@Component` classes share a default bean name. | The pipeline auto-uniquifies (subdomain prefix). If new conflict appears with an external library, add the canonical's `@Component("commonXxx")` per Skill 12. |
+| `ConflictingBeanDefinitionException` for `xxx` | Two `@Component` classes share a default bean name. | The pipeline auto-uniquifies (subdomain prefix). If new conflict appears with an external library, add the canonical's `@Component("commonXxx")` per Rule 12. |
 | `Could not resolve placeholder '${a.b.c}'` | A property key isn't in any `application-*.yml`. | Either include it in `application-<subdomain>.yml` (re-run Pipeline 5 after editing the source `.properties`) or add a default in the `@Value` (`${a.b.c:#{null}}`). |
 | Gate 1 fails on `digit.models.coremodels` | False positive — that's an external library, not a banned local prefix. | The pipeline already excludes that pattern. If you see it, your branch is behind — `git pull origin monolith/main`. |
 | Gate 2 fails (unresolved dups) | Phase 4 left dups and didn't list them as follow-ups. | Investigate the file — the canonical may have changed signature. Add to follow-ups manually if legitimate. |
@@ -234,7 +234,7 @@ the endpoints.
 | Gate 7 fails (flyway version uniqueness) | Two services chose the same `V<timestamp>` prefix (case/order/task all use `V20240424110535`). | Rename one file with an `_<n>` suffix on the version, e.g. `V20240424110535_2__order__ddl.sql`. Flyway parses underscores as decimal separators, so the renamed migration sorts after the original and the unified history table sees both as distinct versions. |
 
 For deeper detail on **why** the pipeline does what it does, see
-[SKILLS.md](SKILLS.md) — every skill notes the original failure that
+[PIPELINE_RULES.md](PIPELINE_RULES.md) — every rule notes the original failure that
 motivated it.
 
 ---
@@ -308,7 +308,7 @@ EOF
 | [`scripts/migration/config_consolidation/run_consolidation.py`](config_consolidation/run_consolidation.py) | Pipeline 5 (config) |
 | [`scripts/migration/dristi_common/`](dristi_common/) | One-time `dristi-common` extraction (already done) |
 | [`scripts/migration/scaffold/`](scaffold/) | One-time monolith scaffold (already done) |
-| [`scripts/migration/SKILLS.md`](SKILLS.md) | 23 hard-won lessons — read it before debugging |
+| [`scripts/migration/PIPELINE_RULES.md`](PIPELINE_RULES.md) | 23 hard-won rules — read it before debugging |
 | [`scripts/migration/SERVICE_REGISTRY.md`](SERVICE_REGISTRY.md) | Service → module/subdomain mapping |
 | [`scripts/migration/RUNBOOK.md`](RUNBOOK.md) | This file |
 | [`scripts/local-test/README.md`](../local-test/README.md) | Local-boot smoke test recipe |

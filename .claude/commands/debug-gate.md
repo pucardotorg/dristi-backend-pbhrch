@@ -1,5 +1,5 @@
 ---
-description: Diagnose a failing pipeline gate using SKILLS.md and the pipeline source, then propose a fix per the tier rules.
+description: Diagnose a failing pipeline gate using PIPELINE_RULES.md and the pipeline source, then propose a fix per the tier rules.
 argument-hint: <gate-number> [context]
 ---
 
@@ -16,17 +16,17 @@ If `<gate-number>` is missing or out of range, stop and ask.
 
 ---
 
-## Step 1 — Find relevant skill(s)
+## Step 1 — Find relevant rule(s)
 
-Grep SKILLS.md for the gate number plus any keywords from the context:
+Grep PIPELINE_RULES.md for the gate number plus any keywords from the context:
 
 ```bash
-grep -ni "Gate <N>\|gate <N>" scripts/migration/SKILLS.md
+grep -ni "Gate <N>\|gate <N>" scripts/migration/PIPELINE_RULES.md
 # plus, if context mentions a class/file/symptom:
-grep -ni "<symptom-keyword>" scripts/migration/SKILLS.md
+grep -ni "<symptom-keyword>" scripts/migration/PIPELINE_RULES.md
 ```
 
-If the gate has no direct mention in SKILLS.md (some gates are encoded
+If the gate has no direct mention in PIPELINE_RULES.md (some gates are encoded
 purely in the Python with no documented "Refined by reality"), grep
 the pipeline source instead:
 
@@ -34,20 +34,20 @@ the pipeline source instead:
 grep -n "phase_7_validate\|Gate <N>" scripts/migration/per_module/run_module_migration.py
 ```
 
-Read **only the matching skill(s) and the matching Python function.**
-Do not load all of SKILLS.md.
+Read **only the matching rule(s) and the matching Python function.**
+Do not load all of PIPELINE_RULES.md.
 
 ---
 
 ## Step 2 — Verify the rule against current code
 
-The skill describes how the gate was *designed* to behave. Confirm
-the current implementation matches the skill's claim:
+The rule describes how the gate was *designed* to behave. Confirm
+the current implementation matches the rule's claim:
 
 - Open the gate's Python function.
 - Read the rule logic.
-- Compare to what the skill says it does.
-- If they diverge, the skill is stale — trust the code, flag the
+- Compare to what the rule says it does.
+- If they diverge, the rule is stale — trust the code, flag the
   drift to the user.
 
 ---
@@ -61,19 +61,19 @@ Decide which class of failure this is:
 | **Stale rule** | Gate logic is buggy / over-broad | Tier 2 (propose pipeline edit) |
 | **Missing whitelist entry** | New legitimate import / token / segment | Tier 2 (propose list edit) |
 | **Genuine violation** | Migrated tree actually contains a banned thing | Tier 1 (fix in migrated tree) |
-| **Novel failure mode** | Not covered by any existing skill | Tier 3 (lay out options) + propose new skill |
+| **Novel failure mode** | Not covered by any existing rule | Tier 3 (lay out options) + propose new rule |
 
 For each class, the action differs:
 
 ### Stale rule / missing whitelist entry (Tier 2)
 - Show the diff to `run_module_migration.py` (or related script).
-- Explain which skill the change extends ("per Skill 16, adding `<x>`
+- Explain which rule the change extends ("per Rule 16, adding `<x>`
   to the digit-prefix whitelist").
 - Wait for approval. Do not apply.
 
 ### Genuine violation (Tier 1)
 - Identify the offending file in the migrated tree.
-- Apply the correct fix per the skill (add an import, rename a
+- Apply the correct fix per the rule (add an import, rename a
   Flyway file, add a HAND-CURATED marker, etc.).
 - Show the diff. Re-run only that gate to confirm:
   ```bash
@@ -83,8 +83,8 @@ For each class, the action differs:
 
 ### Novel failure mode (Tier 3)
 - Lay out 2-3 options for fixing.
-- Draft a candidate new skill (Rule / Refined by reality / Enforcement).
-- Wait for user to choose option + confirm skill framing before
+- Draft a candidate new rule (Rule / Refined by reality / Enforcement).
+- Wait for user to choose option + confirm rule framing before
   any code or doc edit.
 
 ---
@@ -93,7 +93,7 @@ For each class, the action differs:
 
 Tell the user:
 
-1. **Which gate** failed and **which skill** applied (if any).
+1. **Which gate** failed and **which rule** applied (if any).
 2. **What class** of failure it is (per Step 3 table).
 3. **What was changed** (Tier 1 fix applied) **or proposed** (Tier 2/3).
 4. **Re-run result** — gate now passing, or pending user approval.
@@ -104,9 +104,9 @@ standalone) so the migration can continue.
 
 ---
 
-## Common gate → skill mapping (quick reference)
+## Common gate → rule mapping (quick reference)
 
-| Gate | Likely skills | Common cause |
+| Gate | Likely rules | Common cause |
 |---|---|---|
 | 1 (banned imports) | 8, 16 | False-positive on legitimate external library |
 | 2 (protected dups) | 2, 13, 15, 18, 19 | Local helper kept that should be lifted, or vice versa |

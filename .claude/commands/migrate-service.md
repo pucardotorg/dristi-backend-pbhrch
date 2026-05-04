@@ -90,13 +90,13 @@ For each non-empty file, classify each entry:
 - **Tier 4 (ask user):** target service is unmigrated, or the call
   uses `Object`-typed payloads, or the host getter name is ambiguous.
   List these and ask which to convert.
-- **Skip:** target is a platform service (eGov / DIGIT). Skill 17 lists
+- **Skip:** target is a platform service (eGov / DIGIT). Rule 17 lists
   the tokens. Confirm in chat which were skipped and why.
 
 ### Follow-ups (kept protected-class files)
 - **Tier 3 decision per file:** lift extra methods into the canonical
   in `dristi-common` vs. keep as service-local helper. Lay out the
-  tradeoff per file (consult Skills 13, 15, 18, 19), wait for user
+  tradeoff per file (consult Rules 13, 15, 18, 19), wait for user
   decision before any pipeline-level edit.
 
 ---
