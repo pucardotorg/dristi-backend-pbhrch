@@ -11,6 +11,7 @@ import java.util.TimeZone;
 import jakarta.annotation.PostConstruct;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.egov.tracer.config.TracerConfiguration;
 
 
@@ -27,7 +28,7 @@ public class MainConfiguration {
 
     @Bean
     public ObjectMapper objectMapper() {
-        return new ObjectMapper().disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES).setTimeZone(TimeZone.getTimeZone(timeZone));
+        return new ObjectMapper().disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES).setTimeZone(TimeZone.getTimeZone(timeZone)).registerModule(new JavaTimeModule());
     }
 
     @Bean

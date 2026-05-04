@@ -55,6 +55,7 @@ import org.springframework.context.annotation.Import;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 @SpringBootApplication
 @ComponentScan(basePackages = { "org.egov.hrms", "org.egov.hrms.web.controllers" , "org.egov.hrms.config"})
@@ -74,6 +75,7 @@ public class EgovEmployeeApplication {
         final ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         objectMapper.setTimeZone(TimeZone.getTimeZone(timeZone));
+        objectMapper.registerModule(new JavaTimeModule());
         return objectMapper;
     }
 
