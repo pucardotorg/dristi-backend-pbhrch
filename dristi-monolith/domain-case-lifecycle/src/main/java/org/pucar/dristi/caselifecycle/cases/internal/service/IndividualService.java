@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.Collections;
 import java.util.List;
 
-@Service
+@Service("casesIndividualService")
 @Slf4j
 public class IndividualService {
 

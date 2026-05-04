@@ -22,7 +22,7 @@ import java.util.*;
 import static org.pucar.dristi.caselifecycle.cases.internal.config.ServiceConstants.*;
 import static org.pucar.dristi.caselifecycle.cases.internal.config.ServiceConstants.NOTIFICATION_LOCALIZATION_MSGS_JSONPATH;
 
-@Service
+@Service("casesSmsNotificationService")
 @Slf4j
 public class SmsNotificationService {
 

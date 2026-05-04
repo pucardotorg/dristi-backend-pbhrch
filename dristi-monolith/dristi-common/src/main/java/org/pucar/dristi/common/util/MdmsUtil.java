@@ -58,6 +58,19 @@ public class MdmsUtil {
         //log.info(ulbToCategoryListMap.toString());
     }
 
+    public String fetchMdmsDataAsString(RequestInfo requestInfo, String tenantId, String moduleName, List<String> masterNameList) {
+        String response = "";
+        StringBuilder uri = new StringBuilder();
+        uri.append(configs.getMdmsHost()).append(configs.getMdmsEndPoint());
+        MdmsCriteriaReq mdmsCriteriaReq = getMdmsRequest(requestInfo, tenantId, moduleName, masterNameList);
+        try {
+            response = restTemplate.postForObject(uri.toString(), mdmsCriteriaReq, String.class);
+        }catch(Exception e) {
+            log.error(ERROR_WHILE_FETCHING_FROM_MDMS,e);
+        }
+        return response;
+    }
+
     private MdmsCriteriaReq getMdmsRequest(RequestInfo requestInfo, String tenantId,
                                            String moduleName, List<String> masterNameList) {
         List<MasterDetail> masterDetailList = new ArrayList<>();

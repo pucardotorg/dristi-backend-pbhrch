@@ -19,7 +19,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
 
-@Component
+@Component("casesStatuteSectionRowMapper")
 @Slf4j
 public class StatuteSectionRowMapper implements ResultSetExtractor<Map<UUID, List<StatuteSection>>> {
     public Map<UUID, List<StatuteSection>> extractData(ResultSet rs) {

@@ -9,7 +9,7 @@ import java.security.SecureRandom;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Component
+@Component("casesCaseUtil")
 public class CaseUtil {
     private static final String CHARACTERS = "0123456789";
     private static final SecureRandom random = new SecureRandom();
