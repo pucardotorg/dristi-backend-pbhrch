@@ -1,15 +1,72 @@
-# 4 keys with different values across services
+# 23 keys with different values across services
 # Per-service profile YAML resolves them via Spring's profile-overlay rules.
 
+app.timezone
+  case=Asia/Kolkata | lock-svc=Asia/Kolkata
+
 otel.instrumentation.http.server.ignore-urls
-  case=/case/health,/case/prometheus | lock-svc=/lock-svc/health,/lock-svc/prometheus
+  case=/case/health,/case/prometheus | lock-svc=/lock-svc/health,/lock-svc/prometheus | bank-details=/bank-details/health,/bank-details/prometheus
+
+kafka.consumer.config.auto_commit
+  case=true | lock-svc=true
+
+kafka.consumer.config.auto_commit_interval
+  case=100 | lock-svc=100
+
+kafka.consumer.config.session_timeout
+  case=15000 | lock-svc=15000
+
+kafka.consumer.config.auto_offset_reset
+  case=earliest | lock-svc=earliest
+
+kafka.producer.config.retries_config
+  case=0 | lock-svc=0
+
+kafka.producer.config.batch_size_config
+  case=16384 | lock-svc=16384
+
+kafka.producer.config.linger_ms_config
+  case=1 | lock-svc=1
+
+kafka.producer.config.buffer_memory_config
+  case=33554432 | lock-svc=33554432
+
+egov.individual.host
+  case=http://localhost:8081/ | lock-svc=http://localhost:8081/
+
+egov.individual.search.path
+  case=individual/v1/_search | lock-svc=individual/v1/_search
 
 egov.mdms.host
   case=http://localhost:8084 | lock-svc=https://dev.digit.org
 
+egov.mdms.search.endpoint
+  case=/egov-mdms-service/v1/_search | lock-svc=/egov-mdms-service/v1/_search
+
 egov.user.host
   case=http://localhost:8086 | lock-svc=https://dev.digit.org
 
+egov.user.context.path
+  case=/user/users | lock-svc=/user/users
+
+egov.user.create.path
+  case=/_createnovalidate | lock-svc=/_createnovalidate
+
+egov.user.search.path
+  case=/user/_search | lock-svc=/user/_search
+
+egov.user.update.path
+  case=/_updatenovalidate | lock-svc=/_updatenovalidate
+
 kafka.topics.receipt.create
   case=egov.collection.payment-create | lock-svc=dss-collection
+
+logging.loki.enabled
+  case=false | lock-svc=false
+
+logging.loki.url
+  case=http://localhost:3100/loki/api/v1/push | lock-svc=http://localhost:3100/loki/api/v1/push
+
+logging.level.root
+  case=INFO | lock-svc=INFO
 

@@ -28,13 +28,13 @@ egov:
       path: individual/v1/_search
 
   user:
-    host: http://localhost:8081
+    host: http://localhost:8086
     context:
       path: /user/users
     create:
       path: /_createnovalidate
     search:
-      path: /user/_search
+      path: /user/v1/_search
     update:
       path: /_updatenovalidate
 
