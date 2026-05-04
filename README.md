@@ -4,8 +4,8 @@
 > **[scripts/migration/RUNBOOK.md](scripts/migration/RUNBOOK.md)**.
 > Service-to-module mapping is in
 > [SERVICE_REGISTRY.md](scripts/migration/SERVICE_REGISTRY.md);
-> rationale + 23 hard-won pipeline lessons in
-> [SKILLS.md](scripts/migration/SKILLS.md);
+> rationale + 23 hard-won pipeline rules in
+> [PIPELINE_RULES.md](scripts/migration/PIPELINE_RULES.md);
 > local boot smoke-test in
 > [scripts/local-test/README.md](scripts/local-test/README.md).
 
