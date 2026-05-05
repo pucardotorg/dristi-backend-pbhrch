@@ -12,7 +12,7 @@ import java.time.ZonedDateTime;
 import java.util.Date;
 
 @Slf4j
-@Component
+@Component("casesDateUtil")
 public class DateUtil {
 
     private final Configuration configuration;

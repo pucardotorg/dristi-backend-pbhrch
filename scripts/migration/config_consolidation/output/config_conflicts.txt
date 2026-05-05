@@ -1,15 +1,105 @@
-# 4 keys with different values across services
+# 34 keys with different values across services
 # Per-service profile YAML resolves them via Spring's profile-overlay rules.
 
 otel.instrumentation.http.server.ignore-urls
-  case=/case/health,/case/prometheus | lock-svc=/lock-svc/health,/lock-svc/prometheus
+  case=/case/health,/case/prometheus | lock-svc=/lock-svc/health,/lock-svc/prometheus | order=/order/health,/order/prometheus
+
+egov.localization.host
+  case=https://dev.digit.org | order=http://localhost:8080
+
+egov.localization.workDir.path
+  case=/localization/messages/v1 | order=/localization/messages/v1
+
+egov.localization.context.path
+  case=/localization/messages/v1 | order=/localization/messages/v1
+
+egov.localization.statelevel
+  case=true | order=true
+
+egov.individual.path
+  case=individual/v1/_create | order=individual/v1/_create
+
+egov.individual.create.path
+  case=individual/v1/_create | order=individual/v1/_create
+
+egov.individual.update.path
+  case=individual/v1/_update | order=individual/v1/_update
 
 egov.mdms.host
-  case=http://localhost:8084 | lock-svc=https://dev.digit.org
+  case=http://localhost:8084 | lock-svc=https://dev.digit.org | order=http://localhost:8084
+
+egov.hrms.host
+  case=https://dev.digit.org | order=https://dev.digit.org
+
+egov.hrms.search.endpoint
+  case=/egov-hrms/employees/_search | order=/egov-hrms/employees/_search
 
 egov.user.host
-  case=http://localhost:8086 | lock-svc=https://dev.digit.org
+  case=http://localhost:8086 | lock-svc=https://dev.digit.org | order=http://localhost:8086
+
+egov.idgen.host
+  case=http://localhost:8082/ | order=http://localhost:8082/
+
+egov.idgen.path
+  case=egov-idgen/id/_generate | order=egov-idgen/id/_generate
+
+egov.filestore.host
+  case=http://localhost:8085/ | order=http://localhost:8085/
+
+egov.filestore.path
+  case=filestore/v1/files/id? | order=filestore/v1/files/id?
+
+egov.file.store.delete.endpoint
+  case=/filestore/v1/files/delete | order=/filestore/v1/files/delete
+
+egov.advocate.host
+  case=http://localhost:8080/ | order=http://localhost:8080/
+
+egov.advocate.path
+  case=advocate/v1/_search | order=advocate/v1/_search
+
+is.workflow.enabled
+  case=true | order=true
+
+egov.workflow.host
+  case=http://localhost:8083 | order=http://localhost:8083
+
+egov.workflow.transition.path
+  case=/egov-workflow-v2/egov-wf/process/_transition | order=/egov-workflow-v2/egov-wf/process/_transition
+
+egov.workflow.businessservice.search.path
+  case=/egov-workflow-v2/egov-wf/businessservice/_search | order=/egov-workflow-v2/egov-wf/businessservice/_search
+
+egov.workflow.processinstance.search.path
+  case=/egov-workflow-v2/egov-wf/process/_search | order=/egov-workflow-v2/egov-wf/process/_search
+
+egov.url.shortner.host
+  case=https://dev.digit.org | order=https://dev.digit.org
+
+egov.url.shortner.endpoint
+  case=/egov-url-shortening/shortener | order=/egov-url-shortening/shortener
+
+egov.sms.notification.topic
+  case=egov.core.notification.sms | order=egov.core.notification.sms
 
 kafka.topics.receipt.create
-  case=egov.collection.payment-create | lock-svc=dss-collection
+  case=egov.collection.payment-create | lock-svc=dss-collection | order=dss-collection
+
+egov.sms.notification.admission.hearing.scheduled.template.id
+  case=1107173140979241046 | order=1107173140979241046
+
+egov.localization.search.endpoint
+  case=/localization/messages/v1/_search | order=/_search
+
+egov.courtId
+  case=KLKM52 | order=KLKM52
+
+egov.hearing.host
+  case=http://localhost:8080/ | order=http://localhost:9091/
+
+egov.hearing.search.path
+  case=hearing/v1/search | order=hearing/v1/search
+
+app.zone.id
+  case=Asia/Kolkata | order=Asia/Kolkata
 

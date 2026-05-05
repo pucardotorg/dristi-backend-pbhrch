@@ -1,0 +1,3 @@
+dristi-monolith/domain-case-lifecycle/src/main/java/org/pucar/dristi/caselifecycle/order/internal/service/SmsNotificationService.java  uses ['HearingHost', 'HearingSearchPath']
+dristi-monolith/domain-case-lifecycle/src/main/java/org/pucar/dristi/caselifecycle/order/internal/util/AdvocateUtil.java  uses ['AdvocateHost', 'AdvocatePath']
+dristi-monolith/domain-case-lifecycle/src/main/java/org/pucar/dristi/caselifecycle/order/internal/util/CaseUtil.java  uses ['CaseHost', 'CasePath', 'CaseSearchPath']
