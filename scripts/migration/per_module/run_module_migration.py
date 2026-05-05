@@ -652,6 +652,26 @@ def phase_35_contract_lift(manifest: dict, target_dir: Path) -> dict[str, str]:
     source_pkg = f"{manifest['current_package']}.web.models"
     new_pkg = f"{COMMON_PKG}.contract.{subdomain}"
 
+    # Spring Modulith treats unmarked packages in dristi-common as internal —
+    # any cross-module reference (caselifecycle calling these types) flags as
+    # "depends on non-exposed type" and fails ModuleStructureTest. Expose the
+    # contract package via a `@NamedInterface` so dependents resolve cleanly.
+    # Idempotent: only writes if the file doesn't already exist.
+    pkg_info = contract_dir / "package-info.java"
+    if not pkg_info.exists():
+        pkg_info.write_text(
+            "/**\n"
+            f" * {subdomain.capitalize()} subdomain's contract DTOs — request/response envelopes plus their\n"
+            " * transitive payload types, lifted by Phase 35 of the per-module migration\n"
+            " * pipeline. Exposed as a {@link org.springframework.modulith.NamedInterface}\n"
+            " * so callers in other modules (caselifecycle, etc.) can depend on these\n"
+            " * types without crossing the dristi-common boundary.\n"
+            " */\n"
+            f'@org.springframework.modulith.NamedInterface("contract-{subdomain}")\n'
+            f"package {new_pkg};\n",
+            encoding="utf-8",
+        )
+
     lift_map: dict[str, str] = {}
     moved = 0
     preserved_curated = 0

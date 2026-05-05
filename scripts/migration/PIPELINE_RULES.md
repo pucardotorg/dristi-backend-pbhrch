@@ -496,6 +496,14 @@ during the migration itself. A class is in scope if any of:
   this, a sibling subdomain that has its own `Advocate` would gain a
   stray `import <other-subdomain>.contract.<...>.Advocate` and fail to
   compile.
+- Phase 35 writes a `package-info.java` in
+  `dristi-common/contract/<subdomain>/` that declares
+  `@NamedInterface("contract-<subdomain>")`. Without this Spring
+  Modulith treats every lifted DTO as internal-to-`common` and
+  `ModuleStructureTest` fails with "depends on non-exposed type"
+  for every cross-module reference. The marker is idempotent on
+  re-runs (skipped if the file already exists, so hand-edits to the
+  Javadoc survive).
 - Phase 4's import-rewrite sweep also applies the `lift_map`, so any
   imports that surfaced after Phase 6 copied the test tree get fixed.
 - Gate 8 in `phase_7_validate` fails if any contract-suffixed class
