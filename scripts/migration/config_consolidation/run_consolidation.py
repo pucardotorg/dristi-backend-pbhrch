@@ -392,7 +392,7 @@ def main() -> int:
     print(f"  {(APP_RESOURCES / 'application-shared.yml').relative_to(REPO_ROOT)}")
     for svc, path in per_service_locations.items():
         sub = subdomain_of[svc]
-        print(f"  {path.relative_to(REPO_ROOT)} ({svc} → profile {sub})")
+        print(f"  {path.relative_to(REPO_ROOT)} ({svc} -> profile {sub})")
     print(f"  {(OUT_DIR / 'config_consolidation_report.csv').relative_to(REPO_ROOT)}")
     if conflicts:
         print(f"  {(OUT_DIR / 'config_conflicts.txt').relative_to(REPO_ROOT)} ({len(conflicts)} conflicts)")

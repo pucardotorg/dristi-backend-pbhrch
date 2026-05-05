@@ -8,7 +8,7 @@ import org.pucar.dristi.caselifecycle.cases.internal.web.models.OrderListRespons
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.OrderSearchRequest;
 import org.springframework.stereotype.Component;
 
-@Component
+@Component("casesOrderUtil")
 @Slf4j
 public class OrderUtil {
 

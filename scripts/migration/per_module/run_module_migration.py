@@ -427,10 +427,11 @@ def phase_3_auto_rename(manifest: dict, target_dir: Path) -> int:
             print(f"  skipping {f.relative_to(REPO_ROOT)} (has @SpringBootApplication)")
             continue
         rel = f.relative_to(src)
-        if not str(rel).startswith(cur_path):
-            print(f"  skipping {rel} (not under {cur_path})")
+        rel_posix = rel.as_posix()
+        if not rel_posix.startswith(cur_path):
+            print(f"  skipping {rel_posix} (not under {cur_path})")
             continue
-        rest = str(rel)[len(cur_path) + 1 :] if str(rel) != cur_path else f.name
+        rest = rel_posix[len(cur_path) + 1 :] if rel_posix != cur_path else f.name
         dest = target_dir / rest
         # HAND-CURATED guard: never overwrite a file the human has marked.
         if dest.exists() and CURATED_MARKER in dest.read_text(encoding="utf-8"):
@@ -759,9 +760,10 @@ def phase_6_test_migration(manifest: dict) -> int:
     for f in files:
         text = f.read_text(encoding="utf-8")
         rel = f.relative_to(src)
-        if not str(rel).startswith(cur_path):
+        rel_posix = rel.as_posix()
+        if not rel_posix.startswith(cur_path):
             continue
-        rest = str(rel)[len(cur_path) + 1 :]
+        rest = rel_posix[len(cur_path) + 1 :]
         if Path(rest).stem.replace("Test", "").replace("Tests", "") in PROTECTED_CLASSES:
             continue
         dest = target_test_dir / rest
@@ -1043,6 +1045,7 @@ def phase_7_validate(manifest: dict, target_dir: Path) -> tuple[int, list[str]]:
         cwd=MONOLITH_ROOT,
         capture_output=True,
         text=True,
+        shell=True,
     )
     if result.returncode != 0:
         fails.append("Gate 5 (mvn compile): dristi-common no longer compiles")

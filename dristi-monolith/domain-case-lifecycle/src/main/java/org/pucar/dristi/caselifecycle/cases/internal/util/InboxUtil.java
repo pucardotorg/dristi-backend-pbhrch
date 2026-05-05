@@ -20,7 +20,7 @@ import java.util.*;
 import static org.pucar.dristi.caselifecycle.cases.internal.config.ServiceConstants.EXTERNAL_SERVICE_EXCEPTION;
 import static org.pucar.dristi.caselifecycle.cases.internal.config.ServiceConstants.SEARCHER_SERVICE_EXCEPTION;
 
-@Component
+@Component("casesInboxUtil")
 @Slf4j
 public class InboxUtil {
 

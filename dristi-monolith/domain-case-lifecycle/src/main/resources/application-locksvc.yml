@@ -11,6 +11,8 @@ otel:
       server:
         ignore-urls: /lock-svc/health,/lock-svc/prometheus
 egov:
+  individual:
+    host: http://localhost:8081/
   mdms:
     host: https://dev.digit.org
   user:
