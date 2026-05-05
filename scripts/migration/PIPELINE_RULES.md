@@ -452,6 +452,255 @@ lift the extra methods into dristi-common or rename the local file to
 
 ---
 
+## Rule 24 — Eager Contract DTO Lift to `dristi-common/contract/<subdomain>/`
+
+**New rule, learned from the order service migration.**
+
+Order's REST callers (e.g. `CaseUtil` → case service, `AdvocateUtil` →
+advocate service) need typed DTOs to convert from `RestTemplate` calls
+to direct method calls. Each service used to keep its own copy of those
+DTOs in `web/models/`, so the caller's `OrderResponse` and the callee's
+`OrderResponse` were *different types* — converting needed boilerplate
+mappers, and shapes drifted over time. Doing the lift as a follow-up PR
+also doubles the test cycle (one PR for the structural lift, another
+for the contract lift) for every service.
+
+**Rule.** Phase 35 (contract-lift; CLI ID `35` is the alias for the conceptual "Phase 3.5") lifts a service's contract surface
+into `dristi-common/src/main/java/org/pucar/dristi/common/contract/<subdomain>/`
+during the migration itself. A class is in scope if any of:
+
+1. Its simple name ends with `Request`, `Response`, `Criteria`,
+   `SearchCriteria`, `Wrapper`, or `Payload`. (Suffix list is
+   conservative — `Envelope` was dropped after a grep showed zero
+   occurrences in the source services.)
+2. It is referenced as a controller `@RequestBody` parameter, or as the
+   payload type of `ResponseEntity<X>` / a controller method's return
+   type.
+3. It is transitively referenced — as a field type, generic argument,
+   `extends`, or `implements` clause — from any class already in the
+   lift set, **AND** lives in the same `web/models/` tree. The closure
+   stops at non-local packages (`org.egov.*`, `java.*`, etc.); cycles
+   terminate via a visited set.
+
+**Enforcement.**
+
+- `phase_3_5_contract_lift` moves matching files, rewrites the package
+  declaration, stamps `// HAND-CURATED` so re-runs preserve human edits,
+  and returns a `lift_map` of `old_fqcn -> new_fqcn`.
+- The same function sweeps every `domain-*/src/{main,test}/java` tree
+  for stale imports, including wildcard imports of `<svc>.web.models.*`
+  (it adds a parallel wildcard for the contract package rather than
+  expanding each named class).
+- Auto-import insertion for same-package simple-name references is
+  scoped to files **inside the migrating subdomain only** — without
+  this, a sibling subdomain that has its own `Advocate` would gain a
+  stray `import <other-subdomain>.contract.<...>.Advocate` and fail to
+  compile.
+- Phase 4's import-rewrite sweep also applies the `lift_map`, so any
+  imports that surfaced after Phase 6 copied the test tree get fixed.
+- Gate 8 in `phase_7_validate` fails if any contract-suffixed class
+  remains under `<subdomain>/internal/web/models/`.
+
+**Side effects worth knowing.**
+
+- Lifted DTOs drag their compile-time deps (e.g. `javax.validation.*`,
+  `io.swagger.annotations.*` from Swagger 1.x) into `dristi-common`.
+  The pom carries `digit-models` and `swagger-core:1.5.18` to satisfy
+  these legacy namespaces. Drop both once the codebase migrates to
+  Jakarta + Swagger 2.x.
+- Per-subdomain namespacing prevents collision when two services have
+  same-named DTOs (`order/Document` vs `case/Document`). Promotion to
+  shared `dristi-common/contract/<shared>/` is a deliberate follow-up,
+  not a migration step — wait until two services prove they want the
+  same concrete type.
+- `case` and `lock-svc` were migrated before Phase 35 existed; their
+  contract DTOs are still under `internal/web/models/`. A retro-lift
+  PR is owned separately.
+
+---
+
+## Rule 25 — Parent POM Dependency Hygiene
+
+**New rule, learned from the order service migration.**
+
+The monolith's parent pom (`dristi-monolith/pom.xml`) pinned
+`mockito-core:3.12.4` while every source service uses `5.7.0` (via
+Spring Boot's BOM). Most migrations didn't notice — until order
+brought in tests that mock `JsonNode` (a Jackson abstract class).
+Mockito 3.12 + jackson 2.15+ raised
+`WrongTypeOfReturnValue: Boolean cannot be returned by getNodeType()`
+because Mockito 3.x's stub-capture path delegates through the JsonNode
+final-method chain in a way 5.x fixed.
+
+**Rule.** When the parent pom pins a transitive dep that the source
+services already use at a different version, **align with the source
+version** rather than the parent's pin. Specifically, the test
+toolchain (`mockito-core`, `mockito-junit-jupiter`) must be one
+consistent version; mixing 3.x core with 5.x junit-jupiter is the
+specific failure mode that bit order.
+
+**Enforcement.** None automated — the parent pom is hand-curated. Treat
+this as a checklist for any migration PR whose tests touch
+`mock(<abstract-class>.class)`. If you need to bump a parent-pom
+version, also propagate it into the scaffold script
+(`scripts/migration/scaffold/02_generate_module_skeletons.py`) so
+future regenerations carry the bump forward — otherwise the next
+scaffold rebuild will silently revert it.
+
+**Followup.** Audit the parent pom for other stale pins (postgres,
+flyway, jackson) before they bite the next service.
+
+---
+
+## Rule 26 — Canonical Method Return-Type Drift
+
+**New rule, learned from the order service migration. Companion to Rule 18.**
+
+Rule 18 covered request-side divergence (widen the canonical to
+`Object` when service DTOs differ). Order surfaced the *return-side*
+case: the canonical `MdmsUtil.fetchMdmsData(...)` returns
+`Map<String, Map<String, JSONArray>>` (parsed) while order's source
+copy returned `String` (raw JSON). Phase 4 deduplicated the local copy
+in favor of the canonical — correct — but order's call sites still
+expected the `String` shape and failed to compile.
+
+**Rule.** When Phase 4 deletes a local protected-class copy in favor
+of the canonical, check whether call sites compile against the
+canonical's signature. If not, the **caller** adapts to the canonical
+— never widen the canonical to `Object` for return types (callers
+would lose all type safety).
+
+**Concrete adaptation patterns** (from the order migration):
+
+1. **Pattern A — direct usage of parsed structure** (3 sites in
+   `MdmsDataConfig`): replace
+   `String s = util.fetch(...); Response r = mapper.readValue(s, Response.class); array = r.getMdmsRes().get(m).get(n);`
+   with `Map<String,Map<String,JSONArray>> rs = util.fetch(...); array = rs.get(m).get(n);`. Drops a redundant marshal/unmarshal hop.
+
+2. **Pattern B — JsonPath against the raw string** (1 site in
+   `OrderRegistrationValidator`): re-serialize the parsed map back
+   into JSON with a wrapper so the existing JsonPath config keeps
+   working: `String json = mapper.writeValueAsString(Collections.singletonMap("MdmsRes", rs));`. Avoids touching the JsonPath config.
+
+**Enforcement.** None automated; surfaced as compile errors during
+Phase 7 / `mvn verify`. RUNBOOK §7 has the symptom row pointing here.
+
+---
+
+## Rule 27 — REST → Direct Calls Are Follow-up PRs, Not Migration PRs
+
+**New rule, learned from the order service migration.**
+
+When a service `S` is migrated, Phase 5 emits a list of intra-DRISTI
+REST callers in `<service>_rest_calls.txt`. Tempting to convert
+straightforward `@Autowired` swaps in the same PR — but the
+conversion is a **behavioral** change (different error semantics,
+different deserialization path, different serialization timing), not
+a structural lift. Mixing changes the blast radius of the migration
+PR from "did we move files correctly?" to "did we move files AND
+preserve runtime behavior?".
+
+**Rule.** Each service migration PR is structural-only. REST → direct
+conversions land as separate, focused PRs after the migration's
+target services are in the monolith.
+
+**Decision tree** (from /migrate-service Step 3):
+
+| Caller's target | Action in migration PR |
+|---|---|
+| Migrated DRISTI service | Leave as REST. Follow-up PR converts. |
+| Unmigrated DRISTI service | Leave as REST. Will need conversion when target migrates. |
+| Platform (eGov / DIGIT — see `EGOV_HOST_TOKENS`) | Leave as REST. Permanent. |
+
+**Exception.** A single straightforward conversion (typed DTO in/out,
+target already migrated, no `JsonNode` / `Map.class` indirection)
+that is genuinely behaviour-preserving may go in the migration PR if
+the migration author judges the risk low. Default is "follow-up";
+the migration author owns the call.
+
+**Enforcement.** None automated. RUNBOOK §5.1 documents the
+decision tree.
+
+---
+
+## Rule 28 — Three-Commit Structure per Migration PR
+
+**New rule, learned from the order service migration.**
+
+The order PR mixed structural lift, contract uplift (Phase 35 was
+being authored concurrently), and pipeline-source changes into one
+working tree. Reviewing the diff is harder than it needs to be: a
+behavioural regression can't be bisected cleanly between "did we move
+files correctly" and "did the contract lift change anything subtle".
+Separating concerns into commits keeps each one small and gives a
+clean revert boundary.
+
+**Rule.** From `hearing` onwards, every migration PR carries three
+commits in this order:
+
+1. **`migrate(<svc>): structural lift to domain-<module>/<subdomain>`**
+
+   Pure file move from `dristi-services/<svc>` →
+   `dristi-monolith/domain-<module>/.../<subdomain>/internal/`. Includes
+   manual Tier 1 fixes that are part of the lift mechanics (Flyway
+   `_2` rename for Gate 7, caller adaptation to canonical signature
+   per Rule 26, Spring profile wiring, dep version bumps in the
+   parent pom per Rule 25). No contract DTO moves; the `web/models/`
+   tree stays under `internal/` at this commit.
+
+2. **`refactor(<svc>): contract uplift + REST→direct calls`**
+
+   Phase 35's effects: contract DTOs moved to
+   `dristi-common/contract/<sub>/`; caller imports rewritten in
+   `<sub>/internal/`; `dristi-common/pom.xml` deps added if needed
+   (e.g. `digit-models`, `swagger-core:1.5.18`). Plus REST→direct
+   conversions for any target service that's already in the monolith
+   AND has its own contract DTOs already lifted (per Rule 27's
+   decision tree). If the only callable target is unmigrated, this
+   commit is just the contract uplift.
+
+3. **`feat(pipeline): <change>`** *(optional)*
+
+   Edits to `run_module_migration.py`, new gates, new rules in
+   `PIPELINE_RULES.md`, doc updates in `RUNBOOK.md` / `CLAUDE.md`.
+   Skip if the migration didn't motivate any pipeline/rules change.
+
+**How to actually achieve it:**
+
+1. Branch from `monolith/main`.
+2. Run pipeline with `--phase 1,2,3,4,5,6,7,8,9` (excluding 35).
+   Apply manual fixes. Verify `mvn test -pl domain-<module>`.
+   **Commit C1.**
+3. Run `--phase 35`. Add any required `dristi-common` deps. Convert
+   straightforward REST callers per Rule 27. Verify build.
+   **Commit C2.**
+4. If this migration motivated pipeline / rule changes, edit them now
+   and **commit C3**. Otherwise, skip.
+
+**Why this beats one bundled commit:**
+
+- **Bisect:** a runtime regression isolates cleanly to "structural"
+  vs "behavioural" vs "pipeline-only".
+- **Reviewer fatigue:** structural lift is a bulk move with low
+  cognitive load; contract uplift + REST switch is a focused
+  behavioural review.
+- **Revert:** if the REST conversion misbehaves in QA, revert C2
+  alone — C1's structural lift stays in.
+
+**Why this is cheap to follow from `hearing` onwards:** Phase 35 is
+in main now. The natural sequence is "lift first without `--phase 35`,
+commit, then `--phase 35`, commit" — the work is already serialised in
+that order; the only discipline is splitting the commit boundary.
+
+**Exception.** The order migration (this PR) was bundled into two
+commits because Phase 35 was being authored mid-PR. The 3-commit
+structure is the default from `hearing` onwards.
+
+**Enforcement.** None automated; reviewer discipline. Could be linted
+in CI later; not blocking for now.
+
+---
+
 ## Rule 12 — Canonical Curation Marker
 
 **New rule, learned the hard way.**
