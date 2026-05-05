@@ -79,6 +79,7 @@ PROTECTED_CLASSES = {
     "UrlShortenerUtil": "util",
     "IndividualUtil": "util",
     "ResponseInfoFactory": "util",
+    "DateUtil": "util",
     "Producer": "kafka",
     "KafkaProducerService": "kafka",
     "ServiceRequestRepository": "repository",

@@ -14,6 +14,7 @@
     "WorkflowUtil",
     "IndividualUtil",
     "ResponseInfoFactory",
+    "DateUtil",
     "KafkaProducerService",
     "Document",
     "Individual"

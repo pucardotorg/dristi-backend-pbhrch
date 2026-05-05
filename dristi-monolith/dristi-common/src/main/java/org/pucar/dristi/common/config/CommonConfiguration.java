@@ -74,6 +74,9 @@ public class CommonConfiguration {
     @Value("${egov.individual.search.path:#{null}}")
     private String individualSearchEndpoint;
 
+    @Value("${app.zone.id:Asia/Kolkata}")
+    private String zoneId;
+
     public String getIdGenHost() { return idGenHost; }
     public String getIdGenPath() { return idGenPath; }
     public String getFileStoreHost() { return fileStoreHost; }
@@ -92,4 +95,5 @@ public class CommonConfiguration {
     public String getWfBusinessServiceSearchPath() { return wfBusinessServiceSearchPath; }
     public String getIndividualHost() { return individualHost; }
     public String getIndividualSearchEndpoint() { return individualSearchEndpoint; }
+    public String getZoneId() { return zoneId; }
 }

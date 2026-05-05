@@ -10,7 +10,7 @@ import org.egov.common.contract.request.RequestInfo;
 import org.pucar.dristi.caselifecycle.order.internal.config.Configuration;
 import org.pucar.dristi.common.kafka.Producer;
 import org.pucar.dristi.common.repository.ServiceRequestRepository;
-import org.pucar.dristi.caselifecycle.order.internal.util.DateUtil;
+import org.pucar.dristi.common.util.DateUtil;
 import org.pucar.dristi.common.contract.order.HearingCriteria;
 import org.pucar.dristi.common.contract.order.HearingListResponse;
 import org.pucar.dristi.common.contract.order.HearingSearchRequest;
