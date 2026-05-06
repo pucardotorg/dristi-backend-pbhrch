@@ -2,10 +2,10 @@ package org.pucar.dristi.caselifecycle.notification.internal.repository;
 
 import org.pucar.dristi.caselifecycle.notification.internal.repository.querybuilder.NotificationQueryBuilder;
 import org.pucar.dristi.caselifecycle.notification.internal.repository.rowmapper.NotificationRowMapper;
-import org.pucar.dristi.caselifecycle.notification.internal.web.models.Notification;
-import org.pucar.dristi.caselifecycle.notification.internal.web.models.NotificationCriteria;
-import org.pucar.dristi.caselifecycle.notification.internal.web.models.NotificationExists;
-import org.pucar.dristi.caselifecycle.notification.internal.web.models.Pagination;
+import org.pucar.dristi.common.contract.notification.Notification;
+import org.pucar.dristi.common.contract.notification.NotificationCriteria;
+import org.pucar.dristi.common.contract.notification.NotificationExists;
+import org.pucar.dristi.common.contract.notification.Pagination;
 import org.egov.tracer.model.CustomException;
 import org.junit.Before;
 import org.junit.Test;

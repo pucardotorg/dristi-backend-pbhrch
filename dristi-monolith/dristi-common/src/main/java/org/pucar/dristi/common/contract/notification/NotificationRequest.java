@@ -1,4 +1,5 @@
-package org.pucar.dristi.caselifecycle.notification.internal.web.models;
+// HAND-CURATED — lifted by Phase 35 (contract-lift)
+package org.pucar.dristi.common.contract.notification;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.Valid;
@@ -10,7 +11,7 @@ import org.egov.common.contract.request.RequestInfo;
 import org.springframework.validation.annotation.Validated;
 
 /**
- * NotificationSearchRequest
+ * NotificationRequest
  */
 @Validated
 @jakarta.annotation.Generated(value = "org.egov.codegen.SpringBootCodegen", date = "2025-02-07T11:59:26.022967807+05:30[Asia/Kolkata]")
@@ -18,19 +19,15 @@ import org.springframework.validation.annotation.Validated;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class NotificationSearchRequest {
+public class NotificationRequest {
 
     @JsonProperty("RequestInfo")
     @Valid
     private RequestInfo requestInfo = null;
 
-    @JsonProperty("criteria")
+    @JsonProperty("notification")
     @Valid
-    private NotificationCriteria criteria = null;
-
-    @JsonProperty("pagination")
-    @Valid
-    private Pagination pagination = null;
+    private Notification notification = null;
 
 
 }

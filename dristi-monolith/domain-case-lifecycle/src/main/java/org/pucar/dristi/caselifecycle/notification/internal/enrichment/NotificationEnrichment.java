@@ -2,8 +2,8 @@ package org.pucar.dristi.caselifecycle.notification.internal.enrichment;
 
 import org.pucar.dristi.caselifecycle.notification.internal.config.Configuration;
 import org.pucar.dristi.common.util.IdgenUtil;
-import org.pucar.dristi.caselifecycle.notification.internal.web.models.Notification;
-import org.pucar.dristi.caselifecycle.notification.internal.web.models.NotificationRequest;
+import org.pucar.dristi.common.contract.notification.Notification;
+import org.pucar.dristi.common.contract.notification.NotificationRequest;
 import org.egov.common.contract.models.AuditDetails;
 import org.pucar.dristi.common.models.Document;
 import org.egov.common.contract.request.RequestInfo;

@@ -7,7 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.pucar.dristi.caselifecycle.notification.internal.service.NotificationService;
-import org.pucar.dristi.caselifecycle.notification.internal.web.models.*;
+import org.pucar.dristi.common.contract.notification.*;
 import org.pucar.dristi.common.util.ResponseInfoFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

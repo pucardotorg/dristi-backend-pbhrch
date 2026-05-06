@@ -1,8 +1,8 @@
 package org.pucar.dristi.caselifecycle.notification.internal.validator;
 
 import org.pucar.dristi.caselifecycle.notification.internal.repository.NotificationRepository;
-import org.pucar.dristi.caselifecycle.notification.internal.web.models.Notification;
-import org.pucar.dristi.caselifecycle.notification.internal.web.models.NotificationRequest;
+import org.pucar.dristi.common.contract.notification.Notification;
+import org.pucar.dristi.common.contract.notification.NotificationRequest;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
 import org.egov.tracer.model.CustomException;

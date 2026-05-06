@@ -1,13 +1,13 @@
 package org.pucar.dristi.caselifecycle.notification.internal.repository.querybuilder;
 
-import org.pucar.dristi.caselifecycle.notification.internal.web.models.Order;
+import org.pucar.dristi.common.contract.notification.Order;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
 import static org.junit.jupiter.api.Assertions.*;
 
-import org.pucar.dristi.caselifecycle.notification.internal.web.models.NotificationExists;
+import org.pucar.dristi.common.contract.notification.NotificationExists;
 import org.egov.tracer.model.CustomException;
 
 import java.sql.Types;

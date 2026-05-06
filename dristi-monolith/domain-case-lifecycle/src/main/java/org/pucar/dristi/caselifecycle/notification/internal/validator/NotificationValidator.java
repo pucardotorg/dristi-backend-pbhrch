@@ -1,10 +1,10 @@
 package org.pucar.dristi.caselifecycle.notification.internal.validator;
 
 import org.pucar.dristi.caselifecycle.notification.internal.repository.NotificationRepository;
-import org.pucar.dristi.caselifecycle.notification.internal.web.models.Notification;
-import org.pucar.dristi.caselifecycle.notification.internal.web.models.NotificationCriteria;
-import org.pucar.dristi.caselifecycle.notification.internal.web.models.NotificationRequest;
-import org.pucar.dristi.caselifecycle.notification.internal.web.models.Pagination;
+import org.pucar.dristi.common.contract.notification.Notification;
+import org.pucar.dristi.common.contract.notification.NotificationCriteria;
+import org.pucar.dristi.common.contract.notification.NotificationRequest;
+import org.pucar.dristi.common.contract.notification.Pagination;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;

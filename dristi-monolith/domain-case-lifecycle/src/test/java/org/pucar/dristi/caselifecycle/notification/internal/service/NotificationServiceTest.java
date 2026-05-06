@@ -6,7 +6,7 @@ import org.pucar.dristi.common.kafka.Producer;
 import org.pucar.dristi.caselifecycle.notification.internal.repository.NotificationRepository;
 import org.pucar.dristi.caselifecycle.notification.internal.service.NotificationService;
 import org.pucar.dristi.caselifecycle.notification.internal.validator.NotificationValidator;
-import org.pucar.dristi.caselifecycle.notification.internal.web.models.*;
+import org.pucar.dristi.common.contract.notification.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

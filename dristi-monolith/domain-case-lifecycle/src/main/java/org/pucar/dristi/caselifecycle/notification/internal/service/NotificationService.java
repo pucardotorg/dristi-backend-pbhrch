@@ -7,7 +7,7 @@ import org.pucar.dristi.common.kafka.Producer;
 import org.pucar.dristi.caselifecycle.notification.internal.repository.NotificationRepository;
 import org.pucar.dristi.common.util.FileStoreUtil;
 import org.pucar.dristi.caselifecycle.notification.internal.validator.NotificationValidator;
-import org.pucar.dristi.caselifecycle.notification.internal.web.models.*;
+import org.pucar.dristi.common.contract.notification.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,4 +1,5 @@
-package org.pucar.dristi.caselifecycle.notification.internal.web.models;
+// HAND-CURATED — lifted by Phase 35 (contract-lift)
+package org.pucar.dristi.common.contract.notification;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.Valid;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * NotificationListResponse
+ * NotificationExistsResponse
  */
 @Validated
 @jakarta.annotation.Generated(value = "org.egov.codegen.SpringBootCodegen", date = "2025-02-07T11:59:26.022967807+05:30[Asia/Kolkata]")
@@ -21,29 +22,22 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class NotificationListResponse {
+public class NotificationExistsResponse {
 
     @JsonProperty("ResponseInfo")
     @Valid
     private ResponseInfo responseInfo = null;
 
-    @JsonProperty("totalCount")
-    private Integer totalCount = null;
-
-    @JsonProperty("list")
+    @JsonProperty("notificationList")
     @Valid
-    private List<Notification> list = null;
-
-    @JsonProperty("pagination")
-    @Valid
-    private Pagination pagination = null;
+    private List<NotificationExists> notificationList = null;
 
 
-    public NotificationListResponse addListItem(Notification listItem) {
-        if (this.list == null) {
-            this.list = new ArrayList<>();
+    public NotificationExistsResponse addNotificationListItem(NotificationExists notificationListItem) {
+        if (this.notificationList == null) {
+            this.notificationList = new ArrayList<>();
         }
-        this.list.add(listItem);
+        this.notificationList.add(notificationListItem);
         return this;
     }
 

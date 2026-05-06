@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import org.pucar.dristi.caselifecycle.notification.internal.service.NotificationService;
 import org.pucar.dristi.common.util.ResponseInfoFactory;
-import org.pucar.dristi.caselifecycle.notification.internal.web.models.*;
+import org.pucar.dristi.common.contract.notification.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

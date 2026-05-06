@@ -1,4 +1,5 @@
-package org.pucar.dristi.caselifecycle.notification.internal.web.models;
+// HAND-CURATED — lifted by Phase 35 (contract-lift)
+package org.pucar.dristi.common.contract.notification;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;

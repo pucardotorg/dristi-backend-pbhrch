@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import lombok.extern.slf4j.Slf4j;
-import org.pucar.dristi.caselifecycle.notification.internal.web.models.Notification;
+import org.pucar.dristi.common.contract.notification.Notification;
 import org.egov.common.contract.models.AuditDetails;
 import org.pucar.dristi.common.models.Document;
 import org.egov.tracer.model.CustomException;
