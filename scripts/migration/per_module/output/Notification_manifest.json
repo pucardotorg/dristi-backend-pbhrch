@@ -1,0 +1,25 @@
+{
+  "service": "Notification",
+  "source_dir": "dristi-services/Notification",
+  "target_module": "case-lifecycle",
+  "target_subdomain": "notification",
+  "current_package": "notification",
+  "target_package": "org.pucar.dristi.caselifecycle.notification",
+  "main_file_count": 35,
+  "test_file_count": 12,
+  "has_spring_boot_main": true,
+  "duplicated_protected_classes": [
+    "IdgenUtil",
+    "FileStoreUtil",
+    "ResponseInfoFactory",
+    "KafkaProducerService",
+    "ServiceRequestRepository",
+    "Document"
+  ],
+  "rest_call_files": [
+    "dristi-services/Notification/src/main/java/notification/repository/ServiceRequestRepository.java",
+    "dristi-services/Notification/src/main/java/notification/service/WorkflowService.java",
+    "dristi-services/Notification/src/main/java/notification/util/IdgenUtil.java"
+  ],
+  "source_context_path": "/notification"
+}
