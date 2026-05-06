@@ -32,7 +32,7 @@ Core case-lifecycle domain — the bulk of DRISTI.
 | `lock-svc` | 19 | **done** | `case-lifecycle` | `locksvc` | First test-drive |
 | `case` | 330 | **done** | `case-lifecycle` | `cases` | Largest service; pipeline hardened against it |
 | `hearing` | 196 | pending | `case-lifecycle` | `hearing` | |
-| `order` | 105 | pending | `case-lifecycle` | `order` | |
+| `order` | 105 | **done** | `case-lifecycle` | `order` | First service to drive Phase 35 contract-lift; Rule 29 workflow harmonization |
 | `task` | 184 | pending | `case-lifecycle` | `task` | |
 | `evidence` | 161 | pending | `case-lifecycle` | `evidence` | |
 | `application` | 119 | pending | `case-lifecycle` | `application` | |
