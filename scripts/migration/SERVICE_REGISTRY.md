@@ -71,7 +71,7 @@ External-system integrations.
 | `icops_integration-kerala` | 89 | pending | `integration` | `icops` | |
 | `e-sign-svc` + `esign-interceptor` | 68 | pending | `integration` | `esign` | merge both source services into one subdomain |
 | `epost-tracker` | 73 | pending | `integration` | `epost` | |
-| `bank-details` | 15 | pending | `integration` | `bank` | smallest service — good warm-up |
+| `bank-details` | 15 | **done** | `integration` | `bank` | First non-case-lifecycle service; surfaced /migrate-service Rule 28 violation, fixed in PR #55 |
 
 ## domain-payments
 
