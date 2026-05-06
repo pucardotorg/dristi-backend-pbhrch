@@ -709,6 +709,186 @@ in CI later; not blocking for now.
 
 ---
 
+## Rule 29 — Workflow Migration Pattern (and the Behavior-Union Lesson)
+
+**New rule, learned from the order service migration.**
+
+The original canonical `WorkflowUtil` was extracted from `ab-diary` (the
+first-found variant). It missed `setDocuments`, `setAdditionalDetails`,
+and returned `state.getApplicationStatus()` instead of `state.getState()`.
+Order's caller `if (PUBLISHED.equalsIgnoreCase(status))` silently never
+matched, the workflow service rejected transitions for missing
+`documents`, and `additionalDetails` were dropped on every transition.
+
+The rule has two parts: a process rule (how to extract canonicals) and
+a workflow-specific shape (what the canonical surface should be).
+
+### 29A — Extract canonicals from the BEHAVIOR UNION, not first-found
+
+**Rule.** Phase 4 of the `dristi-common` extraction picks a "majority
+variant" canonical based on file-hash plurality. That picks the most
+common *body* but doesn't see *behavior outliers* that need preservation.
+Before locking a canonical, audit every observed service's variant of
+the class for:
+
+1. Field setter calls the canonical doesn't make (`setDocuments`,
+   `setAdditionalDetails`, etc.)
+2. Return-value differences (`state.getState()` vs
+   `state.getApplicationStatus()`)
+3. Method overloads or extra public methods
+
+The canonical must be the **union** of all observed behaviors, exposed
+via overloads / sibling methods so each caller keeps its semantics. Phase
+4's signature-only detector (`(name, param-count)` tuples) cannot see
+body-level divergence; it deletes the local copy whenever the signature
+matches and silently introduces regressions like the three above.
+
+**Enforcement.** No automated detector yet — this is reviewer
+discipline. RUNBOOK §5 manual-review checklist now includes a step:
+"audit any class in `PROTECTED_CLASSES` whose source body differs
+across services". The migration author runs the audit before merging
+and either widens the canonical or marks the local with the
+`// SERVICE-AUGMENTED` opt-out (deferred — not yet implemented; for
+now the audit catches it).
+
+### 29B — Workflow-specific canonical shape
+
+The canonical `WorkflowUtil` is now the workflow toolkit:
+
+| Method | Returns | Use when |
+|---|---|---|
+| `updateWorkflowStatus(...)` | `state.getState()` | Caller compares against state-machine names ("PUBLISHED", "DRAFT") |
+| `updateWorkflowApplicationStatus(...)` | `state.getApplicationStatus()` | Caller compares against egov-defined application lifecycle |
+| `getProcessInstanceForWorkflow(...)` | `ProcessInstanceObject` | Service-local code building a transition request |
+| `callWorkFlow(ProcessInstanceRequest)` | `State` | Service-local code that built its own request and just needs the call |
+| `getWorkflow(List<ProcessInstance>)` | `Map<String, WorkflowObject>` | Search response → WorkflowObject map |
+| `getWorkflowFromProcessInstance(ProcessInstance)` | `WorkflowObject` | Single search result conversion |
+| `getUserListFromUserUuid(List<String>)` | `List<User>` | Stub User objects with UUID set |
+| `getBusinessService(...)` | `BusinessService` | Look up workflow config |
+
+Public surface uses **DRISTI's `WorkflowObject` / `ProcessInstanceObject`**
+(the egov extension that adds `additionalDetails`). Egov's plain
+`Workflow` / `ProcessInstance` only appears at the boundary with the
+egov-workflow service (request payload, response shape).
+
+### 29D — `additionalDetails` round-trip is one-way today
+
+The forked `digit-services/egov-workflow-v2` understands
+`additionalDetails` on its internal `org.egov.wf.web.models.ProcessInstance`
+— so DRISTI services can SEND the field to workflow successfully (request
+direction works). The RESPONSE direction silently drops the field:
+DRISTI clients deserialise responses into
+`org.egov.common.contract.workflow.ProcessInstance` from the
+`services-common` jar, which has no `additionalDetails`. Jackson drops
+unknown JSON properties.
+
+If a future caller needs the field on the inbound side, the fix is one of:
+
+- Publish the fork's DTO classes as an upgraded `services-common`
+  artifact and bump the dep in `dristi-common/pom.xml`.
+- Add a custom `ProcessInstanceObjectResponse` to dristi-common with
+  `List<ProcessInstanceObject>` so Jackson deserialises directly into
+  the subclass.
+
+Until then, the canonical's `getWorkflowFromProcessInstance` only
+recovers `additionalDetails` via an `instanceof ProcessInstanceObject`
+check — true when the caller constructed the object in-memory, false
+when they got it from a workflow response.
+
+### 29C — Rule for future migrations of services with WorkflowUtil/WorkflowService
+
+When migrating a service that has `WorkflowUtil` and/or `WorkflowService`:
+
+1. **Drop service-local `WorkflowObject` / `ProcessInstanceObject`.**
+   The shared types live at `dristi-common.models.workflow.*` (added
+   to `PROTECTED_CLASSES` so Phase 4 auto-redirects imports).
+2. **`WorkflowUtil` callers** map to canonical's
+   `updateWorkflowStatus` (state-name return) or
+   `updateWorkflowApplicationStatus` (app-status return) per the
+   service's existing semantics. Audit the workflow YAML if unsure
+   — most callers want state-name. Phase 4 deletes the local
+   `WorkflowUtil`; verify no body-divergence regressions before merge
+   (cf. 29A audit).
+3. **`WorkflowService` stays service-local.** It's where the
+   domain-specific business logic lives: businessService picking
+   (case has hardcoded "ADV" + payment routing; application has
+   `getBusinessName(svc)` switch; evidence has `getBusinessServiceName`
+   based on `filingType`/`artifactType`); domain entity → ProcessInstance
+   field extraction; domain-specific role checks
+   (`isDelayCondonationCreator`, `isCitizen`); payment-specific
+   helpers.
+4. **Service's `WorkflowService` should delegate generic operations to
+   canonical:** `callWorkFlow`, `getProcessInstanceForWorkflow`,
+   `getWorkflowFromProcessInstance`, `getUserListFromUserUuid`. Drop
+   the duplicated bodies; inject `WorkflowUtil` and call the canonical.
+5. **`getCurrentWorkflow` typically stays service-local** — most
+   services define their own `ProcessInstance` subclass at
+   `web/models/ProcessInstance.java` (separate class, not a subclass
+   of egov's), and the response deserialises to that local type. The
+   canonical can't generalise over service-specific local types.
+
+**Enforcement.** Manual review per migration. The migration recipe
+in [/migrate-service](.claude/commands/migrate-service.md) Step 5 now
+asks the migration author to confirm WorkflowUtil/WorkflowService
+audit when the service has either class.
+
+---
+
+## Rule 30 — Pre-commit Summary Protocol
+
+**New rule, learned from the order service migration.**
+
+Migration PRs accumulate dozens of file changes across heterogeneous
+concerns: structural lift, contract uplift, canonical promotion,
+caller rewrites, pipeline-source edits, rules + docs. Committing
+without surfacing the change-set first makes the PR review opaque
+and any follow-up amend churn-y. Verify-before-commit (Rule N/A —
+session-level convention) handles correctness; this rule handles
+*reviewability*.
+
+**Rule.** Before running `git add` / `git commit` on a migration
+session, surface a structured summary and **wait for the user to
+confirm**. The summary has four sections:
+
+1. **Files added** — table of `path | purpose`. One line per file.
+2. **Files deleted** — table of `path | reason`. Make the reason
+   explicit (e.g. "redundant with shared", "lifted by Phase 35").
+3. **Files modified** — table of `path | one-line change`. Group by
+   concern (canonical / pipeline-source / domain code / tests / docs)
+   when the count exceeds ~10.
+4. **Decisions taken** — table of `decision | rationale`. Captures
+   non-obvious choices (e.g. "two return-flavor methods instead of a
+   boolean flag — self-documenting at call site") so the user can
+   challenge the design before it's locked in a commit. Decisions
+   that came from explicit user direction earlier in the session
+   should reference that direction.
+5. **Verifications NOT yet run** — bulleted list of checks the user
+   should expect before commit (per the verify-before-commit rule).
+   The summary itself is paused-on-user; verifications run AFTER
+   user confirms the design, not before.
+
+After the user confirms:
+- Run all the listed verifications.
+- Surface failures with the same precision; never commit through red.
+- Only then run `git add` / `git commit`.
+
+**Why before verifications, not after.** The verifications cost time
+(mvn runs) but the user can spot a wrong-turn decision in 30 seconds.
+Surfacing the summary first lets the user redirect *before* you spend
+3 minutes verifying a design they'd reject.
+
+**When this rule does NOT apply.** Trivial single-purpose commits
+the user explicitly authorised mid-session (`/migrate-service` step
+6's "ship it" prompt covers this — its summary already follows this
+shape). The rule kicks in for anything that didn't go through a
+slash-command summary, including ad-hoc fixes that touched >2 files
+or any PIPELINE_RULES / RUNBOOK / CLAUDE.md edit.
+
+**Enforcement.** Manual; reviewer convention. Future tooling could
+hook `git commit` to require a session marker, not blocking now.
+
+---
+
 ## Rule 12 — Canonical Curation Marker
 
 **New rule, learned the hard way.**

@@ -182,6 +182,15 @@ Pipeline and Maven output can be large. To keep context efficient:
   acknowledging the marker. The marker exists so re-runs preserve
   human edits; respect it.
 
+- **Do not commit without a pre-commit summary first** (Rule 30).
+  Every `git commit` on a migration session must be preceded by a
+  structured summary of files-added / files-deleted / files-modified /
+  decisions-taken / verifications-not-yet-run, and the user must
+  confirm the design before verification + commit run. Skip the
+  summary only for trivial single-purpose commits the user explicitly
+  authorised mid-session (e.g. `/migrate-service` Step 6's "ship it"
+  flow has its own summary).
+
 - **Do not push or open PRs** without explicit user confirmation,
   even after a green build.
 
@@ -198,7 +207,7 @@ Pipeline and Maven output can be large. To keep context efficient:
 | Path | Purpose |
 |---|---|
 | [RUNBOOK.md](RUNBOOK.md) | Human-readable operational guide |
-| [PIPELINE_RULES.md](PIPELINE_RULES.md) | 27 hard-won rules, indexed by gate/symptom (24=contract lift, 25=parent pom dep hygiene, 26=canonical return-type drift, 27=REST→direct as follow-up PR) |
+| [PIPELINE_RULES.md](PIPELINE_RULES.md) | 30 hard-won rules, indexed by gate/symptom (24=contract lift, 25=parent pom dep hygiene, 26=canonical return-type drift, 27=REST→direct as follow-up PR, 28=three-commit structure, 29=workflow migration pattern + behavior-union extraction, 30=pre-commit summary protocol) |
 | [SERVICE_REGISTRY.md](SERVICE_REGISTRY.md) | Service → module/subdomain mapping |
 | [per_module/run_module_migration.py](per_module/run_module_migration.py) | The 9-phase pipeline |
 | [config_consolidation/run_consolidation.py](config_consolidation/run_consolidation.py) | Pipeline 5 (config) |

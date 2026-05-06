@@ -32,6 +32,7 @@ import static org.pucar.dristi.caselifecycle.order.internal.config.ServiceConsta
 
 import org.pucar.dristi.common.models.individual.Individual;
 import org.pucar.dristi.common.models.Document;
+import org.pucar.dristi.common.models.workflow.WorkflowObject;
 @Service
 @Slf4j
 public class OrderRegistrationService {

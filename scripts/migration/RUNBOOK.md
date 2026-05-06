@@ -194,7 +194,33 @@ review (it has methods absent from the canonical). Either:
 - Leave it as a service-local helper (already auto-renamed to a
   subdomain-prefixed bean name to avoid Spring conflicts).
 
-### 5.3 Skim the contract-lift report
+### 5.3 Audit workflow util/service if service has either
+
+If the migrating service has `WorkflowUtil` and/or `WorkflowService`,
+run the audit per [PIPELINE_RULES.md](PIPELINE_RULES.md) Rule 29:
+
+```bash
+diff dristi-services/<svc>/src/main/java/.../util/WorkflowUtil.java \
+     dristi-monolith/dristi-common/src/main/java/org/pucar/dristi/common/util/WorkflowUtil.java
+```
+
+Things to check:
+- **Return value.** Does the source's `updateWorkflowStatus` return
+  `state.getState()` or `state.getApplicationStatus()`? Update the
+  caller to use the matching canonical method (`updateWorkflowStatus`
+  for state-name, `updateWorkflowApplicationStatus` for app-status).
+- **Service-local types.** The source likely has its own
+  `WorkflowObject` / `ProcessInstanceObject`. They're now shared at
+  `dristi-common.models.workflow.*` (in `PROTECTED_CLASSES`). Phase 4
+  auto-redirects the imports.
+- **WorkflowService.** Stays service-local. Refactor to delegate
+  `callWorkFlow` / `getProcessInstanceForWorkflow` /
+  `getWorkflowFromProcessInstance` / `getUserListFromUserUuid` to
+  the canonical injected `WorkflowUtil`. Keep service-specific
+  business logic (businessService picking, payment helpers, role
+  checks) local.
+
+### 5.4 Skim the contract-lift report
 
 ```bash
 cat scripts/migration/per_module/output/<service>_contract_lift.txt

@@ -1,5 +1,7 @@
-// HAND-CURATED — lifted by Phase 3.5 (contract-lift)
-package org.pucar.dristi.common.contract.order;
+// HAND-CURATED — DRISTI's standard extension of egov's Workflow contract.
+// Promoted to dristi-common after the order migration found every service
+// duplicates this same `additionalDetails`-only subclass. See Rule 29.
+package org.pucar.dristi.common.models.workflow;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

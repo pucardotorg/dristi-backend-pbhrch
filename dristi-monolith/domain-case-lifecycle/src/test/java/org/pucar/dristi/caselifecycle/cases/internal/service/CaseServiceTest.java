@@ -50,6 +50,7 @@ import org.springframework.web.client.RestTemplate;
 
 import org.pucar.dristi.common.models.individual.Individual;
 import org.pucar.dristi.common.util.FileStoreUtil;
+import org.pucar.dristi.common.models.workflow.WorkflowObject;
 @ExtendWith(MockitoExtension.class)
 public class CaseServiceTest {
 

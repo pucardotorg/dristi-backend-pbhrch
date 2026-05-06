@@ -87,6 +87,8 @@ PROTECTED_CLASSES = {
     "ResponseInfo": "models",
     "Document": "models",
     "Individual": "models.individual",
+    "WorkflowObject": "models.workflow",
+    "ProcessInstanceObject": "models.workflow",
 }
 
 # "Banned" = legacy DRISTI service-internal package roots that should have

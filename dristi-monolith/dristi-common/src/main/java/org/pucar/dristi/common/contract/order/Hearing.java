@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.pucar.dristi.common.models.Document;
+import org.pucar.dristi.common.models.workflow.WorkflowObject;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
