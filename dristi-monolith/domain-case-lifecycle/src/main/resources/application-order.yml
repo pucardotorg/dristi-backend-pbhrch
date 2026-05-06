@@ -5,11 +5,31 @@
 # Includes service-unique keys + this service's value for any key that conflicts across services.
 # Activate via spring.profiles.active=...,order,...
 
+app:
+  timezone: Asia/Kolkata
+  zone:
+    id: Asia/Kolkata
 otel:
   instrumentation:
     http:
       server:
         ignore-urls: /order/health,/order/prometheus
+kafka:
+  consumer:
+    config:
+      auto_commit: true
+      auto_commit_interval: 100
+      session_timeout: 15000
+      auto_offset_reset: earliest
+  producer:
+    config:
+      retries_config: 0
+      batch_size_config: 16384
+      linger_ms_config: 1
+      buffer_memory_config: 33554432
+  topics:
+    receipt:
+      create: dss-collection
 egov:
   localization:
     host: http://localhost:8080
@@ -21,13 +41,18 @@ egov:
     search:
       endpoint: /_search
   individual:
+    host: http://localhost:8081/
     path: individual/v1/_create
     create:
       path: individual/v1/_create
+    search:
+      path: individual/v1/_search
     update:
       path: individual/v1/_update
   mdms:
     host: http://localhost:8084
+    search:
+      endpoint: /egov-mdms-service/v1/_search
     order:
       nonoverlapping:
         composite:
@@ -42,6 +67,14 @@ egov:
       endpoint: /egov-hrms/employees/_search
   user:
     host: http://localhost:8086
+    context:
+      path: /user/users
+    create:
+      path: /_createnovalidate
+    search:
+      path: /user/_search
+    update:
+      path: /_updatenovalidate
   idgen:
     host: http://localhost:8082/
     path: egov-idgen/id/_generate
@@ -189,13 +222,12 @@ egov:
 is:
   workflow:
     enabled: true
-kafka:
-  topics:
-    receipt:
-      create: dss-collection
-app:
-  zone:
-    id: Asia/Kolkata
+logging:
+  loki:
+    enabled: false
+    url: http://localhost:3100/loki/api/v1/push
+  level:
+    root: INFO
 mdms:
   order:
     type:
