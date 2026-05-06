@@ -1,0 +1,18 @@
+# Classes lifted from internal/web/models/ to dristi-common/contract/<subdomain>/
+org.pucar.dristi.common.contract.notification.IdGenerationRequest
+org.pucar.dristi.common.contract.notification.IdGenerationResponse
+org.pucar.dristi.common.contract.notification.IdRequest
+org.pucar.dristi.common.contract.notification.IdResponse
+org.pucar.dristi.common.contract.notification.Notification
+org.pucar.dristi.common.contract.notification.NotificationCriteria
+org.pucar.dristi.common.contract.notification.NotificationExists
+org.pucar.dristi.common.contract.notification.NotificationExistsRequest
+org.pucar.dristi.common.contract.notification.NotificationExistsResponse
+org.pucar.dristi.common.contract.notification.NotificationListResponse
+org.pucar.dristi.common.contract.notification.NotificationRequest
+org.pucar.dristi.common.contract.notification.NotificationResponse
+org.pucar.dristi.common.contract.notification.NotificationSearchRequest
+org.pucar.dristi.common.contract.notification.Order
+org.pucar.dristi.common.contract.notification.Pagination
+org.pucar.dristi.common.contract.notification.RequestInfoWrapper
+org.pucar.dristi.common.contract.notification.package-info

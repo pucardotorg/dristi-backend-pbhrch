@@ -19,7 +19,7 @@ import java.util.*;
 
 import static org.pucar.dristi.caselifecycle.cases.internal.config.ServiceConstants.*;
 
-@Service
+@Service("casesNotificationService")
 @Slf4j
 public class NotificationService {
 
