@@ -1,6 +1,7 @@
 package org.pucar.dristi.web.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -63,6 +64,65 @@ public class Party {
 
     @JsonProperty("isPartyInPerson")
     private boolean isPartyInPerson;
+
+    @JsonProperty("firstName")
+    private String firstName = null;
+
+    @JsonProperty("middleName")
+    private String middleName = null;
+
+    @JsonProperty("lastName")
+    private String lastName = null;
+
+    @JsonProperty("fullName")
+    private String fullName = null;
+
+    @JsonProperty("mobileNumber")
+    @Valid
+    private JsonNode mobileNumber = null;
+
+    @JsonProperty("email")
+    @Valid
+    private JsonNode email = null;
+
+    @JsonProperty("age")
+    private String age = null;
+
+    @JsonProperty("litigantType")
+    @Valid
+    private LitigantTypeInfo litigantType = null;
+
+    @JsonProperty("litigantTypeOfEntity")
+    @Valid
+    private LitigantTypeOfEntity litigantTypeOfEntity = null;
+
+    @JsonProperty("companyName")
+    private String companyName = null;
+
+    @JsonProperty("designation")
+    private String designation = null;
+
+    @JsonProperty("transferredPOA")
+    @Valid
+    private TransferredPOAInfo transferredPOA = null;
+
+    @JsonProperty("permanentAddress")
+    @Valid
+    private Address permanentAddress = null;
+
+    @JsonProperty("currentAddress")
+    @Valid
+    private Address currentAddress = null;
+
+    @JsonProperty("isSameAddress")
+    private Boolean isSameAddress = true;
+
+    @JsonProperty("isJoined")
+    private Boolean isJoined = true;
+
+    @JsonProperty("addressDetails")
+    @Valid
+    private JsonNode addressDetails = null;
 
     @JsonProperty("documents")
     @Valid

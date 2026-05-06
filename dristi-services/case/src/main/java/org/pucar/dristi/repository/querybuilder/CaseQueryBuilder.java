@@ -52,9 +52,14 @@ public class CaseQueryBuilder {
     private static final String BASE_LITIGANT_QUERY = " SELECT ltg.id as id, ltg.tenantid as tenantid, ltg.partycategory as partycategory, ltg.case_id as case_id, ltg.isresponserequired as isresponserequired, " +
             "ltg.individualid as individualid, " +
             " ltg.organisationid as organisationid, ltg.partytype as partytype, ltg.isactive as isactive, ltg.additionaldetails as additionaldetails, ltg.createdby as createdby," +
-            " ltg.lastmodifiedby as lastmodifiedby, ltg.createdtime as createdtime, ltg.lastmodifiedtime as lastmodifiedtime , ltg.hassigned as hassigned ";
+            " ltg.lastmodifiedby as lastmodifiedby, ltg.createdtime as createdtime, ltg.lastmodifiedtime as lastmodifiedtime , ltg.hassigned as hassigned," +
+            " ltg.first_name as first_name, ltg.middle_name as middle_name, ltg.last_name as last_name, ltg.full_name as full_name," +
+            " ltg.mobile_number as mobile_number, ltg.email as email, ltg.age as age, ltg.company_name as company_name, ltg.designation as designation," +
+            " ltg.litigant_type as litigant_type, ltg.litigant_type_of_entity as litigant_type_of_entity, ltg.transferred_poa as transferred_poa," +
+            " ltg.permanent_address as permanent_address, ltg.current_address as current_address, ltg.is_same_address as is_same_address, ltg.is_joined as is_joined," +
+            " ltg.address_details as address_details ";
 
-    private static final String BASE_LITIGANT_SUMMARY_QUERY = " SELECT ltg.case_id as case_id, ltg.individualid as individualid, ltg.partytype as partytype";
+    private static final String BASE_LITIGANT_SUMMARY_QUERY = " SELECT ltg.case_id as case_id, ltg.id as id, ltg.individualid as individualid, ltg.partytype as partytype";
 
     private static final String FROM_LITIGANT_TABLE = " FROM dristi_case_litigants ltg";
 
@@ -91,9 +96,11 @@ public class CaseQueryBuilder {
 
     private static final String BASE_POA_HOLDER_QUERY = " SELECT poaholder.id as id, poaholder.tenant_id as tenant_id, poaholder.individual_id as individual_id, poaholder.name as name, poaholder.case_id as case_id, " +
             " poaholder.is_active as is_active, poaholder.additional_details as additional_details, poaholder.created_by as created_by, poaholder.representing_litigants as representing_litigants, poaholder.poa_type as poa_type, " +
-            " poaholder.last_modified_by as last_modified_by, poaholder.created_time as created_time, poaholder.last_modified_time as last_modified_time , poaholder.hasSigned as hasSigned ";
+            " poaholder.last_modified_by as last_modified_by, poaholder.created_time as created_time, poaholder.last_modified_time as last_modified_time , poaholder.hasSigned as hasSigned, " +
+            " poaholder.first_name as first_name, poaholder.middle_name as middle_name, poaholder.last_name as last_name, poaholder.full_name as full_name, " +
+            " poaholder.mobile_number as mobile_number, poaholder.age as age, poaholder.address as address ";
 
-    private static final String BASE_POA_HOLDER_SUMMARY_QUERY = " SELECT poaholder.case_id as case_id, poaholder.additional_details as additional_details, poaholder.individual_id as individual_id, poaholder.representing_litigants as representing_litigants";
+    private static final String BASE_POA_HOLDER_SUMMARY_QUERY = " SELECT poaholder.case_id as case_id, poaholder.id as id, poaholder.additional_details as additional_details, poaholder.individual_id as individual_id, poaholder.representing_litigants as representing_litigants";
 
     private static final String FROM_POA_HOLDER_TABLE = " FROM dristi_case_poaholders poaholder";
 

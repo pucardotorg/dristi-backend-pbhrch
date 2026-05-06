@@ -67,6 +67,18 @@ public class CaseRegistrationEnrichment {
             document.setId(String.valueOf(UUID.randomUUID()));
             document.setDocumentUid(document.getId());
         }
+
+        Map<String, Object> additionalDetails = new LinkedHashMap<>();
+        if (document.getAdditionalDetails() instanceof Map<?, ?> existingAdditionalDetails) {
+            existingAdditionalDetails.forEach((key, value) -> additionalDetails.put(String.valueOf(key), value));
+        }
+        if (document.getFileName() != null) {
+            additionalDetails.put("fileName", document.getFileName());
+        }
+        if (document.getDocumentName() != null) {
+            additionalDetails.put("documentName", document.getDocumentName());
+        }
+        document.setAdditionalDetails(additionalDetails.isEmpty() ? null : additionalDetails);
     }
 
     public static void enrichRepresentativesOnCreateAndUpdate(CourtCase courtCase, AuditDetails auditDetails) {
@@ -146,6 +158,10 @@ public class CaseRegistrationEnrichment {
             party.setId((UUID.randomUUID()));
             party.setCaseId(courtCaseId);
             party.setAuditDetails(auditDetails);
+            if (party.getIsJoined() == null) {
+                boolean isRespondentLitigant = party.getPartyType() != null && party.getPartyType().toLowerCase().contains("respondent");
+                party.setIsJoined(!isRespondentLitigant);
+            }
             if (party.getDocuments() != null) {
                 party.getDocuments().forEach(CaseRegistrationEnrichment::enrichDocumentsOnCreate);
             }
@@ -153,6 +169,10 @@ public class CaseRegistrationEnrichment {
         List<Party> litigantsListToUpdate = courtCase.getLitigants().stream().filter(litigant -> litigant.getId() != null).toList();
         litigantsListToUpdate.forEach(party -> {
             party.setAuditDetails(auditDetails);
+            if (party.getIsJoined() == null) {
+                boolean isRespondentLitigant = party.getPartyType() != null && party.getPartyType().toLowerCase().contains("respondent");
+                party.setIsJoined(!isRespondentLitigant);
+            }
             if (party.getDocuments() != null) {
                 party.getDocuments().forEach(CaseRegistrationEnrichment::enrichDocumentsOnCreate);
             }
@@ -375,10 +395,36 @@ public class CaseRegistrationEnrichment {
         return stB.toString();
     }
 
+    private void mergeExistingLitigantsOnUpdate(CourtCase updatedCourtCase, CourtCase existingCourtCase) {
+        if (updatedCourtCase.getLitigants() == null || existingCourtCase.getLitigants() == null) {
+            return;
+        }
+
+        updatedCourtCase.getLitigants().forEach(updatedLitigant -> {
+            if (updatedLitigant.getId() != null || updatedLitigant.getIndividualId() == null) {
+                return;
+            }
+
+            existingCourtCase.getLitigants().stream()
+                    .filter(existingLitigant -> updatedLitigant.getIndividualId().equalsIgnoreCase(existingLitigant.getIndividualId()))
+                    .filter(existingLitigant -> Objects.equals(updatedLitigant.getPartyType(), existingLitigant.getPartyType()))
+                    .findFirst()
+                    .ifPresent(existingLitigant -> {
+                        updatedLitigant.setId(existingLitigant.getId());
+                        updatedLitigant.setCaseId(existingLitigant.getCaseId());
+                        if (updatedLitigant.getIsActive() == null) {
+                            updatedLitigant.setIsActive(existingLitigant.getIsActive());
+                        }
+                    });
+        });
+    }
+
     public void enrichCaseApplicationUponUpdate(CaseRequest caseRequest, List<CourtCase> existingCourtCaseList) {
         try {
             // Enrich lastModifiedTime and lastModifiedBy in case of update
             CourtCase courtCase = caseRequest.getCases();
+            CourtCase existingCourtCase = existingCourtCaseList.get(0);
+            mergeExistingLitigantsOnUpdate(courtCase, existingCourtCase);
             AuditDetails auditDetails = courtCase.getAuditdetails();
             auditDetails.setLastModifiedTime(caseUtil.getCurrentTimeMil());
             auditDetails.setLastModifiedBy(caseRequest.getRequestInfo().getUserInfo().getUuid());

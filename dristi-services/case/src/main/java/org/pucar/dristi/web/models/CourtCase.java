@@ -194,6 +194,15 @@ public class CourtCase {
     @Builder.Default
     private List<WitnessDetails> witnessDetails = new ArrayList<>();
 
+    @JsonProperty("complainantDetails")
+    private Object complainantDetails = null;
+
+    @JsonProperty("respondentDetails")
+    private Object respondentDetails = null;
+
+    @JsonProperty("prayerSwornStatement")
+    private Object prayerSwornStatement = null;
+
     @JsonProperty("advocateDetailBlock")
     @Valid
     @Builder.Default

@@ -27,9 +27,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.pucar.dristi.config.Configuration;
 import org.pucar.dristi.config.ServiceConstants;
+import org.pucar.dristi.enrichment.AdvocateDetailBlockBuilder;
 import org.pucar.dristi.enrichment.CaseRegistrationEnrichment;
 import org.pucar.dristi.enrichment.EnrichmentService;
-import org.pucar.dristi.enrichment.AdvocateDetailBlockBuilder;
 import org.pucar.dristi.kafka.Producer;
 import org.pucar.dristi.repository.AdvocateOfficeCaseMemberRepository;
 import org.pucar.dristi.repository.CaseRepository;
@@ -126,7 +126,7 @@ public class CaseServiceTest {
     private AdvocateOfficeCaseMemberRepository advocateOfficeCaseMemberRepository;
 
     @Mock
-    private AdvocateDetailBlockBuilder advocateDetailBlockBuilder;
+    private  AdvocateDetailBlockBuilder advocateDetailBlockBuilder ;
 
     private CaseRequest caseRequest;
     private RequestInfo requestInfo;
@@ -190,7 +190,7 @@ public class CaseServiceTest {
         objectMapper = new ObjectMapper();
         enrichmentService = new EnrichmentService(new ArrayList<>());
         OrderUtil orderUtil = new OrderUtil(null, null, null);
-    caseService = new CaseService(validator,enrichmentUtil,caseRepository,workflowService,config,producer,taskUtil,etreasuryUtil,encryptionDecryptionUtil, hearingUtil,userService,paymentCalculaterUtil,objectMapper,cacheService,enrichmentService, notificationService, individualService, advocateUtil, evidenceUtil, evidenceValidator,caseUtil,fileStoreUtil, orderUtil, dateUtil,inboxUtil, advocateOfficeCaseMemberRepository, advocateDetailBlockBuilder);
+        caseService = new CaseService(validator,enrichmentUtil,caseRepository,workflowService,config,producer,taskUtil,etreasuryUtil,encryptionDecryptionUtil, hearingUtil,userService,paymentCalculaterUtil,objectMapper,cacheService,enrichmentService, notificationService, individualService, advocateUtil, evidenceUtil, evidenceValidator,caseUtil,fileStoreUtil, orderUtil, dateUtil,inboxUtil, advocateOfficeCaseMemberRepository,advocateDetailBlockBuilder);
 
         requestInfo = RequestInfo.builder()
                 .userInfo(User.builder().uuid("ba8767a6-7cb1-416b-803e-19cf9dca06bc").tenantId(TENANT_ID).build())
@@ -962,11 +962,9 @@ public class CaseServiceTest {
         courtCase.setStatus(updatedStatus);
         when(validator.validateUpdateRequest(any(CaseRequest.class),any())).thenReturn(true);
         doNothing().when(enrichmentUtil).enrichCaseApplicationUponUpdate(any(CaseRequest.class),any());
-        doNothing().when(workflowService).updateWorkflowStatus(any(CaseRequest.class));
         when(encryptionDecryptionUtil.encryptObject(any(),any(),any())).thenReturn(courtCase);
 
         doNothing().when(producer).push(anyString(), any(CaseRequest.class));
-        doNothing().when(cacheService).save(anyString(), any());
         when(config.getCaseUpdateTopic()).thenReturn("case-update-topic");
         List<CaseCriteria> caseCriteriaList = new ArrayList<>();
         CaseCriteria caseCriteria = new CaseCriteria();
