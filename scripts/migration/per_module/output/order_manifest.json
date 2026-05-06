@@ -1,0 +1,33 @@
+{
+  "service": "order",
+  "source_dir": "dristi-services/order",
+  "target_module": "case-lifecycle",
+  "target_subdomain": "order",
+  "current_package": "org.pucar.dristi",
+  "target_package": "org.pucar.dristi.caselifecycle.order",
+  "main_file_count": 83,
+  "test_file_count": 19,
+  "has_spring_boot_main": true,
+  "duplicated_protected_classes": [
+    "MdmsUtil",
+    "IdgenUtil",
+    "WorkflowUtil",
+    "IndividualUtil",
+    "ResponseInfoFactory",
+    "DateUtil",
+    "KafkaProducerService",
+    "Document",
+    "Individual",
+    "WorkflowObject",
+    "ProcessInstanceObject"
+  ],
+  "rest_call_files": [
+    "dristi-services/order/src/main/java/org/pucar/dristi/service/SmsNotificationService.java",
+    "dristi-services/order/src/main/java/org/pucar/dristi/util/HearingUtil.java",
+    "dristi-services/order/src/main/java/org/pucar/dristi/util/WorkflowUtil.java",
+    "dristi-services/order/src/main/java/org/pucar/dristi/util/IdgenUtil.java",
+    "dristi-services/order/src/main/java/org/pucar/dristi/util/IndividualUtil.java",
+    "dristi-services/order/src/main/java/org/pucar/dristi/util/LocalizationUtil.java"
+  ],
+  "source_context_path": "/order"
+}

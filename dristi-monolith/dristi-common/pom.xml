@@ -64,6 +64,23 @@
             <artifactId>swagger-annotations</artifactId>
             <version>2.2.8</version>
         </dependency>
+        <!-- Swagger 1.x annotations (io.swagger.annotations.*) — needed by
+             contract DTOs lifted by Phase 35 that still carry the legacy
+             namespace from the source services. Drop once those DTOs are
+             migrated to Swagger 2.x. -->
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-core</artifactId>
+            <version>1.5.18</version>
+        </dependency>
+        <!-- digit-models brings javax.validation-api + DIGIT contract types
+             that lifted DTOs reference. Required because source services use
+             pre-Jakarta `javax.validation.*` annotations. -->
+        <dependency>
+            <groupId>org.egov.services</groupId>
+            <artifactId>digit-models</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
 
         <!-- net.minidev json-smart used by MdmsUtil for JSONArray -->
         <dependency>

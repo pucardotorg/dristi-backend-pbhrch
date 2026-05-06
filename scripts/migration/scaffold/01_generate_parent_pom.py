@@ -58,6 +58,19 @@ VERSION_PIN_BLOCKLIST = {
     ("org.springframework", "spring-web"),
 }
 
+# Dependencies where the merged union would pick a version that's correct
+# for the source services but breaks under the monolith's classpath. Each
+# entry overrides whatever the union picked (typically because the union's
+# choice was bumped manually post-scaffold and we want re-runs to keep it).
+#
+#   - mockito-core 5.7.0: source services use this; the union picked 3.12.4
+#     from one outlier service. Mixing 3.12 core with mockito-junit-jupiter
+#     5.7 raises `WrongTypeOfReturnValue: <X> cannot be returned by <Y>()`
+#     on `mock(JsonNode.class)` and similar abstract-class mocks. See Rule 25.
+VERSION_OVERRIDES: dict[tuple[str, str], str] = {
+    ("org.mockito", "mockito-core"): "5.7.0",
+}
+
 
 def q(tag: str) -> str:
     return f"{{{NS}}}{tag}"
@@ -173,6 +186,13 @@ def merge_dependencies(
                 entry["scope"] = scope
             if dtype and not entry["type"]:
                 entry["type"] = dtype
+    # Apply explicit overrides last so re-runs preserve hand-curated bumps
+    # (e.g. mockito-core 5.7.0 — see VERSION_OVERRIDES docstring).
+    for ga, ver in VERSION_OVERRIDES.items():
+        if ga in deps_union:
+            deps_union[ga]["version"] = ver
+        if ga in dm_union:
+            dm_union[ga]["version"] = ver
     return deps_union, dm_union
 
 

@@ -20,6 +20,7 @@ import static org.mockito.Mockito.when;
 import static org.pucar.dristi.caselifecycle.cases.internal.config.ServiceConstants.E_SIGN;
 import static org.pucar.dristi.caselifecycle.cases.internal.config.ServiceConstants.E_SIGN_COMPLETE;
 
+import org.pucar.dristi.common.models.workflow.WorkflowObject;
 @ExtendWith(MockitoExtension.class)
 class EnrichCaseWhenESignTest {
 

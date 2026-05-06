@@ -1,5 +1,8 @@
-package org.pucar.dristi.caselifecycle.cases.internal.web.models;
-
+// HAND-CURATED — DRISTI's standard extension of egov's ProcessInstance.
+// Mirror of WorkflowObject — adds `additionalDetails` so the workflow
+// service receives the field DRISTI services consistently include in
+// their transition requests.
+package org.pucar.dristi.common.models.workflow;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

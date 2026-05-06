@@ -9,7 +9,7 @@ import org.egov.common.contract.request.RequestInfo;
 import org.pucar.dristi.caselifecycle.cases.internal.config.Configuration;
 import org.pucar.dristi.common.kafka.Producer;
 import org.pucar.dristi.common.repository.ServiceRequestRepository;
-import org.pucar.dristi.caselifecycle.cases.internal.util.DateUtil;
+import org.pucar.dristi.common.util.DateUtil;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.SmsTemplateData;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.SMSRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@ import java.util.*;
 import static org.pucar.dristi.caselifecycle.cases.internal.config.ServiceConstants.*;
 import static org.pucar.dristi.caselifecycle.cases.internal.config.ServiceConstants.NOTIFICATION_LOCALIZATION_MSGS_JSONPATH;
 
-@Service
+@Service("casesSmsNotificationService")
 @Slf4j
 public class SmsNotificationService {
 

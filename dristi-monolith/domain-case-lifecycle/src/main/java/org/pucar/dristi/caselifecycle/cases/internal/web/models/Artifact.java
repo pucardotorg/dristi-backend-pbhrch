@@ -18,6 +18,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import org.pucar.dristi.common.models.Document;
+import org.pucar.dristi.common.models.workflow.WorkflowObject;
 /**
  * Artifact
  */
