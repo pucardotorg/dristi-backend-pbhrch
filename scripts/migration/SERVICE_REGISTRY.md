@@ -43,7 +43,7 @@ Core case-lifecycle domain — the bulk of DRISTI.
 | `analytics` | 146 | pending | `case-lifecycle` | `analytics` | depends on `case` |
 | `bail-bond` | 105 | pending | `case-lifecycle` | `bailbond` | depends on `case` |
 | `transformer` | 122 | pending | `case-lifecycle` | `analytics` | merge into `analytics` subdomain |
-| `Notification` | 48 | pending | `case-lifecycle` | `notification` | |
+| `Notification` | 48 | **done** | `case-lifecycle` | `notification` | First migration by an extended-team contributor; surfaced empty-package, YAML-stability, and pipeline-output staging gaps fixed in 5fb67371 |
 | `digitalized-documents` | 105 | pending | `case-lifecycle` | `digitalizeddocuments` | |
 | `ctc` | 125 | pending | `case-lifecycle` | `ctc` | |
 | `template-configuration` | 29 | pending | `case-lifecycle` | `templateconfiguration` | |
