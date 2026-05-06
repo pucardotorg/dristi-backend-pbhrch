@@ -41,7 +41,7 @@ Refer to **[SERVICE_REGISTRY.md](SERVICE_REGISTRY.md)** for:
 - Owner / sprint, where assigned.
 
 **Already migrated** (don't re-run unless you mean to):
-- `lock-svc`, `case`, `order`, `bank-details`.
+- `lock-svc`, `case`, `order`, `bank-details`, `Notification`.
 
 ---
 
