@@ -174,17 +174,6 @@ spring:
     host: localhost
     port: 6379
     timeout: 10
-  datasource:
-    writer:
-      url: jdbc:postgresql://localhost:5432/hearing
-      username: postgres
-      password: root
-      driver-class-name: org.postgresql.Driver
-    reader:
-      url: jdbc:postgresql://localhost:5432/hearing
-      username: postgres
-      password: root
-      driver-class-name: org.postgresql.Driver
 state:
   level:
     tenant:
