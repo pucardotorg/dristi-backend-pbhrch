@@ -193,6 +193,24 @@ def detect_current_package(service_dir: Path) -> str:
     return pkgs.most_common(1)[0][0]
 
 
+def _prune_empty_dirs(root: Path) -> int:
+    """Bottom-up rmdir of empty directories under `root`. The root itself is
+    NOT removed. No-op if root is missing. Returns the count removed.
+
+    Used by Phase 4 (after protected-class deletes) and Phase 35 (after
+    contract DTO lifts) to keep the migrated tree free of phantom empty
+    packages that confuse IDEs and `tree`/`find` output. Git ignores empty
+    dirs, but the developer's working copy retains them until pruned."""
+    if not root.is_dir():
+        return 0
+    removed = 0
+    for d in sorted(root.rglob("*"), key=lambda p: -len(p.parts)):
+        if d.is_dir() and not any(d.iterdir()):
+            d.rmdir()
+            removed += 1
+    return removed
+
+
 def java_files(root: Path) -> list[Path]:
     return [p for p in root.rglob("*.java") if p.is_file()]
 
@@ -805,12 +823,15 @@ def phase_35_contract_lift(manifest: dict, target_dir: Path) -> dict[str, str]:
         encoding="utf-8",
     )
 
+    pruned = _prune_empty_dirs(target_dir)
+
     print(
         f"Phase 35 (contract-lift): lifted {moved} class(es) to "
         f"{contract_dir.relative_to(REPO_ROOT)}"
         + (f"; preserved {preserved_curated} hand-curated" if preserved_curated else "")
         + f"; rewrote imports in {rewritten} file(s)"
         + (f"; auto-imported in {auto_imported} site(s)" if auto_imported else "")
+        + (f"; pruned {pruned} empty dir(s)" if pruned else "")
         + f"; see {out.relative_to(REPO_ROOT)}"
     )
     return lift_map
@@ -995,10 +1016,13 @@ def phase_4_deduplicate(
     # subdomains of this domain module.
     bean_renamed = _resolve_cross_subdomain_bean_collisions(manifest["target_module"])
 
+    pruned = _prune_empty_dirs(target_dir)
+
     print(
         f"Phase 4 (deduplicate): deleted={deleted} protected-class copies, "
         f"rewrote={rewritten} imports, auto-imported={auto_imported}"
         + (f", uniquified-bean-names={bean_renamed}" if bean_renamed else "")
+        + (f", pruned={pruned} empty dir(s)" if pruned else "")
     )
     return deleted, rewritten, auto_imported
 

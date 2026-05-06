@@ -310,7 +310,10 @@ signature adapt per Rule 26; any parent-pom dep bumps per Rule 25).
 Verify `mvn -pl domain-<module> -am test` green, then:
 
 ```bash
-git add -A
+git add dristi-monolith/                                                # domain code + per-subdomain yml
+git add scripts/migration/per_module/output/<service>_manifest.json     # migration record
+git add scripts/migration/per_module/output/<service>_followups.txt     # iff non-empty
+git add scripts/migration/config_consolidation/output/                  # config_conflicts.txt + report.csv
 git commit -m "migrate(<service>): structural lift to domain-<module>/<subdomain>
 
 - N main + M test files moved from dristi-services/<service>
@@ -333,7 +336,9 @@ python3 scripts/migration/per_module/run_module_migration.py \
 # convert REST callers manually, see <service>_rest_calls.txt
 mvn -pl domain-<module> -am test     # verify green
 
-git add -A
+git add dristi-monolith/                                                # contract DTOs + caller rewrites
+git add scripts/migration/per_module/output/<service>_contract_lift.txt # Phase 35 audit
+git add scripts/migration/per_module/output/<service>_rest_calls.txt    # Phase 5 audit (even if empty)
 git commit -m "refactor(<service>): contract uplift + REST→direct calls
 
 - Lifted N contract DTOs to dristi-common/contract/<subdomain>/

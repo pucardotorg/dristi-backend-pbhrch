@@ -198,8 +198,19 @@ migrate(<service>): structural lift to domain-<module>/<subdomain>
 ```
 
 **Wait for explicit "commit C1" / "ship C1" before staging.** On
-confirmation, stage relevant files (not the pipeline-output txt files
-unless the user asks) and commit.
+confirmation, stage exactly:
+
+```bash
+git add dristi-monolith/                                                # domain code + per-subdomain yml
+git add scripts/migration/per_module/output/<service>_manifest.json     # migration record
+git add scripts/migration/per_module/output/<service>_followups.txt     # iff non-empty (Tier 3 decisions)
+git add scripts/migration/config_consolidation/output/                  # config_conflicts.txt + report.csv
+```
+
+These outputs are the audit trail for what the pipeline did at C1; prior
+migrations missed them and required a fixup commit. Do not use
+`git add -A` — it sweeps in unrelated `.claude/` settings and stale
+build artefacts.
 
 ---
 
@@ -275,7 +286,14 @@ refactor(<service>): contract uplift + REST→direct calls
 - dristi-common/pom.xml deps: <list, if any>
 ```
 
-**Wait for explicit "commit C2" / "ship C2" before staging.**
+**Wait for explicit "commit C2" / "ship C2" before staging.** On
+confirmation, stage exactly:
+
+```bash
+git add dristi-monolith/                                                # contract DTOs + caller import rewrites
+git add scripts/migration/per_module/output/<service>_contract_lift.txt # Phase 35 audit
+git add scripts/migration/per_module/output/<service>_rest_calls.txt    # Phase 5 audit (even if empty)
+```
 
 ---
 

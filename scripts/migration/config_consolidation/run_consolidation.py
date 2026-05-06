@@ -321,8 +321,20 @@ def main() -> int:
                 report_rows.append({"key": key, "service": svc, "value": val, "classification": "CONFLICT"})
             conflicts.append({
                 "key": key,
-                "values": " | ".join(f"{svc}={val}" for svc, val in values_by_svc.items()),
+                "values": " | ".join(f"{s}={v}" for s, v in sorted(values_by_svc.items())),
             })
+
+    # Stabilise per_service[svc] iteration order against the source service's
+    # own properties order. Without this, a CONFLICT key's position in the
+    # generated YAML depends on which service was first in the --service list
+    # (key_values iteration order is first-declarer-wins) — adding a new
+    # service to the consolidation reshuffles unrelated services' YAMLs.
+    for svc, picked in list(per_service.items()):
+        if not picked:
+            continue
+        per_service[svc] = {
+            key: picked[key] for key in by_service[svc] if key in picked
+        }
 
     # Emit
     OUT_DIR.mkdir(parents=True, exist_ok=True)
@@ -378,7 +390,7 @@ def main() -> int:
         else:
             fh.write(f"# {len(conflicts)} keys with different values across services\n")
             fh.write("# Per-service profile YAML resolves them via Spring's profile-overlay rules.\n\n")
-            for c in conflicts:
+            for c in sorted(conflicts, key=lambda c: c["key"]):
                 fh.write(f"{c['key']}\n  {c['values']}\n\n")
 
     # Print summary
