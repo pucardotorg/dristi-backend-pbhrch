@@ -31,24 +31,6 @@ kafka:
     receipt:
       create: dss-collection
 egov:
-  localization:
-    host: http://localhost:8080
-    workDir:
-      path: /localization/messages/v1
-    context:
-      path: /localization/messages/v1
-    statelevel: true
-    search:
-      endpoint: /_search
-  individual:
-    host: http://localhost:8081/
-    path: individual/v1/_create
-    create:
-      path: individual/v1/_create
-    search:
-      path: individual/v1/_search
-    update:
-      path: individual/v1/_update
   mdms:
     host: http://localhost:8084
     search:
@@ -61,10 +43,6 @@ egov:
         composite:
           orders: NonRepeatingCompositeOrders
     itemtext: ItemText
-  hrms:
-    host: https://dev.digit.org
-    search:
-      endpoint: /egov-hrms/employees/_search
   user:
     host: http://localhost:8086
     context:
@@ -75,6 +53,28 @@ egov:
       path: /user/_search
     update:
       path: /_updatenovalidate
+  individual:
+    host: http://localhost:8081/
+    search:
+      path: individual/v1/_search
+    path: individual/v1/_create
+    create:
+      path: individual/v1/_create
+    update:
+      path: individual/v1/_update
+  localization:
+    host: http://localhost:8080
+    workDir:
+      path: /localization/messages/v1
+    context:
+      path: /localization/messages/v1
+    statelevel: true
+    search:
+      endpoint: /_search
+  hrms:
+    host: https://dev.digit.org
+    search:
+      endpoint: /egov-hrms/employees/_search
   idgen:
     host: http://localhost:8082/
     path: egov-idgen/id/_generate
@@ -219,15 +219,15 @@ egov:
   documenttype:
     path: $.MdmsRes.Order.DocumentType[?(@.value == '{}' && @.isActive == true)]
   tenantId: pb
-is:
-  workflow:
-    enabled: true
 logging:
   loki:
     enabled: false
     url: http://localhost:3100/loki/api/v1/push
   level:
     root: INFO
+is:
+  workflow:
+    enabled: true
 mdms:
   order:
     type:
