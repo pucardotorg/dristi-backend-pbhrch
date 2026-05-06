@@ -209,7 +209,7 @@ Pipeline and Maven output can be large. To keep context efficient:
 | [RUNBOOK.md](RUNBOOK.md) | Human-readable operational guide |
 | [PIPELINE_RULES.md](PIPELINE_RULES.md) | 30 hard-won rules, indexed by gate/symptom (24=contract lift, 25=parent pom dep hygiene, 26=canonical return-type drift, 27=REST→direct as follow-up PR, 28=three-commit structure, 29=workflow migration pattern + behavior-union extraction, 30=pre-commit summary protocol) |
 | [SERVICE_REGISTRY.md](SERVICE_REGISTRY.md) | Service → module/subdomain mapping |
-| [per_module/run_module_migration.py](per_module/run_module_migration.py) | The 9-phase pipeline |
+| [per_module/run_module_migration.py](per_module/run_module_migration.py) | The 10-phase pipeline (incl. Phase 35 contract-lift) |
 | [config_consolidation/run_consolidation.py](config_consolidation/run_consolidation.py) | Pipeline 5 (config) |
 | [.claude/commands/migrate-service.md](../../.claude/commands/migrate-service.md) | Migration recipe (slash command) |
 | [.claude/commands/debug-gate.md](../../.claude/commands/debug-gate.md) | Gate debug recipe (slash command) |

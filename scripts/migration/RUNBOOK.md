@@ -423,7 +423,7 @@ EOF
 
 | Path | Purpose |
 |---|---|
-| [`scripts/migration/per_module/run_module_migration.py`](per_module/run_module_migration.py) | The 8-phase pipeline |
+| [`scripts/migration/per_module/run_module_migration.py`](per_module/run_module_migration.py) | The 10-phase pipeline (incl. Phase 35 contract-lift) |
 | [`scripts/migration/config_consolidation/run_consolidation.py`](config_consolidation/run_consolidation.py) | Pipeline 5 (config) |
 | [`scripts/migration/dristi_common/`](dristi_common/) | One-time `dristi-common` extraction (already done) |
 | [`scripts/migration/scaffold/`](scaffold/) | One-time monolith scaffold (already done) |
@@ -436,29 +436,37 @@ EOF
 
 ## TL;DR cheat sheet
 
+The full per-service flow is **§8 Commit + PR** above (three-commit
+structure per Rule 28). The recipe normally runs through the
+`/migrate-service` slash command — see
+[.claude/commands/migrate-service.md](../../.claude/commands/migrate-service.md).
+
 ```bash
-# 1. branch
+# 0. branch
 git checkout monolith/main && git pull && git checkout -b monolith/<service>
 
-# 2. migrate
+# 1. structural lift (commit C1)
 python3 scripts/migration/per_module/run_module_migration.py \
-  --service <name> --module <module> --subdomain <subdomain>
-
-# 3. consolidate config (include EVERY migrated service)
+  --service <name> --module <module> --subdomain <subdomain> \
+  --phase 1,2,3,4,5,6,7,8,9      # (Phase 35 deferred to C2)
 python3 scripts/migration/config_consolidation/run_consolidation.py \
   --service case --service lock-svc --service <name>
-
-# 4. add the new profile name to dristi-app/.../application.yml
-#    spring.profiles.active: shared,cases,locksvc,<name>,local
-
-# 5. manual: convert REST calls listed in <name>_rest_calls.txt
-
-# 6. build + test
-mvn -pl dristi-app -am package
+# add profile to dristi-app/.../application.yml: shared,cases,locksvc,<name>,local
 mvn -pl domain-<module> -am test -Dsurefire.failIfNoSpecifiedTests=false
+git add -A && git commit -m "migrate(<name>): structural lift to domain-<module>/<subdomain>"
 
-# 7. PR to monolith/main
-git add -A && git commit -m "migrate: <name>"
+# 2. contract uplift + REST→direct (commit C2)
+python3 scripts/migration/per_module/run_module_migration.py \
+  --service <name> --module <module> --subdomain <subdomain> --phase 35
+# convert callers in <name>_rest_calls.txt where target is migrated
+mvn -pl dristi-app -am test -Dsurefire.failIfNoSpecifiedTests=false
+git add -A && git commit -m "refactor(<name>): contract uplift + REST→direct calls"
+
+# 3. (optional) pipeline / rules / docs (commit C3)
+git add scripts/migration/
+git commit -m "feat(pipeline): <change>"
+
+# 4. push + PR
 git push -u origin monolith/<service>
 gh pr create --base monolith/main
 ```

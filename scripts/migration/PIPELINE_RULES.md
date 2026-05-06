@@ -675,15 +675,33 @@ commits in this order:
 
 **How to actually achieve it:**
 
+The standard entrypoint is the `/migrate-service` slash command —
+[.claude/commands/migrate-service.md](../../.claude/commands/migrate-service.md)
+— which orchestrates the same phases with pre-flight checks and
+manual-review gating built in. The raw flags below are what
+`/migrate-service` invokes under the hood; reach for them only when
+running outside a Claude session.
+
 1. Branch from `monolith/main`.
-2. Run pipeline with `--phase 1,2,3,4,5,6,7,8,9` (excluding 35).
+2. Structural lift (commit C1):
+   ```bash
+   /migrate-service <name> <module> <subdomain>          # preferred
+   # or, raw:
+   python3 scripts/migration/per_module/run_module_migration.py \
+     --service <name> --module <module> --subdomain <subdomain> \
+     --phase 1,2,3,4,5,6,7,8,9
+   ```
    Apply manual fixes. Verify `mvn test -pl domain-<module>`.
-   **Commit C1.**
-3. Run `--phase 35`. Add any required `dristi-common` deps. Convert
-   straightforward REST callers per Rule 27. Verify build.
-   **Commit C2.**
-4. If this migration motivated pipeline / rule changes, edit them now
-   and **commit C3**. Otherwise, skip.
+3. Contract uplift + REST→direct (commit C2):
+   ```bash
+   python3 scripts/migration/per_module/run_module_migration.py \
+     --service <name> --module <module> --subdomain <subdomain> \
+     --phase 35
+   ```
+   Add any required `dristi-common` deps. Convert straightforward REST
+   callers per Rule 27. Verify build.
+4. (Optional, commit C3) If this migration motivated pipeline / rule
+   changes, edit them now. Otherwise, skip.
 
 **Why this beats one bundled commit:**
 
