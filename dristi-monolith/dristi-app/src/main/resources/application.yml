@@ -21,7 +21,7 @@ spring:
     # keys. `shared` carries values every consolidated service agrees on;
     # per-subdomain profiles (cases / locksvc / ...) overlay subdomain
     # config; `local` overrides DB/host/etc. for local dev.
-    active: shared,cases,locksvc,order,local
+    active: shared,cases,locksvc,order,bank,local
 
   jpa:
     show-sql: true

@@ -1,0 +1,6 @@
+# Classes lifted from internal/web/models/ to dristi-common/contract/<subdomain>/
+org.pucar.dristi.common.contract.bank.BankDetails
+org.pucar.dristi.common.contract.bank.BankDetailsSearchCriteria
+org.pucar.dristi.common.contract.bank.BankDetailsSearchRequest
+org.pucar.dristi.common.contract.bank.BankDetailsSearchResponse
+org.pucar.dristi.common.contract.bank.package-info

@@ -5,20 +5,54 @@
 # Includes service-unique keys + this service's value for any key that conflicts across services.
 # Activate via spring.profiles.active=...,locksvc,...
 
+app:
+  timezone: Asia/Kolkata
 otel:
   instrumentation:
     http:
       server:
         ignore-urls: /lock-svc/health,/lock-svc/prometheus
-egov:
-  mdms:
-    host: https://dev.digit.org
-  user:
-    host: https://dev.digit.org
 kafka:
+  consumer:
+    config:
+      auto_commit: true
+      auto_commit_interval: 100
+      session_timeout: 15000
+      auto_offset_reset: earliest
+  producer:
+    config:
+      retries_config: 0
+      batch_size_config: 16384
+      linger_ms_config: 1
+      buffer_memory_config: 33554432
   topics:
     receipt:
       create: dss-collection
+egov:
+  individual:
+    host: http://localhost:8081/
+    search:
+      path: individual/v1/_search
+  mdms:
+    host: https://dev.digit.org
+    search:
+      endpoint: /egov-mdms-service/v1/_search
+  user:
+    host: https://dev.digit.org
+    context:
+      path: /user/users
+    create:
+      path: /_createnovalidate
+    search:
+      path: /user/_search
+    update:
+      path: /_updatenovalidate
+logging:
+  loki:
+    enabled: false
+    url: http://localhost:3100/loki/api/v1/push
+  level:
+    root: INFO
 pucar:
   lock:
     duration: 1200000
