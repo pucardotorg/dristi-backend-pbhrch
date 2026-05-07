@@ -5,7 +5,7 @@ import org.egov.common.contract.models.AuditDetails;
 import org.egov.tracer.model.CustomException;
 import org.pucar.dristi.caselifecycle.hearing.internal.config.Configuration;
 import org.pucar.dristi.common.util.IdgenUtil;
-import org.pucar.dristi.caselifecycle.hearing.internal.util.HearingWorkflowHelper;
+import org.pucar.dristi.common.util.WorkflowUtil;
 import org.pucar.dristi.caselifecycle.hearing.internal.web.models.Attendee;
 import org.pucar.dristi.caselifecycle.hearing.internal.web.models.Hearing;
 import org.pucar.dristi.caselifecycle.hearing.internal.web.models.HearingRequest;
@@ -25,13 +25,13 @@ public class HearingRegistrationEnrichment {
 
     private IdgenUtil idgenUtil;
     private Configuration configuration;
-    private final HearingWorkflowHelper hearingWorkflowHelper;
+    private final WorkflowUtil workflowUtil;
 
     @Autowired
-    public HearingRegistrationEnrichment(IdgenUtil idgenUtil, Configuration configuration, HearingWorkflowHelper hearingWorkflowHelper) {
+    public HearingRegistrationEnrichment(IdgenUtil idgenUtil, Configuration configuration, WorkflowUtil workflowUtil) {
         this.idgenUtil = idgenUtil;
         this.configuration = configuration;
-        this.hearingWorkflowHelper = hearingWorkflowHelper;
+        this.workflowUtil = workflowUtil;
     }
 
     /**
@@ -133,7 +133,7 @@ public class HearingRegistrationEnrichment {
         }
         try {
             // if hearing status moves to complete then, we need to calculate the duration
-            List<ProcessInstance> processInstance = hearingWorkflowHelper.getProcessInstance(hearingRequest.getRequestInfo(), hearingRequest.getHearing().getTenantId(), hearingRequest.getHearing().getHearingId());
+            List<ProcessInstance> processInstance = workflowUtil.getProcessInstance(hearingRequest.getRequestInfo(), hearingRequest.getHearing().getTenantId(), hearingRequest.getHearing().getHearingId(), ProcessInstance.class);
 
             log.info("ProcessInstance :: {}", processInstance.size());
             Long hearingDuration = 0L;

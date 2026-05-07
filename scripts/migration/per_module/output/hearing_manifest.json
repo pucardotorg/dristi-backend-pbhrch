@@ -14,8 +14,11 @@
     "WorkflowUtil",
     "IndividualUtil",
     "ResponseInfoFactory",
+    "DateUtil",
     "KafkaProducerService",
-    "Document"
+    "Document",
+    "WorkflowObject",
+    "ProcessInstanceObject"
   ],
   "rest_call_files": [
     "dristi-services\\hearing\\src\\main\\java\\org\\pucar\\dristi\\service\\SmsNotificationService.java",

@@ -68,6 +68,9 @@ public class CommonConfiguration {
     @Value("${egov.workflow.businessservice.search.path:#{null}}")
     private String wfBusinessServiceSearchPath;
 
+    @Value("${egov.workflow.processinstance.search.path:#{null}}")
+    private String wfProcessInstanceSearchPath;
+
     @Value("${egov.individual.host:#{null}}")
     private String individualHost;
 
@@ -93,6 +96,7 @@ public class CommonConfiguration {
     public String getWfHost() { return wfHost; }
     public String getWfTransitionPath() { return wfTransitionPath; }
     public String getWfBusinessServiceSearchPath() { return wfBusinessServiceSearchPath; }
+    public String getWfProcessInstanceSearchPath() { return wfProcessInstanceSearchPath; }
     public String getIndividualHost() { return individualHost; }
     public String getIndividualSearchEndpoint() { return individualSearchEndpoint; }
     public String getZoneId() { return zoneId; }

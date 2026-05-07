@@ -9,7 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.egov.common.contract.models.AuditDetails;
 import org.egov.common.contract.models.Document;
-import org.pucar.dristi.caselifecycle.hearing.internal.web.models.WorkflowObject;
+import org.pucar.dristi.common.models.workflow.WorkflowObject;
 
 import java.util.ArrayList;
 import java.util.List;

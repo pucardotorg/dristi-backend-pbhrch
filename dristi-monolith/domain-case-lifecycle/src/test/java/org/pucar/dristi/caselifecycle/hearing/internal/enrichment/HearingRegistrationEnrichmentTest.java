@@ -12,7 +12,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.pucar.dristi.caselifecycle.hearing.internal.config.Configuration;
 import org.pucar.dristi.common.util.IdgenUtil;
-import org.pucar.dristi.caselifecycle.hearing.internal.util.HearingWorkflowHelper;
+import org.pucar.dristi.common.util.WorkflowUtil;
 import org.pucar.dristi.caselifecycle.hearing.internal.web.models.*;
 
 import java.util.Arrays;
@@ -25,6 +25,7 @@ import static org.mockito.Mockito.*;
 import static org.pucar.dristi.caselifecycle.hearing.internal.config.ServiceConstants.CLOSE;
 
 import org.pucar.dristi.common.models.Document;
+import org.pucar.dristi.common.models.workflow.WorkflowObject;
 class HearingRegistrationEnrichmentTest {
 
     @InjectMocks
@@ -37,7 +38,7 @@ class HearingRegistrationEnrichmentTest {
     private Configuration configuration;
 
     @Mock
-    private HearingWorkflowHelper hearingWorkflowHelper;
+    private WorkflowUtil workflowUtil;
 
     @BeforeEach
     void setUp() {
@@ -218,8 +219,7 @@ class HearingRegistrationEnrichmentTest {
         workflow.setAction(CLOSE);
         mockHearingRequest.getHearing().setWorkflow(workflow);
 
-        when(hearingWorkflowHelper.getProcessInstance(any(), any(), any()))
-                .thenReturn(mockInstances);
+        doReturn(mockInstances).when(workflowUtil).getProcessInstance(any(), any(), any(), any());
 
         hearingRegistrationEnrichment.enrichHearingApplicationUponUpdate(mockHearingRequest);
 
@@ -283,8 +283,7 @@ class HearingRegistrationEnrichmentTest {
         workflow.setAction(CLOSE);
         mockHearingRequest.getHearing().setWorkflow(workflow);
 
-        when(hearingWorkflowHelper.getProcessInstance(any(), any(), any()))
-                .thenReturn(mockInstances);
+        doReturn(mockInstances).when(workflowUtil).getProcessInstance(any(), any(), any(), any());
 
         hearingRegistrationEnrichment.enrichHearingApplicationUponUpdate(mockHearingRequest);
 
