@@ -12,9 +12,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.models.AuditDetails;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.model.CustomException;
+import org.pucar.dristi.caselifecycle.cases.CaseApi;
+import org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseCriteria;
+import org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseListResponse;
+import org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseSearchRequest;
+import org.pucar.dristi.caselifecycle.cases.internal.web.models.CourtCase;
 import org.pucar.dristi.caselifecycle.order.internal.config.Configuration;
 import org.pucar.dristi.caselifecycle.order.internal.config.MdmsDataConfig;
-import org.pucar.dristi.caselifecycle.order.internal.util.CaseUtil;
 import org.pucar.dristi.common.util.IdgenUtil;
 import org.pucar.dristi.caselifecycle.order.internal.util.LocalizationUtil;
 import org.pucar.dristi.caselifecycle.order.internal.web.models.*;
@@ -41,15 +45,15 @@ public class OrderRegistrationEnrichment {
     private IdgenUtil idgenUtil;
     private Configuration configuration;
     private ObjectMapper objectMapper;
-    private CaseUtil caseUtil;
+    private CaseApi caseApi;
     private final MdmsDataConfig mdmsDataConfig;
     private final LocalizationUtil localizationUtil;
 
-    public OrderRegistrationEnrichment(IdgenUtil idgenUtil, Configuration configuration, ObjectMapper objectMapper, CaseUtil caseUtil, MdmsDataConfig mdmsDataConfig, LocalizationUtil localizationUtil) {
+    public OrderRegistrationEnrichment(IdgenUtil idgenUtil, Configuration configuration, ObjectMapper objectMapper, CaseApi caseApi, MdmsDataConfig mdmsDataConfig, LocalizationUtil localizationUtil) {
         this.idgenUtil = idgenUtil;
         this.configuration = configuration;
         this.objectMapper = objectMapper;
-        this.caseUtil = caseUtil;
+        this.caseApi = caseApi;
         this.mdmsDataConfig = mdmsDataConfig;
         this.localizationUtil = localizationUtil;
     }
@@ -96,13 +100,19 @@ public class OrderRegistrationEnrichment {
                 orderRequest.getRequestInfo(), orderRequest.getOrder()
         );
 
-        JsonNode caseDetails = caseUtil.searchCaseDetails(caseSearchRequest);
-
-        if (caseDetails == null || caseDetails.isEmpty()) {
+        CourtCase courtCase = firstCase(caseApi.search(caseSearchRequest));
+        if (courtCase == null) {
             throw new CustomException("CASE_NOT_FOUND", "Case not found in case details");
         }
+        return courtCase.getCourtId();
+    }
 
-        return caseDetails.get("courtId").textValue();
+    private CourtCase firstCase(CaseListResponse response) {
+        if (response == null || response.getCriteria() == null || response.getCriteria().isEmpty()) {
+            return null;
+        }
+        List<CourtCase> cases = response.getCriteria().get(0).getResponseList();
+        return (cases == null || cases.isEmpty()) ? null : cases.get(0);
     }
 
 

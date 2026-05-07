@@ -9,16 +9,19 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.pucar.dristi.caselifecycle.cases.CaseApi;
+import org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseExists;
+import org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseExistsResponse;
 import org.pucar.dristi.caselifecycle.order.internal.config.Configuration;
 import org.pucar.dristi.caselifecycle.order.internal.config.MdmsDataConfig;
 import org.pucar.dristi.caselifecycle.order.internal.repository.OrderRepository;
-import org.pucar.dristi.caselifecycle.order.internal.util.CaseUtil;
 import org.pucar.dristi.common.util.FileStoreUtil;
 import org.pucar.dristi.common.util.MdmsUtil;
 import org.pucar.dristi.caselifecycle.order.internal.web.models.*;
 import org.pucar.dristi.common.contract.order.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -35,7 +38,7 @@ class OrderRegistrationValidatorTest {
     private OrderRepository repository;
 
     @Mock
-    private CaseUtil caseUtil;
+    private CaseApi caseApi;
 
     @Mock
     private FileStoreUtil fileStoreUtil;
@@ -57,7 +60,7 @@ class OrderRegistrationValidatorTest {
 
     @BeforeEach
     void setUp() {
-        orderRegistrationValidator = new OrderRegistrationValidator(repository, caseUtil, fileStoreUtil,configuration,mdmsUtil,objectMapper,mdmsDataConfig);
+        orderRegistrationValidator = new OrderRegistrationValidator(repository, caseApi, fileStoreUtil,configuration,mdmsUtil,objectMapper,mdmsDataConfig);
     }
 
     @Test
@@ -74,15 +77,18 @@ class OrderRegistrationValidatorTest {
         orderRequest.setRequestInfo(new RequestInfo());
         orderRequest.setOrder(order);
 
-        // Mock behavior
-        when(caseUtil.fetchCaseDetails(any(), eq(order.getCnrNumber()), eq(order.getFilingNumber())))
-                .thenReturn(true);
+        // Mock behavior — caseApi.exists returns a response whose first criterion has exists=true
+        CaseExists matched = new CaseExists();
+        matched.setExists(true);
+        CaseExistsResponse mockResp = CaseExistsResponse.builder()
+                .criteria(Collections.singletonList(matched)).build();
+        when(caseApi.exists(any())).thenReturn(mockResp);
 
         // Execute method
         assertDoesNotThrow(() -> orderRegistrationValidator.validateOrderRegistration(orderRequest));
 
         // Verify
-        verify(caseUtil).fetchCaseDetails(any(), eq(order.getCnrNumber()), eq(order.getFilingNumber()));
+        verify(caseApi).exists(any());
     }
 
     @Test
@@ -117,9 +123,12 @@ class OrderRegistrationValidatorTest {
         orderRequest.setRequestInfo(new RequestInfo());
         orderRequest.setOrder(order);
 
-        // Mock behavior
-        when(caseUtil.fetchCaseDetails(any(), eq(order.getCnrNumber()), eq(order.getFilingNumber())))
-                .thenReturn(false);
+        // Mock behavior — caseApi.exists returns a response whose first criterion has exists=false
+        CaseExists notMatched = new CaseExists();
+        notMatched.setExists(false);
+        CaseExistsResponse mockResp = CaseExistsResponse.builder()
+                .criteria(Collections.singletonList(notMatched)).build();
+        when(caseApi.exists(any())).thenReturn(mockResp);
 
         // Execute and verify exception
         CustomException exception = assertThrows(CustomException.class, () ->
@@ -144,8 +153,8 @@ class OrderRegistrationValidatorTest {
         // Execute method - should not call fetchCaseDetails for Administrative orders
         assertDoesNotThrow(() -> orderRegistrationValidator.validateOrderRegistration(orderRequest));
 
-        // Verify that fetchCaseDetails was not called
-        verify(caseUtil, never()).fetchCaseDetails(any(), any(), any());
+        // Verify that caseApi.exists was not called for Administrative orders
+        verify(caseApi, never()).exists(any());
     }
 
     @Test

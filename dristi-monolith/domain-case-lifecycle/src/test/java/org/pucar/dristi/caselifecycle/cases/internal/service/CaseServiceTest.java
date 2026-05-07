@@ -193,8 +193,7 @@ public class CaseServiceTest {
         courtCase = new CourtCase();
         objectMapper = new ObjectMapper();
         enrichmentService = new EnrichmentService(new ArrayList<>());
-        OrderUtil orderUtil = new OrderUtil(null, null, null);
-    caseService = new CaseService(validator,enrichmentUtil,caseRepository,workflowService,config,producer,taskUtil,etreasuryUtil,encryptionDecryptionUtil, hearingUtil,userService,paymentCalculaterUtil,objectMapper,cacheService,enrichmentService, notificationService, individualService, advocateUtil, evidenceUtil, evidenceValidator,caseUtil,fileStoreUtil, orderUtil, dateUtil,inboxUtil, advocateOfficeCaseMemberRepository, advocateDetailBlockBuilder);
+    caseService = new CaseService(validator,enrichmentUtil,caseRepository,workflowService,config,producer,taskUtil,etreasuryUtil,encryptionDecryptionUtil, hearingUtil,userService,paymentCalculaterUtil,objectMapper,cacheService,enrichmentService, notificationService, individualService, advocateUtil, evidenceUtil, evidenceValidator,caseUtil,fileStoreUtil, dateUtil,inboxUtil, advocateOfficeCaseMemberRepository, advocateDetailBlockBuilder);
 
         requestInfo = RequestInfo.builder()
                 .userInfo(User.builder().uuid("ba8767a6-7cb1-416b-803e-19cf9dca06bc").tenantId(TENANT_ID).build())

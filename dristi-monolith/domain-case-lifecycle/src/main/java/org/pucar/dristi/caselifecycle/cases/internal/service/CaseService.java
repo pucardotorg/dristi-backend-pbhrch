@@ -98,7 +98,6 @@ public class CaseService {
     private final CaseUtil caseUtil;
 
     private final FileStoreUtil fileStoreUtil;
-    private final OrderUtil orderUtil;
     private final DateUtil dateUtil;
     private final InboxUtil inboxUtil;
     private final AdvocateOfficeCaseMemberRepository advocateOfficeCaseMemberRepository;
@@ -117,7 +116,7 @@ public class CaseService {
                        HearingUtil analyticsUtil,
                        UserService userService,
                        PaymentCalculaterUtil paymentCalculaterUtil,
-                       ObjectMapper objectMapper, CacheService cacheService, EnrichmentService enrichmentService, SmsNotificationService notificationService, IndividualService individualService, AdvocateUtil advocateUtil, EvidenceUtil evidenceUtil, EvidenceValidator evidenceValidator, CaseUtil caseUtil, FileStoreUtil fileStoreUtil, OrderUtil orderUtil, DateUtil dateUtil, InboxUtil inboxUtil, AdvocateOfficeCaseMemberRepository advocateOfficeCaseMemberRepository, org.pucar.dristi.caselifecycle.cases.internal.enrichment.AdvocateDetailBlockBuilder advocateDetailBlockBuilder) {
+                       ObjectMapper objectMapper, CacheService cacheService, EnrichmentService enrichmentService, SmsNotificationService notificationService, IndividualService individualService, AdvocateUtil advocateUtil, EvidenceUtil evidenceUtil, EvidenceValidator evidenceValidator, CaseUtil caseUtil, FileStoreUtil fileStoreUtil, DateUtil dateUtil, InboxUtil inboxUtil, AdvocateOfficeCaseMemberRepository advocateOfficeCaseMemberRepository, org.pucar.dristi.caselifecycle.cases.internal.enrichment.AdvocateDetailBlockBuilder advocateDetailBlockBuilder) {
         this.validator = validator;
         this.enrichmentUtil = enrichmentUtil;
         this.caseRepository = caseRepository;
@@ -140,7 +139,6 @@ public class CaseService {
         this.evidenceValidator = evidenceValidator;
         this.caseUtil = caseUtil;
         this.fileStoreUtil = fileStoreUtil;
-        this.orderUtil = orderUtil;
         this.dateUtil = dateUtil;
         this.inboxUtil = inboxUtil;
         this.advocateOfficeCaseMemberRepository = advocateOfficeCaseMemberRepository;

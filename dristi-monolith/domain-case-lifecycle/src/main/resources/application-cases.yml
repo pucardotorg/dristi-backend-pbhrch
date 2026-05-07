@@ -338,10 +338,6 @@ egov:
       case:
         kafka:
           topic: poa-join-case
-  order:
-    host: http://localhost:8086
-    search:
-      endpoint: /order/v1/search
   inbox:
     host: http://localhost:8080
     search:
@@ -432,11 +428,6 @@ indexer:
     case:
       kafka:
         topic: join-case-indexer
-pucar:
-  lock:
-    host: http://localhost:8080/
-    search:
-      endpoint: /lock-svc/v1/_get
 etreasury:
   payment:
     receipt:

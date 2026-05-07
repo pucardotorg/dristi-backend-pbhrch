@@ -8,10 +8,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.model.CustomException;
 import org.pucar.dristi.caselifecycle.order.internal.config.Configuration;
+import org.pucar.dristi.caselifecycle.cases.CaseApi;
+import org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseCriteria;
+import org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseListResponse;
+import org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseSearchRequest;
+import org.pucar.dristi.caselifecycle.cases.internal.web.models.CourtCase;
 import org.pucar.dristi.caselifecycle.order.internal.enrichment.OrderRegistrationEnrichment;
 import org.pucar.dristi.common.kafka.Producer;
 import org.pucar.dristi.caselifecycle.order.internal.repository.OrderRepository;
-import org.pucar.dristi.caselifecycle.order.internal.util.CaseUtil;
 import org.pucar.dristi.common.util.DateUtil;
 import org.pucar.dristi.common.util.FileStoreUtil;
 import org.pucar.dristi.caselifecycle.order.internal.util.HearingUtil;
@@ -52,7 +56,7 @@ public class OrderRegistrationService {
     private Producer producer;
     private ObjectMapper objectMapper;
 
-    private CaseUtil caseUtil;
+    private CaseApi caseApi;
 
     private SmsNotificationService notificationService;
 
@@ -60,7 +64,7 @@ public class OrderRegistrationService {
     private final FileStoreUtil fileStoreUtil;
 
     @Autowired
-    public OrderRegistrationService(OrderRegistrationValidator validator, Producer producer, Configuration config, WorkflowUtil workflowUtil, OrderRepository orderRepository, OrderRegistrationEnrichment enrichmentUtil, ObjectMapper objectMapper, CaseUtil caseUtil, SmsNotificationService notificationService, IndividualService individualService, FileStoreUtil fileStoreUtil, HearingUtil hearingUtil, DateUtil dateUtil) {
+    public OrderRegistrationService(OrderRegistrationValidator validator, Producer producer, Configuration config, WorkflowUtil workflowUtil, OrderRepository orderRepository, OrderRegistrationEnrichment enrichmentUtil, ObjectMapper objectMapper, CaseApi caseApi, SmsNotificationService notificationService, IndividualService individualService, FileStoreUtil fileStoreUtil, HearingUtil hearingUtil, DateUtil dateUtil) {
         this.validator = validator;
         this.producer = producer;
         this.config = config;
@@ -68,7 +72,7 @@ public class OrderRegistrationService {
         this.orderRepository = orderRepository;
         this.enrichmentUtil = enrichmentUtil;
         this.objectMapper = objectMapper;
-        this.caseUtil = caseUtil;
+        this.caseApi = caseApi;
         this.notificationService = notificationService;
         this.individualService = individualService;
         this.fileStoreUtil = fileStoreUtil;
@@ -318,7 +322,8 @@ public class OrderRegistrationService {
 
         try {
             CaseSearchRequest caseSearchRequest = createCaseSearchRequest(orderRequest.getRequestInfo(), orderRequest.getOrder());
-            JsonNode caseDetails = caseUtil.searchCaseDetails(caseSearchRequest);
+            CourtCase firstCase = firstCase(caseApi.search(caseSearchRequest));
+            JsonNode caseDetails = (firstCase == null) ? null : objectMapper.valueToTree(firstCase);
 
             Object additionalDetailsObject = orderRequest.getOrder().getAdditionalDetails();
             String jsonData = objectMapper.writeValueAsString(additionalDetailsObject);
@@ -435,6 +440,14 @@ public class OrderRegistrationService {
         order.setStatus(status);
         if (PUBLISHED.equalsIgnoreCase(status))
             order.setCreatedDate(System.currentTimeMillis());
+    }
+
+    private CourtCase firstCase(CaseListResponse response) {
+        if (response == null || response.getCriteria() == null || response.getCriteria().isEmpty()) {
+            return null;
+        }
+        List<CourtCase> cases = response.getCriteria().get(0).getResponseList();
+        return (cases == null || cases.isEmpty()) ? null : cases.get(0);
     }
 
     private Set<String> callIndividualService(RequestInfo requestInfo, Set<String> ids) {

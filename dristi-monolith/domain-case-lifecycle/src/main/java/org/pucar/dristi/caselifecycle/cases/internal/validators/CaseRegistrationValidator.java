@@ -1,6 +1,5 @@
 package org.pucar.dristi.caselifecycle.cases.internal.validators;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -12,8 +11,8 @@ import org.pucar.dristi.caselifecycle.cases.internal.repository.CaseRepository;
 import org.pucar.dristi.caselifecycle.cases.internal.service.IndividualService;
 import org.pucar.dristi.caselifecycle.cases.internal.util.AdvocateOfficeUtil;
 import org.pucar.dristi.caselifecycle.cases.internal.util.AdvocateUtil;
+import org.pucar.dristi.caselifecycle.locksvc.LockApi;
 import org.pucar.dristi.common.util.FileStoreUtil;
-import org.pucar.dristi.caselifecycle.cases.internal.util.LockUtil;
 import org.pucar.dristi.common.util.MdmsUtil;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.*;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.v2.Emails;
@@ -55,13 +54,13 @@ public class CaseRegistrationValidator {
 
     private ObjectMapper objectMapper;
 
-    private final LockUtil lockUtil;
+    private final LockApi lockApi;
 
     @Autowired
     public CaseRegistrationValidator(IndividualService indService, CaseRepository caseRepo,
                                      MdmsUtil mdmsUtil, FileStoreUtil fileStoreUtil, AdvocateUtil advocateUtil,
                                      AdvocateOfficeUtil advocateOfficeUtil,
-                                     Configuration config, LockUtil lockUtil, ObjectMapper objectMapper) {
+                                     Configuration config, LockApi lockApi, ObjectMapper objectMapper) {
         this.individualService = indService;
         this.repository = caseRepo;
         this.mdmsUtil = mdmsUtil;
@@ -69,7 +68,7 @@ public class CaseRegistrationValidator {
         this.advocateUtil = advocateUtil;
         this.advocateOfficeUtil = advocateOfficeUtil;
         this.config = config;
-        this.lockUtil = lockUtil;
+        this.lockApi = lockApi;
         this.objectMapper = objectMapper;
     }
 
@@ -125,13 +124,7 @@ public class CaseRegistrationValidator {
         String tenantId = caseRequest.getCases().getTenantId();
 
         // check the lock for case if there is lock then throw an exception
-        boolean isLocked;
-        try {
-            isLocked = lockUtil.isLockPresent(caseRequest.getRequestInfo(), uniqueId, tenantId);
-        } catch (JsonProcessingException e) {
-            throw new CustomException("JSON_PROCESSING_EXCEPTION", "Exception Occurred while processing json");
-        }
-        if (isLocked) {
+        if (lockApi.isLockPresent(caseRequest.getRequestInfo(), uniqueId, tenantId)) {
             throw new CustomException("CASE_LOCKED_EXCEPTION", "Case is locked please try after sometime");
         }
 

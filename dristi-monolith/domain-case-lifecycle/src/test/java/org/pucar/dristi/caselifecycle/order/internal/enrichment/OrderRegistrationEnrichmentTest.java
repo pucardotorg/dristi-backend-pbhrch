@@ -12,8 +12,11 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.pucar.dristi.caselifecycle.cases.CaseApi;
+import org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseCriteria;
+import org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseListResponse;
+import org.pucar.dristi.caselifecycle.cases.internal.web.models.CourtCase;
 import org.pucar.dristi.caselifecycle.order.internal.config.Configuration;
-import org.pucar.dristi.caselifecycle.order.internal.util.CaseUtil;
 import org.pucar.dristi.common.util.IdgenUtil;
 import org.pucar.dristi.common.contract.order.Order;
 import org.pucar.dristi.common.contract.order.OrderRequest;
@@ -38,7 +41,7 @@ class OrderRegistrationEnrichmentTest {
     private ObjectMapper objectMapper;
 
     @Mock
-    private CaseUtil caseUtil;
+    private CaseApi caseApi;
 
     @InjectMocks
     private OrderRegistrationEnrichment orderRegistrationEnrichment;
@@ -69,20 +72,20 @@ class OrderRegistrationEnrichmentTest {
         String mockOrderId = "ORDER123";
         String mockOrderNumber = "tenant-123" + "-" + mockOrderId;
 
-        // Prepare mock courtId node
-        JsonNode mockedCaseDetails = mock(JsonNode.class);
-        JsonNode courtIdNode = mock(JsonNode.class);
-
-        when(courtIdNode.isNull()).thenReturn(false);
-        when(courtIdNode.textValue()).thenReturn("COURT123");
+        CourtCase mockCase = new CourtCase();
+        mockCase.setCourtId("COURT123");
+        CaseCriteria criterion = new CaseCriteria();
+        criterion.setResponseList(Collections.singletonList(mockCase));
+        CaseListResponse mockResponse = CaseListResponse.builder()
+                .criteria(Collections.singletonList(criterion))
+                .build();
 
         when(configuration.getOrderConfig()).thenReturn("orderConfigValue");
         when(configuration.getOrderFormat()).thenReturn("orderFormatValue");
         when(idgenUtil.getIdList(any(), eq("tenant123"), any(), any(), eq(1), eq(false)))
                 .thenReturn(Collections.singletonList(mockOrderId));
 
-        when(caseUtil.searchCaseDetails(any())).thenReturn(mockedCaseDetails);
-        when(mockedCaseDetails.get("courtId")).thenReturn(courtIdNode);
+        when(caseApi.search(any())).thenReturn(mockResponse);
 
         // When
         orderRegistrationEnrichment.enrichOrderRegistration(orderRequest);

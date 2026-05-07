@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import lombok.SneakyThrows;
-import org.pucar.dristi.caselifecycle.cases.internal.util.LockUtil;
+import org.pucar.dristi.caselifecycle.locksvc.LockApi;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.*;
 import org.egov.common.contract.models.Workflow;
 import org.egov.common.contract.request.RequestInfo;
@@ -68,7 +68,7 @@ public class CaseRegistrationValidatorTest {
     private FileStoreUtil fileStoreUtil;
 
     @Mock
-    private LockUtil lockUtil;
+    private LockApi lockApi;
 
     @Mock
     private AdvocateUtil advocateUtil;
@@ -377,7 +377,7 @@ public class CaseRegistrationValidatorTest {
         CaseRequest caseRequest = new CaseRequest();
         caseRequest.setCases(courtCase);
         caseRequest.setRequestInfo( RequestInfo.builder().userInfo(User.builder().id(1L).build()).build());
-        when(lockUtil.isLockPresent(any(),anyString(),anyString())).thenReturn(false);
+        when(lockApi.isLockPresent(any(),anyString(),anyString())).thenReturn(false);
 
         assertThrows(CustomException.class, () -> validator.validateUpdateRequest(caseRequest, Collections.singletonList(new CourtCase())));
     }
@@ -665,7 +665,7 @@ public class CaseRegistrationValidatorTest {
         caseRequest.setCases(courtCase);
         caseRequest.setRequestInfo( RequestInfo.builder().userInfo(User.builder().id(1L).build()).build());
 
-        when(lockUtil.isLockPresent(any(),anyString(),anyString())).thenReturn(true);
+        when(lockApi.isLockPresent(any(),anyString(),anyString())).thenReturn(true);
         assertThrows(CustomException.class, () -> validator.validateUpdateRequest(caseRequest, Collections.singletonList(new CourtCase())));
     }
 }

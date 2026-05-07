@@ -203,11 +203,6 @@ egov:
     host: http://localhost:9091/
     search:
       path: hearing/v1/search
-  case:
-    host: http://localhost:9090/
-    path: case/v1/_exists
-    search:
-      path: /case/v1/_search
   kafka:
     order:
       save:
