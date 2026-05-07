@@ -21,7 +21,7 @@ import java.util.Map;
 
 import static org.pucar.dristi.caselifecycle.cases.internal.config.ServiceConstants.FILE_STORE_UTILITY_EXCEPTION;
 
-@Component
+@Component("casesRequestInfoGenerator")
 @Slf4j
 public class RequestInfoGenerator {
 

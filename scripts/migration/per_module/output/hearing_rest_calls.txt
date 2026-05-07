@@ -1,0 +1,5 @@
+dristi-monolith\domain-case-lifecycle\src\main\java\org\pucar\dristi\caselifecycle\hearing\internal\util\AdvocateUtil.java  uses ['AdvocateHost', 'AdvocatePath']
+dristi-monolith\domain-case-lifecycle\src\main\java\org\pucar\dristi\caselifecycle\hearing\internal\util\ApplicationUtil.java  uses ['ApplicationExistsPath', 'ApplicationHost']
+dristi-monolith\domain-case-lifecycle\src\main\java\org\pucar\dristi\caselifecycle\hearing\internal\util\CaseUtil.java  uses ['CaseExistsPath', 'CaseHost', 'CaseSearchPath']
+dristi-monolith\domain-case-lifecycle\src\main\java\org\pucar\dristi\caselifecycle\hearing\internal\util\TaskManagementUtil.java  uses ['TaskManagementServiceHost']
+dristi-monolith\domain-case-lifecycle\src\main\java\org\pucar\dristi\caselifecycle\hearing\internal\util\TaskUtil.java  uses ['TaskServiceHost']

@@ -1,0 +1,34 @@
+{
+  "service": "hearing",
+  "source_dir": "dristi-services\\hearing",
+  "target_module": "case-lifecycle",
+  "target_subdomain": "hearing",
+  "current_package": "org.pucar.dristi",
+  "target_package": "org.pucar.dristi.caselifecycle.hearing",
+  "main_file_count": 166,
+  "test_file_count": 26,
+  "has_spring_boot_main": true,
+  "duplicated_protected_classes": [
+    "MdmsUtil",
+    "IdgenUtil",
+    "WorkflowUtil",
+    "IndividualUtil",
+    "ResponseInfoFactory",
+    "KafkaProducerService",
+    "Document"
+  ],
+  "rest_call_files": [
+    "dristi-services\\hearing\\src\\main\\java\\org\\pucar\\dristi\\service\\SmsNotificationService.java",
+    "dristi-services\\hearing\\src\\main\\java\\org\\pucar\\dristi\\service\\WorkflowService.java",
+    "dristi-services\\hearing\\src\\main\\java\\org\\pucar\\dristi\\util\\IdgenUtil.java",
+    "dristi-services\\hearing\\src\\main\\java\\org\\pucar\\dristi\\util\\InboxUtil.java",
+    "dristi-services\\hearing\\src\\main\\java\\org\\pucar\\dristi\\util\\IndividualUtil.java",
+    "dristi-services\\hearing\\src\\main\\java\\org\\pucar\\dristi\\util\\OrderUtil.java",
+    "dristi-services\\hearing\\src\\main\\java\\org\\pucar\\dristi\\util\\PendingTaskUtil.java",
+    "dristi-services\\hearing\\src\\main\\java\\org\\pucar\\dristi\\util\\SchedulerUtil.java",
+    "dristi-services\\hearing\\src\\main\\java\\org\\pucar\\dristi\\util\\TaskManagementUtil.java",
+    "dristi-services\\hearing\\src\\main\\java\\org\\pucar\\dristi\\util\\TaskUtil.java",
+    "dristi-services\\hearing\\src\\main\\java\\org\\pucar\\dristi\\util\\WorkflowUtil.java"
+  ],
+  "source_context_path": "/hearing"
+}
