@@ -26,6 +26,7 @@ import org.pucar.dristi.caselifecycle.cases.internal.repository.AdvocateOfficeCa
 import org.pucar.dristi.caselifecycle.cases.internal.repository.CaseRepository;
 import org.pucar.dristi.caselifecycle.cases.internal.util.*;
 import org.pucar.dristi.common.util.DateUtil;
+import org.pucar.dristi.common.util.RequestInfoUtil;
 import org.pucar.dristi.caselifecycle.cases.internal.validators.CaseRegistrationValidator;
 import org.pucar.dristi.caselifecycle.cases.internal.validators.EvidenceValidator;
 import org.pucar.dristi.caselifecycle.cases.internal.web.OpenApiCaseSummary;
@@ -2880,8 +2881,7 @@ public class CaseService {
         taskRequest.setTask(task);
         RequestInfo requestInfo = joinCaseRequest.getRequestInfo();
         Role role = Role.builder().code("TASK_CREATOR").name("TASK_CREATOR").tenantId(joinCaseAdvocate.getTenantId()).build();
-        requestInfo.getUserInfo().getRoles().add(role);
-        taskRequest.setRequestInfo(requestInfo);
+        taskRequest.setRequestInfo(RequestInfoUtil.withExtraRole(requestInfo, role));
         return taskUtil.callCreateTask(taskRequest);
     }
 
@@ -2963,8 +2963,7 @@ public class CaseService {
         taskRequest.setTask(task);
         RequestInfo requestInfo = joinCaseRequest.getRequestInfo();
         Role role = Role.builder().code("TASK_CREATOR").name("TASK_CREATOR").tenantId(joinCaseAdvocate.getTenantId()).build();
-        requestInfo.getUserInfo().getRoles().add(role);
-        taskRequest.setRequestInfo(requestInfo);
+        taskRequest.setRequestInfo(RequestInfoUtil.withExtraRole(requestInfo, role));
         return taskUtil.callCreateTask(taskRequest);
     }
 
@@ -3074,8 +3073,7 @@ public class CaseService {
         taskRequest.setTask(task);
         RequestInfo requestInfo = joinCaseRequest.getRequestInfo();
         Role role = Role.builder().code("TASK_CREATOR").name("TASK_CREATOR").tenantId(joinCaseAdvocate.getTenantId()).build();
-        requestInfo.getUserInfo().getRoles().add(role);
-        taskRequest.setRequestInfo(requestInfo);
+        taskRequest.setRequestInfo(RequestInfoUtil.withExtraRole(requestInfo, role));
         return taskUtil.callCreateTask(taskRequest);
     }
 
@@ -3150,8 +3148,7 @@ public class CaseService {
         taskRequest.setTask(task);
         RequestInfo requestInfo = joinCaseRequest.getRequestInfo();
         Role role = Role.builder().code("TASK_CREATOR").name("TASK_CREATOR").tenantId(joinCaseData.getTenantId()).build();
-        requestInfo.getUserInfo().getRoles().add(role);
-        taskRequest.setRequestInfo(requestInfo);
+        taskRequest.setRequestInfo(RequestInfoUtil.withExtraRole(requestInfo, role));
         return taskUtil.callCreateTask(taskRequest);
     }
 
@@ -3388,8 +3385,8 @@ public class CaseService {
         scheduledHearings.forEach(hearing -> {
             Optional.ofNullable(hearing.getAttendees()).orElse(new ArrayList<>()).addAll(newAttendees);
             HearingRequest hearingRequest = new HearingRequest();
-            requestInfo.getUserInfo().getRoles().add(Role.builder().code("HEARING_SCHEDULER").name("HEARING_SCHEDULER").tenantId(joinCaseData.getTenantId()).build());
-            hearingRequest.setRequestInfo(requestInfo);
+            Role hearingSchedulerRole = Role.builder().code("HEARING_SCHEDULER").name("HEARING_SCHEDULER").tenantId(joinCaseData.getTenantId()).build();
+            hearingRequest.setRequestInfo(RequestInfoUtil.withExtraRole(requestInfo, hearingSchedulerRole));
             hearingRequest.setHearing(hearing);
             log.info("updating hearing :: {}", hearing);
             hearingUtil.updateTranscriptAdditionalAttendees(hearingRequest);
@@ -3652,8 +3649,7 @@ public class CaseService {
             taskRequest.setTask(task);
             RequestInfo requestInfo = joinCaseRequest.getRequestInfo();
             Role role = Role.builder().code("TASK_CREATOR").name("TASK_CREATOR").tenantId(joinCaseAdvocate.getTenantId()).build();
-            requestInfo.getUserInfo().getRoles().add(role);
-            taskRequest.setRequestInfo(requestInfo);
+            taskRequest.setRequestInfo(RequestInfoUtil.withExtraRole(requestInfo, role));
             return taskUtil.callCreateTask(taskRequest);
 
         } catch (Exception e) {
@@ -5876,8 +5872,8 @@ public class CaseService {
             newAttendee.setType("Advocate");
             Optional.ofNullable(hearing.getAttendees()).orElse(new ArrayList<>()).add(newAttendee);
             HearingRequest hearingRequest = new HearingRequest();
-            requestInfo.getUserInfo().getRoles().add(Role.builder().code("HEARING_SCHEDULER").name("HEARING_SCHEDULER").tenantId(courtCase.getTenantId()).build());
-            hearingRequest.setRequestInfo(requestInfo);
+            Role hearingSchedulerRole = Role.builder().code("HEARING_SCHEDULER").name("HEARING_SCHEDULER").tenantId(courtCase.getTenantId()).build();
+            hearingRequest.setRequestInfo(RequestInfoUtil.withExtraRole(requestInfo, hearingSchedulerRole));
             hearingRequest.setHearing(hearing);
 
             // remove the old advocate from the hearing if he is no more part of the case

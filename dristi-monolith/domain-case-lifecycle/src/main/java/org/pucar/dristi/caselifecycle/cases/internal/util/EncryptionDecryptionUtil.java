@@ -13,6 +13,7 @@ import org.pucar.dristi.caselifecycle.cases.internal.web.models.Advocate;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.AdvocateMapping;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.CourtCase;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.Party;
+import org.pucar.dristi.common.util.RequestInfoUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -88,7 +89,7 @@ public class EncryptionDecryptionUtil {
                 objectToDecrypt = Collections.singletonList(objectToDecrypt);
             }
             final User encrichedUserInfo = getEncrichedandCopiedUserInfo(requestInfo.getUserInfo());
-            requestInfo.setUserInfo(encrichedUserInfo);
+            requestInfo = RequestInfoUtil.withUser(requestInfo, encrichedUserInfo);
 
             Map<String, String> keyPurposeMap = getKeyToDecrypt(objectToDecrypt, requestInfo);
             String purpose = keyPurposeMap.get(ServiceConstants.PURPOSE);
@@ -216,7 +217,7 @@ public class EncryptionDecryptionUtil {
         }
 
         if (newRoleList.stream().filter(role -> (role.getCode() != null) && (userInfo.getType() != null) && role.getCode().equalsIgnoreCase(userInfo.getType())).count() == 0) {
-            Role roleFromtype = Role.builder().code(userInfo.getType()).name(userInfo.getType()).build();
+            Role roleFromtype = Role.builder().code(userInfo.getType()).name(userInfo.getType()).tenantId(userInfo.getTenantId()).build();
             newRoleList.add(roleFromtype);
         }
 
