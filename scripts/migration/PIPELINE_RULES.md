@@ -1363,6 +1363,56 @@ class needed. If the helpers had been live, they'd have moved to
 
 ---
 
+## Rule 39 — Cross-`*Api` Method Gap Is Tier 4
+
+**New rule, learned from the parallel-migration coordination plan.**
+
+Rule 32 says service `T`'s migration PR rewrites every `done` caller's
+REST call to `T` as a direct `<T>Api` injection. That assumes `<T>Api`
+exposes the needed method. When it doesn't — because `T` was migrated
+earlier under speculation that didn't anticipate this caller's needs,
+or because no other subdomain previously called `T` and so no `*Api`
+was created — Claude has no automatic recourse. Editing `<T>Api` from
+caller `B`'s branch is a cross-subdomain change that breaks
+bisect-ability and violates the migration PR's scope.
+
+**Rule.** When Claude in caller `B`'s session hits a REST call to
+`done` service `T` whose required method is missing from `<T>Api` (or
+where `<T>Api` doesn't exist at all), **stop and surface to the dev**.
+Lay out exactly two options:
+
+1. **Coordinate cross-PR exposure.** The dev reaches out to whoever
+   owns `T` — either asks them to add the method in their open PR, or
+   files a small `feat(<t>): expose <method> on <T>Api` PR scoped only
+   to the addition.
+2. **Leave as REST temporarily.** Caller `B` keeps the REST call;
+   the deferred conversion is documented in `B`'s `_rest_calls.txt`
+   audit trail. Dev confirms this in chat before the PR opens.
+
+Wait for explicit direction. Do **not**:
+
+- Edit `<T>Api.java` or `<T>ApiImpl.java` from `B`'s branch silently.
+  `ModuleStructureTest` will catch it at PR time, but more importantly
+  it breaks Rule 28's commit boundaries.
+- Infer the method shape — only the dev knows whether the call would
+  be a Rule 35 cross-module write that needs Tier 3 design.
+- Drop the conversion silently and produce a green build that hides
+  the gap.
+
+**Rationale.** Three devs working in parallel will inevitably surface
+"I need `HearingApi.searchByCase(...)` that doesn't exist" patterns.
+Treating these as Tier 4 keeps every cross-`*Api` change a deliberate
+decision rather than a side-effect of an unrelated migration. Domain
+context (does this method exist on the internal service under a
+different name? is there a closely-equivalent method? is this the
+right boundary?) lives with the dev, not with Claude.
+
+**Enforcement.** None automated; reviewer convention. The Tier 4
+escalation is wired into `/migrate-service` Step 3.2 / 3.3(b) hard
+stops.
+
+---
+
 ## Useful checks at a glance
 
 | What                                  | Where                                             |
