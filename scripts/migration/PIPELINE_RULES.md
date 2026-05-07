@@ -1111,28 +1111,40 @@ Direct calls bypass that machinery — if `RequestInfo` is implicit, the
 caller's identity, audit metadata, and correlation IDs disappear at
 the boundary.
 
-**Rule.** Every `*Api` method takes `org.egov.common.contract.request.RequestInfo`
-as an explicit parameter. The caller threads its inbound `RequestInfo`
-through:
+**Rule.** Every `*Api` method threads `org.egov.common.contract.request.RequestInfo`
+*explicitly* — either as a direct parameter, or as a field on the
+request-envelope contract DTO that carries the call. The caller threads
+its inbound `RequestInfo` through one of these two shapes:
 
 ```java
+// Shape A — direct parameter (preferred when the logical signature is small)
 public interface LockApi {
     boolean isLockPresent(RequestInfo requestInfo, String uniqueId, String tenantId);
 }
+
+// Shape B — inside a request-envelope DTO (preferred when other call
+// arguments already cluster naturally into a request object, e.g. for
+// search/exists endpoints that mirror the legacy HTTP wire shape)
+public interface CaseApi {
+    CaseExistsResponse exists(CaseExistsRequest request);     // request.getRequestInfo()
+    CaseListResponse   search(CaseSearchRequest request);     // request.getRequestInfo()
+}
 ```
 
-Even when the method's logical signature is just `(uniqueId, tenantId)`,
-RequestInfo stays. Rationale:
+Either shape is acceptable; what is forbidden is *implicit* RequestInfo
+(thread-locals, ambient `SecurityContext`, or reaching into the Spring
+request scope from inside a direct call). Rationale:
 
 - Audit trail and authorisation checks downstream need the caller
   identity. Implicit context loses this.
 - Future `@Async` adoption breaks thread-local context propagation
-  silently. Explicit param survives.
+  silently. Explicit threading survives.
 - Testability — tests construct `RequestInfo` directly rather than
   setting up Spring context.
 
-**Enforcement.** Code review. The pattern is documented in the three
-existing `*Api` interfaces; new APIs should mirror.
+**Enforcement.** Code review. Reviewers must confirm one of the two
+shapes is followed on every new `*Api` method. The pattern is documented
+in the existing `*Api` interfaces; new APIs should mirror.
 
 ---
 

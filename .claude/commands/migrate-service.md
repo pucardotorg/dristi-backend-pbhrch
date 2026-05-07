@@ -57,7 +57,7 @@ ls dristi-services/<service> 2>/dev/null \
 git fetch origin
 git merge-base --is-ancestor origin/monolith/main HEAD \
   && echo "branch is up to date" \
-  || echo "BEHIND monolith/main — rebase first"
+  || echo "BEHIND monolith/main — merge it in first"
 ```
 
 Pre-flight rules:
@@ -74,7 +74,7 @@ Pre-flight rules:
   consolidation with cumulative `--service` list per Step 2.3, and
   re-run Step 1 before proceeding."* Wait for confirmation. See
   [PARALLEL_MIGRATION_PLAN.md §5](../../scripts/migration/PARALLEL_MIGRATION_PLAN.md)
-  for the manual rebase recipe.
+  for the manual merge recipe.
 
 ---
 
@@ -362,7 +362,7 @@ by REST→direct conversion. The pattern was dormant under REST
 (serialization severed the reference) but leaks across direct calls.
 
 ```bash
-grep -rnE "(reqInfo|requestInfo|info)\.setUserInfo\(|requestInfo\.getUserInfo\(\)\.(set[A-Z]|getRoles\(\)\.(add|remove)\()" \
+grep -rnE "(reqInfo|requestInfo|info)\.(setUserInfo\(|getUserInfo\(\)\.(set[A-Z]|getRoles\(\)\.(add|remove)\())" \
   --include="*.java" \
   dristi-monolith/domain-<module>/src/main/java/
 ```

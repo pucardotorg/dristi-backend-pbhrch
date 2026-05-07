@@ -12,7 +12,7 @@
  * {@code @NamedInterface("contract")} marker on that package's
  * {@code package-info.java}. Eventual relocation to
  * {@code dristi-common/contract/cases/} is tracked in
- * {@link scripts/migration/FOLLOWUP_RETROLIFT_PATH_A.md}.
+ * {@code scripts/migration/FOLLOWUP_RETROLIFT_PATH_A.md}.
  */
 @org.springframework.modulith.ApplicationModule(displayName = "Case")
 package org.pucar.dristi.caselifecycle.cases;

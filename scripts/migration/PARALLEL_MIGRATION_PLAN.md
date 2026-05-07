@@ -36,7 +36,7 @@ Per-dev loop:
 3. Run `/migrate-service <service> <module> <subdomain>`.
 4. Push, open PR. Service moves to In-review slot.
 5. Immediately claim next. Repeat.
-6. When coordinator pings *"main moved, your branch needs rebase"* → run §5 manual rebase recipe, re-verify, push.
+6. When coordinator pings *"main moved, your branch needs rebase"* → run §5 manual merge recipe, re-verify, push.
 
 No dev ever has more than one **active** branch.
 
@@ -122,7 +122,7 @@ Key things the session will surface:
 
 ---
 
-## 5. Manual rebase recipe
+## 5. Manual merge recipe
 
 When the coordinator pings *"main moved":*
 
