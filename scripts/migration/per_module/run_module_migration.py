@@ -12,13 +12,20 @@ Phases:
   1 Analyze                 — emit migration_manifest.json (exists, file counts, etc.)
   2 Scaffold                — create target subdomain dirs
   3 Auto-rename             — copy main/java -> target/internal with package rewrite
+ 35 Contract-lift           — move contract DTOs (suffix-matched + transitive closure)
+                              from <subdomain>/internal/web/models/ to
+                              dristi-common/contract/<subdomain>/; rewrite imports.
+                              `35` is just a unique ID — argparse parses int, so we
+                              can't say `3.5`; mnemonically "Phase 3-and-a-bit".
+                              Runs between Phase 3 and Phase 6 in main().
   4 Deduplicate             — delete local copies of protected classes; rewrite imports
   5 Detect REST calls       — flag intra-DRISTI ServiceRequestRepository / RestTemplate
                               usage for manual conversion later
   6 Test migration          — copy src/test/java -> target/test with package rewrite
   7 Validate                — gate checks: no banned packages, no protected class
                               duplicates, no service application.yml, mvn -pl validate,
-                              SQL parity, no Flyway version collisions
+                              SQL parity, no Flyway version collisions, no contract-
+                              suffixed classes left in internal/web/models/
   8 Wire module deps        — add dristi-common dep to the target domain module pom.xml
                               if not already present
   9 DB migrations           — copy src/main/resources/db/migration/**/*.sql -> target
@@ -72,6 +79,7 @@ PROTECTED_CLASSES = {
     "UrlShortenerUtil": "util",
     "IndividualUtil": "util",
     "ResponseInfoFactory": "util",
+    "DateUtil": "util",
     "Producer": "kafka",
     "KafkaProducerService": "kafka",
     "ServiceRequestRepository": "repository",
@@ -79,6 +87,8 @@ PROTECTED_CLASSES = {
     "ResponseInfo": "models",
     "Document": "models",
     "Individual": "models.individual",
+    "WorkflowObject": "models.workflow",
+    "ProcessInstanceObject": "models.workflow",
 }
 
 # "Banned" = legacy DRISTI service-internal package roots that should have
@@ -112,6 +122,16 @@ BANNED_IMPORT_PREFIXES = (
     "org.egov.transformer.",
     "org.drishti.esign.",
     "com.pucar.drishti.",
+)
+
+# Contract DTOs — class-name suffixes that mark a model as part of the
+# service's public API surface (request/response envelopes that callers
+# serialize/deserialize). Phase 35 lifts these (plus their transitive field
+# types within the service's web.models tree) into
+# `dristi-common/contract/<subdomain>/`. See Rule 24 in PIPELINE_RULES.md.
+CONTRACT_SUFFIXES = (
+    "Request", "Response", "Criteria", "SearchCriteria",
+    "Wrapper", "Payload",
 )
 
 PACKAGE_RE = re.compile(r"^\s*package\s+([\w.]+)\s*;", re.MULTILINE)
@@ -171,6 +191,24 @@ def detect_current_package(service_dir: Path) -> str:
     if not pkgs:
         raise SystemExit("ERROR: could not detect current package root")
     return pkgs.most_common(1)[0][0]
+
+
+def _prune_empty_dirs(root: Path) -> int:
+    """Bottom-up rmdir of empty directories under `root`. The root itself is
+    NOT removed. No-op if root is missing. Returns the count removed.
+
+    Used by Phase 4 (after protected-class deletes) and Phase 35 (after
+    contract DTO lifts) to keep the migrated tree free of phantom empty
+    packages that confuse IDEs and `tree`/`find` output. Git ignores empty
+    dirs, but the developer's working copy retains them until pruned."""
+    if not root.is_dir():
+        return 0
+    removed = 0
+    for d in sorted(root.rglob("*"), key=lambda p: -len(p.parts)):
+        if d.is_dir() and not any(d.iterdir()):
+            d.rmdir()
+            removed += 1
+    return removed
 
 
 def java_files(root: Path) -> list[Path]:
@@ -538,6 +576,268 @@ def _resolve_cross_subdomain_bean_collisions(target_module: str) -> int:
     return fixed
 
 
+def _strip_java_noise(text: str) -> str:
+    """Strip imports, comments, and string literals so a regex sweep over
+    type references doesn't false-match on import lines or javadoc."""
+    out = re.sub(r"^\s*import\s+[^;]+;", "", text, flags=re.MULTILINE)
+    out = re.sub(r"//.*$", "", out, flags=re.MULTILINE)
+    out = re.sub(r"/\*.*?\*/", "", out, flags=re.DOTALL)
+    out = re.sub(r'"(?:[^"\\]|\\.)*"', '""', out)
+    return out
+
+
+def _local_type_refs(text: str, local_class_names: set[str]) -> set[str]:
+    """Return the subset of `local_class_names` that appear as identifiers in
+    the file body (after stripping imports/comments/strings). Catches field
+    types, generic args, extends/implements clauses — anything that surfaces
+    as a capitalized identifier in the body."""
+    body = _strip_java_noise(text)
+    refs: set[str] = set()
+    for m in re.finditer(r"\b([A-Z][A-Za-z0-9_]+)\b", body):
+        name = m.group(1)
+        if name in local_class_names:
+            refs.add(name)
+    return refs
+
+
+def phase_35_contract_lift(manifest: dict, target_dir: Path) -> dict[str, str]:
+    """Lift contract DTOs from `<subdomain>/internal/web/models/` into
+    `dristi-common/src/main/java/org/pucar/dristi/common/contract/<subdomain>/`.
+
+    A class is considered part of the service's contract surface if any of:
+      - simple name ends with one of CONTRACT_SUFFIXES, OR
+      - it is referenced as a `@RequestBody` parameter or controller method
+        return type (incl. `ResponseEntity<X>`), OR
+      - it is transitively referenced as a field/extends/implements/generic-arg
+        type from any class already in the lift set, AND lives under the
+        same `web/models/` tree.
+
+    Returns a `lift_map` mapping `old_fqcn -> new_fqcn`. Phase 4 consumes this
+    map to rewrite imports across both main + test trees. The lifted files
+    are stamped with `// HAND-CURATED` so re-runs preserve any edits."""
+    subdomain = manifest["target_subdomain"]
+    web_models_dir = target_dir / "web" / "models"
+    if not web_models_dir.is_dir():
+        print("Phase 35 (contract-lift): no web/models/ directory; nothing to lift")
+        return {}
+
+    all_models = [f for f in web_models_dir.glob("*.java") if f.is_file()]
+    local_class_names = {f.stem for f in all_models}
+    if not local_class_names:
+        print("Phase 35 (contract-lift): web/models/ is empty; nothing to lift")
+        return {}
+
+    # Seed: suffix-matching classes
+    seed: set[str] = {
+        f.stem for f in all_models
+        if any(f.stem.endswith(suf) for suf in CONTRACT_SUFFIXES)
+    }
+
+    # Seed: classes referenced as @RequestBody / controller return types
+    web_dir = target_dir / "web"
+    if web_dir.is_dir():
+        for ctrl in web_dir.rglob("*.java"):
+            if ctrl.parent == web_models_dir:
+                continue
+            text = ctrl.read_text(encoding="utf-8")
+            for m in re.finditer(r"@RequestBody\s+(?:@\w+\s+)*([A-Z]\w+)", text):
+                if m.group(1) in local_class_names:
+                    seed.add(m.group(1))
+            for m in re.finditer(r"ResponseEntity\s*<\s*([A-Z]\w+)\s*>", text):
+                if m.group(1) in local_class_names:
+                    seed.add(m.group(1))
+
+    # Compute transitive closure within web/models/
+    lift_set = set(seed)
+    queue = list(seed)
+    while queue:
+        cls = queue.pop()
+        f = web_models_dir / f"{cls}.java"
+        if not f.is_file():
+            continue
+        for ref in _local_type_refs(f.read_text(encoding="utf-8"), local_class_names):
+            if ref not in lift_set:
+                lift_set.add(ref)
+                queue.append(ref)
+
+    contract_dir = (
+        MONOLITH_ROOT / "dristi-common" / "src" / "main" / "java"
+        / "org" / "pucar" / "dristi" / "common" / "contract" / subdomain
+    )
+    already_lifted = contract_dir.is_dir() and any(contract_dir.glob("*.java"))
+    if not lift_set and not already_lifted:
+        print("Phase 35 (contract-lift): no contract DTOs detected; skipping")
+        return {}
+    contract_dir.mkdir(parents=True, exist_ok=True)
+
+    target_internal_pkg = f"{manifest['target_package']}.internal.web.models"
+    source_pkg = f"{manifest['current_package']}.web.models"
+    new_pkg = f"{COMMON_PKG}.contract.{subdomain}"
+
+    # Spring Modulith treats unmarked packages in dristi-common as internal —
+    # any cross-module reference (caselifecycle calling these types) flags as
+    # "depends on non-exposed type" and fails ModuleStructureTest. Expose the
+    # contract package via a `@NamedInterface` so dependents resolve cleanly.
+    # Idempotent: only writes if the file doesn't already exist.
+    pkg_info = contract_dir / "package-info.java"
+    if not pkg_info.exists():
+        pkg_info.write_text(
+            "/**\n"
+            f" * {subdomain.capitalize()} subdomain's contract DTOs — request/response envelopes plus their\n"
+            " * transitive payload types, lifted by Phase 35 of the per-module migration\n"
+            " * pipeline. Exposed as a {@link org.springframework.modulith.NamedInterface}\n"
+            " * so callers in other modules (caselifecycle, etc.) can depend on these\n"
+            " * types without crossing the dristi-common boundary.\n"
+            " */\n"
+            f'@org.springframework.modulith.NamedInterface("contract-{subdomain}")\n'
+            f"package {new_pkg};\n",
+            encoding="utf-8",
+        )
+
+    lift_map: dict[str, str] = {}
+    moved = 0
+    preserved_curated = 0
+    for cls in sorted(lift_set):
+        src = web_models_dir / f"{cls}.java"
+        if not src.is_file():
+            continue
+        dest = contract_dir / f"{cls}.java"
+
+        # Preserve hand-curated lifts across re-runs.
+        if dest.exists() and CURATED_MARKER in dest.read_text(encoding="utf-8"):
+            src.unlink()
+            preserved_curated += 1
+        else:
+            text = src.read_text(encoding="utf-8")
+            new_text = re.sub(
+                rf"^\s*package\s+{re.escape(target_internal_pkg)}\s*;",
+                f"package {new_pkg};",
+                text,
+                flags=re.MULTILINE,
+            )
+            if CURATED_MARKER not in new_text:
+                new_text = f"{CURATED_MARKER} — lifted by Phase 35 (contract-lift)\n" + new_text
+            dest.write_text(new_text, encoding="utf-8")
+            src.unlink()
+            moved += 1
+
+        lift_map[f"{target_internal_pkg}.{cls}"] = f"{new_pkg}.{cls}"
+        lift_map[f"{source_pkg}.{cls}"] = f"{new_pkg}.{cls}"
+
+    # Idempotency: if Phase 35 was already run earlier, the moved classes are
+    # in contract_dir but lift_set may be empty this run. Rebuild lift_map
+    # from contract_dir contents so the sweep still runs.
+    for existing in contract_dir.glob("*.java"):
+        cls = existing.stem
+        lift_map.setdefault(f"{target_internal_pkg}.{cls}", f"{new_pkg}.{cls}")
+        lift_map.setdefault(f"{source_pkg}.{cls}", f"{new_pkg}.{cls}")
+
+    # Sweep the migrated tree (main + test if it exists yet) and any other
+    # already-migrated domains for stale imports of the lifted classes.
+    rewritten = 0
+    sweep_roots: list[Path] = []
+    for domain in MONOLITH_ROOT.glob("domain-*"):
+        for sub in ("src/main/java", "src/test/java"):
+            d = domain / sub
+            if d.is_dir():
+                sweep_roots.append(d)
+
+    new_pkg_wildcard = f"{new_pkg}.*"
+    for root in sweep_roots:
+        for f in root.rglob("*.java"):
+            text = f.read_text(encoding="utf-8")
+            new = text
+            for old_fqcn, new_fqcn in lift_map.items():
+                new = re.sub(
+                    rf"^(\s*import\s+(?:static\s+)?){re.escape(old_fqcn)}(\s*;)",
+                    rf"\1{new_fqcn}\2",
+                    new,
+                    flags=re.MULTILINE,
+                )
+            # Wildcard imports of `<svc>.web.models.*` no longer cover the
+            # lifted classes. Add a parallel wildcard for the contract pkg
+            # rather than expand each import — minimal diff, mirrors source.
+            for wildcard_pkg in (target_internal_pkg, source_pkg):
+                wildcard_re = rf"^(\s*import\s+){re.escape(wildcard_pkg)}\.\*\s*;"
+                if re.search(wildcard_re, new, re.MULTILINE) and not re.search(
+                    rf"^\s*import\s+{re.escape(new_pkg_wildcard)}\s*;",
+                    new,
+                    re.MULTILINE,
+                ):
+                    new = re.sub(
+                        wildcard_re,
+                        lambda m: f"{m.group(0)}\nimport {new_pkg_wildcard};",
+                        new,
+                        count=1,
+                        flags=re.MULTILINE,
+                    )
+            if new != text:
+                f.write_text(new, encoding="utf-8")
+                rewritten += 1
+
+    # Auto-import for files that referenced lifted classes by simple name
+    # (no import) — typical for same-package siblings in the source service,
+    # especially co-located tests under `internal/web/models/`. Mirrors
+    # Phase 4's auto-import logic for deleted protected classes.
+    #
+    # Restricted to files whose package belongs to the migrating subdomain.
+    # Without this, sibling subdomains that happen to have a same-named
+    # local class (e.g. case has its own `Advocate`) would gain a stray
+    # `import <other-subdomain>.contract.<...>.Advocate` and fail to compile.
+    target_internal_prefix = f"{manifest['target_package']}.internal"
+    lifted_simple_names = {f.stem for f in contract_dir.glob("*.java")}
+    auto_imported = 0
+    for root in sweep_roots:
+        for f in root.rglob("*.java"):
+            text = f.read_text(encoding="utf-8")
+            pkg_match = PACKAGE_RE.search(text)
+            file_pkg = pkg_match.group(1) if pkg_match else ""
+            if not file_pkg.startswith(target_internal_prefix):
+                continue
+            new = text
+            for cls in lifted_simple_names:
+                if not re.search(rf"\b{cls}\b", new):
+                    continue
+                if re.search(
+                    rf"^\s*import\s+(?:static\s+)?\S+\.{cls}\s*;", new, re.MULTILINE
+                ):
+                    continue
+                if re.search(
+                    rf"^\s*import\s+{re.escape(new_pkg)}\.\*\s*;", new, re.MULTILINE
+                ):
+                    continue
+                fqcn = f"{new_pkg}.{cls}"
+                new = _add_import_if_missing(new, fqcn)
+                auto_imported += 1
+            if new != text:
+                f.write_text(new, encoding="utf-8")
+
+    # Report = full set of classes currently in contract_dir (so re-runs don't
+    # blank out the report when lift_set is empty on idempotent re-execution).
+    final_classes = sorted({f.stem for f in contract_dir.glob("*.java")})
+    out = REPO_ROOT / "scripts" / "migration" / "per_module" / "output" / f"{manifest['service']}_contract_lift.txt"
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(
+        "# Classes lifted from internal/web/models/ to dristi-common/contract/<subdomain>/\n"
+        + "\n".join(f"{COMMON_PKG}.contract.{subdomain}.{c}" for c in final_classes)
+        + "\n",
+        encoding="utf-8",
+    )
+
+    pruned = _prune_empty_dirs(target_dir)
+
+    print(
+        f"Phase 35 (contract-lift): lifted {moved} class(es) to "
+        f"{contract_dir.relative_to(REPO_ROOT)}"
+        + (f"; preserved {preserved_curated} hand-curated" if preserved_curated else "")
+        + f"; rewrote imports in {rewritten} file(s)"
+        + (f"; auto-imported in {auto_imported} site(s)" if auto_imported else "")
+        + (f"; pruned {pruned} empty dir(s)" if pruned else "")
+        + f"; see {out.relative_to(REPO_ROOT)}"
+    )
+    return lift_map
+
+
 def _public_methods(text: str) -> set[tuple[str, int]]:
     """Best-effort signature extraction. Returns a set of
     (method-name, parameter-count) tuples. Different overloads of the
@@ -554,7 +854,11 @@ def _public_methods(text: str) -> set[tuple[str, int]]:
     return out
 
 
-def phase_4_deduplicate(manifest: dict, target_dir: Path) -> tuple[int, int, int]:
+def phase_4_deduplicate(
+    manifest: dict,
+    target_dir: Path,
+    lift_map: dict[str, str] | None = None,
+) -> tuple[int, int, int]:
     """Delete local copies of protected classes that already live in
     dristi-common, then rewrite remaining imports + insert missing imports
     in same-package references.
@@ -563,7 +867,13 @@ def phase_4_deduplicate(manifest: dict, target_dir: Path) -> tuple[int, int, int
     canonical is preserved (renamed to <Subdomain><Class>Helper) and
     flagged in `<service>_followups.txt` so a reviewer can decide whether
     to lift the extra methods into dristi-common or keep them service-local.
+
+    `lift_map` (from Phase 35) maps `old_fqcn -> new_fqcn` for contract DTOs
+    moved to `dristi-common/contract/<subdomain>/`. The same sweep loop that
+    rewrites protected-class imports also rewrites these — important for the
+    test tree, which Phase 35 didn't see because Phase 6 hadn't run yet.
     """
+    lift_map = lift_map or {}
     deleted = 0
     rewritten = 0
     auto_imported = 0
@@ -661,6 +971,17 @@ def phase_4_deduplicate(manifest: dict, target_dir: Path) -> tuple[int, int, int
                     new,
                     flags=re.MULTILINE,
                 )
+            # Apply Phase 35's lift_map (contract DTOs moved to
+            # dristi-common/contract/<subdomain>/). Test-tree files are the
+            # main beneficiary — Phase 35 ran before Phase 6 so the test
+            # tree didn't exist yet when imports were first rewritten.
+            for old_fqcn, new_fqcn in lift_map.items():
+                new = re.sub(
+                    rf"^(\s*import\s+(?:static\s+)?){re.escape(old_fqcn)}(\s*;)",
+                    rf"\1{new_fqcn}\2",
+                    new,
+                    flags=re.MULTILINE,
+                )
             if new != text:
                 rewritten += 1
 
@@ -696,10 +1017,13 @@ def phase_4_deduplicate(manifest: dict, target_dir: Path) -> tuple[int, int, int
     # subdomains of this domain module.
     bean_renamed = _resolve_cross_subdomain_bean_collisions(manifest["target_module"])
 
+    pruned = _prune_empty_dirs(target_dir)
+
     print(
         f"Phase 4 (deduplicate): deleted={deleted} protected-class copies, "
         f"rewrote={rewritten} imports, auto-imported={auto_imported}"
         + (f", uniquified-bean-names={bean_renamed}" if bean_renamed else "")
+        + (f", pruned={pruned} empty dir(s)" if pruned else "")
     )
     return deleted, rewritten, auto_imported
 
@@ -1133,6 +1457,31 @@ def phase_7_validate(manifest: dict, target_dir: Path) -> tuple[int, list[str]]:
             f"across {len(versions)} version(s); no collisions"
         )
 
+    # Gate 8: contract DTOs (suffix-matching classes) must not remain under
+    # `<subdomain>/internal/web/models/` — Phase 35 should have moved them
+    # to `dristi-common/contract/<subdomain>/`. A leftover here means either
+    # Phase 35 was skipped via --phase, or a class slipped through the
+    # closure (rare; usually means a contract type lives outside web/models).
+    web_models_dir = target_dir / "web" / "models"
+    leftover_contract: list[Path] = []
+    if web_models_dir.is_dir():
+        for f in web_models_dir.glob("*.java"):
+            if any(f.stem.endswith(suf) for suf in CONTRACT_SUFFIXES):
+                leftover_contract.append(f)
+    if leftover_contract:
+        fails.append(
+            f"Gate 8 (contract DTOs lifted): {len(leftover_contract)} suffix-matching "
+            f"class(es) still under {web_models_dir.relative_to(REPO_ROOT)}"
+        )
+        for p in leftover_contract:
+            fails.append(f"  - {p.relative_to(REPO_ROOT)}")
+        fails.append(
+            "  Fix: re-run with `--phase 35` to lift, or HAND-CURATE the file at "
+            "the destination if it's already present in dristi-common/contract/<subdomain>/."
+        )
+    else:
+        print("PASS Gate 8: no contract-suffixed classes in internal/web/models/")
+
     if fails:
         print()
         print("FAIL — gates:")
@@ -1289,8 +1638,10 @@ def main() -> int:
     parser.add_argument("--service", required=True)
     parser.add_argument("--module", required=True, help="case-lifecycle | identity-access | integration | payments")
     parser.add_argument("--subdomain", required=True)
-    parser.add_argument("--phase", default="1,2,3,4,5,6,7,8,9",
-                        help="comma-separated subset of phases to run")
+    parser.add_argument("--phase", default="1,2,3,35,4,5,6,7,8,9",
+                        help="comma-separated subset of phases to run "
+                             "(35 = contract-lift, alias for the conceptual "
+                             "'Phase 3.5'; runs between 3 and 6)")
     args = parser.parse_args()
 
     phases = {int(p) for p in args.phase.split(",") if p.strip()}
@@ -1314,12 +1665,19 @@ def main() -> int:
         phase_2_scaffold(manifest)
     if 3 in phases:
         phase_3_auto_rename(manifest, target_dir)
+    # Phase 35 (contract-lift) runs after 3 so it sees the renamed package on
+    # main-tree files, but before Phase 6 so it doesn't have to walk a
+    # not-yet-existing test tree. Test-tree imports of lifted classes are
+    # rewritten by Phase 4's sweep using the returned lift_map.
+    lift_map: dict[str, str] = {}
+    if 35 in phases:
+        lift_map = phase_35_contract_lift(manifest, target_dir)
     # Phase 6 (test migration) runs BEFORE Phase 4 so the test tree exists
     # when Phase 4's auto-import sweep walks both main + test directories.
     if 6 in phases:
         phase_6_test_migration(manifest)
     if 4 in phases:
-        phase_4_deduplicate(manifest, target_dir)
+        phase_4_deduplicate(manifest, target_dir, lift_map=lift_map)
     if 5 in phases:
         phase_5_detect_rest(manifest, target_dir)
     if 9 in phases:

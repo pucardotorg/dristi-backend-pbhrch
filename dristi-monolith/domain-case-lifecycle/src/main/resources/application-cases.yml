@@ -5,12 +5,62 @@
 # Includes service-unique keys + this service's value for any key that conflicts across services.
 # Activate via spring.profiles.active=...,cases,...
 
+app:
+  timezone: Asia/Kolkata
+  zone:
+    id: Asia/Kolkata
 otel:
   instrumentation:
     http:
       server:
         ignore-urls: /case/health,/case/prometheus
+kafka:
+  consumer:
+    config:
+      auto_commit: true
+      auto_commit_interval: 100
+      session_timeout: 15000
+      auto_offset_reset: earliest
+  producer:
+    config:
+      retries_config: 0
+      batch_size_config: 16384
+      linger_ms_config: 1
+      buffer_memory_config: 33554432
+  topics:
+    receipt:
+      create: egov.collection.payment-create
+  case:
+    update:
+      last:
+        modified:
+          time: case-update-last-modified-time
 egov:
+  mdms:
+    host: http://localhost:8084
+    search:
+      endpoint: /egov-mdms-service/v1/_search
+  user:
+    host: http://localhost:8086
+    context:
+      path: /user/users
+    create:
+      path: /_createnovalidate
+    search:
+      path: /user/_search
+    update:
+      path: /_updatenovalidate
+    notification:
+      period: 30
+  individual:
+    host: http://localhost:8081/
+    search:
+      path: individual/v1/_search
+    path: individual/v1/_create
+    create:
+      path: individual/v1/_create
+    update:
+      path: individual/v1/_update
   localization:
     host: https://dev.digit.org
     workDir:
@@ -20,26 +70,13 @@ egov:
     statelevel: true
     search:
       endpoint: /localization/messages/v1/_search
-  individual:
-    host: http://localhost:8081/
-    path: individual/v1/_create
-    create:
-      path: individual/v1/_create
-    update:
-      path: individual/v1/_update
   analytics:
     host: http://localhost:8088/
     path: /analytics/pending_task/v1/create
-  mdms:
-    host: http://localhost:8084
   hrms:
     host: https://dev.digit.org
     search:
       endpoint: /egov-hrms/employees/_search
-  user:
-    host: http://localhost:8086
-    notification:
-      period: 30
   idgen:
     host: http://localhost:8082/
     path: egov-idgen/id/_generate
@@ -309,18 +346,15 @@ egov:
     host: http://localhost:8080
     search:
       endpoint: /inbox/v2/index/_search
+logging:
+  loki:
+    enabled: false
+    url: http://localhost:3100/loki/api/v1/push
+  level:
+    root: INFO
 is:
   workflow:
     enabled: true
-kafka:
-  topics:
-    receipt:
-      create: egov.collection.payment-create
-  case:
-    update:
-      last:
-        modified:
-          time: case-update-last-modified-time
 case:
   kafka:
     create:
@@ -426,9 +460,6 @@ lpr:
   stage: Long Pending Register
   sub:
     stage: Long Pending Register
-app:
-  zone:
-    id: Asia/Kolkata
 open:
   hearing:
     topic: open-hearing-topic

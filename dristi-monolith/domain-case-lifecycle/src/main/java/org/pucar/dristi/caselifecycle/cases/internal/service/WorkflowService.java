@@ -27,6 +27,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
 
+import org.pucar.dristi.common.models.workflow.WorkflowObject;
+import org.pucar.dristi.common.models.workflow.ProcessInstanceObject;
 @Component("casesWorkflowService")
 @Slf4j
 public class WorkflowService {

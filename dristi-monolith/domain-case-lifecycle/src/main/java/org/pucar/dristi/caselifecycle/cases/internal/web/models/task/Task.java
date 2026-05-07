@@ -12,7 +12,7 @@ import org.egov.common.contract.models.AuditDetails;
 import org.egov.common.contract.models.Document;
 import org.egov.common.contract.models.Workflow;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.AssignedTo;
-import org.pucar.dristi.caselifecycle.cases.internal.web.models.WorkflowObject;
+import org.pucar.dristi.common.models.workflow.WorkflowObject;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.ArrayList;

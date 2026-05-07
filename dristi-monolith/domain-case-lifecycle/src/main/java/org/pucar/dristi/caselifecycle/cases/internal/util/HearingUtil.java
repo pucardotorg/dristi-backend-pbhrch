@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 
-@Component
+@Component("casesHearingUtil")
 @Slf4j
 public class HearingUtil {
 

@@ -32,7 +32,7 @@ Core case-lifecycle domain — the bulk of DRISTI.
 | `lock-svc` | 19 | **done** | `case-lifecycle` | `locksvc` | First test-drive |
 | `case` | 330 | **done** | `case-lifecycle` | `cases` | Largest service; pipeline hardened against it |
 | `hearing` | 196 | pending | `case-lifecycle` | `hearing` | |
-| `order` | 105 | pending | `case-lifecycle` | `order` | |
+| `order` | 105 | **done** | `case-lifecycle` | `order` | First service to drive Phase 35 contract-lift; Rule 29 workflow harmonization |
 | `task` | 184 | pending | `case-lifecycle` | `task` | |
 | `evidence` | 161 | pending | `case-lifecycle` | `evidence` | |
 | `application` | 119 | pending | `case-lifecycle` | `application` | |
@@ -43,7 +43,7 @@ Core case-lifecycle domain — the bulk of DRISTI.
 | `analytics` | 146 | pending | `case-lifecycle` | `analytics` | depends on `case` |
 | `bail-bond` | 105 | pending | `case-lifecycle` | `bailbond` | depends on `case` |
 | `transformer` | 122 | pending | `case-lifecycle` | `analytics` | merge into `analytics` subdomain |
-| `Notification` | 48 | pending | `case-lifecycle` | `notification` | |
+| `Notification` | 48 | **done** | `case-lifecycle` | `notification` | First migration by an extended-team contributor; surfaced empty-package, YAML-stability, and pipeline-output staging gaps fixed in 5fb67371 |
 | `digitalized-documents` | 105 | pending | `case-lifecycle` | `digitalizeddocuments` | |
 | `ctc` | 125 | pending | `case-lifecycle` | `ctc` | |
 | `template-configuration` | 29 | pending | `case-lifecycle` | `templateconfiguration` | |
@@ -71,7 +71,7 @@ External-system integrations.
 | `icops_integration-kerala` | 89 | pending | `integration` | `icops` | |
 | `e-sign-svc` + `esign-interceptor` | 68 | pending | `integration` | `esign` | merge both source services into one subdomain |
 | `epost-tracker` | 73 | pending | `integration` | `epost` | |
-| `bank-details` | 15 | pending | `integration` | `bank` | smallest service — good warm-up |
+| `bank-details` | 15 | **done** | `integration` | `bank` | First non-case-lifecycle service; surfaced /migrate-service Rule 28 violation, fixed in PR #55 |
 
 ## domain-payments
 

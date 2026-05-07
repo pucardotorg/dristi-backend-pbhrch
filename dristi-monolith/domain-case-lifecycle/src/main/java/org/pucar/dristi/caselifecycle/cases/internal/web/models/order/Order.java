@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 import org.egov.common.contract.models.AuditDetails;
 import org.pucar.dristi.common.models.Document;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.StatuteSection;
-import org.pucar.dristi.caselifecycle.cases.internal.web.models.WorkflowObject;
+import org.pucar.dristi.common.models.workflow.WorkflowObject;
 
 import java.util.ArrayList;
 import java.util.List;

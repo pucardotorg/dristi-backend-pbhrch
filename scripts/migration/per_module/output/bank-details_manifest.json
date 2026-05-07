@@ -1,0 +1,16 @@
+{
+  "service": "bank-details",
+  "source_dir": "integration-services/bank-details",
+  "target_module": "integration",
+  "target_subdomain": "bank",
+  "current_package": "org.pucar.dristi",
+  "target_package": "org.pucar.dristi.integration.bank",
+  "main_file_count": 11,
+  "test_file_count": 4,
+  "has_spring_boot_main": true,
+  "duplicated_protected_classes": [
+    "ResponseInfoFactory"
+  ],
+  "rest_call_files": [],
+  "source_context_path": "/bank-details"
+}

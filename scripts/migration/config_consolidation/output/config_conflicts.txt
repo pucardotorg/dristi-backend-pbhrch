@@ -1,135 +1,162 @@
-# 44 keys with different values across services
+# 53 keys with different values across services
 # Per-service profile YAML resolves them via Spring's profile-overlay rules.
 
+app.timezone
+  lock-svc=Asia/Kolkata | case=Asia/Kolkata | order=Asia/Kolkata | Notification=Asia/Kolkata
+
 otel.instrumentation.http.server.ignore-urls
-  case=/case/health,/case/prometheus | lock-svc=/lock-svc/health,/lock-svc/prometheus | hearing=/hearing/health,/hearing/prometheus
+  lock-svc=/lock-svc/health,/lock-svc/prometheus | case=/case/health,/case/prometheus | order=/order/health,/order/prometheus | bank-details=/bank-details/health,/bank-details/prometheus | Notification=/notification/health,/notification/prometheus
 
-egov.localization.host
-  case=https://dev.digit.org | hearing=https://dev.digit.org
+kafka.consumer.config.auto_commit
+  lock-svc=true | case=true | order=true | Notification=true
 
-egov.localization.workDir.path
-  case=/localization/messages/v1 | hearing=/localization/messages/v1
+kafka.consumer.config.auto_commit_interval
+  lock-svc=100 | case=100 | order=100 | Notification=100
 
-egov.localization.context.path
-  case=/localization/messages/v1 | hearing=/localization/messages/v1
+kafka.consumer.config.session_timeout
+  lock-svc=15000 | case=15000 | order=15000 | Notification=15000
 
-egov.localization.statelevel
-  case=true | hearing=true
+kafka.consumer.config.auto_offset_reset
+  lock-svc=earliest | case=earliest | order=earliest | Notification=earliest
 
-egov.individual.host
-  case=http://localhost:8081/ | lock-svc=http://localhost:8081/ | hearing=http://localhost:8089/
+kafka.producer.config.retries_config
+  lock-svc=0 | case=0 | order=0 | Notification=0
 
-egov.individual.path
-  case=individual/v1/_create | hearing=individual/v1/_create
+kafka.producer.config.batch_size_config
+  lock-svc=16384 | case=16384 | order=16384 | Notification=16384
 
-egov.individual.create.path
-  case=individual/v1/_create | hearing=individual/v1/_create
+kafka.producer.config.linger_ms_config
+  lock-svc=1 | case=1 | order=1 | Notification=1
 
-egov.individual.update.path
-  case=individual/v1/_update | hearing=individual/v1/_update
+kafka.producer.config.buffer_memory_config
+  lock-svc=33554432 | case=33554432 | order=33554432 | Notification=33554432
 
 egov.mdms.host
-  case=http://localhost:8084 | lock-svc=https://dev.digit.org | hearing=http://localhost:8085
+  lock-svc=https://dev.digit.org | case=http://localhost:8084 | order=http://localhost:8084 | Notification=https://dev.digit.org
 
-egov.hrms.host
-  case=https://dev.digit.org | hearing=https://dev.digit.org
-
-egov.hrms.search.endpoint
-  case=/egov-hrms/employees/_search | hearing=/egov-hrms/employees/_search
+egov.mdms.search.endpoint
+  lock-svc=/egov-mdms-service/v1/_search | case=/egov-mdms-service/v1/_search | order=/egov-mdms-service/v1/_search | Notification=/egov-mdms-service/v1/_search
 
 egov.user.host
-  case=http://localhost:8086 | lock-svc=https://dev.digit.org | hearing=https://dev.digit.org
+  lock-svc=https://dev.digit.org | case=http://localhost:8086 | order=http://localhost:8086 | Notification=https://dev.digit.org
 
-egov.idgen.host
-  case=http://localhost:8082/ | hearing=http://localhost:8082/
+egov.user.context.path
+  lock-svc=/user/users | case=/user/users | order=/user/users | Notification=/user/users
 
-egov.idgen.path
-  case=egov-idgen/id/_generate | hearing=egov-idgen/id/_generate
+egov.user.create.path
+  lock-svc=/_createnovalidate | case=/_createnovalidate | order=/_createnovalidate | Notification=/_createnovalidate
 
-egov.filestore.host
-  case=http://localhost:8085/ | hearing=http://localhost:8085/
+egov.user.search.path
+  lock-svc=/user/_search | case=/user/_search | order=/user/_search | Notification=/user/_search
 
-egov.filestore.path
-  case=filestore/v1/files/id? | hearing=filestore/v1/files/id?
-
-egov.file.store.delete.endpoint
-  case=/filestore/v1/files/delete | hearing=/filestore/v1/files/delete
-
-egov.advocate.host
-  case=http://localhost:8080/ | hearing=http://localhost:8080/
-
-egov.advocate.path
-  case=advocate/v1/_search | hearing=advocate/v1/_search
-
-is.workflow.enabled
-  case=true | hearing=true
-
-egov.workflow.host
-  case=http://localhost:8083 | hearing=http://localhost:8083
-
-egov.workflow.transition.path
-  case=/egov-workflow-v2/egov-wf/process/_transition | hearing=/egov-workflow-v2/egov-wf/process/_transition
-
-egov.workflow.businessservice.search.path
-  case=/egov-workflow-v2/egov-wf/businessservice/_search | hearing=/egov-workflow-v2/egov-wf/businessservice/_search
-
-egov.workflow.processinstance.search.path
-  case=/egov-workflow-v2/egov-wf/process/_search | hearing=/egov-workflow-v2/egov-wf/process/_search
-
-egov.url.shortner.host
-  case=https://dev.digit.org | hearing=https://dev.digit.org
-
-egov.url.shortner.endpoint
-  case=/egov-url-shortening/shortener | hearing=/egov-url-shortening/shortener
-
-egov.sms.notification.topic
-  case=egov.core.notification.sms | hearing=egov.core.notification.sms
+egov.user.update.path
+  lock-svc=/_updatenovalidate | case=/_updatenovalidate | order=/_updatenovalidate | Notification=/_updatenovalidate
 
 kafka.topics.receipt.create
-  case=egov.collection.payment-create | lock-svc=dss-collection | hearing=dss-collection
+  lock-svc=dss-collection | case=egov.collection.payment-create | order=dss-collection | Notification=dss-collection
 
-hearing.case.reference.number.update
-  case=update-case-reference-number | hearing=update-case-reference-number
+egov.individual.host
+  lock-svc=http://localhost:8081/ | case=http://localhost:8081/ | order=http://localhost:8081/
 
-egov.case.outcome.topic
-  case=case-outcome-topic | hearing=case-outcome-topic
+egov.individual.search.path
+  lock-svc=individual/v1/_search | case=individual/v1/_search | order=individual/v1/_search
 
-notification.sms.enabled
-  case=true | hearing=true
+logging.loki.enabled
+  lock-svc=false | case=false | order=false | Notification=false
+
+logging.loki.url
+  lock-svc=http://localhost:3100/loki/api/v1/push | case=http://localhost:3100/loki/api/v1/push | order=http://localhost:3100/loki/api/v1/push | Notification=http://localhost:3100/loki/api/v1/push
+
+logging.level.root
+  lock-svc=INFO | case=INFO | order=INFO | Notification=INFO
+
+egov.localization.host
+  case=https://dev.digit.org | order=http://localhost:8080 | Notification=https://dev.digit.org
+
+egov.localization.workDir.path
+  case=/localization/messages/v1 | order=/localization/messages/v1 | Notification=/localization/messages/v1
+
+egov.localization.context.path
+  case=/localization/messages/v1 | order=/localization/messages/v1 | Notification=/localization/messages/v1
+
+egov.localization.statelevel
+  case=true | order=true | Notification=true
+
+egov.individual.path
+  case=individual/v1/_create | order=individual/v1/_create
+
+egov.individual.create.path
+  case=individual/v1/_create | order=individual/v1/_create
+
+egov.individual.update.path
+  case=individual/v1/_update | order=individual/v1/_update
+
+egov.hrms.host
+  case=https://dev.digit.org | order=https://dev.digit.org | Notification=https://dev.digit.org
+
+egov.hrms.search.endpoint
+  case=/egov-hrms/employees/_search | order=/egov-hrms/employees/_search | Notification=/egov-hrms/employees/_search
+
+egov.idgen.host
+  case=http://localhost:8082/ | order=http://localhost:8082/ | Notification=https://dev.digit.org/
+
+egov.idgen.path
+  case=egov-idgen/id/_generate | order=egov-idgen/id/_generate | Notification=egov-idgen/id/_generate
+
+egov.filestore.host
+  case=http://localhost:8085/ | order=http://localhost:8085/ | Notification=https://dev.digit.org
+
+egov.filestore.path
+  case=filestore/v1/files/id? | order=filestore/v1/files/id?
+
+egov.file.store.delete.endpoint
+  case=/filestore/v1/files/delete | order=/filestore/v1/files/delete | Notification=/filestore/v1/files/delete
+
+egov.advocate.host
+  case=http://localhost:8080/ | order=http://localhost:8080/
+
+egov.advocate.path
+  case=advocate/v1/_search | order=advocate/v1/_search
+
+is.workflow.enabled
+  case=true | order=true | Notification=true
+
+egov.workflow.host
+  case=http://localhost:8083 | order=http://localhost:8083 | Notification=https://dev.digit.org
+
+egov.workflow.transition.path
+  case=/egov-workflow-v2/egov-wf/process/_transition | order=/egov-workflow-v2/egov-wf/process/_transition | Notification=/egov-workflow-v2/egov-wf/process/_transition
+
+egov.workflow.businessservice.search.path
+  case=/egov-workflow-v2/egov-wf/businessservice/_search | order=/egov-workflow-v2/egov-wf/businessservice/_search | Notification=/egov-workflow-v2/egov-wf/businessservice/_search
+
+egov.workflow.processinstance.search.path
+  case=/egov-workflow-v2/egov-wf/process/_search | order=/egov-workflow-v2/egov-wf/process/_search | Notification=/egov-workflow-v2/egov-wf/process/_search
+
+egov.url.shortner.host
+  case=https://dev.digit.org | order=https://dev.digit.org | Notification=https://dev.digit.org
+
+egov.url.shortner.endpoint
+  case=/egov-url-shortening/shortener | order=/egov-url-shortening/shortener | Notification=/egov-url-shortening/shortener
+
+egov.sms.notification.topic
+  case=egov.core.notification.sms | order=egov.core.notification.sms | Notification=egov.core.notification.sms
+
+egov.sms.notification.admission.hearing.scheduled.template.id
+  case=1107173140979241046 | order=1107173140979241046
 
 egov.localization.search.endpoint
-  case=/localization/messages/v1/_search | hearing=/_search
+  case=/localization/messages/v1/_search | order=/_search | Notification=/_search
 
-user.oauth.url
-  case=https://dristi-kerala-dev.pucar.org/user/oauth/token?_=1713357247536 | hearing=https://dristi-kerala-dev.pucar.org/user/oauth/token?_=1713357247536
+egov.courtId
+  case=KLKM52 | order=KLKM52
 
-egov.default.user.username
-  case=case-cron-job | hearing=hearing-cron-job
+egov.hearing.host
+  case=http://localhost:8080/ | order=http://localhost:9091/
 
-egov.default.user.password
-  case=Dristi@123 | hearing=Dristi@123
-
-spring.redis.host
-  case=localhost | hearing=localhost
-
-spring.redis.port
-  case=6379 | hearing=6379
-
-spring.redis.timeout
-  case=10 | hearing=10
-
-state.level.tenant.id
-  case=pb | hearing=pb
-
-lpr.case.details.update.kafka.topic
-  case=lpr-case-details-update | hearing=lpr-case-details-update
+egov.hearing.search.path
+  case=hearing/v1/search | order=hearing/v1/search
 
 app.zone.id
-  case=Asia/Kolkata | hearing=Asia/Kolkata
-
-egov.inbox.host
-  case=http://localhost:8080 | hearing=http://localhost:8059
-
-egov.inbox.search.endpoint
-  case=/inbox/v2/index/_search | hearing=/inbox/v2/index/_search
+  case=Asia/Kolkata | order=Asia/Kolkata
 

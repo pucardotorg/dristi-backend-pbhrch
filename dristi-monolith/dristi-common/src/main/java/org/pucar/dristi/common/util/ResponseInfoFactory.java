@@ -27,6 +27,11 @@ import static org.pucar.dristi.common.config.CommonConstants.SUCCESSFUL;
 public class ResponseInfoFactory {
 
     public ResponseInfo createResponseInfoFromRequestInfo(final RequestInfo requestInfo, final Boolean success) {
+        return createResponseInfoFromRequestInfo(requestInfo, success, RES_MSG_ID);
+    }
+
+    /** Overload that lets the caller set {@code resMsgId} (used by order). */
+    public ResponseInfo createResponseInfoFromRequestInfo(final RequestInfo requestInfo, final Boolean success, final String msg) {
         final String apiId = requestInfo != null ? requestInfo.getApiId() : "";
         final String ver = requestInfo != null ? requestInfo.getVer() : "";
         final Long ts = requestInfo != null ? requestInfo.getTs() : null;
@@ -36,7 +41,7 @@ public class ResponseInfoFactory {
                 .apiId(apiId)
                 .ver(ver)
                 .ts(ts)
-                .resMsgId(RES_MSG_ID)
+                .resMsgId(msg)
                 .msgId(msgId)
                 .status(responseStatus)
                 .build();

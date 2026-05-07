@@ -33,6 +33,7 @@ import org.pucar.dristi.caselifecycle.cases.internal.web.models.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.pucar.dristi.common.models.workflow.WorkflowObject;
 @ExtendWith(MockitoExtension.class)
 public class WorkflowServiceTest {
 

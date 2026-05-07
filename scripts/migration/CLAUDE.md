@@ -38,12 +38,18 @@ Local, reversible, low-risk inside the migrated tree.
 
 - Pre-flight checks (`git status`, branch, source dir).
 - Running the pipeline; running config consolidation; running `mvn`.
-- Reading any `_followups.txt`, `_rest_calls.txt`, `config_conflicts.txt`.
+- Reading any `_followups.txt`, `_rest_calls.txt`, `_contract_lift.txt`,
+  `config_conflicts.txt`.
 - Adding a `// HAND-CURATED` marker to a file Claude just edited.
 - Adding a `@Value` default (`${a.b.c:#{null}}`) per RUNBOOK §7.
 - Renaming a Flyway file to `V<ts>_2__...sql` to break a Gate 7 collision.
+- Adapting a service-local caller to the canonical's method signature
+  (Rule 26) — e.g. switching `String → readValue` chains to direct use
+  of the canonical's parsed return type.
 - Converting an intra-DRISTI REST call to a direct service call **inside
-  the migrated tree** when the target service is already in the monolith.
+  the migrated tree** when the target service is already in the monolith
+  AND the conversion is genuinely behaviour-preserving (Rule 27 default
+  is "follow-up PR" — only deviate for the easy cases).
 
 ### Tier 2 — Propose diff, wait for approval
 Edits to the **pipeline source** or its data lists. Affects every
@@ -51,18 +57,31 @@ future migration.
 
 - Edits to `scripts/migration/per_module/run_module_migration.py`.
 - Whitelist/blocklist tweaks (banned imports, `EGOV_HOST_TOKENS`,
-  `DOMAIN_MODULE_SEGMENTS`).
+  `DOMAIN_MODULE_SEGMENTS`, `CONTRACT_SUFFIXES`).
 - New gate logic; new phase; phase reordering.
 - Edits to `scripts/migration/config_consolidation/run_consolidation.py`.
+- Bumping a version pin in `dristi-monolith/pom.xml` or
+  `dristi-monolith/dristi-common/pom.xml` (Rule 25). Affects every
+  module's resolved classpath.
+- Adding a dep to `dristi-monolith/dristi-common/pom.xml` (Rule 24:
+  e.g. `digit-models`, `swagger-core:1.5.18` to satisfy lifted contract
+  DTOs' legacy imports).
 
 Show the diff, explain why, wait. Do not apply.
 
 ### Tier 3 — Lay out 2-3 options with tradeoffs, wait
 Architectural / cross-service decisions where wrong-answer cost is high.
 
-- Widening a canonical method signature to `Object` (Rule 18).
+- Widening a canonical method signature to `Object` (Rule 18) — only
+  for request-side divergence; return-type drift is Tier 1 (Rule 26:
+  adapt the caller).
 - Lifting a kept helper into `dristi-common` vs. keeping it
   service-local (Rule 13).
+- Promoting a contract DTO out of `dristi-common/contract/<subdomain>/`
+  into a shared `dristi-common/contract/<shared>/` namespace once two
+  services prove they want the same concrete type (Rule 24).
+- Adding a class to the lift set that doesn't match `CONTRACT_SUFFIXES`
+  (false negative — would the caller need it for a direct call?).
 - Resolving a CONFLICT-classified config key when behavioral
   divergence matters.
 - Modifying PIPELINE_RULES.md (writing a new rule, retiring an old one).
@@ -142,11 +161,19 @@ Pipeline and Maven output can be large. To keep context efficient:
 
 ## 5. Hard rules (never do these without explicit user instruction)
 
-- **Do not edit auto-generated files:**
-  - `dristi-monolith/pom.xml`
+- **Do not edit auto-generated files structurally:**
+  - `dristi-monolith/pom.xml` (parent — only the `<dependencies>` and
+    `<dependencyManagement>` sections are hand-editable; see Rule 25)
+  - `dristi-monolith/dristi-common/pom.xml` (only the `<dependencies>`
+    section is hand-editable; see Rule 24's note on `digit-models` +
+    `swagger-core:1.5.18`)
   - `dristi-app/src/main/resources/application-shared.yml`
   - `dristi-app/src/main/resources/application-<subdomain>.yml`
-  Re-running the pipeline regenerates them; manual edits are clobbered.
+  Re-running the pipeline regenerates structure; manual structural edits
+  get clobbered. When you legitimately add a dep to one of the editable
+  pom sections, also propagate it into
+  `scripts/migration/scaffold/02_generate_module_skeletons.py` so the
+  next scaffold regen carries it forward.
 
 - **Do not remove `spring.flyway.locations` entries** in
   `dristi-app/.../application.yml` by hand — Phase 9 owns that list.
@@ -154,6 +181,15 @@ Pipeline and Maven output can be large. To keep context efficient:
 - **Do not modify files marked `// HAND-CURATED`** without the user
   acknowledging the marker. The marker exists so re-runs preserve
   human edits; respect it.
+
+- **Do not commit without a pre-commit summary first** (Rule 30).
+  Every `git commit` on a migration session must be preceded by a
+  structured summary of files-added / files-deleted / files-modified /
+  decisions-taken / verifications-not-yet-run, and the user must
+  confirm the design before verification + commit run. Skip the
+  summary only for trivial single-purpose commits the user explicitly
+  authorised mid-session (e.g. `/migrate-service` Step 6's "ship it"
+  flow has its own summary).
 
 - **Do not push or open PRs** without explicit user confirmation,
   even after a green build.
@@ -171,9 +207,9 @@ Pipeline and Maven output can be large. To keep context efficient:
 | Path | Purpose |
 |---|---|
 | [RUNBOOK.md](RUNBOOK.md) | Human-readable operational guide |
-| [PIPELINE_RULES.md](PIPELINE_RULES.md) | 23 hard-won rules, indexed by gate/symptom |
+| [PIPELINE_RULES.md](PIPELINE_RULES.md) | 30 hard-won rules, indexed by gate/symptom (24=contract lift, 25=parent pom dep hygiene, 26=canonical return-type drift, 27=REST→direct as follow-up PR, 28=three-commit structure, 29=workflow migration pattern + behavior-union extraction, 30=pre-commit summary protocol) |
 | [SERVICE_REGISTRY.md](SERVICE_REGISTRY.md) | Service → module/subdomain mapping |
-| [per_module/run_module_migration.py](per_module/run_module_migration.py) | The 9-phase pipeline |
+| [per_module/run_module_migration.py](per_module/run_module_migration.py) | The 10-phase pipeline (incl. Phase 35 contract-lift) |
 | [config_consolidation/run_consolidation.py](config_consolidation/run_consolidation.py) | Pipeline 5 (config) |
 | [.claude/commands/migrate-service.md](../../.claude/commands/migrate-service.md) | Migration recipe (slash command) |
 | [.claude/commands/debug-gate.md](../../.claude/commands/debug-gate.md) | Gate debug recipe (slash command) |
