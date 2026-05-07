@@ -499,14 +499,18 @@ public class CaseService {
             if (lastSigned) {
                 log.info("Last e-sign for case {}", caseRequest.getCases().getId());
                 Calculation calculation = compareCalculationAndCreateDemand(caseRequest);
-                caseRequest.getRequestInfo().getUserInfo().getRoles().add(Role.builder().id(123L).code(SYSTEM).name(SYSTEM).tenantId(caseRequest.getCases().getTenantId()).build());
+                Role systemRole = Role.builder().id(123L).code(SYSTEM).name(SYSTEM).tenantId(caseRequest.getCases().getTenantId()).build();
+                RequestInfo systemRequestInfo = RequestInfoUtil.withExtraRole(caseRequest.getRequestInfo(), systemRole);
                 if (calculation != null) {
                     caseRequest.getCases().getWorkflow().setAction(E_SIGN_COMPLETE_WITH_PAYMENT);
                 } else {
                     caseRequest.getCases().getWorkflow().setAction(E_SIGN_COMPLETE);
                 }
                 log.info("Updating workflow status for case {} in last e-sign", caseRequest.getCases().getId());
-                workflowService.updateWorkflowStatus(caseRequest);
+                workflowService.updateWorkflowStatus(CaseRequest.builder()
+                        .requestInfo(systemRequestInfo)
+                        .cases(caseRequest.getCases())
+                        .build());
             }
 
             checkItsLastResponse(caseRequest);
@@ -992,10 +996,14 @@ public class CaseService {
             }
 
             log.info("Last response submitted by accused for case {}", caseRequest.getCases().getId());
-            caseRequest.getRequestInfo().getUserInfo().getRoles().add(Role.builder().id(123L).code(SYSTEM).name(SYSTEM).tenantId(caseRequest.getCases().getTenantId()).build());
+            Role systemRole = Role.builder().id(123L).code(SYSTEM).name(SYSTEM).tenantId(caseRequest.getCases().getTenantId()).build();
+            RequestInfo systemRequestInfo = RequestInfoUtil.withExtraRole(caseRequest.getRequestInfo(), systemRole);
             caseRequest.getCases().getWorkflow().setAction(RESPONSE_COMPLETE);
             log.info("Updating workflow status for case {} in last response submission", caseRequest.getCases().getId());
-            workflowService.updateWorkflowStatus(caseRequest);
+            workflowService.updateWorkflowStatus(CaseRequest.builder()
+                    .requestInfo(systemRequestInfo)
+                    .cases(caseRequest.getCases())
+                    .build());
         }
     }
 
@@ -2370,8 +2378,8 @@ public class CaseService {
             scheduledHearings.forEach(hearing -> {
                 Optional.ofNullable(hearing.getAttendees()).orElse(new ArrayList<>()).add(newAttendee);
                 HearingRequest hearingRequest = new HearingRequest();
-                joinCaseRequest.getRequestInfo().getUserInfo().getRoles().add(Role.builder().code("HEARING_SCHEDULER").name("HEARING_SCHEDULER").tenantId(joinCaseData.getTenantId()).build());
-                hearingRequest.setRequestInfo(joinCaseRequest.getRequestInfo());
+                Role hearingSchedulerRole = Role.builder().code("HEARING_SCHEDULER").name("HEARING_SCHEDULER").tenantId(joinCaseData.getTenantId()).build();
+                hearingRequest.setRequestInfo(RequestInfoUtil.withExtraRole(joinCaseRequest.getRequestInfo(), hearingSchedulerRole));
                 hearingRequest.setHearing(hearing);
                 hearingUtil.updateTranscriptAdditionalAttendees(hearingRequest);
 

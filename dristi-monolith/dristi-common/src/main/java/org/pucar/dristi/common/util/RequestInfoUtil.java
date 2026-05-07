@@ -22,6 +22,9 @@ public final class RequestInfoUtil {
     /** Defensive copy of {@code source} with {@code role} appended to the user's roles list. */
     public static RequestInfo withExtraRole(RequestInfo source, Role role) {
         User src = source.getUserInfo();
+        if (src == null) {
+            throw new IllegalArgumentException("source.getUserInfo() must not be null");
+        }
         List<Role> roles = new ArrayList<>(
                 src.getRoles() != null ? src.getRoles() : Collections.emptyList());
         roles.add(role);

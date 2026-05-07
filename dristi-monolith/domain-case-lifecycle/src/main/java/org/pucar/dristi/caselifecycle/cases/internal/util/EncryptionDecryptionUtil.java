@@ -211,7 +211,12 @@ public class EncryptionDecryptionUtil {
         List<Role> newRoleList = new ArrayList<>();
         if (userInfo.getRoles() != null) {
             for (Role role : userInfo.getRoles()) {
-                Role newRole = Role.builder().code(role.getCode()).name(role.getName()).id(role.getId()).build();
+                Role newRole = Role.builder()
+                        .code(role.getCode())
+                        .name(role.getName())
+                        .id(role.getId())
+                        .tenantId(role.getTenantId() != null ? role.getTenantId() : userInfo.getTenantId())
+                        .build();
                 newRoleList.add(newRole);
             }
         }
