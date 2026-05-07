@@ -1413,6 +1413,78 @@ stops.
 
 ---
 
+## Rule 40 — `RequestInfo` Is Effectively Immutable in Direct Calls
+
+**New rule, surfaced by port-forward testing of the LockApi/CaseApi cutover.**
+
+REST→direct conversion (Rules 31, 32) makes a previously-implicit
+invariant explicit: when a caller and callee share a JVM, the
+`RequestInfo` they exchange is the **same object reference**. Mutations
+the callee makes leak back to the caller — historically tolerated only
+because REST serialization severed the reference at the wire boundary.
+
+**Concrete failure mode.** If the callee adds a role, replaces
+`userInfo`, or changes any field of the incoming `RequestInfo`, the
+caller's `RequestInfo` is now corrupted for any subsequent calls
+(workflow service, payment service, etc.) that depend on the original
+shape — especially `tenantId` propagation through roles. The cited
+incident: `getEncrichedandCopiedUserInfo` (despite the name) replaced
+the caller's `userInfo` in place with a Role missing `tenantId`;
+subsequent workflow calls failed with a tenant-resolution error.
+
+**Rule.** Code reachable from a `*Api` impl, an internal service, or
+any helper that may be called via direct method **must not mutate**
+the incoming `RequestInfo` or its nested `UserInfo` / `Role` / `roles`
+list. Build a defensive copy via
+`org.pucar.dristi.common.util.RequestInfoUtil.withExtraRole(...)` /
+`.withUser(...)` and use that locally:
+
+```java
+// WRONG — leaks to caller
+requestInfo.getUserInfo().getRoles().add(systemAdminRole);
+downstream.setRequestInfo(requestInfo);
+
+// RIGHT — defensive copy
+downstream.setRequestInfo(
+    RequestInfoUtil.withExtraRole(requestInfo, systemAdminRole));
+```
+
+**Exception.** Mutations on a *locally-constructed* `RequestInfo` are
+fine (e.g. `RequestInfo r = new RequestInfo(); r.setUserInfo(...);`
+when impersonating SYSTEM for a downstream call). The rule applies
+to `RequestInfo`s that originated from a parameter or a request
+envelope — anything reached via `*.getRequestInfo()` or a method
+parameter typed `RequestInfo`.
+
+**Detection (proactive scan):**
+
+```bash
+grep -rnE "(reqInfo|requestInfo|info)\.setUserInfo\(|requestInfo\.getUserInfo\(\)\.(set[A-Z]|getRoles\(\)\.(add|remove)\()" \
+  --include="*.java" dristi-monolith/domain-*/src/main/java/
+```
+
+Each hit needs eyes on whether the `RequestInfo` is parameter-derived
+(must defensive-copy) or fresh-local (safe to mutate).
+
+**Cited fix from this rule's introduction.** 9 sites across the `case`
+subdomain — `EncryptionDecryptionUtil.decryptObject`, `PaymentUpdateService.updatePayment`,
+and 7 enrichment paths in `CaseService` (TASK_CREATOR / HEARING_SCHEDULER
+role additions before downstream task and hearing calls) — converted
+from in-place mutation to `RequestInfoUtil.withExtraRole(...)` /
+`.withUser(...)`. Plus a `tenantId`-on-synthesized-Role fix in
+`getEncrichedandCopiedUserInfo` itself. The 4 mutations in
+`CaseService.createTaskAndDemand` (around line 3705) are on a fresh
+`new RequestInfo()` and remain unchanged — see *Exception* above.
+
+**Test pattern.** Any `*Api` test that exercises an enrichment path
+should assert the input `RequestInfo` is unchanged after the call.
+
+**Enforcement.** No automated check yet. Code review + the proactive
+scan when reviewing migration PRs that introduce REST→direct
+conversion.
+
+---
+
 ## Useful checks at a glance
 
 | What                                  | Where                                             |

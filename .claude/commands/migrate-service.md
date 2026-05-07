@@ -355,6 +355,39 @@ If lifted DTOs need legacy deps in `dristi-common` (e.g.
 
 ### 3.4 Build verification
 
+#### 3.4.1 Rule 40 mutation scan
+
+Before maven, scan for `RequestInfo` mutations introduced or exposed
+by REST→direct conversion. The pattern was dormant under REST
+(serialization severed the reference) but leaks across direct calls.
+
+```bash
+grep -rnE "(reqInfo|requestInfo|info)\.setUserInfo\(|requestInfo\.getUserInfo\(\)\.(set[A-Z]|getRoles\(\)\.(add|remove)\()" \
+  --include="*.java" \
+  dristi-monolith/domain-<module>/src/main/java/
+```
+
+For each hit, read the enclosing method and classify:
+- **Safe (Rule 40 exception):** the mutated `RequestInfo` was declared
+  via `RequestInfo X = new RequestInfo()` in the same scope. No leak. Skip.
+- **Tier 4 (must fix):** the `RequestInfo` originated from a parameter
+  or `*.getRequestInfo()` call. Surface to dev with the fix recipe:
+  ```java
+  // BEFORE
+  requestInfo.getUserInfo().getRoles().add(role);
+  downstream.setRequestInfo(requestInfo);
+
+  // AFTER
+  downstream.setRequestInfo(
+      RequestInfoUtil.withExtraRole(requestInfo, role));
+  ```
+  Wait for explicit OK per site. Apply only on confirmation.
+
+If any unresolved Tier 4 finds remain, do NOT proceed to 3.4.2 — maven
+won't fail on shared-reference mutations; the bug would slip past CI.
+
+#### 3.4.2 Maven verification
+
 ```bash
 cd dristi-monolith && \
   JAVA_HOME=/home/mani/.jdks/corretto-17.0.18 \
@@ -436,10 +469,13 @@ Test plan.
 
 - Failing gate at Step 2.1 or 3.1 → invoke `/debug-gate`, return when fixed.
 - Tier 3/4 decision needed → present, wait, do not act.
-- `mvn` failure at Step 2.5 or 3.4 → diagnose, do not commit.
-- **`ModuleStructureTest` violation** at Step 3.4 → surface the violating
+- `mvn` failure at Step 2.5 or 3.4.2 → diagnose, do not commit.
+- **`ModuleStructureTest` violation** at Step 3.4.2 → surface the violating
   file + import line. Boundary breach is fixed by switching to the
   target's `*Api` (Rule 31), not by silencing the test.
+- **Rule 40 mutation found** at Step 3.4.1 → STOP. Convert to
+  `RequestInfoUtil.withExtraRole/withUser` (defensive copy). Maven won't
+  catch shared-reference mutations.
 - **Cross-`*Api` method gap** at Step 3.2 or 3.3(b) → STOP. Surface
   options per Rule 39: (a) coordinate with target's migrator to expose
   the method, (b) leave as REST temporarily and file a follow-up. Do
