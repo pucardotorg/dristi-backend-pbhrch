@@ -523,7 +523,73 @@ during the migration itself. A class is in scope if any of:
   same concrete type.
 - `case` and `lock-svc` were migrated before Phase 35 existed; their
   contract DTOs are still under `internal/web/models/`. A retro-lift
-  PR is owned separately.
+  PR is owned separately. **Note:** the case retro-lift was attempted
+  in the LockApi/CaseApi cutover PR and rolled back after Phase 35
+  produced 203 compile errors — see [Rule 24a](#rule-24a--namedinterfacecontract-when-retro-lift-isnt-feasible)
+  for the alternative pattern, and [FOLLOWUP_RETROLIFT_PATH_A.md](FOLLOWUP_RETROLIFT_PATH_A.md)
+  for the deferred Path A details.
+
+---
+
+## Rule 24a — `@NamedInterface("contract")` When Retro-Lift Isn't Feasible
+
+**New rule, learned from the LockApi/CaseApi cutover PR.**
+
+Rule 24's "lift contract DTOs to `dristi-common/contract/<subdomain>/`"
+is the preferred shape. It doesn't always work: services with
+**tangled `web/models/` trees** produce a class of errors Phase 35
+can't resolve mechanically:
+
+| Tangle category | Concrete example |
+|---|---|
+| **JPA + DTO dual role** | `Lock` is `@Entity(name="lock")` AND the wire DTO. After lift to `dristi-common`, `jakarta.persistence` isn't on dristi-common's classpath; `LockRepository extends JpaRepository<Lock, UUID>` still needs the entity at its old location |
+| **Subpackage references** | `Address.java` imports `cases.internal.web.models.v2.AddressV2`. Phase 35 walks only top-level `web/models/*.java`; subpackage types stay put. Lifted `Address` can't resolve `AddressV2` from `dristi-common` |
+| **Internal annotation references** | `CaseSearchCriteria` uses `cases.internal.annotation.SomeValidator` (custom Bean Validation). Lifted DTO references a class in another module |
+| **External library deps not in dristi-common pom** | `IndividualSearch` uses `org.egov.common.data.query.annotations.*`; that artifact isn't pulled in |
+
+Concrete data: running Phase 35 on case lifted 140 classes and produced
+**203 compile errors** spanning all four categories. Rolling Phase 35
+forward to handle these is open-ended — each fix may surface new
+categories. Path A (proper retro-lift) is deferred; Path B (in-place
+exposure) unblocks today.
+
+**Rule.** When Rule 24's retro-lift isn't feasible — measured by a
+trial Phase 35 run failing to compile — keep contract DTOs in
+`<subdomain>/internal/web/models/` and stamp the package with
+`@NamedInterface("contract")`:
+
+```java
+// <subdomain>/internal/web/models/package-info.java
+@org.springframework.modulith.NamedInterface("contract")
+package org.pucar.dristi.<domain>.<subdomain>.internal.web.models;
+```
+
+Cross-subdomain callers import `<subdomain>.internal.web.models.<Type>`
+directly. Spring Modulith's `verify()` accepts the import because the
+named-interface marker exposes the package; without the marker it
+would fail with "depends on non-exposed type."
+
+**Decision tree.**
+
+| Service shape | Pattern |
+|---|---|
+| Flat `web/models/` (only top-level `.java` files), no JPA dual-role, no internal-annotation refs | **Rule 24** — lift to `dristi-common/contract/<subdomain>/` |
+| Tangled `web/models/` (any of the 4 categories above) | **Rule 24a** — keep in place, expose via `@NamedInterface("contract")` |
+
+The two patterns coexist; both produce a clean cross-module boundary.
+The difference is *where* the contract types physically live.
+
+**Trade-off for choosing Rule 24a now.** Rule 24a defers the canonical
+relocation to `dristi-common`. Cost of moving from 24a → 24 later is
+bounded: Phase 35's import-rewrite sweep handles caller-import
+migration automatically, the `@NamedInterface` marker comes off in
+one line, and the deeper work (splitting dual-role entity/DTO classes,
+robustifying Phase 35) is the same magnitude regardless of timing.
+The followup is tracked in [FOLLOWUP_RETROLIFT_PATH_A.md](FOLLOWUP_RETROLIFT_PATH_A.md).
+
+**Enforcement.** Same as Rule 24 — Spring Modulith's
+`ModuleStructureTest.verify()` is the gate. Cross-subdomain references
+to types not behind a named interface fail the test.
 
 ---
 
@@ -597,7 +663,14 @@ Phase 7 / `mvn verify`. RUNBOOK §7 has the symptom row pointing here.
 
 ## Rule 27 — REST → Direct Calls Are Follow-up PRs, Not Migration PRs
 
-**New rule, learned from the order service migration.**
+> **Superseded by [Rule 32](#rule-32--restdirect-converts-at-target-migration-time-not-caller-migration-time).**
+> Rule 27 was the right call when API-first infrastructure didn't exist
+> yet. With per-subdomain `@ApplicationModule` (Rule 31) and `*Api`
+> interfaces in place, REST→direct conversion belongs in the *target's*
+> migration PR rather than a separate follow-up. Original text retained
+> below for archive.
+
+**Original (now superseded), learned from the order service migration.**
 
 When a service `S` is migrated, Phase 5 emits a list of intra-DRISTI
 REST callers in `<service>_rest_calls.txt`. Tempting to convert
@@ -922,6 +995,371 @@ hand-edited target-module file must contain the exact string
 `// HAND-CURATED`. Phase 3 of `dristi_common/03_build_canonical.py`
 and Phases 3 + 6 of the per-module pipeline both check for this marker
 and refuse to overwrite.
+
+---
+
+## Rule 31 — API-First Cross-Subdomain Boundary
+
+**New rule, learned from the LockApi/CaseApi cutover PR.**
+
+`domain-case-lifecycle` is one Maven module with multiple subdomains
+(cases, locksvc, order, notification). Spring Modulith's default
+detection treats the Maven module as the unit; subdomains are sub-
+packages of the same module and freely cross-import. That defeats the
+DDD bounded-context separation each subdomain should preserve — they
+were independently authored microservices before the monolith pulled
+them in.
+
+**Rule.** Each subdomain marks itself as a Spring Modulith application
+module via `package-info.java`:
+
+```java
+// <subdomain>/package-info.java
+@org.springframework.modulith.ApplicationModule(displayName = "Case")
+package org.pucar.dristi.<domain>.<subdomain>;
+```
+
+After this, cross-subdomain imports of `internal/...` fail
+`ModuleStructureTest.verify()`. Other subdomains may consume the
+subdomain only via:
+
+1. **Top-level `<Subdomain>Api.java`** at the subdomain root (auto-
+   exposed because top-level types are public-by-default per Modulith
+   convention). One `*Api` per subdomain by default; split when surface
+   grows past ~10 methods or naturally bifurcates.
+2. **Contract DTOs**: either lifted to `dristi-common/contract/<subdomain>/`
+   (Rule 24) or exposed in-place via `@NamedInterface("contract")`
+   (Rule 24a). `*Api` signatures use these types.
+
+**Implementation lives in `<subdomain>/internal/service/`** and
+delegates to the existing internal services. Keep impls thin —
+business logic stays in the existing service classes.
+
+**When to expose `*Api` in a subdomain:** add it on first cross-subdomain
+need OR forward-looking when the registry shows imminent demand. The
+order subdomain's `OrderApi.search` was added speculatively because
+hearing/task/evidence/etc. are in flight and will all consume it.
+
+**Enforcement.** `ModuleStructureTest.verify()` (Spring Modulith
+`ApplicationModules.of(DristiApplication.class)`) — already in the
+build, just runs against the new markers automatically.
+
+---
+
+## Rule 32 — REST→Direct Converts at Target-Migration Time, Not Caller-Migration Time
+
+**New rule, learned from the LockApi/CaseApi cutover PR.**
+**Supersedes Rule 27.**
+
+Rule 27 said "REST→direct = separate follow-up PR" because doing the
+conversion required behavioural surgery and the API-first
+infrastructure (Rules 31, 24a) didn't exist. With that infrastructure
+in place, conversion belongs in the **target service's migration PR**
+— the same PR that adds the target's `*Api`.
+
+**Rule.** When service `T` migrates, the migration PR carries three
+concerns in this order:
+
+1. **C1 (structural lift):** unchanged from Rule 28.
+2. **C2 (contract uplift + REST→direct):** Phase 35 (or Rule 24a's
+   `@NamedInterface` if Phase 35 isn't feasible) + add `<T>Api` at
+   subdomain top-level + rewrite every `done` caller's REST call to
+   `T` as a direct `*Api` injection.
+3. **C3 (pipeline/rules/docs):** unchanged.
+
+The caller-side migration PR (when caller `C` originally migrated)
+**leaves the REST call untouched** — `T` doesn't exist in the monolith
+yet, and there's nothing to point at. The deferred conversion lands
+in `T`'s PR, not as endless follow-up PRs that never get cleaned up.
+
+**Decision tree** (replaces Rule 27's table):
+
+| Caller's target | Action in target's migration PR (when target = `T`) |
+|---|---|
+| Migrated DRISTI service | Convert. Caller switches from REST util to `@Autowired <T>Api` |
+| Unmigrated DRISTI service | N/A — caller's REST call stays until that target migrates |
+| Platform (eGov / DIGIT — see `EGOV_HOST_TOKENS`) | Permanent REST. Never converts |
+
+**Side effect of conversion** (must be done in the same PR):
+
+- Caller's REST helper util gets deleted. Don't keep it as a one-line
+  wrapper — see [Rule 38](#rule-38--delete-rest-helper-utils-on-conversion-dont-wrap).
+- Caller's per-subdomain YAML loses `<target>.host`/`<target>.path`
+  keys; the corresponding `Configuration` getter methods get dropped.
+- Caller's tests stop mocking `RestTemplate`/`serviceRequestRepository`
+  for that target; they mock the `*Api` instead — see Rule 36.
+
+**Exception.** A first-of-its-kind retro-conversion (cleaning up
+done→done calls that pre-existed because Rules 31/32 didn't exist
+during their migrations) may go in a dedicated PR scoped to the
+cleanup, as the LockApi/CaseApi cutover did. Once retro-cleanup is
+done, Rule 32 governs forward.
+
+**Enforcement.** None automated; reviewer convention. A future Phase
+5 enhancement could enumerate done→done REST candidates and fail the
+build if any remain after target's PR.
+
+---
+
+## Rule 33 — RequestInfo Is an Explicit Parameter on Every `*Api` Method
+
+**New rule, learned from the LockApi/CaseApi cutover PR.**
+
+REST calls passed `RequestInfo` in the body envelope; Spring's request
+context made the value implicitly available via thread-locals.
+Direct calls bypass that machinery — if `RequestInfo` is implicit, the
+caller's identity, audit metadata, and correlation IDs disappear at
+the boundary.
+
+**Rule.** Every `*Api` method takes `org.egov.common.contract.request.RequestInfo`
+as an explicit parameter. The caller threads its inbound `RequestInfo`
+through:
+
+```java
+public interface LockApi {
+    boolean isLockPresent(RequestInfo requestInfo, String uniqueId, String tenantId);
+}
+```
+
+Even when the method's logical signature is just `(uniqueId, tenantId)`,
+RequestInfo stays. Rationale:
+
+- Audit trail and authorisation checks downstream need the caller
+  identity. Implicit context loses this.
+- Future `@Async` adoption breaks thread-local context propagation
+  silently. Explicit param survives.
+- Testability — tests construct `RequestInfo` directly rather than
+  setting up Spring context.
+
+**Enforcement.** Code review. The pattern is documented in the three
+existing `*Api` interfaces; new APIs should mirror.
+
+---
+
+## Rule 34 — `*Api` Signatures Use Contract DTOs Only
+
+**New rule, learned from the LockApi/CaseApi cutover PR.**
+
+The whole point of the API boundary is that callers don't see
+implementation types. Leaking an internal type into a method signature
+gives the caller an excuse to import it transitively, which defeats
+the boundary.
+
+**Rule.** Every type in an `*Api` method's parameters or return type
+is one of:
+
+1. A **contract DTO** lifted to `dristi-common/contract/<subdomain>/`
+   (Rule 24).
+2. A **contract DTO** in `<subdomain>/internal/web/models/` with the
+   package marked `@NamedInterface("contract")` (Rule 24a).
+3. A **platform / eGov type** from `org.egov.common.contract.*` (e.g.
+   `RequestInfo`, `ResponseInfo`).
+4. A **JDK primitive or standard collection** (`boolean`, `String`,
+   `List<X>` where X is itself permissible).
+
+Internal types from `internal/` (other than the Rule 24a contract
+package) must not appear. If a useful return value is an internal
+type, the impl converts it to a contract type at the boundary.
+
+**Concrete example from this PR.** `OrderApi.search` returns
+`OrderListResponse` (lifted to `contract/order/`). Internally,
+`OrderRegistrationService.searchOrder` returns `List<Order>`. The
+`OrderApiImpl` wraps:
+
+```java
+List<Order> orders = orderRegistrationService.searchOrder(request);
+return OrderListResponse.builder()
+    .list(orders).totalCount(...).pagination(...).responseInfo(...).build();
+```
+
+The wrap is the API's job, not the caller's.
+
+**Enforcement.** Spring Modulith `verify()` flags imports of
+non-exposed internal types; that's the technical enforcement. Code
+review covers the design intent.
+
+---
+
+## Rule 35 — Cross-Module Writes Are Tier 3
+
+**New rule, learned from the LockApi/CaseApi cutover PR.**
+
+Cross-subdomain *reads* (caller asks target for data) are routine and
+covered by `*Api`. Cross-subdomain **writes** (caller asks target to
+mutate state) are different — they raise transaction boundaries,
+idempotency, rollback, eventual consistency, and audit-trail
+questions that the read path doesn't.
+
+**Rule.** Default `*Api` shape is read-only / idempotent. Adding a
+*write* method to a `*Api` is **Tier 3** (per
+[scripts/migration/CLAUDE.md §2](CLAUDE.md)) — propose 2-3 design
+options with trade-offs, surface to the user, and wait for direction.
+Specifically discuss:
+
+1. **Transaction boundary.** Does the caller's `@Transactional`
+   propagate through the direct call? If yes, a target-side rollback
+   surfaces as a caller-side rollback. If no, partial-write states
+   need explicit reconciliation.
+2. **Idempotency.** Does the target's write tolerate replay? If the
+   caller retries (e.g. on a transient exception), is the target's
+   state consistent?
+3. **Audit trail.** Cross-module write events are easy to lose. Add
+   structured logging at the API boundary (enter/exit + correlation
+   ID from `RequestInfo.userInfo`).
+4. **Event vs. RPC.** Sometimes the right shape is "publish event,
+   target subscribes" rather than "direct call." Spring Modulith
+   supports `ApplicationModuleListener` for this.
+
+**Enforcement.** Reviewer discipline. Code review on any `*Api` PR
+asks "does this method mutate target state? if so, did we hit Tier 3?"
+
+---
+
+## Rule 36 — Convert Tests at the Same Time as the Call
+
+**New rule, learned from the LockApi/CaseApi cutover PR.**
+
+Caller tests previously mocked `RestTemplate.postForObject(...)` or
+`serviceRequestRepository.fetchResult(...)` to stub the REST round-
+trip. After conversion, those mocks no longer exercise the real call
+path — the call goes through `<T>Api` now.
+
+**Rule.** When a caller's REST call to target `T` becomes a direct
+`<T>Api` call, the same commit:
+
+1. Removes the `RestTemplate` / `ServiceRequestRepository` mocks for
+   that target.
+2. Adds `@Mock <T>Api` to the caller's test class.
+3. Stubs the equivalent shape with `when(api.method(...)).thenReturn(...)`
+   using contract DTOs (typed, not `Map.class` or `JsonNode`).
+4. Updates `verify(...)` calls to match the new method.
+
+**Concrete patterns from this PR**:
+
+```java
+// BEFORE (REST stub of fetchCaseDetails returning Boolean)
+when(caseUtil.fetchCaseDetails(any(), eq(cnr), eq(filing))).thenReturn(true);
+verify(caseUtil).fetchCaseDetails(any(), eq(cnr), eq(filing));
+
+// AFTER (typed *Api stub returning a built CaseExistsResponse)
+CaseExists matched = new CaseExists();
+matched.setExists(true);
+when(caseApi.exists(any())).thenReturn(
+    CaseExistsResponse.builder().criteria(Collections.singletonList(matched)).build());
+verify(caseApi).exists(any());
+```
+
+```java
+// BEFORE (REST stub of searchCaseDetails returning JsonNode)
+JsonNode mockedDetails = mock(JsonNode.class);
+when(mockedDetails.get("courtId")).thenReturn(courtIdNode);
+when(caseUtil.searchCaseDetails(any())).thenReturn(mockedDetails);
+
+// AFTER (typed *Api stub returning a built CaseListResponse with one CourtCase)
+CourtCase mockCase = new CourtCase();
+mockCase.setCourtId("COURT123");
+CaseCriteria criterion = new CaseCriteria();
+criterion.setResponseList(Collections.singletonList(mockCase));
+when(caseApi.search(any())).thenReturn(
+    CaseListResponse.builder().criteria(Collections.singletonList(criterion)).build());
+```
+
+The new mock pattern is more verbose but typed — refactoring renames
+catch errors that JsonNode-mocked tests would miss.
+
+**Enforcement.** Review-time. The conversion's mvn test must pass.
+
+---
+
+## Rule 37 — Dead Code Surfaces During Cutover; Sweep It Out
+
+**New rule, learned from the LockApi/CaseApi cutover PR.**
+
+REST→direct cutovers are exactly the moment to find legacy dead code
+the original team meant to clean up. Concrete patterns surfaced
+during the LockApi/CaseApi cutover:
+
+1. **Dead injection.** A util is `@Autowired` into a service but no
+   method on the service ever calls it. `cases/internal/service/CaseService`
+   declared `OrderUtil orderUtil` and assigned it — never invoked.
+2. **Orphaned local DTOs.** Types in `<subdomain>/internal/web/models/`
+   that only the now-deleted util referenced. `cases` had local
+   `OrderListResponse` and `OrderSearchRequest` only `OrderUtil` saw.
+3. **Unused helper methods.** A util has 6 methods, 2 are REST callers,
+   the other 4 are pure JSON helpers nobody calls. `order/CaseUtil`
+   shipped 4 helpers (`getLitigants`, `getIndividualIds`,
+   `getRepresentatives`, `getAdvocateIds`) used nowhere.
+4. **Contract orphans.** When two services lifted their own view of a
+   shared DTO into separate `contract/<subdomain>/*` namespaces, one
+   becomes the canonical and the other an orphan. Order's
+   `contract/order/{CaseExists*, CaseSearchRequest, CaseCriteria}`
+   were orphans against case's `internal/web/models` types.
+5. **Configuration drift.** When the REST helper util goes, its
+   `<svc>.host`/`<svc>.path` `@Value`-bound fields go too — and the
+   per-subdomain YAML keys that fed them.
+
+**Rule.** During a REST→direct cutover, in the same commit:
+
+- **Grep first**: `grep -rE "<utilName>\\." <subdomain>/src/main/java`
+  to find call sites. If empty, the util is dead — delete entirely.
+- **Walk the imports of the deleted util.** Any local DTO whose only
+  importer is the deleted util becomes an orphan — delete it too.
+- **Check the util's other methods** for usage. Methods nobody calls
+  are dead even if the rest of the util isn't.
+- **Find duplicates.** Run `comm -12 <(ls contract/<a>/) <(ls contract/<b>/)`
+  for any pair of post-Phase-35 contract dirs — overlapping names are
+  candidates for dedupe.
+- **Drop now-unused config.** Each `Configuration` `@Value` field that
+  fed only the deleted util gets removed; corresponding YAML keys
+  too.
+
+These cleanups belong in the **same** commit as the conversion, not a
+follow-up. Splitting hides the connection.
+
+**Enforcement.** None automated. Surfaces during code review of the
+cutover commit.
+
+---
+
+## Rule 38 — Delete REST Helper Utils on Conversion, Don't Wrap
+
+**New rule, learned from the LockApi/CaseApi cutover PR.**
+
+Tempting to keep the REST util as a thin pass-through after conversion:
+
+```java
+// Don't do this.
+@Component
+public class LockUtil {
+    @Autowired private LockApi lockApi;
+    public boolean isLockPresent(RequestInfo r, String u, String t) {
+        return lockApi.isLockPresent(r, u, t);
+    }
+}
+```
+
+It's smaller blast radius (callers don't change the injected type) but
+it's a half-finished refactor — the wrapper does literally nothing
+and accumulates as technical debt that nobody schedules to remove.
+
+**Rule.** When a REST util is converted to `*Api`, **delete the util**.
+Caller call sites switch from `@Autowired <X>Util util;` to
+`@Autowired <X>Api api;`. Tests update at the same time (Rule 36).
+
+**Exception.** If a util has both REST methods AND non-trivial
+non-REST behaviour (formatting, validation, multi-call orchestration),
+split: extract the REST methods into the `*Api` callers; keep the
+non-REST behaviour in a renamed helper class (`<X>Helper` or
+`<X>JsonHelper`). The original util class goes away.
+
+**Cited cleanup from this PR**: `order/CaseUtil` had 2 REST methods
+and 4 pure JSON helpers. Of the 4 helpers, all 4 turned out to be
+dead code (Rule 37) — so the entire util went away with no helper
+class needed. If the helpers had been live, they'd have moved to
+`order/internal/util/CaseJsonHelper`.
+
+**Enforcement.** Code review. If reviewer sees a one-line
+`*Api`-wrapping util after a conversion, push back.
 
 ---
 

@@ -46,10 +46,20 @@ Local, reversible, low-risk inside the migrated tree.
 - Adapting a service-local caller to the canonical's method signature
   (Rule 26) — e.g. switching `String → readValue` chains to direct use
   of the canonical's parsed return type.
-- Converting an intra-DRISTI REST call to a direct service call **inside
-  the migrated tree** when the target service is already in the monolith
-  AND the conversion is genuinely behaviour-preserving (Rule 27 default
-  is "follow-up PR" — only deviate for the easy cases).
+- Converting an intra-DRISTI REST call to a direct `*Api` call inside
+  the target's migration PR (Rule 32 — supersedes Rule 27's "follow-up
+  PR" hedge once the target's `*Api` exists). Mechanical: switch
+  `@Autowired <X>Util` to `@Autowired <X>Api`, update tests to mock the
+  Api (Rule 36), drop the now-dead REST helper util (Rule 38) and
+  any obsolete `<svc>.host`/`<svc>.path` config (Rule 37).
+- Adding the first method to a subdomain's `*Api` interface that
+  another already-migrated subdomain genuinely needs (Rule 31). Same
+  with adding a forward-looking method when the registry shows
+  imminent demand from in-flight migrations.
+- Stamping a subdomain with `@ApplicationModule` (Rule 31) or its
+  `internal/web/models/` with `@NamedInterface("contract")` (Rule
+  24a). Both are one-line `package-info.java` annotations whose
+  effect is enforcement, not behaviour change.
 
 ### Tier 2 — Propose diff, wait for approval
 Edits to the **pipeline source** or its data lists. Affects every
@@ -80,8 +90,19 @@ Architectural / cross-service decisions where wrong-answer cost is high.
 - Promoting a contract DTO out of `dristi-common/contract/<subdomain>/`
   into a shared `dristi-common/contract/<shared>/` namespace once two
   services prove they want the same concrete type (Rule 24).
+- Choosing between **Rule 24** (lift contract DTOs to dristi-common)
+  and **Rule 24a** (keep in `internal/web/models/` with
+  `@NamedInterface("contract")`). Try Rule 24 first; if Phase 35
+  fails, see [FOLLOWUP_RETROLIFT_PATH_A.md](FOLLOWUP_RETROLIFT_PATH_A.md)
+  before deciding to invest in pipeline robustness vs. accept Rule 24a.
 - Adding a class to the lift set that doesn't match `CONTRACT_SUFFIXES`
   (false negative — would the caller need it for a direct call?).
+- **Adding a *write* method to a `*Api`** (Rule 35): cross-module
+  writes raise transaction boundary, idempotency, rollback, and
+  audit-trail questions the read path doesn't. Surface options
+  including event-publishing alternatives.
+- Changing a `*Api` interface signature in a way that breaks existing
+  cross-subdomain callers (Rule 31).
 - Resolving a CONFLICT-classified config key when behavioral
   divergence matters.
 - Modifying PIPELINE_RULES.md (writing a new rule, retiring an old one).
@@ -207,7 +228,8 @@ Pipeline and Maven output can be large. To keep context efficient:
 | Path | Purpose |
 |---|---|
 | [RUNBOOK.md](RUNBOOK.md) | Human-readable operational guide |
-| [PIPELINE_RULES.md](PIPELINE_RULES.md) | 30 hard-won rules, indexed by gate/symptom (24=contract lift, 25=parent pom dep hygiene, 26=canonical return-type drift, 27=REST→direct as follow-up PR, 28=three-commit structure, 29=workflow migration pattern + behavior-union extraction, 30=pre-commit summary protocol) |
+| [PIPELINE_RULES.md](PIPELINE_RULES.md) | hard-won rules, indexed by gate/symptom (24=contract lift, 24a=`@NamedInterface` alternative when retro-lift fails, 25=parent pom dep hygiene, 26=canonical return-type drift, 27=REST→direct as follow-up PR — *superseded by 32*, 28=three-commit structure, 29=workflow migration pattern + behavior-union extraction, 30=pre-commit summary protocol, 31=API-first cross-subdomain boundary via `@ApplicationModule` + `*Api`, 32=REST→direct converts at target-migration time, 33=`RequestInfo` explicit on every `*Api`, 34=`*Api` signatures use contract DTOs only, 35=cross-module writes are Tier 3, 36=convert tests at the same time as the call, 37=dead code surfaces during cutover (sweep it out), 38=delete REST helper utils on conversion, don't wrap) |
+| [FOLLOWUP_RETROLIFT_PATH_A.md](FOLLOWUP_RETROLIFT_PATH_A.md) | Deferred work to relocate case + lock-svc contract DTOs from `internal/web/models/` to `dristi-common/contract/` once Phase 35 is robust enough to handle JPA / subpackage / internal-annotation tendrils |
 | [SERVICE_REGISTRY.md](SERVICE_REGISTRY.md) | Service → module/subdomain mapping |
 | [per_module/run_module_migration.py](per_module/run_module_migration.py) | The 10-phase pipeline (incl. Phase 35 contract-lift) |
 | [config_consolidation/run_consolidation.py](config_consolidation/run_consolidation.py) | Pipeline 5 (config) |
