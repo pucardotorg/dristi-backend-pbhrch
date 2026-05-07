@@ -26,6 +26,7 @@ import org.pucar.dristi.caselifecycle.cases.internal.repository.AdvocateOfficeCa
 import org.pucar.dristi.caselifecycle.cases.internal.repository.CaseRepository;
 import org.pucar.dristi.caselifecycle.cases.internal.util.*;
 import org.pucar.dristi.common.util.DateUtil;
+import org.pucar.dristi.common.util.RequestInfoUtil;
 import org.pucar.dristi.caselifecycle.cases.internal.validators.CaseRegistrationValidator;
 import org.pucar.dristi.caselifecycle.cases.internal.validators.EvidenceValidator;
 import org.pucar.dristi.caselifecycle.cases.internal.web.OpenApiCaseSummary;
@@ -98,7 +99,6 @@ public class CaseService {
     private final CaseUtil caseUtil;
 
     private final FileStoreUtil fileStoreUtil;
-    private final OrderUtil orderUtil;
     private final DateUtil dateUtil;
     private final InboxUtil inboxUtil;
     private final AdvocateOfficeCaseMemberRepository advocateOfficeCaseMemberRepository;
@@ -117,7 +117,7 @@ public class CaseService {
                        HearingUtil analyticsUtil,
                        UserService userService,
                        PaymentCalculaterUtil paymentCalculaterUtil,
-                       ObjectMapper objectMapper, CacheService cacheService, EnrichmentService enrichmentService, SmsNotificationService notificationService, IndividualService individualService, AdvocateUtil advocateUtil, EvidenceUtil evidenceUtil, EvidenceValidator evidenceValidator, CaseUtil caseUtil, FileStoreUtil fileStoreUtil, OrderUtil orderUtil, DateUtil dateUtil, InboxUtil inboxUtil, AdvocateOfficeCaseMemberRepository advocateOfficeCaseMemberRepository, org.pucar.dristi.caselifecycle.cases.internal.enrichment.AdvocateDetailBlockBuilder advocateDetailBlockBuilder) {
+                       ObjectMapper objectMapper, CacheService cacheService, EnrichmentService enrichmentService, SmsNotificationService notificationService, IndividualService individualService, AdvocateUtil advocateUtil, EvidenceUtil evidenceUtil, EvidenceValidator evidenceValidator, CaseUtil caseUtil, FileStoreUtil fileStoreUtil, DateUtil dateUtil, InboxUtil inboxUtil, AdvocateOfficeCaseMemberRepository advocateOfficeCaseMemberRepository, org.pucar.dristi.caselifecycle.cases.internal.enrichment.AdvocateDetailBlockBuilder advocateDetailBlockBuilder) {
         this.validator = validator;
         this.enrichmentUtil = enrichmentUtil;
         this.caseRepository = caseRepository;
@@ -140,7 +140,6 @@ public class CaseService {
         this.evidenceValidator = evidenceValidator;
         this.caseUtil = caseUtil;
         this.fileStoreUtil = fileStoreUtil;
-        this.orderUtil = orderUtil;
         this.dateUtil = dateUtil;
         this.inboxUtil = inboxUtil;
         this.advocateOfficeCaseMemberRepository = advocateOfficeCaseMemberRepository;
@@ -500,14 +499,18 @@ public class CaseService {
             if (lastSigned) {
                 log.info("Last e-sign for case {}", caseRequest.getCases().getId());
                 Calculation calculation = compareCalculationAndCreateDemand(caseRequest);
-                caseRequest.getRequestInfo().getUserInfo().getRoles().add(Role.builder().id(123L).code(SYSTEM).name(SYSTEM).tenantId(caseRequest.getCases().getTenantId()).build());
+                Role systemRole = Role.builder().id(123L).code(SYSTEM).name(SYSTEM).tenantId(caseRequest.getCases().getTenantId()).build();
+                RequestInfo systemRequestInfo = RequestInfoUtil.withExtraRole(caseRequest.getRequestInfo(), systemRole);
                 if (calculation != null) {
                     caseRequest.getCases().getWorkflow().setAction(E_SIGN_COMPLETE_WITH_PAYMENT);
                 } else {
                     caseRequest.getCases().getWorkflow().setAction(E_SIGN_COMPLETE);
                 }
                 log.info("Updating workflow status for case {} in last e-sign", caseRequest.getCases().getId());
-                workflowService.updateWorkflowStatus(caseRequest);
+                workflowService.updateWorkflowStatus(CaseRequest.builder()
+                        .requestInfo(systemRequestInfo)
+                        .cases(caseRequest.getCases())
+                        .build());
             }
 
             checkItsLastResponse(caseRequest);
@@ -993,10 +996,14 @@ public class CaseService {
             }
 
             log.info("Last response submitted by accused for case {}", caseRequest.getCases().getId());
-            caseRequest.getRequestInfo().getUserInfo().getRoles().add(Role.builder().id(123L).code(SYSTEM).name(SYSTEM).tenantId(caseRequest.getCases().getTenantId()).build());
+            Role systemRole = Role.builder().id(123L).code(SYSTEM).name(SYSTEM).tenantId(caseRequest.getCases().getTenantId()).build();
+            RequestInfo systemRequestInfo = RequestInfoUtil.withExtraRole(caseRequest.getRequestInfo(), systemRole);
             caseRequest.getCases().getWorkflow().setAction(RESPONSE_COMPLETE);
             log.info("Updating workflow status for case {} in last response submission", caseRequest.getCases().getId());
-            workflowService.updateWorkflowStatus(caseRequest);
+            workflowService.updateWorkflowStatus(CaseRequest.builder()
+                    .requestInfo(systemRequestInfo)
+                    .cases(caseRequest.getCases())
+                    .build());
         }
     }
 
@@ -2371,8 +2378,8 @@ public class CaseService {
             scheduledHearings.forEach(hearing -> {
                 Optional.ofNullable(hearing.getAttendees()).orElse(new ArrayList<>()).add(newAttendee);
                 HearingRequest hearingRequest = new HearingRequest();
-                joinCaseRequest.getRequestInfo().getUserInfo().getRoles().add(Role.builder().code("HEARING_SCHEDULER").name("HEARING_SCHEDULER").tenantId(joinCaseData.getTenantId()).build());
-                hearingRequest.setRequestInfo(joinCaseRequest.getRequestInfo());
+                Role hearingSchedulerRole = Role.builder().code("HEARING_SCHEDULER").name("HEARING_SCHEDULER").tenantId(joinCaseData.getTenantId()).build();
+                hearingRequest.setRequestInfo(RequestInfoUtil.withExtraRole(joinCaseRequest.getRequestInfo(), hearingSchedulerRole));
                 hearingRequest.setHearing(hearing);
                 hearingUtil.updateTranscriptAdditionalAttendees(hearingRequest);
 
@@ -2882,8 +2889,7 @@ public class CaseService {
         taskRequest.setTask(task);
         RequestInfo requestInfo = joinCaseRequest.getRequestInfo();
         Role role = Role.builder().code("TASK_CREATOR").name("TASK_CREATOR").tenantId(joinCaseAdvocate.getTenantId()).build();
-        requestInfo.getUserInfo().getRoles().add(role);
-        taskRequest.setRequestInfo(requestInfo);
+        taskRequest.setRequestInfo(RequestInfoUtil.withExtraRole(requestInfo, role));
         return taskUtil.callCreateTask(taskRequest);
     }
 
@@ -2965,8 +2971,7 @@ public class CaseService {
         taskRequest.setTask(task);
         RequestInfo requestInfo = joinCaseRequest.getRequestInfo();
         Role role = Role.builder().code("TASK_CREATOR").name("TASK_CREATOR").tenantId(joinCaseAdvocate.getTenantId()).build();
-        requestInfo.getUserInfo().getRoles().add(role);
-        taskRequest.setRequestInfo(requestInfo);
+        taskRequest.setRequestInfo(RequestInfoUtil.withExtraRole(requestInfo, role));
         return taskUtil.callCreateTask(taskRequest);
     }
 
@@ -3076,8 +3081,7 @@ public class CaseService {
         taskRequest.setTask(task);
         RequestInfo requestInfo = joinCaseRequest.getRequestInfo();
         Role role = Role.builder().code("TASK_CREATOR").name("TASK_CREATOR").tenantId(joinCaseAdvocate.getTenantId()).build();
-        requestInfo.getUserInfo().getRoles().add(role);
-        taskRequest.setRequestInfo(requestInfo);
+        taskRequest.setRequestInfo(RequestInfoUtil.withExtraRole(requestInfo, role));
         return taskUtil.callCreateTask(taskRequest);
     }
 
@@ -3152,8 +3156,7 @@ public class CaseService {
         taskRequest.setTask(task);
         RequestInfo requestInfo = joinCaseRequest.getRequestInfo();
         Role role = Role.builder().code("TASK_CREATOR").name("TASK_CREATOR").tenantId(joinCaseData.getTenantId()).build();
-        requestInfo.getUserInfo().getRoles().add(role);
-        taskRequest.setRequestInfo(requestInfo);
+        taskRequest.setRequestInfo(RequestInfoUtil.withExtraRole(requestInfo, role));
         return taskUtil.callCreateTask(taskRequest);
     }
 
@@ -3390,8 +3393,8 @@ public class CaseService {
         scheduledHearings.forEach(hearing -> {
             Optional.ofNullable(hearing.getAttendees()).orElse(new ArrayList<>()).addAll(newAttendees);
             HearingRequest hearingRequest = new HearingRequest();
-            requestInfo.getUserInfo().getRoles().add(Role.builder().code("HEARING_SCHEDULER").name("HEARING_SCHEDULER").tenantId(joinCaseData.getTenantId()).build());
-            hearingRequest.setRequestInfo(requestInfo);
+            Role hearingSchedulerRole = Role.builder().code("HEARING_SCHEDULER").name("HEARING_SCHEDULER").tenantId(joinCaseData.getTenantId()).build();
+            hearingRequest.setRequestInfo(RequestInfoUtil.withExtraRole(requestInfo, hearingSchedulerRole));
             hearingRequest.setHearing(hearing);
             log.info("updating hearing :: {}", hearing);
             hearingUtil.updateTranscriptAdditionalAttendees(hearingRequest);
@@ -3654,8 +3657,7 @@ public class CaseService {
             taskRequest.setTask(task);
             RequestInfo requestInfo = joinCaseRequest.getRequestInfo();
             Role role = Role.builder().code("TASK_CREATOR").name("TASK_CREATOR").tenantId(joinCaseAdvocate.getTenantId()).build();
-            requestInfo.getUserInfo().getRoles().add(role);
-            taskRequest.setRequestInfo(requestInfo);
+            taskRequest.setRequestInfo(RequestInfoUtil.withExtraRole(requestInfo, role));
             return taskUtil.callCreateTask(taskRequest);
 
         } catch (Exception e) {
@@ -5878,8 +5880,8 @@ public class CaseService {
             newAttendee.setType("Advocate");
             Optional.ofNullable(hearing.getAttendees()).orElse(new ArrayList<>()).add(newAttendee);
             HearingRequest hearingRequest = new HearingRequest();
-            requestInfo.getUserInfo().getRoles().add(Role.builder().code("HEARING_SCHEDULER").name("HEARING_SCHEDULER").tenantId(courtCase.getTenantId()).build());
-            hearingRequest.setRequestInfo(requestInfo);
+            Role hearingSchedulerRole = Role.builder().code("HEARING_SCHEDULER").name("HEARING_SCHEDULER").tenantId(courtCase.getTenantId()).build();
+            hearingRequest.setRequestInfo(RequestInfoUtil.withExtraRole(requestInfo, hearingSchedulerRole));
             hearingRequest.setHearing(hearing);
 
             // remove the old advocate from the hearing if he is no more part of the case

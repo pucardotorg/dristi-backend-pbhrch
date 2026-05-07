@@ -378,12 +378,6 @@ public class Configuration {
 	@Value("${indexer.join.case.kafka.topic}")
 	private String joinCaseTopicIndexer;
 
-	@Value("${pucar.lock.host}")
-	private String lockSvcHost;
-
-	@Value("${pucar.lock.search.endpoint}")
-	private String lockEndPoint;
-
 	@Value("${egov.payment.calculator.host}")
 	private String paymentCalculatorHost;
 
@@ -458,13 +452,6 @@ public class Configuration {
 
 	@Value("${egov.sms.vakalatnama.filed.time}")
 	private String smsVakalatnamaFiledTime;
-
-	// Order
-	@Value("${egov.order.host}")
-	private String orderHost;
-
-	@Value("${egov.order.search.endpoint}")
-	private String orderSearchEndpoint;
 
 	@Value("${app.zone.id}")
 	private String zoneId;
