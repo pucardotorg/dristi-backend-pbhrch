@@ -11,7 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.pucar.dristi.caselifecycle.templateconfiguration.internal.config.Configuration;
-import org.pucar.dristi.caselifecycle.templateconfiguration.internal.web.models.*;
+import org.pucar.dristi.common.contract.templateconfiguration.*;
 
 import java.util.UUID;
 

@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.models.AuditDetails;
 import org.egov.tracer.model.CustomException;
 import org.pucar.dristi.caselifecycle.templateconfiguration.internal.config.Configuration;
-import org.pucar.dristi.caselifecycle.templateconfiguration.internal.web.models.*;
+import org.pucar.dristi.common.contract.templateconfiguration.*;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;

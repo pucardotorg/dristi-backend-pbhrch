@@ -10,7 +10,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.pucar.dristi.caselifecycle.templateconfiguration.internal.service.TemplateConfigurationService;
 import org.pucar.dristi.common.util.ResponseInfoFactory;
-import org.pucar.dristi.caselifecycle.templateconfiguration.internal.web.models.*;
+import org.pucar.dristi.common.contract.templateconfiguration.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 

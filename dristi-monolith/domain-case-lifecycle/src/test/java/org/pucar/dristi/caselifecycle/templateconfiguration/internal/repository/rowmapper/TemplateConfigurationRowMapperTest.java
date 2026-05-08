@@ -15,6 +15,7 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import org.pucar.dristi.common.contract.templateconfiguration.TemplateConfiguration;
 class TemplateConfigurationRowMapperTest {
 
     private TemplateConfigurationRowMapper rowMapper;
@@ -61,7 +62,7 @@ class TemplateConfigurationRowMapperTest {
 
         assertEquals(1, result.size());
         assertEquals(UUID.fromString(uuid),
-                ((org.pucar.dristi.caselifecycle.templateconfiguration.internal.web.models.TemplateConfiguration) result.get(0)).getId());
+                ((TemplateConfiguration) result.get(0)).getId());
     }
 
     // =====================================================
@@ -130,7 +131,7 @@ class TemplateConfigurationRowMapperTest {
 
         List<?> result = rowMapper.extractData(resultSet);
 
-        var template = (org.pucar.dristi.caselifecycle.templateconfiguration.internal.web.models.TemplateConfiguration) result.get(0);
+        var template = (TemplateConfiguration) result.get(0);
 
         assertNull(template.getAuditDetails().getLastModifiedTime());
     }

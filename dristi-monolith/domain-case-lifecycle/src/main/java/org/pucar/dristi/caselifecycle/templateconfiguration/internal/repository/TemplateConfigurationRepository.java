@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.egov.tracer.model.CustomException;
 import org.pucar.dristi.caselifecycle.templateconfiguration.internal.repository.querybuilder.TemplateConfigurationQueryBuilder;
 import org.pucar.dristi.caselifecycle.templateconfiguration.internal.repository.rowmapper.*;
-import org.pucar.dristi.caselifecycle.templateconfiguration.internal.web.models.*;
+import org.pucar.dristi.common.contract.templateconfiguration.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;

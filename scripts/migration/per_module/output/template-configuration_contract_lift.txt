@@ -1,0 +1,10 @@
+# Classes lifted from internal/web/models/ to dristi-common/contract/<subdomain>/
+org.pucar.dristi.common.contract.templateconfiguration.OrderPagination
+org.pucar.dristi.common.contract.templateconfiguration.Pagination
+org.pucar.dristi.common.contract.templateconfiguration.TemplateConfiguration
+org.pucar.dristi.common.contract.templateconfiguration.TemplateConfigurationCriteria
+org.pucar.dristi.common.contract.templateconfiguration.TemplateConfigurationListResponse
+org.pucar.dristi.common.contract.templateconfiguration.TemplateConfigurationRequest
+org.pucar.dristi.common.contract.templateconfiguration.TemplateConfigurationResponse
+org.pucar.dristi.common.contract.templateconfiguration.TemplateConfigurationSearchRequest
+org.pucar.dristi.common.contract.templateconfiguration.package-info

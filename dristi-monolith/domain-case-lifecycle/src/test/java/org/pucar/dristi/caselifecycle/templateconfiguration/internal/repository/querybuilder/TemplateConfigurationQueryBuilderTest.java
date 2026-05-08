@@ -3,9 +3,9 @@ package org.pucar.dristi.caselifecycle.templateconfiguration.internal.repository
 import org.egov.tracer.model.CustomException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.pucar.dristi.caselifecycle.templateconfiguration.internal.web.models.OrderPagination;
-import org.pucar.dristi.caselifecycle.templateconfiguration.internal.web.models.Pagination;
-import org.pucar.dristi.caselifecycle.templateconfiguration.internal.web.models.TemplateConfigurationCriteria;
+import org.pucar.dristi.common.contract.templateconfiguration.OrderPagination;
+import org.pucar.dristi.common.contract.templateconfiguration.Pagination;
+import org.pucar.dristi.common.contract.templateconfiguration.TemplateConfigurationCriteria;
 
 import java.sql.Types;
 import java.util.ArrayList;

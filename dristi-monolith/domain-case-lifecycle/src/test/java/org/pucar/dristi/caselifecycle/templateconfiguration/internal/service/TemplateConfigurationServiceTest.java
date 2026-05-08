@@ -9,7 +9,7 @@ import org.pucar.dristi.caselifecycle.templateconfiguration.internal.config.Conf
 import org.pucar.dristi.caselifecycle.templateconfiguration.internal.enrichment.TemplateConfigurationEnrichment;
 import org.pucar.dristi.common.kafka.Producer;
 import org.pucar.dristi.caselifecycle.templateconfiguration.internal.repository.TemplateConfigurationRepository;
-import org.pucar.dristi.caselifecycle.templateconfiguration.internal.web.models.*;
+import org.pucar.dristi.common.contract.templateconfiguration.*;
 
 import java.util.*;
 

@@ -1,4 +1,5 @@
-package org.pucar.dristi.caselifecycle.templateconfiguration.internal.web.models;
+// HAND-CURATED — lifted by Phase 35 (contract-lift)
+package org.pucar.dristi.common.contract.templateconfiguration;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.Valid;
@@ -6,15 +7,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import org.egov.common.contract.response.ResponseInfo;
 import org.springframework.validation.annotation.Validated;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
- * TemplateConfigurationListResponse
+ * TemplateConfigurationResponse
  */
 @Validated
 @jakarta.annotation.Generated(value = "org.egov.codegen.SpringBootCodegen", date = "2024-04-18T11:13:43.389623100+05:30[Asia/Calcutta]")
@@ -22,21 +19,15 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class TemplateConfigurationListResponse {
+public class TemplateConfigurationResponse {
 
     @JsonProperty("ResponseInfo")
     @Valid
     private ResponseInfo responseInfo = null;
 
-    @JsonProperty("TotalCount")
-    private Integer totalCount = null;
-
-    @JsonProperty("list")
+    @JsonProperty("templateConfiguration")
     @Valid
-    private List<TemplateConfiguration> list = null;
+    private TemplateConfiguration templateConfiguration = null;
 
-    @JsonProperty("pagination")
-    @Valid
-    private Pagination pagination = null;
 
 }

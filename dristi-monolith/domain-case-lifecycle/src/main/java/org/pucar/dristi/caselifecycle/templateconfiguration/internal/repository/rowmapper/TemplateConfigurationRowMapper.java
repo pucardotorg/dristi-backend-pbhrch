@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.models.AuditDetails;
 import org.egov.tracer.model.CustomException;
 import org.postgresql.util.PGobject;
-import org.pucar.dristi.caselifecycle.templateconfiguration.internal.web.models.TemplateConfiguration;
+import org.pucar.dristi.common.contract.templateconfiguration.TemplateConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Component;

@@ -2,8 +2,8 @@ package org.pucar.dristi.caselifecycle.templateconfiguration.internal.repository
 
 import lombok.extern.slf4j.Slf4j;
 import org.egov.tracer.model.CustomException;
-import org.pucar.dristi.caselifecycle.templateconfiguration.internal.web.models.TemplateConfigurationCriteria;
-import org.pucar.dristi.caselifecycle.templateconfiguration.internal.web.models.Pagination;
+import org.pucar.dristi.common.contract.templateconfiguration.TemplateConfigurationCriteria;
+import org.pucar.dristi.common.contract.templateconfiguration.Pagination;
 import org.springframework.stereotype.Component;
 
 import java.sql.Types;
