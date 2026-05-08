@@ -46,7 +46,7 @@ Core case-lifecycle domain — the bulk of DRISTI.
 | `Notification` | 48 | **done** | `case-lifecycle` | `notification` | First migration by an extended-team contributor; surfaced empty-package, YAML-stability, and pipeline-output staging gaps fixed in 5fb67371 |
 | `digitalized-documents` | 105 | pending | `case-lifecycle` | `digitalizeddocuments` | |
 | `ctc` | 125 | pending | `case-lifecycle` | `ctc` | |
-| `template-configuration` | 29 | pending | `case-lifecycle` | `templateconfiguration` | |
+| `template-configuration` | 29 | **done** | `case-lifecycle` | `templateconfiguration` | First migration on the parallel-migration kickoff recipe; leaf-service path validated (no `*Api`, `@ApplicationModule` for boundary, Rule 40 scan clean) |
 | `ab-diary` | 91 | pending | `case-lifecycle` | `abdiary` | |
 | `inportal-survey` | 43 | pending | `case-lifecycle` | `inportalsurvey` | |
 | `scheduler-svc` | 237 | pending | `case-lifecycle` | `scheduler` | depends on `hearing` |
