@@ -3,6 +3,7 @@ package org.pucar.dristi.caselifecycle.inportalsurvey.internal.web.controllers;
 import org.pucar.dristi.caselifecycle.inportalsurvey.internal.service.InPortalSurveyService;
 import org.pucar.dristi.common.util.ResponseInfoFactory;
 import org.pucar.dristi.caselifecycle.inportalsurvey.internal.web.models.*;
+import org.pucar.dristi.common.contract.inportalsurvey.*;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.response.ResponseInfo;

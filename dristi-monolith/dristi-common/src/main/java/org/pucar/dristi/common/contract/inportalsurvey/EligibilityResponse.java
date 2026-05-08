@@ -1,4 +1,5 @@
-package org.pucar.dristi.caselifecycle.inportalsurvey.internal.web.models;
+// HAND-CURATED — lifted by Phase 35 (contract-lift)
+package org.pucar.dristi.common.contract.inportalsurvey;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.Valid;
@@ -6,11 +7,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.springframework.validation.annotation.Validated;
 
 /**
- * RemindMeLater
+ * EligibilityResponse
  */
 @Validated
 @jakarta.annotation.Generated(value = "org.egov.codegen.SpringBootCodegen", date = "2025-10-14T19:19:54.104875784+05:30[Asia/Kolkata]")
@@ -18,10 +19,14 @@ import org.springframework.validation.annotation.Validated;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class RemindMeLaterRequest {
+public class EligibilityResponse {
 
-    @JsonProperty("RequestInfo")
+    @JsonProperty("ResponseInfo")
     @Valid
-    private RequestInfo requestInfo;
+    private ResponseInfo responseInfo;
+
+    @JsonProperty("Eligibility")
+    @Valid
+    private Eligibility eligibility;
 
 }

@@ -1,4 +1,6 @@
-package org.pucar.dristi.caselifecycle.inportalsurvey.internal.web.models;
+// HAND-CURATED — lifted by Phase 35 (contract-lift)
+package org.pucar.dristi.common.contract.inportalsurvey;
+
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.Valid;
@@ -11,7 +13,7 @@ import org.egov.common.contract.models.AuditDetails;
 import org.springframework.validation.annotation.Validated;
 
 /**
- * SurveyTracker
+ * FeedBack
  */
 @Validated
 @jakarta.annotation.Generated(value = "org.egov.codegen.SpringBootCodegen", date = "2025-10-14T19:19:54.104875784+05:30[Asia/Kolkata]")
@@ -19,36 +21,31 @@ import org.springframework.validation.annotation.Validated;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class SurveyTracker {
+public class FeedBack {
 
-    @JsonProperty("userUuid")
+    @JsonProperty("uuid")
     @Valid
-    @NotNull
-    private String userUuid = null;
+    private String uuid;
 
     @JsonProperty("tenantId")
     @Valid
+    private String tenantId;
+
+    @JsonProperty("rating")
+    @Valid
     @NotNull
-    private String tenantId = null;
+    private Rating rating;
 
-    @JsonProperty("userType")
+    @JsonProperty("feedback")
     @Valid
-    private String userType = null;
+    private String feedback;
 
-    @JsonProperty("remindMeLater")
+    @JsonProperty("category")
     @Valid
-    private Boolean remindMeLater = null;
-
-    @JsonProperty("lastTriggeredDate")
-    @Valid
-    private Long lastTriggeredDate = null;
-
-    @JsonProperty("attempts")
-    @Valid
-    private Integer attempts = null;
+    private String category;
 
     @JsonProperty("auditDetails")
     @Valid
-    private AuditDetails auditDetails = null;
+    private AuditDetails auditDetails;
 
 }

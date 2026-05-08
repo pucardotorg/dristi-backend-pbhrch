@@ -3,6 +3,7 @@ package org.pucar.dristi.caselifecycle.inportalsurvey.internal.web.controllers;
 import org.pucar.dristi.caselifecycle.inportalsurvey.internal.service.InPortalSurveyService;
 import org.pucar.dristi.common.util.ResponseInfoFactory;
 import org.pucar.dristi.caselifecycle.inportalsurvey.internal.web.models.*;
+import org.pucar.dristi.common.contract.inportalsurvey.*;
 import org.egov.common.contract.models.AuditDetails;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;

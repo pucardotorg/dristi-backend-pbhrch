@@ -1,4 +1,5 @@
-package org.pucar.dristi.caselifecycle.inportalsurvey.internal.web.models;
+// HAND-CURATED — lifted by Phase 35 (contract-lift)
+package org.pucar.dristi.common.contract.inportalsurvey;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;

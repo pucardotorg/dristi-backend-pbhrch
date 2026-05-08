@@ -1,6 +1,6 @@
 package org.pucar.dristi.caselifecycle.inportalsurvey.internal.repository.rowmapper;
 
-import org.pucar.dristi.caselifecycle.inportalsurvey.internal.web.models.SurveyTracker;
+import org.pucar.dristi.common.contract.inportalsurvey.SurveyTracker;
 import org.egov.tracer.model.CustomException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

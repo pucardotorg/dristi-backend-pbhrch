@@ -6,6 +6,7 @@ import org.pucar.dristi.common.kafka.Producer;
 import org.pucar.dristi.caselifecycle.inportalsurvey.internal.repository.InPortalSurveyRepository;
 import org.pucar.dristi.caselifecycle.inportalsurvey.internal.validators.InportalSurveyValidations;
 import org.pucar.dristi.caselifecycle.inportalsurvey.internal.web.models.*;
+import org.pucar.dristi.common.contract.inportalsurvey.*;
 import org.egov.common.contract.models.AuditDetails;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;

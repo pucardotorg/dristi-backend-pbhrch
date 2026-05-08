@@ -2,7 +2,7 @@ package org.pucar.dristi.caselifecycle.inportalsurvey.internal.repository;
 
 import org.pucar.dristi.caselifecycle.inportalsurvey.internal.repository.querybuilder.SurveyTrackerQueryBuilder;
 import org.pucar.dristi.caselifecycle.inportalsurvey.internal.repository.rowmapper.SurveyTrackerRowMapper;
-import org.pucar.dristi.caselifecycle.inportalsurvey.internal.web.models.SurveyTracker;
+import org.pucar.dristi.common.contract.inportalsurvey.SurveyTracker;
 import org.egov.common.contract.models.AuditDetails;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;

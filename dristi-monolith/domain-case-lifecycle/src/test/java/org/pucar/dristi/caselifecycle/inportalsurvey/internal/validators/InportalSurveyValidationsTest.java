@@ -3,6 +3,7 @@ package org.pucar.dristi.caselifecycle.inportalsurvey.internal.validators;
 import org.pucar.dristi.caselifecycle.inportalsurvey.internal.config.MdmsDataConfig;
 import org.pucar.dristi.caselifecycle.inportalsurvey.internal.util.InPortalSurveyUtil;
 import org.pucar.dristi.caselifecycle.inportalsurvey.internal.web.models.*;
+import org.pucar.dristi.common.contract.inportalsurvey.*;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
 import org.egov.tracer.model.CustomException;

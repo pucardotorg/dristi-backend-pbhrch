@@ -1,6 +1,6 @@
 package org.pucar.dristi.caselifecycle.inportalsurvey.internal.repository.rowmapper;
 
-import org.pucar.dristi.caselifecycle.inportalsurvey.internal.web.models.SurveyTracker;
+import org.pucar.dristi.common.contract.inportalsurvey.SurveyTracker;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.models.AuditDetails;
 import org.egov.tracer.model.CustomException;

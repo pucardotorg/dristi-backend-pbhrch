@@ -2,11 +2,11 @@ package org.pucar.dristi.caselifecycle.inportalsurvey.internal.validators;
 
 import org.pucar.dristi.caselifecycle.inportalsurvey.internal.config.MdmsDataConfig;
 import org.pucar.dristi.caselifecycle.inportalsurvey.internal.util.InPortalSurveyUtil;
-import org.pucar.dristi.caselifecycle.inportalsurvey.internal.web.models.EligibilityRequest;
-import org.pucar.dristi.caselifecycle.inportalsurvey.internal.web.models.FeedBackRequest;
-import org.pucar.dristi.caselifecycle.inportalsurvey.internal.web.models.RemindMeLaterRequest;
+import org.pucar.dristi.common.contract.inportalsurvey.EligibilityRequest;
+import org.pucar.dristi.common.contract.inportalsurvey.FeedBackRequest;
+import org.pucar.dristi.common.contract.inportalsurvey.RemindMeLaterRequest;
 import org.pucar.dristi.caselifecycle.inportalsurvey.internal.web.models.SurveyConfig;
-import org.pucar.dristi.caselifecycle.inportalsurvey.internal.web.models.SurveyTracker;
+import org.pucar.dristi.common.contract.inportalsurvey.SurveyTracker;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
