@@ -40,8 +40,10 @@ Refer to **[SERVICE_REGISTRY.md](SERVICE_REGISTRY.md)** for:
 - Priority order (dependencies between services).
 - Owner / sprint, where assigned.
 
-**Already migrated** (don't re-run unless you mean to):
-- `lock-svc`, `case`, `order`, `bank-details`, `Notification`.
+**Already migrated** — see the `done` rows in
+[SERVICE_REGISTRY.md](SERVICE_REGISTRY.md) (don't re-run unless you
+mean to). The registry is the canonical source; this file used to
+duplicate the list but it kept going stale.
 
 ---
 
