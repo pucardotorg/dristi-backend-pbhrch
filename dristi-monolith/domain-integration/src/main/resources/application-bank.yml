@@ -5,13 +5,13 @@
 # Includes service-unique keys + this service's value for any key that conflicts across services.
 # Activate via spring.profiles.active=...,bank,...
 
-otel:
-  instrumentation:
-    http:
-      server:
-        ignore-urls: /bank-details/health,/bank-details/prometheus
 razorpay:
   ifsc:
     api: https://ifsc.razorpay.com/
     connect-timeout: 3000
     read-timeout: 5000
+otel:
+  instrumentation:
+    http:
+      server:
+        ignore-urls: /bank-details/health,/bank-details/prometheus
