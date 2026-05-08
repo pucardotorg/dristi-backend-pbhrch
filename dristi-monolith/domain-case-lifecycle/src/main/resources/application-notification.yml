@@ -30,10 +30,23 @@ kafka:
       create: dss-collection
     consumer: service-consumer-topic
 egov:
+  localization:
+    host: https://dev.digit.org
+    workDir:
+      path: /localization/messages/v1
+    context:
+      path: /localization/messages/v1
+    search:
+      endpoint: /_search
+    statelevel: true
   mdms:
     host: https://dev.digit.org
     search:
       endpoint: /egov-mdms-service/v1/_search
+  hrms:
+    host: https://dev.digit.org
+    search:
+      endpoint: /egov-hrms/employees/_search
   user:
     host: https://dev.digit.org
     context:
@@ -44,31 +57,12 @@ egov:
       path: /user/_search
     update:
       path: /_updatenovalidate
-  localization:
-    host: https://dev.digit.org
-    workDir:
-      path: /localization/messages/v1
-    context:
-      path: /localization/messages/v1
-    statelevel: true
-    search:
-      endpoint: /_search
-  hrms:
-    host: https://dev.digit.org
-    search:
-      endpoint: /egov-hrms/employees/_search
   idgen:
     host: https://dev.digit.org/
     path: egov-idgen/id/_generate
     notification:
       config: court-notification.[TENANT_ID]
       format: '[TENANT_ID][SEQ_NT_[TENANT_ID]][cy:yyyy]-NT'
-  filestore:
-    host: https://dev.digit.org
-  file:
-    store:
-      delete:
-        endpoint: /filestore/v1/files/delete
   workflow:
     host: https://dev.digit.org
     transition:
@@ -86,12 +80,12 @@ egov:
   sms:
     notification:
       topic: egov.core.notification.sms
-logging:
-  loki:
-    enabled: false
-    url: http://localhost:3100/loki/api/v1/push
-  level:
-    root: INFO
+  filestore:
+    host: https://dev.digit.org
+  file:
+    store:
+      delete:
+        endpoint: /filestore/v1/files/delete
 is:
   workflow:
     enabled: true
@@ -101,3 +95,9 @@ dristi:
       topic: create-notification
     update:
       topic: update-notification
+logging:
+  loki:
+    enabled: false
+    url: http://localhost:3100/loki/api/v1/push
+  level:
+    root: INFO
