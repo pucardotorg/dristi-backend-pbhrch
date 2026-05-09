@@ -12,6 +12,7 @@ import org.pucar.dristi.common.config.CommonConfiguration;
 import org.pucar.dristi.common.models.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -101,11 +102,27 @@ public class FileStoreUtil {
     }
 
     /**
+     * Fetches raw bytes for a file from filestore by tenantId + fileStoreId.
+     */
+    public byte[] getFile(String tenantId, String fileStoreId) {
+        try {
+            StringBuilder uri = new StringBuilder(configs.getFileStoreHost()).append(configs.getFileStorePath());
+            uri.append("tenantId=").append(tenantId).append("&").append("fileStoreId=").append(fileStoreId);
+            ResponseEntity<Resource> responseEntity = restTemplate.getForEntity(uri.toString(), Resource.class);
+            return responseEntity.getBody().getContentAsByteArray();
+        } catch (Exception e) {
+            log.error("Document {} is not found in the Filestore for tenantId {} ! An exception occurred!",
+                    fileStoreId, tenantId, e);
+        }
+        return null;
+    }
+
+    /**
      * Best-effort extraction of the first File entry from the filestore
      * upload response into a {@link Document}.
      */
     @SuppressWarnings("unchecked")
-    private Document extractDocumentFromResponse(ResponseEntity<Object> response) {
+    public Document extractDocumentFromResponse(ResponseEntity<Object> response) {
         if (response == null || response.getBody() == null) {
             return Document.builder().build();
         }

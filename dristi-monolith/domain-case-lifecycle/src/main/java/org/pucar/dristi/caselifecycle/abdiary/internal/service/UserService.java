@@ -1,23 +1,24 @@
-package org.pucar.dristi.caselifecycle.cases.internal.service;
+package org.pucar.dristi.caselifecycle.abdiary.internal.service;
 
+import org.pucar.dristi.caselifecycle.abdiary.internal.config.Configuration;
+import org.pucar.dristi.common.repository.ServiceRequestRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.Role;
 import org.egov.common.contract.request.User;
+import org.egov.common.utils.MultiStateInstanceUtil;
 import org.egov.tracer.model.CustomException;
-import org.pucar.dristi.caselifecycle.cases.internal.config.Configuration;
-import org.pucar.dristi.common.repository.ServiceRequestRepository;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
-import static org.pucar.dristi.caselifecycle.cases.internal.config.ServiceConstants.*;
-
+import static org.pucar.dristi.caselifecycle.abdiary.internal.config.ServiceConstants.*;
 
 @Slf4j
-@Service("casesUserService")
+@Service("abdiaryUserService")
 public class UserService {
 
     @Autowired
