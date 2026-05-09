@@ -1,8 +1,8 @@
 package org.pucar.dristi.caselifecycle.abdiary.internal.enrichment;
 
 import org.pucar.dristi.caselifecycle.abdiary.internal.util.ADiaryUtil;
-import org.pucar.dristi.caselifecycle.abdiary.internal.web.models.CaseDiaryEntry;
-import org.pucar.dristi.caselifecycle.abdiary.internal.web.models.CaseDiaryEntryRequest;
+import org.pucar.dristi.common.contract.abdiary.CaseDiaryEntry;
+import org.pucar.dristi.common.contract.abdiary.CaseDiaryEntryRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.models.AuditDetails;
 import org.egov.common.contract.request.RequestInfo;
@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import static org.pucar.dristi.caselifecycle.abdiary.internal.config.ServiceConstants.ENRICHMENT_EXCEPTION;
 
+import org.pucar.dristi.common.contract.abdiary.CaseDiarySearchRequest;
 @Component
 @Slf4j
 public class ADiaryEntryEnrichment {

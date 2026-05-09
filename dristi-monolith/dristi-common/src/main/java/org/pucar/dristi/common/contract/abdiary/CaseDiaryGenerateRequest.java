@@ -1,17 +1,17 @@
-package org.pucar.dristi.caselifecycle.abdiary.internal.web.models;
+// HAND-CURATED — lifted by Phase 35 (contract-lift)
+package org.pucar.dristi.common.contract.abdiary;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.egov.common.contract.request.RequestInfo;
 import org.springframework.validation.annotation.Validated;
-import jakarta.validation.constraints.*;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Data;
 import lombok.Builder;
 
-import java.util.UUID;
-
 /**
- * CaseDiarySearchCriteria
+ * CaseDiaryGenerateRequest
  */
 @Validated
 @jakarta.annotation.Generated(value = "org.egov.codegen.SpringBootCodegen", date = "2025-01-15T12:45:29.792404900+05:30[Asia/Kolkata]")
@@ -19,16 +19,14 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CaseDiaryExistCriteria {
+public class CaseDiaryGenerateRequest {
+    @JsonProperty("RequestInfo")
+    @Valid
+    private RequestInfo requestInfo = null;
 
-    @JsonProperty("id")
-    @NotNull
+    @JsonProperty("diary")
+    @Valid
+    private CaseDiary diary = null;
 
-    private UUID id = null;
-
-    @JsonProperty("tenantId")
-    @NotNull
-
-    private String tenantId = null;
 
 }

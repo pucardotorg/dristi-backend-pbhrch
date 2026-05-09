@@ -1,6 +1,11 @@
-package org.pucar.dristi.caselifecycle.abdiary.internal.web.models;
+// HAND-CURATED — lifted by Phase 35 (contract-lift)
+package org.pucar.dristi.common.contract.abdiary;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.egov.common.contract.response.ResponseInfo;
 import org.springframework.validation.annotation.Validated;
 import jakarta.validation.Valid;
@@ -10,7 +15,7 @@ import lombok.Data;
 import lombok.Builder;
 
 /**
- * CaseDiaryResponse
+ * CaseDiaryListResponse
  */
 @Validated
 @jakarta.annotation.Generated(value = "org.egov.codegen.SpringBootCodegen", date = "2025-01-15T12:45:29.792404900+05:30[Asia/Kolkata]")
@@ -18,16 +23,28 @@ import lombok.Builder;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CaseDiaryResponse {
+public class CaseDiaryListResponse {
     @JsonProperty("ResponseInfo")
 
     @Valid
     private ResponseInfo responseInfo = null;
 
-    @JsonProperty("diaryEntry")
+    @JsonProperty("diaries")
+    @Valid
+    private List<CaseDiaryListItem> diaries = null;
+
+    @JsonProperty("pagination")
 
     @Valid
-    private CaseDiary diaryEntry = null;
+    private Pagination pagination = null;
 
+
+    public CaseDiaryListResponse addDiariesItem(CaseDiaryListItem diariesItem) {
+        if (this.diaries == null) {
+            this.diaries = new ArrayList<>();
+        }
+        this.diaries.add(diariesItem);
+        return this;
+    }
 
 }

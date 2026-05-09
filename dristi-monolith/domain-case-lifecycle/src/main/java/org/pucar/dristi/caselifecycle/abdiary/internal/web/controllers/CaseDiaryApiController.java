@@ -5,6 +5,7 @@ import org.pucar.dristi.caselifecycle.abdiary.internal.service.DiaryEntryService
 import org.pucar.dristi.caselifecycle.abdiary.internal.service.DiaryService;
 import org.pucar.dristi.common.util.ResponseInfoFactory;
 import org.pucar.dristi.caselifecycle.abdiary.internal.web.models.*;
+import org.pucar.dristi.common.contract.abdiary.*;
 
 import java.util.List;
 import java.util.UUID;

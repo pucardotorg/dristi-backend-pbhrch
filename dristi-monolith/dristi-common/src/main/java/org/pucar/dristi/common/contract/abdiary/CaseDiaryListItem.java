@@ -1,11 +1,14 @@
-package org.pucar.dristi.caselifecycle.abdiary.internal.web.models;
+// HAND-CURATED — lifted by Phase 35 (contract-lift)
+package org.pucar.dristi.common.contract.abdiary;
 
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import org.pucar.dristi.caselifecycle.abdiary.internal.annotation.OneOf;
 import io.swagger.v3.oas.annotations.media.Schema;
+
+import java.util.UUID;
+
 import org.springframework.validation.annotation.Validated;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
@@ -15,18 +18,22 @@ import lombok.Data;
 import lombok.Builder;
 
 /**
- * CaseDiarySearchCriteria
+ * this entity is only for use by get API to return a list of items. it is not stored in DB, but is filled by getting data from DB. This will mostly be used for A Diary to show a list of A diaries across dates
  */
+@Schema(description = "this entity is only for use by get API to return a list of items. it is not stored in DB, but is filled by getting data from DB. This will mostly be used for A Diary to show a list of A diaries across dates")
 @Validated
 @jakarta.annotation.Generated(value = "org.egov.codegen.SpringBootCodegen", date = "2025-01-15T12:45:29.792404900+05:30[Asia/Kolkata]")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@OneOf(message = "One of caseId or date must be provided")
-public class CaseDiarySearchCriteria {
+public class CaseDiaryListItem {
+    @JsonProperty("diaryId")
+
+    @Valid
+    private UUID diaryId = null;
+
     @JsonProperty("tenantId")
-    @NotNull
 
     private String tenantId = null;
 
@@ -34,27 +41,13 @@ public class CaseDiarySearchCriteria {
 
     private Long date = null;
 
-    @JsonProperty("caseId")
-
-    private String caseId = null;
-
-    @JsonProperty("caseUuid")
-    private String caseUuid = null;
-
     @JsonProperty("diaryType")
 
     private String diaryType = null;
 
-    @JsonProperty("courtId")
-    @NotNull
+    @JsonProperty("fileStoreID")
 
-    private String courtId = null;
-
-    @JsonProperty("referenceId")
-    private String referenceId = null;
-
-    @JsonProperty("referenceType")
-    private String referenceType = null;
+    private String fileStoreID = null;
 
 
 }

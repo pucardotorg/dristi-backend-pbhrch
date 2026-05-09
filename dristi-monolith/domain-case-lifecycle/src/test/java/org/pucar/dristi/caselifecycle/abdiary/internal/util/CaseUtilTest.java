@@ -3,6 +3,7 @@ package org.pucar.dristi.caselifecycle.abdiary.internal.util;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.pucar.dristi.caselifecycle.abdiary.internal.config.Configuration;
 import org.pucar.dristi.caselifecycle.abdiary.internal.web.models.*;
+import org.pucar.dristi.common.contract.abdiary.*;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.model.CustomException;
 import org.junit.jupiter.api.BeforeEach;

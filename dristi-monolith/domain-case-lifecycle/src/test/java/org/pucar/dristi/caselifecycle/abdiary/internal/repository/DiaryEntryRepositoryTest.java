@@ -3,6 +3,7 @@ package org.pucar.dristi.caselifecycle.abdiary.internal.repository;
 import org.pucar.dristi.caselifecycle.abdiary.internal.repository.querybuilder.DiaryEntryQueryBuilder;
 import org.pucar.dristi.caselifecycle.abdiary.internal.repository.rowmapper.DiaryEntryRowMapper;
 import org.pucar.dristi.caselifecycle.abdiary.internal.web.models.*;
+import org.pucar.dristi.common.contract.abdiary.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

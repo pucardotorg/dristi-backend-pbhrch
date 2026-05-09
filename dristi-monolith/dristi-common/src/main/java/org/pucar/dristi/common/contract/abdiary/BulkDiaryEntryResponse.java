@@ -1,9 +1,10 @@
-package org.pucar.dristi.caselifecycle.abdiary.internal.web.models;
+// HAND-CURATED — lifted by Phase 35 (contract-lift)
+package org.pucar.dristi.common.contract.abdiary;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.Valid;
 import lombok.*;
-import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
@@ -14,14 +15,13 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class BulkDiaryEntryRequest {
-
-    @JsonProperty("RequestInfo")
+public class BulkDiaryEntryResponse {
+    @JsonProperty("ResponseInfo")
     @Valid
-    private RequestInfo requestInfo;
+    private ResponseInfo responseInfo;
 
     @JsonProperty("diaryEntries")
     @Valid
-    private List<CaseDiaryEntry> caseDiaryList;
+    private List<CaseDiaryEntry> caseDiaryEntries;
 
 }

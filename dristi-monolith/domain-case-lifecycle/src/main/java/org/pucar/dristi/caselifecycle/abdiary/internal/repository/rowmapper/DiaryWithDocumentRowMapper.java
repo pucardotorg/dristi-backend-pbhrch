@@ -1,8 +1,8 @@
 package org.pucar.dristi.caselifecycle.abdiary.internal.repository.rowmapper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.pucar.dristi.caselifecycle.abdiary.internal.web.models.CaseDiary;
-import org.pucar.dristi.caselifecycle.abdiary.internal.web.models.CaseDiaryDocument;
+import org.pucar.dristi.common.contract.abdiary.CaseDiary;
+import org.pucar.dristi.common.contract.abdiary.CaseDiaryDocument;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.models.AuditDetails;
 import org.egov.tracer.model.CustomException;

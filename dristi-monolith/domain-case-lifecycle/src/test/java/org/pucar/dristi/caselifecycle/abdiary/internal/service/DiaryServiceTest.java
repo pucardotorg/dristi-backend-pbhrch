@@ -10,6 +10,7 @@ import org.pucar.dristi.caselifecycle.abdiary.internal.util.FileStoreUtil;
 import org.pucar.dristi.caselifecycle.abdiary.internal.util.PdfServiceUtil;
 import org.pucar.dristi.caselifecycle.abdiary.internal.validators.ADiaryValidator;
 import org.pucar.dristi.caselifecycle.abdiary.internal.web.models.*;
+import org.pucar.dristi.common.contract.abdiary.*;
 import org.egov.common.contract.models.Document;
 import org.egov.common.contract.models.Workflow;
 import org.egov.common.contract.request.RequestInfo;

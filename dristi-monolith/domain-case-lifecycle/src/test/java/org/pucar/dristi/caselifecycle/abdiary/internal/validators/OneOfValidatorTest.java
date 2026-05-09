@@ -1,6 +1,6 @@
 package org.pucar.dristi.caselifecycle.abdiary.internal.validators;
 
-import org.pucar.dristi.caselifecycle.abdiary.internal.web.models.CaseDiarySearchCriteria;
+import org.pucar.dristi.common.contract.abdiary.CaseDiarySearchCriteria;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

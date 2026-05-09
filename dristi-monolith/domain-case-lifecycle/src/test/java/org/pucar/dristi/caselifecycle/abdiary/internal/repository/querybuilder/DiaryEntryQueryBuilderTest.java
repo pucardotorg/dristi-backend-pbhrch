@@ -1,9 +1,9 @@
 package org.pucar.dristi.caselifecycle.abdiary.internal.repository.querybuilder;
 
-import org.pucar.dristi.caselifecycle.abdiary.internal.web.models.CaseDiaryExistCriteria;
-import org.pucar.dristi.caselifecycle.abdiary.internal.web.models.CaseDiarySearchCriteria;
-import org.pucar.dristi.caselifecycle.abdiary.internal.web.models.Order;
-import org.pucar.dristi.caselifecycle.abdiary.internal.web.models.Pagination;
+import org.pucar.dristi.common.contract.abdiary.CaseDiaryExistCriteria;
+import org.pucar.dristi.common.contract.abdiary.CaseDiarySearchCriteria;
+import org.pucar.dristi.common.contract.abdiary.Order;
+import org.pucar.dristi.common.contract.abdiary.Pagination;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

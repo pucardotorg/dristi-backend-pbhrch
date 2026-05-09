@@ -5,10 +5,10 @@ import org.pucar.dristi.caselifecycle.abdiary.internal.enrichment.ADiaryEntryEnr
 import org.pucar.dristi.common.kafka.Producer;
 import org.pucar.dristi.caselifecycle.abdiary.internal.repository.DiaryEntryRepository;
 import org.pucar.dristi.caselifecycle.abdiary.internal.validators.ADiaryValidator;
-import org.pucar.dristi.caselifecycle.abdiary.internal.web.models.BulkDiaryEntryRequest;
-import org.pucar.dristi.caselifecycle.abdiary.internal.web.models.CaseDiaryEntry;
-import org.pucar.dristi.caselifecycle.abdiary.internal.web.models.CaseDiaryEntryRequest;
-import org.pucar.dristi.caselifecycle.abdiary.internal.web.models.CaseDiarySearchRequest;
+import org.pucar.dristi.common.contract.abdiary.BulkDiaryEntryRequest;
+import org.pucar.dristi.common.contract.abdiary.CaseDiaryEntry;
+import org.pucar.dristi.common.contract.abdiary.CaseDiaryEntryRequest;
+import org.pucar.dristi.common.contract.abdiary.CaseDiarySearchRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.tracer.model.CustomException;
 import org.springframework.stereotype.Service;

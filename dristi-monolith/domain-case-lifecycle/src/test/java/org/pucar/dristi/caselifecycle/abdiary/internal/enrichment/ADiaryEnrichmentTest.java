@@ -3,6 +3,7 @@ package org.pucar.dristi.caselifecycle.abdiary.internal.enrichment;
 import org.pucar.dristi.caselifecycle.abdiary.internal.repository.DiaryRepository;
 import org.pucar.dristi.caselifecycle.abdiary.internal.util.ADiaryUtil;
 import org.pucar.dristi.caselifecycle.abdiary.internal.web.models.*;
+import org.pucar.dristi.common.contract.abdiary.*;
 import org.egov.common.contract.models.AuditDetails;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;

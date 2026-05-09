@@ -2,9 +2,9 @@ package org.pucar.dristi.caselifecycle.abdiary.internal.repository;
 
 import org.pucar.dristi.caselifecycle.abdiary.internal.repository.querybuilder.DiaryEntryQueryBuilder;
 import org.pucar.dristi.caselifecycle.abdiary.internal.repository.rowmapper.DiaryEntryRowMapper;
-import org.pucar.dristi.caselifecycle.abdiary.internal.web.models.CaseDiaryEntry;
-import org.pucar.dristi.caselifecycle.abdiary.internal.web.models.CaseDiaryExistCriteria;
-import org.pucar.dristi.caselifecycle.abdiary.internal.web.models.CaseDiarySearchRequest;
+import org.pucar.dristi.common.contract.abdiary.CaseDiaryEntry;
+import org.pucar.dristi.common.contract.abdiary.CaseDiaryExistCriteria;
+import org.pucar.dristi.common.contract.abdiary.CaseDiarySearchRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.tracer.model.CustomException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -15,6 +15,7 @@ import java.util.List;
 
 import static org.pucar.dristi.caselifecycle.abdiary.internal.config.ServiceConstants.*;
 
+import org.pucar.dristi.common.contract.abdiary.Pagination;
 @Repository
 @Slf4j
 public class DiaryEntryRepository {

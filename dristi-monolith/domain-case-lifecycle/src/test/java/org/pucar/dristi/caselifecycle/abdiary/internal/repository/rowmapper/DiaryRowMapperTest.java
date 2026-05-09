@@ -1,6 +1,6 @@
 package org.pucar.dristi.caselifecycle.abdiary.internal.repository.rowmapper;
 
-import org.pucar.dristi.caselifecycle.abdiary.internal.web.models.CaseDiaryListItem;
+import org.pucar.dristi.common.contract.abdiary.CaseDiaryListItem;
 import org.egov.tracer.model.CustomException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

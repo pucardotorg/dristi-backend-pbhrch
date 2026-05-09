@@ -4,6 +4,7 @@ import org.pucar.dristi.caselifecycle.abdiary.internal.repository.querybuilder.D
 import org.pucar.dristi.caselifecycle.abdiary.internal.repository.rowmapper.DiaryRowMapper;
 import org.pucar.dristi.caselifecycle.abdiary.internal.repository.rowmapper.DiaryWithDocumentRowMapper;
 import org.pucar.dristi.caselifecycle.abdiary.internal.web.models.*;
+import org.pucar.dristi.common.contract.abdiary.*;
 import org.egov.tracer.model.CustomException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -1,7 +1,7 @@
 package org.pucar.dristi.caselifecycle.abdiary.internal.util;
 
 import org.pucar.dristi.caselifecycle.abdiary.internal.config.Configuration;
-import org.pucar.dristi.caselifecycle.abdiary.internal.web.models.CaseDiaryRequest;
+import org.pucar.dristi.common.contract.abdiary.CaseDiaryRequest;
 import org.egov.tracer.model.CustomException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
