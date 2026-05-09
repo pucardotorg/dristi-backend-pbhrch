@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.stereotype.Component;
 
 
+import org.pucar.dristi.common.contract.advocate.Advocate;
 @Component
 @Data
 @Import({ TracerConfiguration.class })

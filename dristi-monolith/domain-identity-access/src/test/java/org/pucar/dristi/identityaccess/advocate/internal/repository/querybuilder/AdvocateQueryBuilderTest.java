@@ -5,7 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
-import org.pucar.dristi.identityaccess.advocate.internal.web.models.AdvocateSearchCriteria;
+import org.pucar.dristi.common.contract.advocate.AdvocateSearchCriteria;
 
 import java.util.ArrayList;
 import java.util.List;

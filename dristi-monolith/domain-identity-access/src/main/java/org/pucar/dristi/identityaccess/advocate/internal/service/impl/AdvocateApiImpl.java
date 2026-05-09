@@ -1,0 +1,64 @@
+package org.pucar.dristi.identityaccess.advocate.internal.service.impl;
+
+import org.egov.common.contract.request.RequestInfo;
+import org.pucar.dristi.common.contract.advocate.Advocate;
+import org.pucar.dristi.common.contract.advocate.AdvocateSearchCriteria;
+import org.pucar.dristi.identityaccess.advocate.AdvocateApi;
+import org.pucar.dristi.identityaccess.advocate.internal.service.AdvocateService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+@Component
+public class AdvocateApiImpl implements AdvocateApi {
+
+    private final AdvocateService advocateService;
+
+    @Autowired
+    public AdvocateApiImpl(AdvocateService advocateService) {
+        this.advocateService = advocateService;
+    }
+
+    @Override
+    public List<Advocate> searchAdvocatesById(RequestInfo requestInfo, String advocateId) {
+        return search(requestInfo, AdvocateSearchCriteria.builder().id(advocateId).build());
+    }
+
+    @Override
+    public List<Advocate> searchAdvocatesByIndividualId(RequestInfo requestInfo, String individualId) {
+        return search(requestInfo, AdvocateSearchCriteria.builder().individualId(individualId).build());
+    }
+
+    @Override
+    public boolean advocateExists(RequestInfo requestInfo, String advocateId) {
+        return !searchAdvocatesById(requestInfo, advocateId).isEmpty();
+    }
+
+    @Override
+    public Set<String> getAdvocateIndividualIds(RequestInfo requestInfo, List<String> advocateIds) {
+        List<AdvocateSearchCriteria> criteriaList = advocateIds.stream()
+                .map(id -> AdvocateSearchCriteria.builder().id(id).build())
+                .collect(Collectors.toList());
+        int limit = Math.max(advocateIds.size() * 2, 10);
+        advocateService.searchAdvocate(requestInfo, criteriaList, null, limit, 0);
+        return criteriaList.stream()
+                .filter(c -> c.getResponseList() != null)
+                .flatMap(c -> c.getResponseList().stream())
+                .filter(Advocate::getIsActive)
+                .map(Advocate::getIndividualId)
+                .collect(Collectors.toSet());
+    }
+
+    private List<Advocate> search(RequestInfo requestInfo, AdvocateSearchCriteria criteria) {
+        List<AdvocateSearchCriteria> criteriaList = new ArrayList<>();
+        criteriaList.add(criteria);
+        advocateService.searchAdvocate(requestInfo, criteriaList, null, 10, 0);
+        return criteria.getResponseList() == null
+                ? List.of()
+                : criteria.getResponseList().stream().filter(Advocate::getIsActive).toList();
+    }
+}

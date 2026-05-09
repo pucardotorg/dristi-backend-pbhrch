@@ -12,6 +12,7 @@ import org.pucar.dristi.common.kafka.Producer;
 import org.pucar.dristi.identityaccess.advocate.internal.repository.AdvocateRepository;
 import org.pucar.dristi.identityaccess.advocate.internal.validators.AdvocateRegistrationValidator;
 import org.pucar.dristi.identityaccess.advocate.internal.web.models.*;
+import org.pucar.dristi.common.contract.advocate.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;

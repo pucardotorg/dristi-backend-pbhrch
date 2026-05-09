@@ -1,7 +1,7 @@
-package org.pucar.dristi.identityaccess.advocate.internal.web.models;
+// HAND-CURATED — lifted by Phase 35 (contract-lift)
+package org.pucar.dristi.common.contract.advocate;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import org.egov.common.contract.response.ResponseInfo;
 import org.springframework.validation.annotation.Validated;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,19 +22,14 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class AdvocateListResponse {
-	@JsonProperty("responseInfo")
-	@Valid
-	private ResponseInfo responseInfo = null;
+public class AdvocateResponse {
+        @JsonProperty("responseInfo")
+        @Valid
+        private ResponseInfo responseInfo = null;
 
-	@JsonProperty("advocates")
-	@Valid
-	private List<AdvocateSearchCriteria> advocates = null;
-
-	@JsonProperty("pagination")
-
-	@Valid
-	private Pagination pagination = null;
+        @JsonProperty("advocates")
+        @Valid
+        private List<Advocate> advocates = null;
 
 
 }

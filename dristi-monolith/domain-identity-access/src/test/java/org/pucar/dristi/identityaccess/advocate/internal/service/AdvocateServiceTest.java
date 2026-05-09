@@ -13,10 +13,10 @@ import org.pucar.dristi.identityaccess.advocate.internal.enrichment.AdvocateRegi
 import org.pucar.dristi.common.kafka.Producer;
 import org.pucar.dristi.identityaccess.advocate.internal.repository.AdvocateRepository;
 import org.pucar.dristi.identityaccess.advocate.internal.validators.AdvocateRegistrationValidator;
-import org.pucar.dristi.identityaccess.advocate.internal.web.models.Advocate;
-import org.pucar.dristi.identityaccess.advocate.internal.web.models.AdvocateRequest;
-import org.pucar.dristi.identityaccess.advocate.internal.web.models.AdvocateSearchCriteria;
-import org.pucar.dristi.identityaccess.advocate.internal.web.models.AdvocateSimpleSearchRequest;
+import org.pucar.dristi.common.contract.advocate.Advocate;
+import org.pucar.dristi.common.contract.advocate.AdvocateRequest;
+import org.pucar.dristi.common.contract.advocate.AdvocateSearchCriteria;
+import org.pucar.dristi.common.contract.advocate.AdvocateSimpleSearchRequest;
 import org.pucar.dristi.identityaccess.advocate.internal.web.models.BarRegistrationNumberComponents;
 
 import java.util.ArrayList;

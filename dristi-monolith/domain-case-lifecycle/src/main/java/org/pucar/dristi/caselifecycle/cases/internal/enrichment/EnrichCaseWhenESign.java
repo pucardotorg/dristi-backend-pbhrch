@@ -4,9 +4,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
 import org.pucar.dristi.caselifecycle.cases.internal.enrichment.strategy.EnrichmentStrategy;
 import org.pucar.dristi.caselifecycle.cases.internal.service.IndividualService;
-import org.pucar.dristi.caselifecycle.cases.internal.util.AdvocateUtil;
 import org.pucar.dristi.caselifecycle.cases.internal.util.CaseUtil;
-import org.pucar.dristi.caselifecycle.cases.internal.web.models.Advocate;
+import org.pucar.dristi.common.contract.advocate.Advocate;
+import org.pucar.dristi.identityaccess.advocate.AdvocateApi;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseRequest;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.POAHolder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,14 +24,14 @@ import static org.pucar.dristi.caselifecycle.cases.internal.config.ServiceConsta
 public class EnrichCaseWhenESign implements EnrichmentStrategy {
 
     private final IndividualService individualService;
-    private final AdvocateUtil advocateUtil;
+    private final AdvocateApi advocateApi;
 
     private final CaseUtil caseUtil;
 
     @Autowired
-    public EnrichCaseWhenESign(IndividualService individualService, AdvocateUtil advocateUtil, CaseUtil caseUtil) {
+    public EnrichCaseWhenESign(IndividualService individualService, AdvocateApi advocateApi, CaseUtil caseUtil) {
         this.individualService = individualService;
-        this.advocateUtil = advocateUtil;
+        this.advocateApi = advocateApi;
         this.caseUtil = caseUtil;
     }
 
@@ -87,7 +87,7 @@ public class EnrichCaseWhenESign implements EnrichmentStrategy {
         if (!isLitigantSigned && !litigantPoaMapping.containsKey(individualId)) {
             log.info("Method=EnrichCaseWhenESign,Result=IN_PROGRESS, checking if advocate signed");
 
-            List<Advocate> advocates = advocateUtil.fetchAdvocatesByIndividualId(requestInfo, individualId);
+            List<Advocate> advocates = advocateApi.searchAdvocatesByIndividualId(requestInfo, individualId);
 
             List<Advocate> activeAdvocate = advocates.stream()
                     .filter(Advocate::getIsActive)

@@ -12,8 +12,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.pucar.dristi.identityaccess.advocate.internal.config.Configuration;
 import org.pucar.dristi.common.util.IdgenUtil;
-import org.pucar.dristi.identityaccess.advocate.internal.web.models.Advocate;
-import org.pucar.dristi.identityaccess.advocate.internal.web.models.AdvocateRequest;
+import org.pucar.dristi.common.contract.advocate.Advocate;
+import org.pucar.dristi.common.contract.advocate.AdvocateRequest;
 
 import java.util.ArrayList;
 import java.util.List;

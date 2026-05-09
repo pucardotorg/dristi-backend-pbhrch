@@ -10,8 +10,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.pucar.dristi.identityaccess.advocate.internal.repository.AdvocateClerkRepository;
 import org.pucar.dristi.identityaccess.advocate.internal.service.IndividualService;
-import org.pucar.dristi.identityaccess.advocate.internal.web.models.AdvocateClerk;
-import org.pucar.dristi.identityaccess.advocate.internal.web.models.AdvocateClerkRequest;
+import org.pucar.dristi.common.contract.advocate.AdvocateClerk;
+import org.pucar.dristi.common.contract.advocate.AdvocateClerkRequest;
 
 import java.util.ArrayList;
 import java.util.Collections;

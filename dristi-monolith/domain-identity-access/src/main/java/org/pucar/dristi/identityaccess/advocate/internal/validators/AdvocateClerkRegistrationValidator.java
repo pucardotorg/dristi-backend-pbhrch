@@ -5,9 +5,9 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.model.CustomException;
 import org.pucar.dristi.identityaccess.advocate.internal.repository.AdvocateClerkRepository;
 import org.pucar.dristi.identityaccess.advocate.internal.service.IndividualService;
-import org.pucar.dristi.identityaccess.advocate.internal.web.models.AdvocateClerk;
-import org.pucar.dristi.identityaccess.advocate.internal.web.models.AdvocateClerkRequest;
-import org.pucar.dristi.identityaccess.advocate.internal.web.models.AdvocateClerkSearchCriteria;
+import org.pucar.dristi.common.contract.advocate.AdvocateClerk;
+import org.pucar.dristi.common.contract.advocate.AdvocateClerkRequest;
+import org.pucar.dristi.common.contract.advocate.AdvocateClerkSearchCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
@@ -19,6 +19,7 @@ import java.util.List;
 import static org.pucar.dristi.identityaccess.advocate.internal.config.ServiceConstants.INDIVIDUAL_NOT_FOUND;
 import static org.pucar.dristi.identityaccess.advocate.internal.config.ServiceConstants.VALIDATION_EXCEPTION;
 
+import org.pucar.dristi.common.contract.advocate.Advocate;
 @Component
 @Slf4j
 public class AdvocateClerkRegistrationValidator {

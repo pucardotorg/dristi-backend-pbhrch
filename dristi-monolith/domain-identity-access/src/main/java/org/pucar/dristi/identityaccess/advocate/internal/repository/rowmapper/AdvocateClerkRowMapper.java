@@ -6,7 +6,7 @@ import org.egov.common.contract.models.AuditDetails;
 import org.egov.common.contract.models.Document;
 import org.egov.tracer.model.CustomException;
 import org.postgresql.util.PGobject;
-import org.pucar.dristi.identityaccess.advocate.internal.web.models.AdvocateClerk;
+import org.pucar.dristi.common.contract.advocate.AdvocateClerk;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Component;
 

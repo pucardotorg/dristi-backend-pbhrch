@@ -6,8 +6,8 @@ import org.egov.common.contract.models.AuditDetails;
 import org.egov.tracer.model.CustomException;
 import org.pucar.dristi.identityaccess.advocate.internal.config.Configuration;
 import org.pucar.dristi.common.util.IdgenUtil;
-import org.pucar.dristi.identityaccess.advocate.internal.web.models.AdvocateClerk;
-import org.pucar.dristi.identityaccess.advocate.internal.web.models.AdvocateClerkRequest;
+import org.pucar.dristi.common.contract.advocate.AdvocateClerk;
+import org.pucar.dristi.common.contract.advocate.AdvocateClerkRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +16,7 @@ import java.util.UUID;
 
 import static org.pucar.dristi.identityaccess.advocate.internal.config.ServiceConstants.ENRICHMENT_EXCEPTION;
 
+import org.pucar.dristi.common.contract.advocate.Advocate;
 @Component
 @Slf4j
 public class AdvocateClerkRegistrationEnrichment {

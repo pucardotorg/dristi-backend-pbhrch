@@ -1,4 +1,5 @@
-package org.pucar.dristi.identityaccess.advocate.internal.web.models;
+// HAND-CURATED — lifted by Phase 35 (contract-lift)
+package org.pucar.dristi.common.contract.advocate;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.Valid;
@@ -9,11 +10,8 @@ import lombok.NoArgsConstructor;
 import org.egov.common.contract.request.RequestInfo;
 import org.springframework.validation.annotation.Validated;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
- * AdvocateClerkSearchRequest
+ * AdvocateClerkRequest
  */
 @Validated
 @jakarta.annotation.Generated(value = "org.egov.codegen.SpringBootCodegen", date = "2024-04-04T05:55:27.937918+05:30[Asia/Kolkata]")
@@ -21,17 +19,13 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class AdvocateClerkSearchRequest {
+public class AdvocateClerkRequest {
 	@JsonProperty("RequestInfo")
 	@Valid
 	private RequestInfo requestInfo = null;
 
-	@JsonProperty("tenantId")
-	private String tenantId = null;
-
-	@JsonProperty("criteria")
+	@JsonProperty("clerk")
 	@Valid
-	private List<AdvocateClerkSearchCriteria> criteria = new ArrayList<>();
-
+	private AdvocateClerk clerk = null;
 
 }

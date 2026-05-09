@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.pucar.dristi.identityaccess.advocate.internal.web.models.AdvocateClerk;
+import org.pucar.dristi.common.contract.advocate.AdvocateClerk;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

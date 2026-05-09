@@ -2,7 +2,7 @@ package org.pucar.dristi.identityaccess.advocate.internal.repository.querybuilde
 
 import lombok.extern.slf4j.Slf4j;
 import org.egov.tracer.model.CustomException;
-import org.pucar.dristi.identityaccess.advocate.internal.web.models.AdvocateSearchCriteria;
+import org.pucar.dristi.common.contract.advocate.AdvocateSearchCriteria;
 import org.springframework.stereotype.Component;
 
 import java.sql.Types;
@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 import static org.pucar.dristi.identityaccess.advocate.internal.config.ServiceConstants.*;
 
+import org.pucar.dristi.common.contract.advocate.Pagination;
 @Component
 @Slf4j
 public class AdvocateQueryBuilder {

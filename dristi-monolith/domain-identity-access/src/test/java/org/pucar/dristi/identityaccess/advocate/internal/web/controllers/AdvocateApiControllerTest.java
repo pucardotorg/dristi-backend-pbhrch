@@ -11,6 +11,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.pucar.dristi.identityaccess.advocate.internal.service.AdvocateService;
 import org.pucar.dristi.common.util.ResponseInfoFactory;
 import org.pucar.dristi.identityaccess.advocate.internal.web.models.*;
+import org.pucar.dristi.common.contract.advocate.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 

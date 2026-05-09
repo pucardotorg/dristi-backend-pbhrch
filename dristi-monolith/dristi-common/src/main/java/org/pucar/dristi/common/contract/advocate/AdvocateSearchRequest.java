@@ -1,4 +1,5 @@
-package org.pucar.dristi.identityaccess.advocate.internal.web.models;
+// HAND-CURATED — lifted by Phase 35 (contract-lift)
+package org.pucar.dristi.common.contract.advocate;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -9,6 +10,8 @@ import org.egov.common.contract.request.RequestInfo;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * AdvocateSearchRequest
@@ -19,13 +22,17 @@ import javax.validation.Valid;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class AdvocateSimpleSearchRequest {
+public class AdvocateSearchRequest {
 	@JsonProperty("RequestInfo")
 	@Valid
 	private RequestInfo requestInfo = null;
 
+	@JsonProperty("tenantId")
+	private String tenantId = null;
+
 	@JsonProperty("criteria")
 	@Valid
-	private AdvocateSearchCriteria advocateSearchCriteria;
+	private List<AdvocateSearchCriteria> criteria = new ArrayList<>();
+
 
 }

@@ -9,8 +9,8 @@ import org.mockito.MockitoAnnotations;
 import org.pucar.dristi.identityaccess.advocate.internal.repository.querybuilder.AdvocateQueryBuilder;
 import org.pucar.dristi.identityaccess.advocate.internal.repository.rowmapper.AdvocateDocumentRowMapper;
 import org.pucar.dristi.identityaccess.advocate.internal.repository.rowmapper.AdvocateRowMapper;
-import org.pucar.dristi.identityaccess.advocate.internal.web.models.Advocate;
-import org.pucar.dristi.identityaccess.advocate.internal.web.models.AdvocateSearchCriteria;
+import org.pucar.dristi.common.contract.advocate.Advocate;
+import org.pucar.dristi.common.contract.advocate.AdvocateSearchCriteria;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.ArrayList;

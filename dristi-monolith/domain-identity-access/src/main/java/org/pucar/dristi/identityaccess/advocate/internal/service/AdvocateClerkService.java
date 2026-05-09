@@ -8,9 +8,9 @@ import org.pucar.dristi.identityaccess.advocate.internal.enrichment.AdvocateCler
 import org.pucar.dristi.common.kafka.Producer;
 import org.pucar.dristi.identityaccess.advocate.internal.repository.AdvocateClerkRepository;
 import org.pucar.dristi.identityaccess.advocate.internal.validators.AdvocateClerkRegistrationValidator;
-import org.pucar.dristi.identityaccess.advocate.internal.web.models.AdvocateClerk;
-import org.pucar.dristi.identityaccess.advocate.internal.web.models.AdvocateClerkRequest;
-import org.pucar.dristi.identityaccess.advocate.internal.web.models.AdvocateClerkSearchCriteria;
+import org.pucar.dristi.common.contract.advocate.AdvocateClerk;
+import org.pucar.dristi.common.contract.advocate.AdvocateClerkRequest;
+import org.pucar.dristi.common.contract.advocate.AdvocateClerkSearchCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;

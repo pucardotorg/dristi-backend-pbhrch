@@ -9,9 +9,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.pucar.dristi.caselifecycle.cases.internal.service.IndividualService;
-import org.pucar.dristi.caselifecycle.cases.internal.util.AdvocateUtil;
 import org.pucar.dristi.caselifecycle.cases.internal.util.CaseUtil;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.*;
+import org.pucar.dristi.common.contract.advocate.Advocate;
+import org.pucar.dristi.identityaccess.advocate.AdvocateApi;
 
 import java.util.*;
 
@@ -28,7 +29,7 @@ class EnrichCaseWhenESignTest {
     private IndividualService individualService;
 
     @Mock
-    private AdvocateUtil advocateUtil;
+    private AdvocateApi advocateApi;
 
     @Mock
     private CaseUtil caseUtil;
@@ -98,7 +99,7 @@ class EnrichCaseWhenESignTest {
 
 
         Advocate advocate = Advocate.builder().id(UUID.randomUUID()).isActive(true).build();
-        when(advocateUtil.fetchAdvocatesByIndividualId(requestInfo, individualId)).thenReturn(List.of(advocate));
+        when(advocateApi.searchAdvocatesByIndividualId(requestInfo, individualId)).thenReturn(List.of(advocate));
 
         AdvocateMapping advocateMapping = AdvocateMapping.builder()
                 .advocateId(advocate.getId().toString())

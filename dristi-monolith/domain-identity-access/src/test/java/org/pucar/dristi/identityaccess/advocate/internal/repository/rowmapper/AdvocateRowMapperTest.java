@@ -9,7 +9,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.postgresql.util.PGobject;
-import org.pucar.dristi.identityaccess.advocate.internal.web.models.Advocate;
+import org.pucar.dristi.common.contract.advocate.Advocate;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

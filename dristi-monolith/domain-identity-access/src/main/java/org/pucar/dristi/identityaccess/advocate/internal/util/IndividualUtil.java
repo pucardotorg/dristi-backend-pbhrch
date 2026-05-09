@@ -10,7 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.egov.common.models.individual.Individual;
 import org.egov.tracer.model.CustomException;
 import org.pucar.dristi.common.repository.ServiceRequestRepository;
-import org.pucar.dristi.identityaccess.advocate.internal.web.models.IndividualSearchRequest;
+import org.pucar.dristi.common.contract.advocate.IndividualSearchRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

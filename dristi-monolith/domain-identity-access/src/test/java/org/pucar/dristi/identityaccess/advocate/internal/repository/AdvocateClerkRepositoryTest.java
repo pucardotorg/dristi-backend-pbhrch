@@ -11,8 +11,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.pucar.dristi.identityaccess.advocate.internal.repository.querybuilder.AdvocateClerkQueryBuilder;
 import org.pucar.dristi.identityaccess.advocate.internal.repository.rowmapper.AdvocateClerkDocumentRowMapper;
 import org.pucar.dristi.identityaccess.advocate.internal.repository.rowmapper.AdvocateClerkRowMapper;
-import org.pucar.dristi.identityaccess.advocate.internal.web.models.AdvocateClerk;
-import org.pucar.dristi.identityaccess.advocate.internal.web.models.AdvocateClerkSearchCriteria;
+import org.pucar.dristi.common.contract.advocate.AdvocateClerk;
+import org.pucar.dristi.common.contract.advocate.AdvocateClerkSearchCriteria;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.*;

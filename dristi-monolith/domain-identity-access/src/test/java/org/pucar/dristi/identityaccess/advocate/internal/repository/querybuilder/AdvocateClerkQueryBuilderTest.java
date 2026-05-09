@@ -5,8 +5,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.pucar.dristi.identityaccess.advocate.internal.web.models.AdvocateClerkSearchCriteria;
-import org.pucar.dristi.identityaccess.advocate.internal.web.models.Pagination;
+import org.pucar.dristi.common.contract.advocate.AdvocateClerkSearchCriteria;
+import org.pucar.dristi.common.contract.advocate.Pagination;
 
 import java.util.ArrayList;
 import java.util.List;

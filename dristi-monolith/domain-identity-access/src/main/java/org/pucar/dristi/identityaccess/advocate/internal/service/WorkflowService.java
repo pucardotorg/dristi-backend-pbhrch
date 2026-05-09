@@ -12,6 +12,7 @@ import org.egov.tracer.model.CustomException;
 import org.pucar.dristi.identityaccess.advocate.internal.config.Configuration;
 import org.pucar.dristi.common.repository.ServiceRequestRepository;
 import org.pucar.dristi.identityaccess.advocate.internal.web.models.*;
+import org.pucar.dristi.common.contract.advocate.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
