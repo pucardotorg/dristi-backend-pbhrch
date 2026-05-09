@@ -1,8 +1,8 @@
-# 53 keys with different values across services
+# 54 keys with different values across services
 # Per-service profile YAML resolves them via Spring's profile-overlay rules.
 
 app.timezone
-  Notification=Asia/Kolkata | case=Asia/Kolkata | lock-svc=Asia/Kolkata | order=Asia/Kolkata | template-configuration=Asia/Kolkata
+  Notification=Asia/Kolkata | advocate=Asia/Kolkata | case=Asia/Kolkata | lock-svc=Asia/Kolkata | order=Asia/Kolkata | template-configuration=Asia/Kolkata
 
 app.zone.id
   case=Asia/Kolkata | order=Asia/Kolkata
@@ -32,131 +32,134 @@ egov.hearing.search.path
   case=hearing/v1/search | order=hearing/v1/search
 
 egov.hrms.host
-  Notification=https://dev.digit.org | case=https://dev.digit.org | order=https://dev.digit.org
+  Notification=https://dev.digit.org | advocate=https://dev.digit.org | case=https://dev.digit.org | order=https://dev.digit.org
 
 egov.hrms.search.endpoint
-  Notification=/egov-hrms/employees/_search | case=/egov-hrms/employees/_search | order=/egov-hrms/employees/_search
+  Notification=/egov-hrms/employees/_search | advocate=/egov-hrms/employees/_search | case=/egov-hrms/employees/_search | order=/egov-hrms/employees/_search
 
 egov.idgen.host
-  Notification=https://dev.digit.org/ | case=http://localhost:8082/ | order=http://localhost:8082/
+  Notification=https://dev.digit.org/ | advocate=http://localhost:8087/ | case=http://localhost:8082/ | order=http://localhost:8082/
 
 egov.idgen.path
-  Notification=egov-idgen/id/_generate | case=egov-idgen/id/_generate | order=egov-idgen/id/_generate
+  Notification=egov-idgen/id/_generate | advocate=egov-idgen/id/_generate | case=egov-idgen/id/_generate | order=egov-idgen/id/_generate
 
 egov.individual.create.path
-  case=individual/v1/_create | order=individual/v1/_create
+  advocate=individual/v1/_create | case=individual/v1/_create | order=individual/v1/_create
 
 egov.individual.host
-  case=http://localhost:8081/ | lock-svc=http://localhost:8081/ | order=http://localhost:8081/
+  advocate=http://localhost:8089/ | case=http://localhost:8081/ | lock-svc=http://localhost:8081/ | order=http://localhost:8081/
 
 egov.individual.path
-  case=individual/v1/_create | order=individual/v1/_create
+  advocate=individual/v1/_create | case=individual/v1/_create | order=individual/v1/_create
 
 egov.individual.search.path
-  case=individual/v1/_search | lock-svc=individual/v1/_search | order=individual/v1/_search
+  advocate=individual/v1/_search | case=individual/v1/_search | lock-svc=individual/v1/_search | order=individual/v1/_search
 
 egov.individual.update.path
-  case=individual/v1/_update | order=individual/v1/_update
+  advocate=individual/v1/_update | case=individual/v1/_update | order=individual/v1/_update
 
 egov.localization.context.path
-  Notification=/localization/messages/v1 | case=/localization/messages/v1 | order=/localization/messages/v1
+  Notification=/localization/messages/v1 | advocate=/localization/messages/v1 | case=/localization/messages/v1 | order=/localization/messages/v1
 
 egov.localization.host
-  Notification=https://dev.digit.org | case=https://dev.digit.org | order=http://localhost:8080
+  Notification=https://dev.digit.org | advocate=https://dev.digit.org | case=https://dev.digit.org | order=http://localhost:8080
 
 egov.localization.search.endpoint
-  Notification=/_search | case=/localization/messages/v1/_search | order=/_search
+  Notification=/_search | advocate=/_search | case=/localization/messages/v1/_search | order=/_search
 
 egov.localization.statelevel
-  Notification=true | case=true | order=true
+  Notification=true | advocate=true | case=true | order=true
 
 egov.localization.workDir.path
-  Notification=/localization/messages/v1 | case=/localization/messages/v1 | order=/localization/messages/v1
+  Notification=/localization/messages/v1 | advocate=/localization/messages/v1 | case=/localization/messages/v1 | order=/localization/messages/v1
 
 egov.mdms.host
-  Notification=https://dev.digit.org | case=http://localhost:8084 | lock-svc=https://dev.digit.org | order=http://localhost:8084
+  Notification=https://dev.digit.org | advocate=http://localhost:8085 | case=http://localhost:8084 | lock-svc=https://dev.digit.org | order=http://localhost:8084
 
 egov.mdms.search.endpoint
-  Notification=/egov-mdms-service/v1/_search | case=/egov-mdms-service/v1/_search | lock-svc=/egov-mdms-service/v1/_search | order=/egov-mdms-service/v1/_search
+  Notification=/egov-mdms-service/v1/_search | advocate=/egov-mdms-service/v1/_search | case=/egov-mdms-service/v1/_search | lock-svc=/egov-mdms-service/v1/_search | order=/egov-mdms-service/v1/_search
 
 egov.sms.notification.admission.hearing.scheduled.template.id
   case=1107173140979241046 | order=1107173140979241046
 
 egov.sms.notification.topic
-  Notification=egov.core.notification.sms | case=egov.core.notification.sms | order=egov.core.notification.sms
+  Notification=egov.core.notification.sms | advocate=egov.core.notification.sms | case=egov.core.notification.sms | order=egov.core.notification.sms
 
 egov.url.shortner.endpoint
-  Notification=/egov-url-shortening/shortener | case=/egov-url-shortening/shortener | order=/egov-url-shortening/shortener
+  Notification=/egov-url-shortening/shortener | advocate=/egov-url-shortening/shortener | case=/egov-url-shortening/shortener | order=/egov-url-shortening/shortener
 
 egov.url.shortner.host
-  Notification=https://dev.digit.org | case=https://dev.digit.org | order=https://dev.digit.org
+  Notification=https://dev.digit.org | advocate=https://dev.digit.org | case=https://dev.digit.org | order=https://dev.digit.org
 
 egov.user.context.path
-  Notification=/user/users | case=/user/users | lock-svc=/user/users | order=/user/users
+  Notification=/user/users | advocate=/user/users | case=/user/users | lock-svc=/user/users | order=/user/users
 
 egov.user.create.path
-  Notification=/_createnovalidate | case=/_createnovalidate | lock-svc=/_createnovalidate | order=/_createnovalidate
+  Notification=/_createnovalidate | advocate=/_createnovalidate | case=/_createnovalidate | lock-svc=/_createnovalidate | order=/_createnovalidate
 
 egov.user.host
-  Notification=https://dev.digit.org | case=http://localhost:8086 | lock-svc=https://dev.digit.org | order=http://localhost:8086
+  Notification=https://dev.digit.org | advocate=http://localhost:8086 | case=http://localhost:8086 | lock-svc=https://dev.digit.org | order=http://localhost:8086
 
 egov.user.search.path
-  Notification=/user/_search | case=/user/_search | lock-svc=/user/_search | order=/user/_search
+  Notification=/user/_search | advocate=/user/_search | case=/user/_search | lock-svc=/user/_search | order=/user/_search
 
 egov.user.update.path
-  Notification=/_updatenovalidate | case=/_updatenovalidate | lock-svc=/_updatenovalidate | order=/_updatenovalidate
+  Notification=/_updatenovalidate | advocate=/_updatenovalidate | case=/_updatenovalidate | lock-svc=/_updatenovalidate | order=/_updatenovalidate
 
 egov.workflow.businessservice.search.path
-  Notification=/egov-workflow-v2/egov-wf/businessservice/_search | case=/egov-workflow-v2/egov-wf/businessservice/_search | order=/egov-workflow-v2/egov-wf/businessservice/_search
+  Notification=/egov-workflow-v2/egov-wf/businessservice/_search | advocate=/egov-workflow-v2/egov-wf/businessservice/_search | case=/egov-workflow-v2/egov-wf/businessservice/_search | order=/egov-workflow-v2/egov-wf/businessservice/_search
 
 egov.workflow.host
-  Notification=https://dev.digit.org | case=http://localhost:8083 | order=http://localhost:8083
+  Notification=https://dev.digit.org | advocate=http://localhost:8088 | case=http://localhost:8083 | order=http://localhost:8083
 
 egov.workflow.processinstance.search.path
-  Notification=/egov-workflow-v2/egov-wf/process/_search | case=/egov-workflow-v2/egov-wf/process/_search | order=/egov-workflow-v2/egov-wf/process/_search
+  Notification=/egov-workflow-v2/egov-wf/process/_search | advocate=/egov-workflow-v2/egov-wf/process/_search | case=/egov-workflow-v2/egov-wf/process/_search | order=/egov-workflow-v2/egov-wf/process/_search
 
 egov.workflow.transition.path
-  Notification=/egov-workflow-v2/egov-wf/process/_transition | case=/egov-workflow-v2/egov-wf/process/_transition | order=/egov-workflow-v2/egov-wf/process/_transition
+  Notification=/egov-workflow-v2/egov-wf/process/_transition | advocate=/egov-workflow-v2/egov-wf/process/_transition | case=/egov-workflow-v2/egov-wf/process/_transition | order=/egov-workflow-v2/egov-wf/process/_transition
 
 is.workflow.enabled
-  Notification=true | case=true | order=true
+  Notification=true | advocate=true | case=true | order=true
 
 kafka.consumer.config.auto_commit
-  Notification=true | case=true | lock-svc=true | order=true | template-configuration=true
+  Notification=true | advocate=true | case=true | lock-svc=true | order=true | template-configuration=true
 
 kafka.consumer.config.auto_commit_interval
-  Notification=100 | case=100 | lock-svc=100 | order=100 | template-configuration=100
+  Notification=100 | advocate=100 | case=100 | lock-svc=100 | order=100 | template-configuration=100
 
 kafka.consumer.config.auto_offset_reset
-  Notification=earliest | case=earliest | lock-svc=earliest | order=earliest | template-configuration=earliest
+  Notification=earliest | advocate=earliest | case=earliest | lock-svc=earliest | order=earliest | template-configuration=earliest
 
 kafka.consumer.config.session_timeout
-  Notification=15000 | case=15000 | lock-svc=15000 | order=15000 | template-configuration=15000
+  Notification=15000 | advocate=15000 | case=15000 | lock-svc=15000 | order=15000 | template-configuration=15000
 
 kafka.producer.config.batch_size_config
-  Notification=16384 | case=16384 | lock-svc=16384 | order=16384 | template-configuration=16384
+  Notification=16384 | advocate=16384 | case=16384 | lock-svc=16384 | order=16384 | template-configuration=16384
 
 kafka.producer.config.buffer_memory_config
-  Notification=33554432 | case=33554432 | lock-svc=33554432 | order=33554432 | template-configuration=33554432
+  Notification=33554432 | advocate=33554432 | case=33554432 | lock-svc=33554432 | order=33554432 | template-configuration=33554432
 
 kafka.producer.config.linger_ms_config
-  Notification=1 | case=1 | lock-svc=1 | order=1 | template-configuration=1
+  Notification=1 | advocate=1 | case=1 | lock-svc=1 | order=1 | template-configuration=1
 
 kafka.producer.config.retries_config
-  Notification=0 | case=0 | lock-svc=0 | order=0 | template-configuration=0
+  Notification=0 | advocate=0 | case=0 | lock-svc=0 | order=0 | template-configuration=0
+
+kafka.topics.consumer
+  Notification=service-consumer-topic | advocate=save-advocate-application
 
 kafka.topics.receipt.create
-  Notification=dss-collection | case=egov.collection.payment-create | lock-svc=dss-collection | order=dss-collection
+  Notification=dss-collection | advocate=dss-collection | case=egov.collection.payment-create | lock-svc=dss-collection | order=dss-collection
 
 logging.level.root
-  Notification=INFO | case=INFO | lock-svc=INFO | order=INFO | template-configuration=INFO
+  Notification=INFO | advocate=INFO | case=INFO | lock-svc=INFO | order=INFO | template-configuration=INFO
 
 logging.loki.enabled
-  Notification=false | case=false | lock-svc=false | order=false | template-configuration=false
+  Notification=false | advocate=false | case=false | lock-svc=false | order=false | template-configuration=false
 
 logging.loki.url
-  Notification=http://localhost:3100/loki/api/v1/push | case=http://localhost:3100/loki/api/v1/push | lock-svc=http://localhost:3100/loki/api/v1/push | order=http://localhost:3100/loki/api/v1/push | template-configuration=http://localhost:3100/loki/api/v1/push
+  Notification=http://localhost:3100/loki/api/v1/push | advocate=http://localhost:3100/loki/api/v1/push | case=http://localhost:3100/loki/api/v1/push | lock-svc=http://localhost:3100/loki/api/v1/push | order=http://localhost:3100/loki/api/v1/push | template-configuration=http://localhost:3100/loki/api/v1/push
 
 otel.instrumentation.http.server.ignore-urls
-  Notification=/notification/health,/notification/prometheus | bank-details=/bank-details/health,/bank-details/prometheus | case=/case/health,/case/prometheus | lock-svc=/lock-svc/health,/lock-svc/prometheus | order=/order/health,/order/prometheus | template-configuration=/template-configuration/health,/template-configuration/prometheus
+  Notification=/notification/health,/notification/prometheus | advocate=/advocate/health,/advocate/prometheus | bank-details=/bank-details/health,/bank-details/prometheus | case=/case/health,/case/prometheus | lock-svc=/lock-svc/health,/lock-svc/prometheus | order=/order/health,/order/prometheus | template-configuration=/template-configuration/health,/template-configuration/prometheus
 
