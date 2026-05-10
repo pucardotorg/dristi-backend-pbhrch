@@ -9,7 +9,7 @@ import org.egov.tracer.model.CustomException;
 import org.pucar.dristi.caselifecycle.hearing.internal.config.Configuration;
 import org.pucar.dristi.common.kafka.Producer;
 import org.pucar.dristi.common.repository.ServiceRequestRepository;
-import org.pucar.dristi.caselifecycle.hearing.internal.web.models.SMSRequest;
+import org.pucar.dristi.common.contract.hearing.SMSRequest;
 import org.pucar.dristi.caselifecycle.hearing.internal.web.models.SmsTemplateData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

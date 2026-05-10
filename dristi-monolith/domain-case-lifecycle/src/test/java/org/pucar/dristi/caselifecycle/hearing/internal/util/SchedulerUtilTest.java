@@ -10,6 +10,7 @@ import org.mockito.MockitoAnnotations;
 import org.pucar.dristi.caselifecycle.hearing.internal.config.Configuration;
 import org.pucar.dristi.common.repository.ServiceRequestRepository;
 import org.pucar.dristi.caselifecycle.hearing.internal.web.models.*;
+import org.pucar.dristi.common.contract.hearing.*;
 import org.slf4j.Logger;
 import org.springframework.web.client.RestTemplate;
 

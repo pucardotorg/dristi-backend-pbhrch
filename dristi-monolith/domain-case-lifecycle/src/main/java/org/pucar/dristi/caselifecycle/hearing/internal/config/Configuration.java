@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 
+import org.pucar.dristi.common.contract.hearing.Hearing;
+import org.pucar.dristi.common.contract.hearing.Order;
 @Component("hearingConfiguration")
 @Import({TracerConfiguration.class})
 @Setter

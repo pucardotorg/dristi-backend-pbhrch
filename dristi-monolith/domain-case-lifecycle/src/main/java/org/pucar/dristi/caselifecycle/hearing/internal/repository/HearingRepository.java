@@ -7,6 +7,7 @@ import org.pucar.dristi.caselifecycle.hearing.internal.repository.querybuilder.H
 import org.pucar.dristi.caselifecycle.hearing.internal.repository.rowmapper.HearingDocumentRowMapper;
 import org.pucar.dristi.caselifecycle.hearing.internal.repository.rowmapper.HearingRowMapper;
 import org.pucar.dristi.caselifecycle.hearing.internal.web.models.*;
+import org.pucar.dristi.common.contract.hearing.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;

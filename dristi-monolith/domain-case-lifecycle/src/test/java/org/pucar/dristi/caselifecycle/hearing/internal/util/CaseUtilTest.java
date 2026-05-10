@@ -8,12 +8,12 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.pucar.dristi.caselifecycle.hearing.internal.web.models.CaseExists;
-import org.pucar.dristi.caselifecycle.hearing.internal.web.models.CaseSearchRequest;
+import org.pucar.dristi.common.contract.hearing.CaseExists;
+import org.pucar.dristi.common.contract.hearing.CaseSearchRequest;
 import org.springframework.web.client.RestTemplate;
 import org.pucar.dristi.caselifecycle.hearing.internal.config.Configuration;
-import org.pucar.dristi.caselifecycle.hearing.internal.web.models.CaseExistsRequest;
-import org.pucar.dristi.caselifecycle.hearing.internal.web.models.CaseExistsResponse;
+import org.pucar.dristi.common.contract.hearing.CaseExistsRequest;
+import org.pucar.dristi.common.contract.hearing.CaseExistsResponse;
 import org.egov.tracer.model.CustomException;
 
 import java.util.Collections;

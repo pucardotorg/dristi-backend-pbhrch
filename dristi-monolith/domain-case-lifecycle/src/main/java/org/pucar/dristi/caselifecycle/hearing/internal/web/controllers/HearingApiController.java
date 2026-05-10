@@ -12,6 +12,7 @@ import org.pucar.dristi.caselifecycle.hearing.internal.service.WitnessDeposition
 import org.pucar.dristi.caselifecycle.hearing.internal.util.OrderUtil;
 import org.pucar.dristi.common.util.ResponseInfoFactory;
 import org.pucar.dristi.caselifecycle.hearing.internal.web.models.*;
+import org.pucar.dristi.common.contract.hearing.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;

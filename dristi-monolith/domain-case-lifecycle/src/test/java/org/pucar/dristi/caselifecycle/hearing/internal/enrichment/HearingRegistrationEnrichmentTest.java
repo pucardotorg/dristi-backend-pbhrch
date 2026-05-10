@@ -14,6 +14,7 @@ import org.pucar.dristi.caselifecycle.hearing.internal.config.Configuration;
 import org.pucar.dristi.common.util.IdgenUtil;
 import org.pucar.dristi.common.util.WorkflowUtil;
 import org.pucar.dristi.caselifecycle.hearing.internal.web.models.*;
+import org.pucar.dristi.common.contract.hearing.*;
 
 import java.util.Arrays;
 import java.util.Collections;

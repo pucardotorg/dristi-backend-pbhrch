@@ -4,9 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.tracer.model.CustomException;
-import org.pucar.dristi.caselifecycle.hearing.internal.web.models.Hearing;
-import org.pucar.dristi.caselifecycle.hearing.internal.web.models.HearingCriteria;
-import org.pucar.dristi.caselifecycle.hearing.internal.web.models.Pagination;
+import org.pucar.dristi.common.contract.hearing.Hearing;
+import org.pucar.dristi.common.contract.hearing.HearingCriteria;
+import org.pucar.dristi.common.contract.hearing.Pagination;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

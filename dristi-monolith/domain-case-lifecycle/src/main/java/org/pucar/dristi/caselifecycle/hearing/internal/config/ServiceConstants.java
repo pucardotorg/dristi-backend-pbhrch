@@ -4,6 +4,7 @@ package org.pucar.dristi.caselifecycle.hearing.internal.config;
 import org.springframework.stereotype.Component;
 
 
+import org.pucar.dristi.common.contract.hearing.Hearing;
 @Component("hearingServiceConstants")
 public class ServiceConstants {
 

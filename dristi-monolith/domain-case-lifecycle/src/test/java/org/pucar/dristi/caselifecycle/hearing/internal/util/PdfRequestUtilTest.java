@@ -9,7 +9,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.pucar.dristi.caselifecycle.hearing.internal.config.Configuration;
-import org.pucar.dristi.caselifecycle.hearing.internal.web.models.WitnessPdfRequest;
+import org.pucar.dristi.common.contract.hearing.WitnessPdfRequest;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestClientException;

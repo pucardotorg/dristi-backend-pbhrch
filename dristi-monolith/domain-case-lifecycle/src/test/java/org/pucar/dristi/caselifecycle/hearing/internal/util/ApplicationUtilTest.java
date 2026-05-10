@@ -6,12 +6,12 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.pucar.dristi.caselifecycle.hearing.internal.web.models.ApplicationExists;
+import org.pucar.dristi.common.contract.hearing.ApplicationExists;
 import org.springframework.web.client.RestTemplate;
 
 import org.pucar.dristi.caselifecycle.hearing.internal.config.Configuration;
-import org.pucar.dristi.caselifecycle.hearing.internal.web.models.ApplicationExistsRequest;
-import org.pucar.dristi.caselifecycle.hearing.internal.web.models.ApplicationExistsResponse;
+import org.pucar.dristi.common.contract.hearing.ApplicationExistsRequest;
+import org.pucar.dristi.common.contract.hearing.ApplicationExistsResponse;
 import org.egov.tracer.model.CustomException;
 
 import java.util.Collections;

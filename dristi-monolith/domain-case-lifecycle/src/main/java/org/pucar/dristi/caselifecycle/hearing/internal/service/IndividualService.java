@@ -6,8 +6,8 @@ import org.egov.common.models.individual.Individual;
 import org.egov.tracer.model.CustomException;
 import org.pucar.dristi.caselifecycle.hearing.internal.config.Configuration;
 import org.pucar.dristi.caselifecycle.hearing.internal.util.IndividualUtil;
-import org.pucar.dristi.caselifecycle.hearing.internal.web.models.IndividualSearch;
-import org.pucar.dristi.caselifecycle.hearing.internal.web.models.IndividualSearchRequest;
+import org.pucar.dristi.common.contract.hearing.IndividualSearch;
+import org.pucar.dristi.common.contract.hearing.IndividualSearchRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

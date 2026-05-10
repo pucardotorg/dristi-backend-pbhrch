@@ -16,6 +16,7 @@ import org.pucar.dristi.caselifecycle.hearing.internal.repository.HearingReposit
 import org.pucar.dristi.caselifecycle.hearing.internal.util.*;
 import org.pucar.dristi.caselifecycle.hearing.internal.validator.HearingRegistrationValidator;
 import org.pucar.dristi.caselifecycle.hearing.internal.web.models.*;
+import org.pucar.dristi.common.contract.hearing.*;
 import org.pucar.dristi.caselifecycle.hearing.internal.web.models.cases.CaseRequest;
 import org.pucar.dristi.caselifecycle.hearing.internal.web.models.cases.CourtCase;
 import org.pucar.dristi.caselifecycle.hearing.internal.web.models.inbox.InboxRequest;
