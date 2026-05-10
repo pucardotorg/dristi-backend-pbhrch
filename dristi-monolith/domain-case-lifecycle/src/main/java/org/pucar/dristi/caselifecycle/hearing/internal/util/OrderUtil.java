@@ -12,13 +12,16 @@ import org.egov.common.contract.request.Role;
 import org.egov.common.models.project.TaskResponse;
 import org.egov.tracer.model.CustomException;
 import org.pucar.dristi.caselifecycle.hearing.internal.config.Configuration;
+import org.pucar.dristi.caselifecycle.order.internal.service.OrderRegistrationService;
+import org.pucar.dristi.common.contract.order.Order;
+import org.pucar.dristi.common.contract.order.OrderCriteria;
+import org.pucar.dristi.common.contract.order.OrderPagination;
+import org.pucar.dristi.common.contract.order.OrderRequest;
+import org.pucar.dristi.common.contract.order.OrderSearchRequest;
 import org.pucar.dristi.common.kafka.Producer;
-import org.pucar.dristi.common.repository.ServiceRequestRepository;
 import org.pucar.dristi.caselifecycle.hearing.internal.web.models.*;
 import org.pucar.dristi.common.contract.hearing.*;
 import org.pucar.dristi.caselifecycle.hearing.internal.web.models.demand.*;
-import org.pucar.dristi.caselifecycle.hearing.internal.web.models.orders.*;
-import org.pucar.dristi.caselifecycle.hearing.internal.web.models.orders.Order;
 import org.pucar.dristi.caselifecycle.hearing.internal.web.models.taskManagement.*;
 import org.pucar.dristi.caselifecycle.hearing.internal.web.models.tasks.*;
 import org.pucar.dristi.caselifecycle.hearing.internal.web.models.tasks.TaskSearchRequest;
@@ -38,7 +41,7 @@ import org.pucar.dristi.common.util.WorkflowUtil;
 @Component("hearingOrderUtil")
 public class OrderUtil {
 
-    private final ServiceRequestRepository serviceRequestRepository;
+    private final OrderRegistrationService orderService;
     private final ObjectMapper mapper;
     private final Configuration configuration;
     private final TaskUtil taskUtil;
@@ -51,9 +54,9 @@ public class OrderUtil {
     private final CaseUtil caseUtil;
 
     @Autowired
-    public OrderUtil(ServiceRequestRepository serviceRequestRepository, ObjectMapper mapper, Configuration configuration,
+    public OrderUtil(OrderRegistrationService orderService, ObjectMapper mapper, Configuration configuration,
                      TaskUtil taskUtil, WorkflowUtil workflowUtil, Producer producer, DemandUtil demandUtil, MdmsUtil mdmsUtil, PendingTaskUtil pendingTaskUtil, TaskManagementUtil taskManagementUtil, CaseUtil caseUtil) {
-        this.serviceRequestRepository = serviceRequestRepository;
+        this.orderService = orderService;
         this.mapper = mapper;
         this.configuration = configuration;
         this.taskUtil = taskUtil;
@@ -105,53 +108,53 @@ public class OrderUtil {
     private List<Order> fetchRelevantOrders(String hearingId, String tenantId) {
         log.info("Fetching orders for Hearing ID: {}, Tenant ID: {}", hearingId, tenantId);
 
-        OrderCriteria criteria = OrderCriteria.builder()
-                .scheduledHearingNumber(hearingId)
-                .status(PUBLISHED)
-                .tenantId(tenantId)
-                .build();
+        OrderCriteria criteria = new OrderCriteria();
+        criteria.setScheduledHearingNumber(hearingId);
+        criteria.setStatus(PUBLISHED);
+        criteria.setTenantId(tenantId);
 
-        OrderSearchRequest searchRequest = OrderSearchRequest.builder()
-                .criteria(criteria)
-                .pagination(Pagination.builder().limit(100.0).offSet(0.0).order(org.pucar.dristi.common.contract.hearing.Order.ASC).sortBy("createdDate").build())
-                .build();
+        org.pucar.dristi.common.contract.order.Pagination page1 = org.pucar.dristi.common.contract.order.Pagination.builder()
+                .limit(100.0).offSet(0.0).order(OrderPagination.ASC).sortBy("createdDate").build();
+        OrderSearchRequest searchRequest = new OrderSearchRequest();
+        searchRequest.setCriteria(criteria);
+        searchRequest.setPagination(page1);
 
-        OrderListResponse response = getOrders(searchRequest);
-        if (response == null || CollectionUtils.isEmpty(response.getList())) {
+        List<Order> firstBatch = getOrders(searchRequest);
+        if (CollectionUtils.isEmpty(firstBatch)) {
             log.info("No orders found for Hearing ID: {}", hearingId);
             return null;
         }
 
         // get orders which are created after this hearing scheduled
-        OrderCriteria orderCriteria = OrderCriteria.builder()
-                .fromPublishedDate(response.getList().get(0).getCreatedDate())
-                .toPublishedDate(System.currentTimeMillis())
-                .filingNumber(response.getList().get(0).getFilingNumber())
-                .status(PUBLISHED)
-                .tenantId(tenantId)
-                .build();
+        OrderCriteria orderCriteria = new OrderCriteria();
+        orderCriteria.setFromPublishedDate(firstBatch.get(0).getCreatedDate());
+        orderCriteria.setToPublishedDate(System.currentTimeMillis());
+        orderCriteria.setFilingNumber(firstBatch.get(0).getFilingNumber());
+        orderCriteria.setStatus(PUBLISHED);
+        orderCriteria.setTenantId(tenantId);
 
-        OrderSearchRequest orderSearchRequest = OrderSearchRequest.builder()
-                .criteria(orderCriteria)
-                .pagination(Pagination.builder().limit(100.0).offSet(0.0).order(org.pucar.dristi.common.contract.hearing.Order.ASC).sortBy("createdDate").build())
-                .build();
+        org.pucar.dristi.common.contract.order.Pagination page2 = org.pucar.dristi.common.contract.order.Pagination.builder()
+                .limit(100.0).offSet(0.0).order(OrderPagination.ASC).sortBy("createdDate").build();
+        OrderSearchRequest orderSearchRequest = new OrderSearchRequest();
+        orderSearchRequest.setCriteria(orderCriteria);
+        orderSearchRequest.setPagination(page2);
 
-        OrderListResponse orderListResponse = getOrders(orderSearchRequest);
-        if (orderListResponse == null || CollectionUtils.isEmpty(orderListResponse.getList())) {
+        List<Order> allOrders = getOrders(orderSearchRequest);
+        if (CollectionUtils.isEmpty(allOrders)) {
             log.info("no orders were published after the hearing was scheduled : {}", hearingId);
             return null;
         }
 
         List<String> orderTypes = new ArrayList<>(List.of(SUMMONS, WARRANT, NOTICE, PROCLAMATION, ATTACHMENT));
 
-        Order nextScheduleOrder = orderListResponse.getList().stream().filter(order -> order.getScheduledHearingNumber() != null && !order.getScheduledHearingNumber().equals(hearingId)).findFirst().orElse(null);
+        Order nextScheduleOrder = allOrders.stream().filter(order -> order.getScheduledHearingNumber() != null && !order.getScheduledHearingNumber().equals(hearingId)).findFirst().orElse(null);
         if (nextScheduleOrder != null) {
             log.info("Found next schedule order for hearingId: {}", hearingId);
             Long createdDate = nextScheduleOrder.getCreatedDate();
-            orderListResponse.getList().removeIf(order -> order.getCreatedDate() >= createdDate);
+            allOrders.removeIf(order -> order.getCreatedDate() >= createdDate);
         }
 
-        List<Order> filteredOrders = orderListResponse.getList().stream()
+        List<Order> filteredOrders = allOrders.stream()
                 .filter(order -> {
                     String orderType = (order.getOrderType() != null)
                             ? order.getOrderType().toUpperCase()
@@ -552,33 +555,22 @@ public class OrderUtil {
         log.info("Updated demand status to CANCELLED for consumer codes: {}", consumerCodes);
     }
 
-    public OrderListResponse getOrders(OrderSearchRequest searchRequest) {
-        StringBuilder uri = new StringBuilder();
-        uri.append(configuration.getOrderHost()).append(configuration.getOrderSearchEndPoint());
+    public List<Order> getOrders(OrderSearchRequest searchRequest) {
         try {
-            log.info("Calling order service with URI: {}", uri);
-            Object response = serviceRequestRepository.fetchResult(uri, searchRequest);
-            return mapper.convertValue(response, OrderListResponse.class);
+            return orderService.searchOrder(searchRequest);
         } catch (Exception e) {
             log.error(ERROR_WHILE_FETCHING_FROM_ORDER, e);
             return null;
         }
     }
 
-    public OrderResponse createOrder(OrderRequest orderRequest) {
-        StringBuilder uri = new StringBuilder();
-        uri.append(configuration.getOrderHost()).append(configuration.getOrderCreateEndPoint());
-        Object response;
-        OrderResponse orderResponse;
+    public Order createOrder(OrderRequest orderRequest) {
         try {
-            response = serviceRequestRepository.fetchResult(uri, orderRequest);
-            orderResponse = mapper.convertValue(response, OrderResponse.class);
+            return orderService.createOrder(orderRequest);
         } catch (Exception e) {
             log.error(ERROR_WHILE_FETCHING_FROM_ORDER, e);
             throw new CustomException(ERROR_WHILE_FETCHING_FROM_ORDER, e.getMessage());
-
         }
-        return orderResponse;
     }
 
     public List<String> extractConsumerCode(Task task, RequestInfo requestInfo) {

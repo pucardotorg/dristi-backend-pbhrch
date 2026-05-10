@@ -20,8 +20,10 @@ import org.pucar.dristi.common.contract.hearing.*;
 import org.pucar.dristi.caselifecycle.hearing.internal.web.models.cases.CaseRequest;
 import org.pucar.dristi.caselifecycle.hearing.internal.web.models.cases.CourtCase;
 import org.pucar.dristi.caselifecycle.hearing.internal.web.models.inbox.InboxRequest;
-import org.pucar.dristi.caselifecycle.hearing.internal.web.models.orders.*;
-import org.pucar.dristi.caselifecycle.hearing.internal.web.models.orders.Order;
+import org.pucar.dristi.common.contract.order.Order;
+import org.pucar.dristi.common.contract.order.OrderCriteria;
+import org.pucar.dristi.common.contract.order.OrderRequest;
+import org.pucar.dristi.common.contract.order.StatuteSection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -937,24 +939,20 @@ public class HearingService {
     }
 
     public void createDraftOrder(String hearingNumber, String hearingType, String tenantId, String filingNumber, String cnrNumber, RequestInfo requestInfo) {
-        OrderCriteria criteria = OrderCriteria.builder()
-                .filingNumber(filingNumber)
-                .hearingNumber(hearingNumber)
-                .tenantId(tenantId)
-                .build();
+        OrderCriteria criteria = new OrderCriteria();
+        criteria.setFilingNumber(filingNumber);
+        criteria.setHearingNumber(hearingNumber);
+        criteria.setTenantId(tenantId);
 
-        OrderSearchRequest searchRequest = OrderSearchRequest.builder()
-                .criteria(criteria)
-                .pagination(Pagination.builder().limit(100.0).offSet(0.0).build())
-                .build();
+        org.pucar.dristi.common.contract.order.OrderSearchRequest searchRequest = new org.pucar.dristi.common.contract.order.OrderSearchRequest();
+        searchRequest.setCriteria(criteria);
+        searchRequest.setPagination(org.pucar.dristi.common.contract.order.Pagination.builder().limit(100.0).offSet(0.0).build());
 
-                OrderResponse orderResponse;
-
-        OrderListResponse response = orderUtil.getOrders(searchRequest);
-        if (response != null && !CollectionUtils.isEmpty(response.getList())) {
+        List<Order> existingOrders = orderUtil.getOrders(searchRequest);
+        if (!CollectionUtils.isEmpty(existingOrders)) {
             log.info("Found existing SCHEDULING_NEXT_HEARING draft(s) for Hearing ID: {}; skipping creation.", hearingNumber);
         } else {
-            org.pucar.dristi.caselifecycle.hearing.internal.web.models.orders.Order order = Order.builder()
+            Order order = Order.builder()
                     .hearingNumber(hearingNumber)
                     .hearingType(hearingType)
                     .filingNumber(filingNumber)
@@ -975,8 +973,8 @@ public class HearingService {
 
             OrderRequest orderRequest = OrderRequest.builder()
                     .requestInfo(requestInfo).order(order).build();
-            orderResponse = orderUtil.createOrder(orderRequest);
-            log.info("Order created for Hearing ID: {}, orderNumber:: {}", hearingNumber, orderResponse.getOrder().getOrderNumber());
+            Order createdOrder = orderUtil.createOrder(orderRequest);
+            log.info("Order created for Hearing ID: {}, orderNumber:: {}", hearingNumber, createdOrder.getOrderNumber());
         }
 
     }
