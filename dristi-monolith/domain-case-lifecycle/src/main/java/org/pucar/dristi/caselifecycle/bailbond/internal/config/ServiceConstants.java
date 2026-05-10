@@ -4,6 +4,7 @@ package org.pucar.dristi.caselifecycle.bailbond.internal.config;
 import org.springframework.stereotype.Component;
 
 
+import org.pucar.dristi.common.contract.bailbond.Bail;
 @Component("bailbondServiceConstants")
 public class ServiceConstants {
 

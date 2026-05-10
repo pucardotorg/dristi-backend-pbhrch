@@ -2,10 +2,10 @@ package org.pucar.dristi.caselifecycle.bailbond.internal.repository;
 
 import org.pucar.dristi.caselifecycle.bailbond.internal.repository.querybuilder.BailQueryBuilder;
 import org.pucar.dristi.caselifecycle.bailbond.internal.repository.rowmapper.BailRowMapper;
-import org.pucar.dristi.caselifecycle.bailbond.internal.web.models.Bail;
-import org.pucar.dristi.caselifecycle.bailbond.internal.web.models.BailSearchCriteria;
-import org.pucar.dristi.caselifecycle.bailbond.internal.web.models.BailSearchRequest;
-import org.pucar.dristi.caselifecycle.bailbond.internal.web.models.Pagination;
+import org.pucar.dristi.common.contract.bailbond.Bail;
+import org.pucar.dristi.common.contract.bailbond.BailSearchCriteria;
+import org.pucar.dristi.common.contract.bailbond.BailSearchRequest;
+import org.pucar.dristi.common.contract.bailbond.Pagination;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.model.CustomException;

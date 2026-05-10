@@ -1,7 +1,7 @@
 package org.pucar.dristi.caselifecycle.bailbond.internal.util;
 
-import org.pucar.dristi.caselifecycle.bailbond.internal.web.models.Bail;
-import org.pucar.dristi.caselifecycle.bailbond.internal.web.models.BailRequest;
+import org.pucar.dristi.common.contract.bailbond.Bail;
+import org.pucar.dristi.common.contract.bailbond.BailRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.egov.tracer.model.CustomException;

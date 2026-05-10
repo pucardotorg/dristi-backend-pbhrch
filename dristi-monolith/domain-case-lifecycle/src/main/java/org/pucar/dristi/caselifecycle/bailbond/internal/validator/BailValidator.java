@@ -1,8 +1,8 @@
 package org.pucar.dristi.caselifecycle.bailbond.internal.validator;
 
 import org.pucar.dristi.caselifecycle.bailbond.internal.repository.BailRepository;
-import org.pucar.dristi.caselifecycle.bailbond.internal.web.models.Bail;
-import org.pucar.dristi.caselifecycle.bailbond.internal.web.models.BailRequest;
+import org.pucar.dristi.common.contract.bailbond.Bail;
+import org.pucar.dristi.common.contract.bailbond.BailRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
@@ -16,6 +16,7 @@ import static org.pucar.dristi.caselifecycle.bailbond.internal.config.ServiceCon
 import static org.pucar.dristi.caselifecycle.bailbond.internal.config.ServiceConstants.SAVE_DRAFT;
 import static org.pucar.dristi.caselifecycle.bailbond.internal.config.ServiceConstants.VALIDATION_EXCEPTION;
 
+import org.pucar.dristi.common.contract.bailbond.Surety;
 @Component
 @Slf4j
 @AllArgsConstructor

@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Import;
 import org.springframework.stereotype.Component;
 
+import org.pucar.dristi.common.contract.bailbond.Bail;
+import org.pucar.dristi.common.contract.bailbond.Email;
 @Component("bailbondConfiguration")
 @Data
 @Import({TracerConfiguration.class})

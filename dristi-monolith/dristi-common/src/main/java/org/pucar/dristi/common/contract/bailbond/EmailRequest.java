@@ -1,4 +1,5 @@
-package org.pucar.dristi.caselifecycle.bailbond.internal.web.models;
+// HAND-CURATED — lifted by Phase 35 (contract-lift)
+package org.pucar.dristi.common.contract.bailbond;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

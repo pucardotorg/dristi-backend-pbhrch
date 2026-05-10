@@ -15,8 +15,8 @@
 
     import org.pucar.dristi.caselifecycle.bailbond.internal.config.Configuration;
     import org.pucar.dristi.caselifecycle.bailbond.internal.repository.ServiceRequestRepository;
-    import org.pucar.dristi.caselifecycle.bailbond.internal.web.models.Bail;
-    import org.pucar.dristi.caselifecycle.bailbond.internal.web.models.BailRequest;
+    import org.pucar.dristi.common.contract.bailbond.Bail;
+    import org.pucar.dristi.common.contract.bailbond.BailRequest;
     import org.pucar.dristi.common.models.workflow.WorkflowObject;
     import org.egov.common.contract.models.Workflow;
     import org.egov.common.contract.request.RequestInfo;
@@ -36,6 +36,8 @@
 
     import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.pucar.dristi.common.contract.bailbond.CaseCriteria;
+import org.pucar.dristi.common.contract.bailbond.CaseSearchRequest;
     @ExtendWith(MockitoExtension.class)
     public class WorkflowServiceTest {
 

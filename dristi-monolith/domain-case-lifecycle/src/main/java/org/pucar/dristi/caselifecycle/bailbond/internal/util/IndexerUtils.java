@@ -3,7 +3,7 @@ package org.pucar.dristi.caselifecycle.bailbond.internal.util;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 import org.pucar.dristi.caselifecycle.bailbond.internal.config.Configuration;
-import org.pucar.dristi.caselifecycle.bailbond.internal.web.models.Bail;
+import org.pucar.dristi.common.contract.bailbond.Bail;
 import org.pucar.dristi.common.models.Document;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;

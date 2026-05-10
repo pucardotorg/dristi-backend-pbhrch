@@ -1,9 +1,9 @@
 package org.pucar.dristi.caselifecycle.bailbond.internal.repository.rowmapper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.pucar.dristi.caselifecycle.bailbond.internal.web.models.Bail;
+import org.pucar.dristi.common.contract.bailbond.Bail;
 import org.pucar.dristi.common.models.Document;
-import org.pucar.dristi.caselifecycle.bailbond.internal.web.models.Surety;
+import org.pucar.dristi.common.contract.bailbond.Surety;
 import org.egov.tracer.model.CustomException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

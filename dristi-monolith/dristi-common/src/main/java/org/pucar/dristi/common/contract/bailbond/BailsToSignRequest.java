@@ -1,4 +1,6 @@
-package org.pucar.dristi.caselifecycle.bailbond.internal.web.models;
+// HAND-CURATED — lifted by Phase 35 (contract-lift)
+package org.pucar.dristi.common.contract.bailbond;
+
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.Valid;
@@ -7,28 +9,30 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.egov.common.contract.request.RequestInfo;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Validated
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UpdateSignedBailRequest {
+public class BailsToSignRequest {
     @JsonProperty("RequestInfo")
     @Valid
     private RequestInfo requestInfo = null;
 
-    @JsonProperty("signedBails")
+    @JsonProperty("criteria")
     @Valid
-    private List<SignedBail> signedBails = null;
+    private List<BailsCriteria> criteria = null;
 
-    public UpdateSignedBailRequest addSignedBailsItem(SignedBail signedBailsItem) {
-        if (this.signedBails == null) {
-            this.signedBails = new ArrayList<>();
+    public BailsToSignRequest addCriteriaItem(BailsCriteria criteriaItem) {
+        if (this.criteria == null) {
+            this.criteria = new ArrayList<>();
         }
-        this.signedBails.add(signedBailsItem);
+        this.criteria.add(criteriaItem);
         return this;
     }
 }

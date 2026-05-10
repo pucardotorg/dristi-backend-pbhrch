@@ -5,13 +5,13 @@ import org.pucar.dristi.caselifecycle.bailbond.internal.config.Configuration;
 import org.pucar.dristi.common.kafka.Producer;
 import org.pucar.dristi.caselifecycle.bailbond.internal.repository.ServiceRequestRepository;
 import org.pucar.dristi.caselifecycle.bailbond.internal.util.DateUtil;
-import org.pucar.dristi.caselifecycle.bailbond.internal.web.models.BailRequest;
-import org.pucar.dristi.caselifecycle.bailbond.internal.web.models.Email;
+import org.pucar.dristi.common.contract.bailbond.BailRequest;
+import org.pucar.dristi.common.contract.bailbond.Email;
 import org.pucar.dristi.caselifecycle.bailbond.internal.web.models.EmailRecipientData;
 import org.pucar.dristi.caselifecycle.bailbond.internal.web.models.EmailTemplateData;
 import org.pucar.dristi.caselifecycle.bailbond.internal.web.models.EmailContent;
-import org.pucar.dristi.caselifecycle.bailbond.internal.web.models.EmailRequest;
-import org.pucar.dristi.caselifecycle.bailbond.internal.web.models.SMSRequest;
+import org.pucar.dristi.common.contract.bailbond.EmailRequest;
+import org.pucar.dristi.common.contract.bailbond.SMSRequest;
 import org.pucar.dristi.caselifecycle.bailbond.internal.web.models.SmsTemplateData;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -28,6 +28,7 @@ import java.util.Set;
 
 import static org.pucar.dristi.caselifecycle.bailbond.internal.config.ServiceConstants.*;
 
+import org.pucar.dristi.common.contract.bailbond.Surety;
 @Service("bailbondNotificationService")
 @Slf4j
 public class NotificationService {

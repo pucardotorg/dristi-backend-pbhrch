@@ -1,9 +1,9 @@
 package org.pucar.dristi.caselifecycle.bailbond.internal.validator;
 
 import org.pucar.dristi.caselifecycle.bailbond.internal.repository.BailRepository;
-import org.pucar.dristi.caselifecycle.bailbond.internal.web.models.Bail;
-import org.pucar.dristi.caselifecycle.bailbond.internal.web.models.BailRequest;
-import org.pucar.dristi.caselifecycle.bailbond.internal.web.models.Surety;
+import org.pucar.dristi.common.contract.bailbond.Bail;
+import org.pucar.dristi.common.contract.bailbond.BailRequest;
+import org.pucar.dristi.common.contract.bailbond.Surety;
 import org.pucar.dristi.common.models.workflow.WorkflowObject;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;

@@ -3,6 +3,7 @@ package org.pucar.dristi.caselifecycle.bailbond.internal.repository;
 import org.pucar.dristi.caselifecycle.bailbond.internal.repository.querybuilder.BailQueryBuilder;
 import org.pucar.dristi.caselifecycle.bailbond.internal.repository.rowmapper.BailRowMapper;
 import org.pucar.dristi.caselifecycle.bailbond.internal.web.models.*;
+import org.pucar.dristi.common.contract.bailbond.*;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.model.CustomException;
 import org.junit.jupiter.api.BeforeEach;

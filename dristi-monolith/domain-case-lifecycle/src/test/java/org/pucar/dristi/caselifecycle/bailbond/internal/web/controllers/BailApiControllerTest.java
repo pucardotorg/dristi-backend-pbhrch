@@ -2,17 +2,17 @@
 
     import org.pucar.dristi.caselifecycle.bailbond.internal.service.BailService;
     import org.pucar.dristi.common.util.ResponseInfoFactory;
-    import org.pucar.dristi.caselifecycle.bailbond.internal.web.models.Bail;
-    import org.pucar.dristi.caselifecycle.bailbond.internal.web.models.BailRequest;
-    import org.pucar.dristi.caselifecycle.bailbond.internal.web.models.BailResponse;
-    import org.pucar.dristi.caselifecycle.bailbond.internal.web.models.BailSearchCriteria;
-    import org.pucar.dristi.caselifecycle.bailbond.internal.web.models.BailSearchRequest;
-    import org.pucar.dristi.caselifecycle.bailbond.internal.web.models.BailSearchResponse;
-    import org.pucar.dristi.caselifecycle.bailbond.internal.web.models.BailToSign;
-    import org.pucar.dristi.caselifecycle.bailbond.internal.web.models.BailsToSignRequest;
-    import org.pucar.dristi.caselifecycle.bailbond.internal.web.models.BailsToSignResponse;
-    import org.pucar.dristi.caselifecycle.bailbond.internal.web.models.UpdateSignedBailRequest;
-    import org.pucar.dristi.caselifecycle.bailbond.internal.web.models.UpdateSignedBailResponse;
+    import org.pucar.dristi.common.contract.bailbond.Bail;
+    import org.pucar.dristi.common.contract.bailbond.BailRequest;
+    import org.pucar.dristi.common.contract.bailbond.BailResponse;
+    import org.pucar.dristi.common.contract.bailbond.BailSearchCriteria;
+    import org.pucar.dristi.common.contract.bailbond.BailSearchRequest;
+    import org.pucar.dristi.common.contract.bailbond.BailSearchResponse;
+    import org.pucar.dristi.common.contract.bailbond.BailToSign;
+    import org.pucar.dristi.common.contract.bailbond.BailsToSignRequest;
+    import org.pucar.dristi.common.contract.bailbond.BailsToSignResponse;
+    import org.pucar.dristi.common.contract.bailbond.UpdateSignedBailRequest;
+    import org.pucar.dristi.common.contract.bailbond.UpdateSignedBailResponse;
     import org.egov.common.contract.request.RequestInfo;
     import org.egov.common.contract.response.ResponseInfo;
     import org.junit.jupiter.api.Test;

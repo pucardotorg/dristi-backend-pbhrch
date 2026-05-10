@@ -2,6 +2,7 @@ package org.pucar.dristi.caselifecycle.bailbond.internal.repository.rowmapper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.pucar.dristi.caselifecycle.bailbond.internal.web.models.*;
+import org.pucar.dristi.common.contract.bailbond.*;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.tracer.model.CustomException;
 import org.postgresql.util.PGobject;

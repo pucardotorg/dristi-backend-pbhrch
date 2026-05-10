@@ -8,6 +8,7 @@ import org.pucar.dristi.caselifecycle.bailbond.internal.repository.BailRepositor
 import org.pucar.dristi.caselifecycle.bailbond.internal.util.*;
 import org.pucar.dristi.caselifecycle.bailbond.internal.validator.BailValidator;
 import org.pucar.dristi.caselifecycle.bailbond.internal.web.models.*;
+import org.pucar.dristi.common.contract.bailbond.*;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
 import org.egov.tracer.model.CustomException;

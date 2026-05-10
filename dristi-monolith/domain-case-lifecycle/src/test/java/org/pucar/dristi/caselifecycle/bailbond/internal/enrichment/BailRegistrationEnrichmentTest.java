@@ -6,6 +6,7 @@ import org.pucar.dristi.caselifecycle.bailbond.internal.config.Configuration;
 import org.pucar.dristi.caselifecycle.bailbond.internal.util.CaseUtil;
 import org.pucar.dristi.common.util.IdgenUtil;
 import org.pucar.dristi.caselifecycle.bailbond.internal.web.models.*;
+import org.pucar.dristi.common.contract.bailbond.*;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
 import org.junit.jupiter.api.BeforeEach;

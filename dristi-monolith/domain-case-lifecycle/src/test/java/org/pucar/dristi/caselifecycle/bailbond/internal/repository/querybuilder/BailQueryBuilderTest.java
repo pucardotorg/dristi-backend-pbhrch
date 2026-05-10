@@ -1,8 +1,8 @@
 package org.pucar.dristi.caselifecycle.bailbond.internal.repository.querybuilder;
 
-import org.pucar.dristi.caselifecycle.bailbond.internal.web.models.BailSearchCriteria;
-import org.pucar.dristi.caselifecycle.bailbond.internal.web.models.Order;
-import org.pucar.dristi.caselifecycle.bailbond.internal.web.models.Pagination;
+import org.pucar.dristi.common.contract.bailbond.BailSearchCriteria;
+import org.pucar.dristi.common.contract.bailbond.Order;
+import org.pucar.dristi.common.contract.bailbond.Pagination;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -13,6 +13,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.pucar.dristi.common.contract.bailbond.Bail;
 class BailQueryBuilderTest {
 
     private BailQueryBuilder queryBuilder;

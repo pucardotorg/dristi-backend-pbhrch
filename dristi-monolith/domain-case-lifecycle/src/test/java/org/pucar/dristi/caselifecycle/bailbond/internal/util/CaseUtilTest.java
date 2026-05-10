@@ -4,108 +4,81 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.pucar.dristi.caselifecycle.bailbond.internal.config.Configuration;
-import org.pucar.dristi.caselifecycle.bailbond.internal.web.models.CaseSearchRequest;
+import org.pucar.dristi.caselifecycle.cases.internal.service.CaseService;
+import org.pucar.dristi.caselifecycle.cases.internal.web.models.CourtCase;
+import org.pucar.dristi.common.contract.bailbond.CaseCriteria;
+import org.pucar.dristi.common.contract.bailbond.CaseSearchRequest;
 import org.egov.tracer.model.CustomException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.web.client.RestTemplate;
+import org.mockito.stubbing.Answer;
 
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import static org.pucar.dristi.caselifecycle.bailbond.internal.config.ServiceConstants.ERROR_WHILE_FETCHING_FROM_CASE;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.anyString;
-import static org.mockito.Mockito.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 public class CaseUtilTest {
 
-    private Configuration config;
+    private CaseService caseService;
     private ObjectMapper objectMapper;
-    private RestTemplate restTemplate;
     private CaseUtil caseUtil;
 
     @BeforeEach
     void setup() {
-        config = mock(Configuration.class);
+        caseService = mock(CaseService.class);
         objectMapper = new ObjectMapper();
-        restTemplate = mock(RestTemplate.class);
-        caseUtil = new CaseUtil(config, objectMapper, restTemplate);
+        caseUtil = new CaseUtil(caseService, objectMapper);
     }
 
     @Test
     void testSearchCaseDetailsSuccess() throws Exception {
-        // Given
-        String host = "http://localhost";
-        String path = "/case/v1/search";
-        when(config.getCaseHost()).thenReturn(host);
-        when(config.getCaseSearchPath()).thenReturn(path);
+        CourtCase courtCase = new CourtCase();
+        courtCase.setCourtId("COURT-123");
 
-        CaseSearchRequest request = new CaseSearchRequest();
+        doAnswer((Answer<Void>) invocation -> {
+            org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseSearchRequest req =
+                    invocation.getArgument(0);
+            req.getCriteria().get(0).setResponseList(Collections.singletonList(courtCase));
+            return null;
+        }).when(caseService).searchCases(any());
 
-        Map<String, Object> mockResponse = new HashMap<>();
-        Map<String, Object> innerCriteria = new HashMap<>();
-        Map<String, String> caseDetail = new HashMap<>();
-        caseDetail.put("courtId", "COURT-123");
-        innerCriteria.put("responseList", List.of(caseDetail));
-        mockResponse.put("criteria", List.of(innerCriteria));
+        CaseSearchRequest request = CaseSearchRequest.builder()
+                .criteria(List.of(CaseCriteria.builder().filingNumber("FN-001").defaultFields(true).build()))
+                .build();
 
-        when(restTemplate.postForObject(eq(host + path), any(), eq(Map.class)))
-                .thenReturn(mockResponse);
-
-        // When
         JsonNode result = caseUtil.searchCaseDetails(request);
 
-        // Then
         assertNotNull(result);
         assertEquals("COURT-123", result.get(0).get("courtId").asText());
     }
 
     @Test
     void testSearchCaseDetails_InvalidStructure_ThrowsCustomException() {
-        // Given
-        when(config.getCaseHost()).thenReturn("http://localhost");
-        when(config.getCaseSearchPath()).thenReturn("/case/v1/search");
+        // searchCases is void and does nothing — responseList stays null
+        CaseSearchRequest request = CaseSearchRequest.builder()
+                .criteria(List.of(CaseCriteria.builder().build()))
+                .build();
 
-        CaseSearchRequest request = new CaseSearchRequest();
-
-        Map<String, Object> invalidResponse = new HashMap<>(); // No "criteria"
-
-        when(restTemplate.postForObject(anyString(), any(), eq(Map.class)))
-                .thenReturn(invalidResponse);
-
-        // When / Then
-        CustomException ex = assertThrows(CustomException.class, () -> {
-            caseUtil.searchCaseDetails(request);
-        });
+        CustomException ex = assertThrows(CustomException.class,
+                () -> caseUtil.searchCaseDetails(request));
 
         assertEquals(ERROR_WHILE_FETCHING_FROM_CASE, ex.getCode());
     }
 
     @Test
     void testSearchCaseDetails_ExceptionDuringProcessing_ThrowsCustomException() {
-        // Given
-        when(config.getCaseHost()).thenReturn("http://localhost");
-        when(config.getCaseSearchPath()).thenReturn("/case/v1/search");
+        doThrow(new RuntimeException("Service down")).when(caseService).searchCases(any());
 
-        CaseSearchRequest request = new CaseSearchRequest();
+        CaseSearchRequest request = CaseSearchRequest.builder()
+                .criteria(List.of(CaseCriteria.builder().build()))
+                .build();
 
-        when(restTemplate.postForObject(anyString(), any(), eq(Map.class)))
-                .thenThrow(new RuntimeException("Service down"));
-
-        // When / Then
-        CustomException ex = assertThrows(CustomException.class, () -> {
-            caseUtil.searchCaseDetails(request);
-        });
+        CustomException ex = assertThrows(CustomException.class,
+                () -> caseUtil.searchCaseDetails(request));
 
         assertEquals(ERROR_WHILE_FETCHING_FROM_CASE, ex.getCode());
         assertTrue(ex.getMessage().contains("Service down"));
@@ -113,7 +86,6 @@ public class CaseUtilTest {
 
     @Test
     void testExtractFieldsSuccess() {
-        // Given
         ObjectNode caseNode = objectMapper.createObjectNode();
         caseNode.put("courtId", "C1");
         caseNode.put("caseTitle", "ABC vs XYZ");
@@ -126,7 +98,6 @@ public class CaseUtilTest {
         ArrayNode arrayNode = objectMapper.createArrayNode();
         arrayNode.add(caseNode);
 
-        // Then
         assertEquals("C1", caseUtil.getCourtId(arrayNode));
         assertEquals("ABC vs XYZ", caseUtil.getCaseTitle(arrayNode));
         assertEquals("CNR123", caseUtil.getCnrNumber(arrayNode));
@@ -138,13 +109,11 @@ public class CaseUtilTest {
 
     @Test
     void testExtractField_NullOrEmpty_ShouldReturnNull() {
-        // Given
         ArrayNode emptyArray = objectMapper.createArrayNode();
         assertNull(caseUtil.getCaseTitle(emptyArray));
 
         ArrayNode arrayNode = objectMapper.createArrayNode();
-        ObjectNode nodeWithoutField = objectMapper.createObjectNode(); // no "courtId"
-        arrayNode.add(nodeWithoutField);
+        arrayNode.add(objectMapper.createObjectNode());
         assertNull(caseUtil.getCourtId(arrayNode));
     }
 }
