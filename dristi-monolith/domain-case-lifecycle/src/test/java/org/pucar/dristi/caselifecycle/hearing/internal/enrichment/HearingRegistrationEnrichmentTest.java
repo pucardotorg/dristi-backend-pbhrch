@@ -24,8 +24,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static org.pucar.dristi.caselifecycle.hearing.internal.config.ServiceConstants.CLOSE;
 
-import org.pucar.dristi.common.models.Document;
 import org.pucar.dristi.common.models.workflow.WorkflowObject;
+import org.pucar.dristi.common.models.Document;
 class HearingRegistrationEnrichmentTest {
 
     @InjectMocks

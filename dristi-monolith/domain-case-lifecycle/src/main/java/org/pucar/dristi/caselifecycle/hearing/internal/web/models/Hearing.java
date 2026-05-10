@@ -16,8 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import org.pucar.dristi.common.models.Document;
 import org.pucar.dristi.common.models.workflow.WorkflowObject;
+import org.pucar.dristi.common.models.Document;
 /**
  * a case can have multiple hearings. this represents one of the many hearings related to the case
  */
