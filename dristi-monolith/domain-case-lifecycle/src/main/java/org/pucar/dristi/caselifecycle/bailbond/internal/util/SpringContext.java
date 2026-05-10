@@ -1,11 +1,11 @@
-package org.pucar.dristi.caselifecycle.cases.internal.util;
+package org.pucar.dristi.caselifecycle.bailbond.internal.util;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
-@Component("casesSpringContext")
+@Component("bailbondSpringContext")
 public class SpringContext implements ApplicationContextAware {
 
     private static ApplicationContext context;
