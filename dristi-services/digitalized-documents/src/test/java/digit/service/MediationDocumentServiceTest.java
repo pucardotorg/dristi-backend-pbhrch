@@ -3,7 +3,7 @@ package digit.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import digit.config.Configuration;
 import digit.enrichment.MediationEnrichment;
-import org.pucar.dristi.common.kafka.Producer;
+import digit.kafka.Producer;
 import digit.util.FileStoreUtil;
 import digit.validators.MediationDocumentValidator;
 import digit.web.models.*;
