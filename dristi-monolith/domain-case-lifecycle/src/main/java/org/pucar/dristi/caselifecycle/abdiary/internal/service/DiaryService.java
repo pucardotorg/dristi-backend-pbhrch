@@ -4,7 +4,6 @@ import org.pucar.dristi.caselifecycle.abdiary.internal.config.Configuration;
 import org.pucar.dristi.caselifecycle.abdiary.internal.enrichment.ADiaryEnrichment;
 import org.pucar.dristi.common.kafka.Producer;
 import org.pucar.dristi.caselifecycle.abdiary.internal.repository.DiaryRepository;
-import org.pucar.dristi.caselifecycle.abdiary.internal.util.CaseUtil;
 import org.pucar.dristi.caselifecycle.abdiary.internal.util.FileStoreUtil;
 import org.pucar.dristi.caselifecycle.abdiary.internal.util.DateTimeUtil;
 import org.pucar.dristi.caselifecycle.abdiary.internal.util.PdfServiceUtil;
@@ -46,11 +45,9 @@ public class DiaryService {
 
     private final WorkflowService workflowService;
 
-    private final CaseUtil caseUtil;
-
     private final DateTimeUtil dateTimeUtil;
 
-    public DiaryService(Producer producer, Configuration configuration, DiaryRepository diaryRepository, ADiaryValidator validator, ADiaryEnrichment enrichment, DiaryEntryService diaryEntryService, FileStoreUtil fileStoreUtil, PdfServiceUtil pdfServiceUtil, WorkflowService workflowService, CaseUtil caseUtil, DateTimeUtil dateTimeUtil) {
+    public DiaryService(Producer producer, Configuration configuration, DiaryRepository diaryRepository, ADiaryValidator validator, ADiaryEnrichment enrichment, DiaryEntryService diaryEntryService, FileStoreUtil fileStoreUtil, PdfServiceUtil pdfServiceUtil, WorkflowService workflowService, DateTimeUtil dateTimeUtil) {
         this.producer = producer;
         this.configuration = configuration;
         this.diaryRepository = diaryRepository;
@@ -60,7 +57,6 @@ public class DiaryService {
         this.fileStoreUtil = fileStoreUtil;
         this.pdfServiceUtil = pdfServiceUtil;
         this.workflowService = workflowService;
-        this.caseUtil = caseUtil;
         this.dateTimeUtil = dateTimeUtil;
     }
 
@@ -124,21 +120,6 @@ public class DiaryService {
             validator.validateGenerateRequest(generateRequest);
             enrichment.enrichGenerateRequestForDiary(generateRequest);
 
-            //TODO: use strategy design pattern to get case diary entries based on diaryType
-
-//            if (generateRequest.getDiary().getDiaryType().equalsIgnoreCase())
-
-//            List<CourtCase> caseListResponse = caseUtil.getCaseDetails(generateRequest);
-
-//            String cmpNumber = null;
-//            String courtCaseNumber = null;
-//            if (caseListResponse != null) {
-//                cmpNumber = caseListResponse.get(0).getCmpNumber();
-//                courtCaseNumber = caseListResponse.get(0).getCourtCaseNumber();
-//            }
-
-//            CaseDiarySearchRequest caseDiarySearchRequest = buildCaseDiarySearchRequest(generateRequest, cmpNumber);
-//            List<CaseDiaryEntry> caseDiaryEntries = new ArrayList<>(diaryEntryService.searchDiaryEntries(caseDiarySearchRequest));
             CaseDiarySearchRequest caseDiarySearchRequest = buildCaseDiarySearchRequest(generateRequest, null);
             List<CaseDiaryEntry> caseDiaryEntries = diaryEntryService.searchDiaryEntries(caseDiarySearchRequest);
             if(caseDiaryEntries.isEmpty()){

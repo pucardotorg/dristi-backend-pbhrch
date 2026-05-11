@@ -138,11 +138,6 @@ bDiary:
   pdf:
     template:
       key: bDiary-format
-dristi:
-  case:
-    host: http://localhost:8090
-    search:
-      path: /case/v1/_search
 logging:
   loki:
     enabled: false
