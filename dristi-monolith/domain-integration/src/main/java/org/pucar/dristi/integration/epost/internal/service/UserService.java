@@ -19,7 +19,7 @@ import static org.pucar.dristi.integration.epost.internal.config.ServiceConstant
 
 
 @Slf4j
-@Service
+@Service("epostUserService")
 public class UserService {
 
     private final EPostConfiguration configuration;

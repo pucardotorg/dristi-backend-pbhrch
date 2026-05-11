@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
-@Component
+@Component("epostConsumer")
 @Slf4j
 @EnableAsync
 public class Consumer {
