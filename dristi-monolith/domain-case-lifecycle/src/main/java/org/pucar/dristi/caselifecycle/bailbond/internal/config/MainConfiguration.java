@@ -1,6 +1,7 @@
 package org.pucar.dristi.caselifecycle.bailbond.internal.config;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -8,11 +9,12 @@ import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import java.util.TimeZone;
 import jakarta.annotation.PostConstruct;
-    import com.fasterxml.jackson.databind.DeserializationFeature;
-    import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.egov.tracer.config.TracerConfiguration;
+import org.apache.tika.Tika;
 
-
+@Configuration
 @Import({TracerConfiguration.class})
 public class MainConfiguration {
 
@@ -27,6 +29,11 @@ public class MainConfiguration {
     @Bean
     public ObjectMapper objectMapper(){
     return new ObjectMapper().disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES).setTimeZone(TimeZone.getTimeZone(timeZone));
+    }
+
+    @Bean
+    public Tika tika() {
+    return new Tika();
     }
 
     @Bean
