@@ -1,0 +1,18 @@
+{
+  "service": "inportal-survey",
+  "source_dir": "dristi-services/inportal-survey",
+  "target_module": "case-lifecycle",
+  "target_subdomain": "inportalsurvey",
+  "current_package": "digit",
+  "target_package": "org.pucar.dristi.caselifecycle.inportalsurvey",
+  "main_file_count": 30,
+  "test_file_count": 11,
+  "has_spring_boot_main": true,
+  "duplicated_protected_classes": [
+    "MdmsUtil",
+    "ResponseInfoFactory",
+    "KafkaProducerService"
+  ],
+  "rest_call_files": [],
+  "source_context_path": "/inportal-survey"
+}
