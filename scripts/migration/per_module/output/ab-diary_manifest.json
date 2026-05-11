@@ -1,0 +1,23 @@
+{
+  "service": "ab-diary",
+  "source_dir": "dristi-services/ab-diary",
+  "target_module": "case-lifecycle",
+  "target_subdomain": "abdiary",
+  "current_package": "digit",
+  "target_package": "org.pucar.dristi.caselifecycle.abdiary",
+  "main_file_count": 56,
+  "test_file_count": 29,
+  "has_spring_boot_main": true,
+  "duplicated_protected_classes": [
+    "FileStoreUtil",
+    "UserUtil",
+    "ResponseInfoFactory",
+    "KafkaProducerService"
+  ],
+  "rest_call_files": [
+    "dristi-services/ab-diary/src/main/java/digit/service/WorkflowService.java",
+    "dristi-services/ab-diary/src/main/java/digit/service/UserService.java",
+    "dristi-services/ab-diary/src/main/java/digit/util/UserUtil.java"
+  ],
+  "source_context_path": "/ab-diary"
+}

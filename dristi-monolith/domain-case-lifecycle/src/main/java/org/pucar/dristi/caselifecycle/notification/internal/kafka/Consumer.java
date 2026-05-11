@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 
-@Component
+@Component("notificationConsumer")
 public class Consumer {
 
     /*

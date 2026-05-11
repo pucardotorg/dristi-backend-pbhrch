@@ -17,7 +17,7 @@ import static org.pucar.dristi.caselifecycle.cases.internal.config.ServiceConsta
 
 
 @Slf4j
-@Service
+@Service("casesUserService")
 public class UserService {
 
     @Autowired
