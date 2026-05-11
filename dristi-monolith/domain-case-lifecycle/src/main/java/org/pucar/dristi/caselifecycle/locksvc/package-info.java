@@ -7,4 +7,5 @@
  * {@code ModuleStructureTest.verify()}.
  */
 @org.springframework.modulith.ApplicationModule(displayName = "Lock Service")
+@org.springframework.modulith.NamedInterface("api")
 package org.pucar.dristi.caselifecycle.locksvc;
