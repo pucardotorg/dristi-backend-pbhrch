@@ -48,7 +48,7 @@ Core case-lifecycle domain — the bulk of DRISTI.
 | `ctc` | 125 | pending | `case-lifecycle` | `ctc` | |
 | `template-configuration` | 29 | **done** | `case-lifecycle` | `templateconfiguration` | First migration on the parallel-migration kickoff recipe; leaf-service path validated (no `*Api`, `@ApplicationModule` for boundary, Rule 40 scan clean) |
 | `ab-diary` | 91 | **done** | `case-lifecycle` | `abdiary` | Two-PR split (#66 structural+uplift, #68 dead-code sweep + Phase 4a revert). A-diary live; B-diary case-fetch deferred — wire `CaseApi` directly when resumed (Rule 32). FileStoreUtil lift to dristi-common deferred to its own Tier 3 PR |
-| `inportal-survey` | 43 | pending | `case-lifecycle` | `inportalsurvey` | |
+| `inportal-survey` | 43 | **done** | `case-lifecycle` | `inportalsurvey` | Second leaf service after `template-configuration` (0 intra-DRISTI REST calls); 12 contract DTOs Phase-35-lifted to `dristi-common/contract/inportalsurvey/`; `@ApplicationModule` boundary marker, no `*Api` (no callers yet). Merge resolution (PR #64) surfaced that Pipeline 5 mechanically re-adds REST host keys to subdomain overlays after REST→direct cleanup commits → `SERVICE_DEAD_KEYS` denylist added in `run_consolidation.py` (483b71f8c) so ab-diary's `dristi.case.*` and payment-calculator's `egov.case.*` stay suppressed across future regens |
 | `scheduler-svc` | 237 | pending | `case-lifecycle` | `scheduler` | depends on `hearing` |
 | `openapi` | 260 | pending | `case-lifecycle` | `openapi` | |
 
