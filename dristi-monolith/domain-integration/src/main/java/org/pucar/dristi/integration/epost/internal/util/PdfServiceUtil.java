@@ -2,7 +2,7 @@ package org.pucar.dristi.integration.epost.internal.util;
 
 import lombok.extern.slf4j.Slf4j;
 import org.pucar.dristi.integration.epost.internal.config.EPostConfiguration;
-import org.pucar.dristi.integration.epost.internal.model.EPostTrackerPdfRequest;
+import org.pucar.dristi.common.contract.epost.EPostTrackerPdfRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;

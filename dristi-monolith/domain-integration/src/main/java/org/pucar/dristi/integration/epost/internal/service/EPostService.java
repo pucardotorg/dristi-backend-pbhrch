@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;
 import org.pucar.dristi.integration.epost.internal.config.EPostConfiguration;
 import org.pucar.dristi.common.kafka.Producer;
+import org.pucar.dristi.common.contract.epost.*;
 import org.pucar.dristi.integration.epost.internal.model.*;
 import org.pucar.dristi.integration.epost.internal.repository.EPostRepository;
 import org.pucar.dristi.integration.epost.internal.util.EpostUtil;

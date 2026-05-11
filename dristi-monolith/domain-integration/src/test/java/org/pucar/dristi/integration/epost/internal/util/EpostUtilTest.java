@@ -18,6 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.pucar.dristi.common.util.IdgenUtil;
 import org.pucar.dristi.integration.epost.internal.config.EPostConfiguration;
 import org.pucar.dristi.integration.epost.internal.config.MdmsDataConfig;
+import org.pucar.dristi.common.contract.epost.*;
 import org.pucar.dristi.integration.epost.internal.model.*;
 import org.pucar.dristi.integration.epost.internal.repository.EPostRepository;
 

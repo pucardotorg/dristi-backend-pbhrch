@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.model.CustomException;
 import org.pucar.dristi.integration.epost.internal.config.EPostConfiguration;
+import org.pucar.dristi.common.contract.epost.*;
 import org.pucar.dristi.integration.epost.internal.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

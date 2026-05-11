@@ -2,7 +2,7 @@ package org.pucar.dristi.integration.epost.internal.kafka;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.pucar.dristi.integration.epost.internal.model.EPostRequest;
+import org.pucar.dristi.common.contract.epost.EPostRequest;
 import org.pucar.dristi.integration.epost.internal.util.SummonsUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;

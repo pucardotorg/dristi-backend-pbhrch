@@ -5,6 +5,7 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
 import org.pucar.dristi.integration.epost.internal.config.EPostConfiguration;
 import org.pucar.dristi.common.kafka.Producer;
+import org.pucar.dristi.common.contract.epost.*;
 import org.pucar.dristi.integration.epost.internal.model.*;
 import org.pucar.dristi.integration.epost.internal.model.email.Email;
 import org.pucar.dristi.integration.epost.internal.model.email.EmailRequest;

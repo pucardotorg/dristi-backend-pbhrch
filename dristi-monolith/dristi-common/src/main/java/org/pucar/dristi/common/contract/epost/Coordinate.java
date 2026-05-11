@@ -1,4 +1,4 @@
-package org.pucar.dristi.integration.epost.internal.model;
+package org.pucar.dristi.common.contract.epost;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
@@ -11,7 +11,7 @@ import lombok.*;
 public class Coordinate {
 
     @JsonProperty("latitude")
-    private  String latitude;
+    private String latitude;
 
     @JsonProperty("longitude")
     private String longitude;

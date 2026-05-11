@@ -1,4 +1,4 @@
-package org.pucar.dristi.integration.epost.internal.model;
+package org.pucar.dristi.common.contract.epost;
 
 import lombok.*;
 import org.egov.common.contract.models.AuditDetails;

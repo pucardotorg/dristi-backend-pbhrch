@@ -1,4 +1,4 @@
-package org.pucar.dristi.integration.epost.internal.model;
+package org.pucar.dristi.common.contract.epost;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
@@ -6,9 +6,6 @@ import lombok.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * AdditionalFields
- */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -24,7 +21,6 @@ public class AdditionalFields {
     @JsonProperty("fields")
     private List<Field> fields = null;
 
-
     public AdditionalFields addFieldsItem(Field fieldsItem) {
         if (this.fields == null) {
             this.fields = new ArrayList<>();
@@ -32,5 +28,4 @@ public class AdditionalFields {
         this.fields.add(fieldsItem);
         return this;
     }
-
 }

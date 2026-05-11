@@ -10,6 +10,7 @@ import org.egov.tracer.model.CustomException;
 import org.pucar.dristi.common.util.IdgenUtil;
 import org.pucar.dristi.integration.epost.internal.config.EPostConfiguration;
 import org.pucar.dristi.integration.epost.internal.config.MdmsDataConfig;
+import org.pucar.dristi.common.contract.epost.*;
 import org.pucar.dristi.integration.epost.internal.model.*;
 import org.pucar.dristi.integration.epost.internal.repository.EPostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.pucar.dristi.integration.epost.internal.config.ServiceConstants.*;
-import static org.pucar.dristi.integration.epost.internal.model.DeliveryStatus.BOOKED;
+import static org.pucar.dristi.common.contract.epost.DeliveryStatus.BOOKED;
 
 @Slf4j
 @Component

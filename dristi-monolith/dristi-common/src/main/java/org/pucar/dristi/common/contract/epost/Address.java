@@ -1,7 +1,9 @@
-package org.pucar.dristi.integration.epost.internal.model;
+package org.pucar.dristi.common.contract.epost;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
+
+import java.util.stream.Stream;
 
 @Getter
 @Setter
@@ -30,9 +32,8 @@ public class Address {
 
     @Override
     public String toString() {
-        return java.util.stream.Stream.of(locality, city, district, state, pinCode)
+        return Stream.of(locality, city, district, state, pinCode)
                 .filter(value -> value != null && !value.isBlank())
                 .collect(java.util.stream.Collectors.joining(", "));
     }
-
 }

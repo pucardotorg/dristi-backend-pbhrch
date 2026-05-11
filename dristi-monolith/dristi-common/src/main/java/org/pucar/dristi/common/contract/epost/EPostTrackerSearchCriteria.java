@@ -1,4 +1,4 @@
-package org.pucar.dristi.integration.epost.internal.model;
+package org.pucar.dristi.common.contract.epost;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -20,7 +20,7 @@ public class EPostTrackerSearchCriteria {
     private String processNumber;
 
     @JsonProperty("trackingNumber")
-    private  String trackingNumber;
+    private String trackingNumber;
 
     @JsonProperty("deliveryStatus")
     private String deliveryStatus;

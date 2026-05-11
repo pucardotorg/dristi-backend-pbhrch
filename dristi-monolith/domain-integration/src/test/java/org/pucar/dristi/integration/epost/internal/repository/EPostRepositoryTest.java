@@ -5,10 +5,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.pucar.dristi.integration.epost.internal.model.EPostResponse;
-import org.pucar.dristi.integration.epost.internal.model.EPostTracker;
-import org.pucar.dristi.integration.epost.internal.model.EPostTrackerSearchCriteria;
-import org.pucar.dristi.integration.epost.internal.model.Pagination;
+import org.pucar.dristi.common.contract.epost.EPostResponse;
+import org.pucar.dristi.common.contract.epost.EPostTracker;
+import org.pucar.dristi.common.contract.epost.EPostTrackerSearchCriteria;
+import org.pucar.dristi.common.contract.epost.Pagination;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.Collections;

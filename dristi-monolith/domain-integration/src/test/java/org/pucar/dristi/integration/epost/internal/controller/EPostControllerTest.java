@@ -3,6 +3,7 @@ package org.pucar.dristi.integration.epost.internal.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.response.ResponseInfo;
+import org.pucar.dristi.common.contract.epost.*;
 import org.pucar.dristi.integration.epost.internal.model.*;
 import org.pucar.dristi.integration.epost.internal.service.EPostService;
 import org.pucar.dristi.common.util.ResponseInfoFactory;

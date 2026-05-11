@@ -2,9 +2,9 @@ package org.pucar.dristi.integration.epost.internal.validator;
 
 import lombok.extern.slf4j.Slf4j;
 import org.egov.tracer.model.CustomException;
-import org.pucar.dristi.integration.epost.internal.model.EPostRequest;
-import org.pucar.dristi.integration.epost.internal.model.EPostTracker;
-import org.pucar.dristi.integration.epost.internal.model.EPostTrackerSearchCriteria;
+import org.pucar.dristi.common.contract.epost.EPostRequest;
+import org.pucar.dristi.common.contract.epost.EPostTracker;
+import org.pucar.dristi.common.contract.epost.EPostTrackerSearchCriteria;
 import org.pucar.dristi.integration.epost.internal.repository.EPostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

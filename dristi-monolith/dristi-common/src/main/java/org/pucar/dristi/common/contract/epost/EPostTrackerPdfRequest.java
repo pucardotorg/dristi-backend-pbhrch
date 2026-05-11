@@ -1,4 +1,4 @@
-package org.pucar.dristi.integration.epost.internal.model;
+package org.pucar.dristi.common.contract.epost;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.Valid;
@@ -21,5 +21,4 @@ public class EPostTrackerPdfRequest {
     @JsonProperty("ePostTrackerPdf")
     @Valid
     private EPostTrackerPdf ePostTrackerPdf = null;
-
 }

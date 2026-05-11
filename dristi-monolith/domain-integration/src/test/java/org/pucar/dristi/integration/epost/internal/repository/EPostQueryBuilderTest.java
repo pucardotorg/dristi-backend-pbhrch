@@ -3,10 +3,10 @@ package org.pucar.dristi.integration.epost.internal.repository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.pucar.dristi.integration.epost.internal.model.EPostTrackerSearchCriteria;
-import org.pucar.dristi.integration.epost.internal.model.Pagination;
-import org.pucar.dristi.integration.epost.internal.model.Sort;
-import org.pucar.dristi.integration.epost.internal.model.Order;
+import org.pucar.dristi.common.contract.epost.EPostTrackerSearchCriteria;
+import org.pucar.dristi.common.contract.epost.Pagination;
+import org.pucar.dristi.common.contract.epost.Sort;
+import org.pucar.dristi.common.contract.epost.Order;
 
 import java.util.ArrayList;
 import java.util.Arrays;

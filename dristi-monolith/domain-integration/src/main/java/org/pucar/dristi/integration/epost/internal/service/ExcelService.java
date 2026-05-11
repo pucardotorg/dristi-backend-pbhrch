@@ -5,10 +5,10 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.egov.tracer.model.CustomException;
 import org.pucar.dristi.integration.epost.internal.config.EPostConfiguration;
-import org.pucar.dristi.integration.epost.internal.model.EPostResponse;
-import org.pucar.dristi.integration.epost.internal.model.EPostTracker;
-import org.pucar.dristi.integration.epost.internal.model.EPostTrackerSearchRequest;
-import org.pucar.dristi.integration.epost.internal.model.ExcelSheetType;
+import org.pucar.dristi.common.contract.epost.EPostResponse;
+import org.pucar.dristi.common.contract.epost.EPostTracker;
+import org.pucar.dristi.common.contract.epost.EPostTrackerSearchRequest;
+import org.pucar.dristi.common.contract.epost.ExcelSheetType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

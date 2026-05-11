@@ -1,4 +1,4 @@
-package org.pucar.dristi.integration.epost.internal.model;
+package org.pucar.dristi.common.contract.epost;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.Valid;
@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class EPostTrackerPdf {
-
 
     @JsonProperty("totalAmount")
     @Valid
@@ -37,5 +36,4 @@ public class EPostTrackerPdf {
     @JsonProperty("generatedDateTime")
     @Valid
     private String generatedDateTime;
-
 }

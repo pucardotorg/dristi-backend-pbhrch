@@ -3,6 +3,7 @@ package org.pucar.dristi.integration.epost.internal.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Data;
+import org.pucar.dristi.common.contract.epost.ChannelName;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.Map;
