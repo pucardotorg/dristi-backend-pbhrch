@@ -4,7 +4,6 @@ import org.pucar.dristi.caselifecycle.abdiary.internal.config.Configuration;
 import org.pucar.dristi.caselifecycle.abdiary.internal.enrichment.ADiaryEnrichment;
 import org.pucar.dristi.common.kafka.Producer;
 import org.pucar.dristi.caselifecycle.abdiary.internal.repository.DiaryRepository;
-import org.pucar.dristi.caselifecycle.abdiary.internal.util.CaseUtil;
 import org.pucar.dristi.caselifecycle.abdiary.internal.util.DateTimeUtil;
 import org.pucar.dristi.caselifecycle.abdiary.internal.util.FileStoreUtil;
 import org.pucar.dristi.caselifecycle.abdiary.internal.util.PdfServiceUtil;
@@ -61,9 +60,6 @@ public class DiaryServiceTest {
 
     @Mock
     private WorkflowService workflowService;
-
-    @Mock
-    private CaseUtil caseUtil;
 
     @Mock
     private DateTimeUtil dateTimeUtil;

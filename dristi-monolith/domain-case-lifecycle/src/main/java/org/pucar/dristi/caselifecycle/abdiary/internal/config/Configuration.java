@@ -149,12 +149,6 @@ public class Configuration {
     @Value("${egov.workflow.case.diary.business.service.name}")
     private String caseDiaryBusinessServiceName;
 
-    @Value("${dristi.case.host}")
-    private String caseHost;
-
-    @Value("${dristi.case.search.path}")
-    private String caseSearchPath;
-
     @Value("${egov.tenantId}")
     private String tenantId;
 
