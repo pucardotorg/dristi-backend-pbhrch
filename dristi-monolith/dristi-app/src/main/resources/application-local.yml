@@ -28,13 +28,13 @@ egov:
       path: individual/v1/_search
 
   user:
-    host: http://localhost:8081
+    host: http://localhost:8086
     context:
       path: /user/users
     create:
       path: /_createnovalidate
     search:
-      path: /user/_search
+      path: /user/v1/_search
     update:
       path: /_updatenovalidate
 
@@ -44,7 +44,7 @@ egov:
       endpoint: /egov-mdms-service/v1/_search
 
   idgen:
-    host: http://localhost:8081
+    host: http://localhost:8085
     path: /egov-idgen/id/_generate
 
   filestore:
@@ -56,7 +56,7 @@ egov:
         endpoint: /filestore/v1/files
 
   workflow:
-    host: http://localhost:8081
+    host: http://localhost:8050
     transition:
       path: /egov-workflow-v2/egov-wf/process/_transition
     businessservice:
@@ -65,8 +65,8 @@ egov:
 
   url:
     shortner:
-      host: http://localhost:8081
-      endpoint: /egov-url-shortener/shortener
+      host: http://localhost:8087
+      endpoint: /egov-url-shortening/shortener
 
 # Lock-svc specific
 pucar:

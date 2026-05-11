@@ -33,11 +33,15 @@ public final class CommonConstants {
 
     // URL shortener
     public static final String URL = "url";
+    public static final String REFERENCE_ID = "referenceId";
     public static final String URL_SHORTENING_ERROR_CODE = "URL_SHORTENING_ERROR";
     public static final String URL_SHORTENING_ERROR_MESSAGE = "Unable to shorten url: ";
 
     // FileStore
     public static final String FILE_STORE_UTILITY_EXCEPTION = "FILE_STORE_UTILITY_EXCEPTION";
+    public static final String FILE_STORE_SERVICE_EXCEPTION_CODE = "FILE_STORE_SERVICE_EXCEPTION_CODE";
+    public static final String INVALID_INPUT = "INVALID_INPUT";
+    public static final String FILE = "file";
 
     // Individual
     public static final String INDIVIDUAL_UTILITY_EXCEPTION = "INDIVIDUAL_UTILITY_EXCEPTION";

@@ -1,0 +1,33 @@
+{
+  "service": "digitalized-documents",
+  "source_dir": "dristi-services/digitalized-documents",
+  "target_module": "case-lifecycle",
+  "target_subdomain": "digitalizeddocuments",
+  "current_package": "digit",
+  "target_package": "org.pucar.dristi.caselifecycle.digitalizeddocuments",
+  "main_file_count": 72,
+  "test_file_count": 27,
+  "has_spring_boot_main": true,
+  "duplicated_protected_classes": [
+    "IdgenUtil",
+    "WorkflowUtil",
+    "FileStoreUtil",
+    "UrlShortenerUtil",
+    "ResponseInfoFactory",
+    "KafkaProducerService",
+    "ServiceRequestRepository",
+    "Document",
+    "WorkflowObject",
+    "ProcessInstanceObject"
+  ],
+  "rest_call_files": [
+    "dristi-services/digitalized-documents/src/main/java/digit/util/FileStoreUtil.java",
+    "dristi-services/digitalized-documents/src/main/java/digit/util/ESignUtil.java",
+    "dristi-services/digitalized-documents/src/main/java/digit/util/WorkflowUtil.java",
+    "dristi-services/digitalized-documents/src/main/java/digit/util/IdgenUtil.java",
+    "dristi-services/digitalized-documents/src/main/java/digit/service/NotificationService.java",
+    "dristi-services/digitalized-documents/src/main/java/digit/service/WorkflowService.java",
+    "dristi-services/digitalized-documents/src/main/java/digit/repository/ServiceRequestRepository.java"
+  ],
+  "source_context_path": "/digitalized-documents"
+}

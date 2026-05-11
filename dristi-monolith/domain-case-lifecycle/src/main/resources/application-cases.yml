@@ -72,7 +72,7 @@ egov:
     create:
       path: /_createnovalidate
     search:
-      path: /user/_search
+      path: /user/v1/_search
     update:
       path: /_updatenovalidate
     notification:
