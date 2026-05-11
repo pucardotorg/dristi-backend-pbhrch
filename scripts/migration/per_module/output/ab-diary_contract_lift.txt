@@ -1,0 +1,25 @@
+# Classes lifted from internal/web/models/ to dristi-common/contract/<subdomain>/
+org.pucar.dristi.common.contract.abdiary.BulkDiaryEntryRequest
+org.pucar.dristi.common.contract.abdiary.BulkDiaryEntryResponse
+org.pucar.dristi.common.contract.abdiary.CaseCriteria
+org.pucar.dristi.common.contract.abdiary.CaseDiary
+org.pucar.dristi.common.contract.abdiary.CaseDiaryDocument
+org.pucar.dristi.common.contract.abdiary.CaseDiaryEntry
+org.pucar.dristi.common.contract.abdiary.CaseDiaryEntryListResponse
+org.pucar.dristi.common.contract.abdiary.CaseDiaryEntryRequest
+org.pucar.dristi.common.contract.abdiary.CaseDiaryEntryResponse
+org.pucar.dristi.common.contract.abdiary.CaseDiaryExistCriteria
+org.pucar.dristi.common.contract.abdiary.CaseDiaryFile
+org.pucar.dristi.common.contract.abdiary.CaseDiaryGenerateRequest
+org.pucar.dristi.common.contract.abdiary.CaseDiaryListItem
+org.pucar.dristi.common.contract.abdiary.CaseDiaryListResponse
+org.pucar.dristi.common.contract.abdiary.CaseDiaryRequest
+org.pucar.dristi.common.contract.abdiary.CaseDiaryResponse
+org.pucar.dristi.common.contract.abdiary.CaseDiarySearchCriteria
+org.pucar.dristi.common.contract.abdiary.CaseDiarySearchRequest
+org.pucar.dristi.common.contract.abdiary.CaseListResponse
+org.pucar.dristi.common.contract.abdiary.CaseSearchRequest
+org.pucar.dristi.common.contract.abdiary.CourtCase
+org.pucar.dristi.common.contract.abdiary.Order
+org.pucar.dristi.common.contract.abdiary.Pagination
+org.pucar.dristi.common.contract.abdiary.package-info
