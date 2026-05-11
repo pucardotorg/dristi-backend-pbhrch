@@ -1040,9 +1040,96 @@ need OR forward-looking when the registry shows imminent demand. The
 order subdomain's `OrderApi.search` was added speculatively because
 hearing/task/evidence/etc. are in flight and will all consume it.
 
+**Refined by reality (PR #65 — payment-calculator → CaseApi).** The
+claim above that "top-level types are public-by-default per Modulith
+convention" is true **only inside the same Maven module**. Spring
+Modulith auto-detects the first-level package under the application
+root (`caselifecycle`, `payments`, `identity`, `integration`) as one
+module per Maven artifact. `@ApplicationModule` annotations on deeper
+sub-packages (`caselifecycle.cases`, `caselifecycle.order`, etc.) are
+decorative under default auto-detection — they set display names but
+do not promote those sub-packages to cross-module export boundaries.
+
+So order's `caselifecycle.order` package can call `caselifecycle.cases.CaseApi`
+without ceremony (intra-Maven-module reach), but `payments.calculator`
+cannot — Spring Modulith flags "depends on non-exposed type" because
+the `cases` sub-package is internal to the `caselifecycle` module from
+its perspective. The fix is Rule 31a's `@NamedInterface("api")` marker.
+
 **Enforcement.** `ModuleStructureTest.verify()` (Spring Modulith
 `ApplicationModules.of(DristiApplication.class)`) — already in the
 build, just runs against the new markers automatically.
+
+---
+
+## Rule 31a — `@NamedInterface("api")` for Cross-Maven-Module `*Api` Access
+
+**New rule, surfaced by PR #65 (payment-calculator → CaseApi).**
+
+Rule 31 promised the subdomain root's `*Api` was "auto-exposed because
+top-level types are public-by-default per Modulith convention." That
+holds **inside a single Maven module** (order → cases inside
+`domain-case-lifecycle` works without annotation). It does **not**
+hold across Maven modules: when `domain-payments.payments.calculator`
+tries to call `domain-case-lifecycle.caselifecycle.cases.CaseApi`,
+Spring Modulith reports
+
+```
+Module 'payments' depends on non-exposed type
+  org.pucar.dristi.caselifecycle.cases.CaseApi
+within module 'caselifecycle'!
+```
+
+even though `CaseApi.java` is at the subdomain root. That's because
+`caselifecycle` is the auto-detected module (first-level package under
+the application root) and `caselifecycle.cases` is one of its internal
+sub-packages.
+
+**Rule.** Each subdomain whose `*Api` is callable from a sibling Maven
+module's code stamps its root `package-info.java` with
+`@NamedInterface("api")` alongside the existing `@ApplicationModule`:
+
+```java
+// <subdomain>/package-info.java
+@org.springframework.modulith.ApplicationModule(displayName = "Case")
+@org.springframework.modulith.NamedInterface("api")
+package org.pucar.dristi.<domain>.<subdomain>;
+```
+
+This is the API-side sibling of Rule 24a's `@NamedInterface("contract")`
+on the DTOs package. Together, the two annotations expose two clean
+named slices of the subdomain — the API and the wire-format contracts —
+while keeping `internal/` hidden.
+
+**Preempt the debt.** Add `@NamedInterface("api")` to a subdomain's
+package-info as soon as it gains an `*Api`, even before the first
+cross-Maven-module caller exists. Adding it lazily (when the first
+caller appears) only fixes that caller's compile; preemption means
+new migrations don't have to debug the same Modulith violation in
+their PR. PR #65 retrofitted this to cases, locksvc, and order in
+the same commit that introduced the rule, so the next caller arrives
+to a clean target.
+
+**Scaffold-script integration.** Cross-Maven-module access also
+requires a `<dependency>` from the consumer's pom to the target's
+domain artifact. Manual edits to `dristi-monolith/domain-*/pom.xml`
+get clobbered by `scripts/migration/scaffold/02_generate_module_skeletons.py`
+on the next regen. The `EXTRA_DEPS` mapping in that script
+(introduced alongside this rule, keyed by consumer artifactId → list
+of target domain-* artifactIds) is where to record the dep so it
+survives regeneration. Add an entry every time you add a manual
+`<dependency>` on another `domain-*` artifact.
+
+**Decision tree.**
+
+| Caller's Maven module vs target's Maven module | Pattern |
+|---|---|
+| Same module (e.g. order → cases, both in `domain-case-lifecycle`) | No annotation needed; intra-module reach |
+| Different modules (e.g. payments → cases) | **Rule 31a**: target subdomain gets `@NamedInterface("api")` on its package-info, consumer's pom gets a `<dependency>` on the target's `domain-*` artifact, and the dep is recorded in `EXTRA_DEPS` |
+
+**Enforcement.** `ModuleStructureTest.verify()` — same gate as Rules
+24a and 31. A missing `@NamedInterface("api")` produces "depends on
+non-exposed type" violations; the fix is mechanical.
 
 ---
 
@@ -1494,6 +1581,100 @@ should assert the input `RequestInfo` is unchanged after the call.
 **Enforcement.** No automated check yet. Code review + the proactive
 scan when reviewing migration PRs that introduce REST→direct
 conversion.
+
+---
+
+## Rule 41 — Subdomain `Configuration` Classes Need an Explicit Bean Name
+
+**New rule, surfaced by PR #65 review (payment-calculator) — confirmed latent in bank-details too.**
+
+Every subdomain in the monolith carries an internal `Configuration`
+class (same simple class name across subdomains, different packages)
+holding the subdomain's `@Value`-bound settings. Spring's
+`AnnotationBeanNameGenerator` derives a bare `@Component`'s bean name
+from the simple class name with the first letter lowercased — so
+*every* `Configuration` class with bare `@Component` resolves to the
+same bean name, `configuration`. On boot with multiple subdomain
+profiles active, the first one to register wins and Spring raises
+`BeanDefinitionOverrideException` (or the second registration is
+silently dropped, depending on the `spring.main.allow-bean-definition-overriding`
+flag).
+
+**Rule.** Every `Configuration`-named `@Component` class in a
+subdomain must specify an explicit bean name matching the subdomain:
+
+```java
+@Component("<subdomain>Configuration")
+public class Configuration { ... }
+```
+
+Examples in the migrated tree:
+`@Component("casesConfiguration")`, `@Component("orderConfiguration")`,
+`@Component("locksvcConfiguration")`, `@Component("notificationConfiguration")`,
+`@Component("templateconfigurationConfiguration")`,
+`@Component("calculatorConfiguration")`, `@Component("bankConfiguration")`.
+
+**Refined by reality.** The collision was first repaired by the
+symptom-driven commit `295f95d1c fix(boot): resolve Spring bean-name
+collisions on monolith startup` — for cases, order, locksvc, and
+notification (the subdomains that existed at that time). Subsequent
+migrations (templateconfiguration, calculator, bank) each re-introduced
+bare `@Component` because the lesson wasn't codified in PIPELINE_RULES.md
+and the migration scaffold doesn't enforce it. Calculator and bank
+slipped in undetected because **no `@SpringBootTest` boots the full
+`DristiApplication` context with multiple subdomain profiles active** —
+the entire current test surface is unit-only (`@MockitoExtension`,
+ArchUnit static analysis, etc.). The first integration test that boots
+`dristi-app` with `calculator,case,...` profiles would have failed
+immediately; we don't have one yet.
+
+**Why this affects more than just `Configuration` classes.** The same
+hazard exists for any other `@Component`/`@Service`/`@Repository`
+class whose simple name repeats across subdomains. Concrete offenders
+surfaced in PR #65 alone (during `DristiApplication` boot test):
+`Configuration`, `ServiceConstants`, `TaskUtil`, `CaseUtil` — calculator's
+copies were bare while their cases-side counterparts were either bare too
+(TaskUtil — pre-existing latent bug) or already qualified (CaseUtil,
+ServiceConstants). Other simple-name repeats already qualified by the
+295f95d1c repair: `WorkflowService`, `SmsNotificationService`,
+`NotificationService`, `IndividualService`, `HearingUtil`,
+`AdvocateUtil`, `DocumentRowMapper`, `StatuteSectionRowMapper`. The
+rule extends: **any internal Spring-managed class whose simple name
+collides with a sibling subdomain's class must specify an explicit
+bean name**.
+
+**Enforcement.** Two complementary checks, both manual until automated:
+
+1. **Reviewer collision sweep** at PR time — list every simple class
+   name that appears in ≥2 subdomains with a Spring stereotype, then
+   confirm each one has an explicit bean name:
+   ```bash
+   for f in $(grep -rlE "^@(Component|Service|Repository|Controller|RestController)" \
+       --include="*.java" \
+       dristi-monolith/domain-*/src/main/java/ \
+       dristi-monolith/dristi-common/src/main/java/); do
+     echo "$(basename "$f" .java)|$f";
+   done | sort | awk -F'|' '{c[$1]++; locs[$1]=locs[$1]" "$2}
+                            END{for(n in c) if(c[n]>1) print c[n], n":"locs[n]}' \
+     | sort -rn
+   ```
+   Then, for each colliding name, grep its files for `^@(Component|Service|Repository)$`
+   (bare). Any hit needs `("<subdomain><ClassName>")`.
+
+2. **(Future) `@SpringBootTest` smoke test** in
+   `dristi-app/src/test/java/` that boots `DristiApplication` with
+   every migrated subdomain profile active and asserts the context
+   started cleanly. Catches this class of collision plus any other
+   boot-time integration failure. Tracked as a separate follow-up
+   PR — adding it requires deciding the test profile shape and what
+   external services (database, kafka, etc.) it needs to mock or
+   container-start.
+
+**Scaffold integration.** The migration scaffold currently doesn't
+generate `Configuration` classes — they're lifted as-is from each
+source service. Adding a Phase-X check that grep-fails on bare
+`@Component` in any `Configuration.java` under the target tree is
+the cleanest pipeline fix; deferred until the smoke-test PR.
 
 ---
 

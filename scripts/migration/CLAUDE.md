@@ -60,6 +60,12 @@ Local, reversible, low-risk inside the migrated tree.
   `internal/web/models/` with `@NamedInterface("contract")` (Rule
   24a). Both are one-line `package-info.java` annotations whose
   effect is enforcement, not behaviour change.
+- Stamping a subdomain's root `package-info.java` with
+  `@NamedInterface("api")` (Rule 31a). Required when a sibling Maven
+  module consumes the subdomain's `*Api`; preemptive when the
+  subdomain has an `*Api` but no cross-Maven-module caller yet.
+  Pairs with the consumer-side `<dependency>` add (see hard rule
+  on `EXTRA_DEPS` below).
 
 ### Tier 2 — Propose diff, wait for approval
 Edits to the **pipeline source** or its data lists. Affects every
@@ -194,7 +200,10 @@ Pipeline and Maven output can be large. To keep context efficient:
   get clobbered. When you legitimately add a dep to one of the editable
   pom sections, also propagate it into
   `scripts/migration/scaffold/02_generate_module_skeletons.py` so the
-  next scaffold regen carries it forward.
+  next scaffold regen carries it forward. Cross-Maven-module deps (a
+  `<dependency>` from one `domain-*/pom.xml` on another `domain-*`
+  artifact, e.g. `domain-payments → domain-case-lifecycle` for CaseApi
+  access — Rule 31a) go in that script's `EXTRA_DEPS` mapping.
 
 - **Do not remove `spring.flyway.locations` entries** in
   `dristi-app/.../application.yml` by hand — Phase 9 owns that list.
@@ -228,7 +237,7 @@ Pipeline and Maven output can be large. To keep context efficient:
 | Path | Purpose |
 |---|---|
 | [RUNBOOK.md](RUNBOOK.md) | Human-readable operational guide |
-| [PIPELINE_RULES.md](PIPELINE_RULES.md) | hard-won rules, indexed by gate/symptom (24=contract lift, 24a=`@NamedInterface` alternative when retro-lift fails, 25=parent pom dep hygiene, 26=canonical return-type drift, 27=REST→direct as follow-up PR — *superseded by 32*, 28=three-commit structure, 29=workflow migration pattern + behavior-union extraction, 30=pre-commit summary protocol, 31=API-first cross-subdomain boundary via `@ApplicationModule` + `*Api`, 32=REST→direct converts at target-migration time, 33=`RequestInfo` explicit on every `*Api`, 34=`*Api` signatures use contract DTOs only, 35=cross-module writes are Tier 3, 36=convert tests at the same time as the call, 37=dead code surfaces during cutover (sweep it out), 38=delete REST helper utils on conversion, don't wrap) |
+| [PIPELINE_RULES.md](PIPELINE_RULES.md) | hard-won rules, indexed by gate/symptom (24=contract lift, 24a=`@NamedInterface("contract")` alternative when retro-lift fails, 25=parent pom dep hygiene, 26=canonical return-type drift, 27=REST→direct as follow-up PR — *superseded by 32*, 28=three-commit structure, 29=workflow migration pattern + behavior-union extraction, 30=pre-commit summary protocol, 31=API-first cross-subdomain boundary via `@ApplicationModule` + `*Api`, 31a=`@NamedInterface("api")` for cross-Maven-module `*Api` access, 32=REST→direct converts at target-migration time, 33=`RequestInfo` explicit on every `*Api`, 34=`*Api` signatures use contract DTOs only, 35=cross-module writes are Tier 3, 36=convert tests at the same time as the call, 37=dead code surfaces during cutover (sweep it out), 38=delete REST helper utils on conversion, don't wrap, 39=cross-`*Api` method gap is Tier 4, 40=`RequestInfo` is effectively immutable in direct calls, 41=subdomain `Configuration` classes need explicit bean name) |
 | [FOLLOWUP_RETROLIFT_PATH_A.md](FOLLOWUP_RETROLIFT_PATH_A.md) | Deferred work to relocate case + lock-svc contract DTOs from `internal/web/models/` to `dristi-common/contract/` once Phase 35 is robust enough to handle JPA / subpackage / internal-annotation tendrils |
 | [SERVICE_REGISTRY.md](SERVICE_REGISTRY.md) | Service → module/subdomain mapping |
 | [per_module/run_module_migration.py](per_module/run_module_migration.py) | The 10-phase pipeline (incl. Phase 35 contract-lift) |

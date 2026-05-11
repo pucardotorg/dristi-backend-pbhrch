@@ -47,7 +47,7 @@ Core case-lifecycle domain — the bulk of DRISTI.
 | `digitalized-documents` | 105 | pending | `case-lifecycle` | `digitalizeddocuments` | |
 | `ctc` | 125 | pending | `case-lifecycle` | `ctc` | |
 | `template-configuration` | 29 | **done** | `case-lifecycle` | `templateconfiguration` | First migration on the parallel-migration kickoff recipe; leaf-service path validated (no `*Api`, `@ApplicationModule` for boundary, Rule 40 scan clean) |
-| `ab-diary` | 91 | pending | `case-lifecycle` | `abdiary` | |
+| `ab-diary` | 91 | **done** | `case-lifecycle` | `abdiary` | Two-PR split (#66 structural+uplift, #68 dead-code sweep + Phase 4a revert). A-diary live; B-diary case-fetch deferred — wire `CaseApi` directly when resumed (Rule 32). FileStoreUtil lift to dristi-common deferred to its own Tier 3 PR |
 | `inportal-survey` | 43 | pending | `case-lifecycle` | `inportalsurvey` | |
 | `scheduler-svc` | 237 | pending | `case-lifecycle` | `scheduler` | depends on `hearing` |
 | `openapi` | 260 | pending | `case-lifecycle` | `openapi` | |
@@ -77,7 +77,7 @@ External-system integrations.
 
 | Service | Files | Status | `--module` | `--subdomain` | Notes |
 |---|---:|---|---|---|---|
-| `payment-calculator-svc` | 107 | pending | `payments` | `calculator` | |
+| `payment-calculator-svc` | 107 | **done** | `payments` | `calculator` | First cross-Maven-module `*Api` consumer (calculator → `CaseApi`). Surfaced Rule 31a (`@NamedInterface("api")` for cross-Maven-module access) and Rule 41 (subdomain `Configuration`/`*Util`/`*Service` bean-name qualifier). Added `BeanNameCollisionTest` (PR #65) as static catch-net for Rule 41 |
 
 ## De-scoped (NOT migrated)
 
