@@ -1,0 +1,25 @@
+{
+  "service": "epost-tracker",
+  "source_dir": "dristi-services/epost-tracker",
+  "target_module": "integration",
+  "target_subdomain": "epost",
+  "current_package": "org.pucar.dristi",
+  "target_package": "org.pucar.dristi.integration.epost",
+  "main_file_count": 61,
+  "test_file_count": 11,
+  "has_spring_boot_main": true,
+  "duplicated_protected_classes": [
+    "MdmsUtil",
+    "IdgenUtil",
+    "ResponseInfoFactory",
+    "KafkaProducerService",
+    "ServiceRequestRepository",
+    "WorkflowObject"
+  ],
+  "rest_call_files": [
+    "dristi-services/epost-tracker/src/main/java/org/pucar/dristi/repository/ServiceRequestRepository.java",
+    "dristi-services/epost-tracker/src/main/java/org/pucar/dristi/service/UserService.java",
+    "dristi-services/epost-tracker/src/main/java/org/pucar/dristi/util/IdgenUtil.java"
+  ],
+  "source_context_path": "/epost-tracker"
+}

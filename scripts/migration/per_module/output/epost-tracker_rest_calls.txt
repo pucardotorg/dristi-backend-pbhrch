@@ -1,0 +1,2 @@
+dristi-monolith/domain-integration/src/main/java/org/pucar/dristi/integration/epost/internal/util/SummonsUtil.java  uses ['SummonsHost']
+dristi-monolith/domain-integration/src/main/java/org/pucar/dristi/integration/epost/internal/util/PdfServiceUtil.java  uses ['PdfServiceHost']
