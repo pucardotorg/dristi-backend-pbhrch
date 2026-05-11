@@ -2,6 +2,7 @@ key,service,value,classification
 app.timezone,Notification,Asia/Kolkata,CONFLICT
 app.timezone,ab-diary,Asia/Kolkata,CONFLICT
 app.timezone,case,Asia/Kolkata,CONFLICT
+app.timezone,inportal-survey,Asia/Kolkata,CONFLICT
 app.timezone,lock-svc,Asia/Kolkata,CONFLICT
 app.timezone,order,Asia/Kolkata,CONFLICT
 app.timezone,payment-calculator-svc,Asia/Kolkata,CONFLICT
@@ -89,12 +90,14 @@ egov.localization.workDir.path,order,/localization/messages/v1,CONFLICT
 egov.mdms.host,Notification,https://dev.digit.org,CONFLICT
 egov.mdms.host,ab-diary,https://dev.digit.org,CONFLICT
 egov.mdms.host,case,http://localhost:8084,CONFLICT
+egov.mdms.host,inportal-survey,http://localhost:8081,CONFLICT
 egov.mdms.host,lock-svc,https://dev.digit.org,CONFLICT
 egov.mdms.host,order,http://localhost:8084,CONFLICT
 egov.mdms.host,payment-calculator-svc,http://localhost:8020,CONFLICT
 egov.mdms.search.endpoint,Notification,/egov-mdms-service/v1/_search,CONFLICT
 egov.mdms.search.endpoint,ab-diary,/egov-mdms-service/v1/_search,CONFLICT
 egov.mdms.search.endpoint,case,/egov-mdms-service/v1/_search,CONFLICT
+egov.mdms.search.endpoint,inportal-survey,/egov-mdms-service/v1/_search,CONFLICT
 egov.mdms.search.endpoint,lock-svc,/egov-mdms-service/v1/_search,CONFLICT
 egov.mdms.search.endpoint,order,/egov-mdms-service/v1/_search,CONFLICT
 egov.mdms.search.endpoint,payment-calculator-svc,/egov-mdms-service/v1/_search,CONFLICT
@@ -103,6 +106,7 @@ egov.sms.notification.admission.hearing.scheduled.template.id,order,110717314097
 egov.sms.notification.topic,Notification,egov.core.notification.sms,CONFLICT
 egov.sms.notification.topic,ab-diary,egov.core.notification.sms,CONFLICT
 egov.sms.notification.topic,case,egov.core.notification.sms,CONFLICT
+egov.sms.notification.topic,inportal-survey,egov.core.notification.sms,CONFLICT
 egov.sms.notification.topic,order,egov.core.notification.sms,CONFLICT
 egov.sms.notification.topic,payment-calculator-svc,egov.core.notification.sms,CONFLICT
 egov.tenantId,ab-diary,pb,CONFLICT
@@ -163,6 +167,7 @@ is.workflow.enabled,order,true,CONFLICT
 kafka.consumer.config.auto_commit,Notification,true,CONFLICT
 kafka.consumer.config.auto_commit,ab-diary,true,CONFLICT
 kafka.consumer.config.auto_commit,case,true,CONFLICT
+kafka.consumer.config.auto_commit,inportal-survey,true,CONFLICT
 kafka.consumer.config.auto_commit,lock-svc,true,CONFLICT
 kafka.consumer.config.auto_commit,order,true,CONFLICT
 kafka.consumer.config.auto_commit,payment-calculator-svc,true,CONFLICT
@@ -170,6 +175,7 @@ kafka.consumer.config.auto_commit,template-configuration,true,CONFLICT
 kafka.consumer.config.auto_commit_interval,Notification,100,CONFLICT
 kafka.consumer.config.auto_commit_interval,ab-diary,100,CONFLICT
 kafka.consumer.config.auto_commit_interval,case,100,CONFLICT
+kafka.consumer.config.auto_commit_interval,inportal-survey,100,CONFLICT
 kafka.consumer.config.auto_commit_interval,lock-svc,100,CONFLICT
 kafka.consumer.config.auto_commit_interval,order,100,CONFLICT
 kafka.consumer.config.auto_commit_interval,payment-calculator-svc,100,CONFLICT
@@ -177,6 +183,7 @@ kafka.consumer.config.auto_commit_interval,template-configuration,100,CONFLICT
 kafka.consumer.config.auto_offset_reset,Notification,earliest,CONFLICT
 kafka.consumer.config.auto_offset_reset,ab-diary,earliest,CONFLICT
 kafka.consumer.config.auto_offset_reset,case,earliest,CONFLICT
+kafka.consumer.config.auto_offset_reset,inportal-survey,earliest,CONFLICT
 kafka.consumer.config.auto_offset_reset,lock-svc,earliest,CONFLICT
 kafka.consumer.config.auto_offset_reset,order,earliest,CONFLICT
 kafka.consumer.config.auto_offset_reset,payment-calculator-svc,earliest,CONFLICT
@@ -184,6 +191,7 @@ kafka.consumer.config.auto_offset_reset,template-configuration,earliest,CONFLICT
 kafka.consumer.config.session_timeout,Notification,15000,CONFLICT
 kafka.consumer.config.session_timeout,ab-diary,15000,CONFLICT
 kafka.consumer.config.session_timeout,case,15000,CONFLICT
+kafka.consumer.config.session_timeout,inportal-survey,15000,CONFLICT
 kafka.consumer.config.session_timeout,lock-svc,15000,CONFLICT
 kafka.consumer.config.session_timeout,order,15000,CONFLICT
 kafka.consumer.config.session_timeout,payment-calculator-svc,15000,CONFLICT
@@ -191,6 +199,7 @@ kafka.consumer.config.session_timeout,template-configuration,15000,CONFLICT
 kafka.producer.config.batch_size_config,Notification,16384,CONFLICT
 kafka.producer.config.batch_size_config,ab-diary,16384,CONFLICT
 kafka.producer.config.batch_size_config,case,16384,CONFLICT
+kafka.producer.config.batch_size_config,inportal-survey,16384,CONFLICT
 kafka.producer.config.batch_size_config,lock-svc,16384,CONFLICT
 kafka.producer.config.batch_size_config,order,16384,CONFLICT
 kafka.producer.config.batch_size_config,payment-calculator-svc,16384,CONFLICT
@@ -198,6 +207,7 @@ kafka.producer.config.batch_size_config,template-configuration,16384,CONFLICT
 kafka.producer.config.buffer_memory_config,Notification,33554432,CONFLICT
 kafka.producer.config.buffer_memory_config,ab-diary,33554432,CONFLICT
 kafka.producer.config.buffer_memory_config,case,33554432,CONFLICT
+kafka.producer.config.buffer_memory_config,inportal-survey,33554432,CONFLICT
 kafka.producer.config.buffer_memory_config,lock-svc,33554432,CONFLICT
 kafka.producer.config.buffer_memory_config,order,33554432,CONFLICT
 kafka.producer.config.buffer_memory_config,payment-calculator-svc,33554432,CONFLICT
@@ -205,6 +215,7 @@ kafka.producer.config.buffer_memory_config,template-configuration,33554432,CONFL
 kafka.producer.config.linger_ms_config,Notification,1,CONFLICT
 kafka.producer.config.linger_ms_config,ab-diary,1,CONFLICT
 kafka.producer.config.linger_ms_config,case,1,CONFLICT
+kafka.producer.config.linger_ms_config,inportal-survey,1,CONFLICT
 kafka.producer.config.linger_ms_config,lock-svc,1,CONFLICT
 kafka.producer.config.linger_ms_config,order,1,CONFLICT
 kafka.producer.config.linger_ms_config,payment-calculator-svc,1,CONFLICT
@@ -212,21 +223,25 @@ kafka.producer.config.linger_ms_config,template-configuration,1,CONFLICT
 kafka.producer.config.retries_config,Notification,0,CONFLICT
 kafka.producer.config.retries_config,ab-diary,0,CONFLICT
 kafka.producer.config.retries_config,case,0,CONFLICT
+kafka.producer.config.retries_config,inportal-survey,0,CONFLICT
 kafka.producer.config.retries_config,lock-svc,0,CONFLICT
 kafka.producer.config.retries_config,order,0,CONFLICT
 kafka.producer.config.retries_config,payment-calculator-svc,0,CONFLICT
 kafka.producer.config.retries_config,template-configuration,0,CONFLICT
 kafka.topics.consumer,Notification,service-consumer-topic,CONFLICT
 kafka.topics.consumer,ab-diary,service-consumer-topic,CONFLICT
+kafka.topics.consumer,inportal-survey,service-consumer-topic,CONFLICT
 kafka.topics.receipt.create,Notification,dss-collection,CONFLICT
 kafka.topics.receipt.create,ab-diary,dss-collection,CONFLICT
 kafka.topics.receipt.create,case,egov.collection.payment-create,CONFLICT
+kafka.topics.receipt.create,inportal-survey,dss-collection,CONFLICT
 kafka.topics.receipt.create,lock-svc,dss-collection,CONFLICT
 kafka.topics.receipt.create,order,dss-collection,CONFLICT
 kafka.topics.receipt.create,payment-calculator-svc,dss-collection,CONFLICT
 logging.level.root,Notification,INFO,CONFLICT
 logging.level.root,ab-diary,INFO,CONFLICT
 logging.level.root,case,INFO,CONFLICT
+logging.level.root,inportal-survey,INFO,CONFLICT
 logging.level.root,lock-svc,INFO,CONFLICT
 logging.level.root,order,INFO,CONFLICT
 logging.level.root,payment-calculator-svc,INFO,CONFLICT
@@ -234,6 +249,7 @@ logging.level.root,template-configuration,INFO,CONFLICT
 logging.loki.enabled,Notification,false,CONFLICT
 logging.loki.enabled,ab-diary,false,CONFLICT
 logging.loki.enabled,case,false,CONFLICT
+logging.loki.enabled,inportal-survey,false,CONFLICT
 logging.loki.enabled,lock-svc,false,CONFLICT
 logging.loki.enabled,order,false,CONFLICT
 logging.loki.enabled,payment-calculator-svc,false,CONFLICT
@@ -241,6 +257,7 @@ logging.loki.enabled,template-configuration,false,CONFLICT
 logging.loki.url,Notification,http://localhost:3100/loki/api/v1/push,CONFLICT
 logging.loki.url,ab-diary,http://localhost:3100/loki/api/v1/push,CONFLICT
 logging.loki.url,case,http://localhost:3100/loki/api/v1/push,CONFLICT
+logging.loki.url,inportal-survey,http://localhost:3100/loki/api/v1/push,CONFLICT
 logging.loki.url,lock-svc,http://localhost:3100/loki/api/v1/push,CONFLICT
 logging.loki.url,order,http://localhost:3100/loki/api/v1/push,CONFLICT
 logging.loki.url,payment-calculator-svc,http://localhost:3100/loki/api/v1/push,CONFLICT
@@ -249,6 +266,7 @@ otel.instrumentation.http.server.ignore-urls,Notification,"/notification/health,
 otel.instrumentation.http.server.ignore-urls,ab-diary,"/ab-diary/health,/ab-diary/prometheus",CONFLICT
 otel.instrumentation.http.server.ignore-urls,bank-details,"/bank-details/health,/bank-details/prometheus",CONFLICT
 otel.instrumentation.http.server.ignore-urls,case,"/case/health,/case/prometheus",CONFLICT
+otel.instrumentation.http.server.ignore-urls,inportal-survey,"/inportal-survey/health,/inportal-survey/prometheus",CONFLICT
 otel.instrumentation.http.server.ignore-urls,lock-svc,"/lock-svc/health,/lock-svc/prometheus",CONFLICT
 otel.instrumentation.http.server.ignore-urls,order,"/order/health,/order/prometheus",CONFLICT
 otel.instrumentation.http.server.ignore-urls,payment-calculator-svc,"/payment-calculator/health,/payment-calculator/prometheus",CONFLICT
@@ -273,6 +291,8 @@ config.case.esign.pending,case,00 00 18 * * *,SERVICE-SPECIFIC
 court.enabled,ab-diary,true,SERVICE-SPECIFIC
 court.id,ab-diary,KLKM52,SERVICE-SPECIFIC
 court.name,ab-diary,"Special Court Of Judicial Magistrate of the First Class, for the trial of cases under section 138 of NI Act, 1881 at Kollam (""24X7 ON Court"")",SERVICE-SPECIFIC
+create.feed.back.topic,inportal-survey,insert-feed-back-topic,SERVICE-SPECIFIC
+create.survey.tracker.topic,inportal-survey,create-survey-tracker-topic,SERVICE-SPECIFIC
 cron.case.reassigned.expression,case,0 0 18 * * *,SERVICE-SPECIFIC
 decryption.abac.enabled,case,true,SERVICE-SPECIFIC
 diary.kafka.update.topic,ab-diary,update-diary,SERVICE-SPECIFIC
@@ -287,6 +307,7 @@ dristi.case.host,ab-diary,http://localhost:8090,SERVICE-SPECIFIC
 dristi.case.search.path,ab-diary,/case/v1/_search,SERVICE-SPECIFIC
 dristi.notification.create.topic,Notification,create-notification,SERVICE-SPECIFIC
 dristi.notification.update.topic,Notification,update-notification,SERVICE-SPECIFIC
+egov-state-level-tenant-id,inportal-survey,pb,SERVICE-SPECIFIC
 egov.additional.join.case.kafka.topic,case,join-case-update-case-additional-details,SERVICE-SPECIFIC
 egov.advocate.clerk.path,case,/advocate/clerk/v1/_search,SERVICE-SPECIFIC
 egov.analytics.host,case,http://localhost:8088/,SERVICE-SPECIFIC
@@ -347,6 +368,8 @@ egov.litigant.join.case.kafka.topic,case,litigant-join-case,SERVICE-SPECIFIC
 egov.mdms.itemtext,order,ItemText,SERVICE-SPECIFIC
 egov.mdms.order.nonoverlapping.composite.orders,order,NonOverlappingCompositeOrders,SERVICE-SPECIFIC
 egov.mdms.order.nonrepeating.composite.orders,order,NonRepeatingCompositeOrders,SERVICE-SPECIFIC
+egov.mdms.survey.master.name,inportal-survey,SurveyConfig,SERVICE-SPECIFIC
+egov.mdms.survey.module.name,inportal-survey,survey,SERVICE-SPECIFIC
 egov.order.host,case,http://localhost:8086,SERVICE-SPECIFIC
 egov.order.search.endpoint,case,/order/v1/search,SERVICE-SPECIFIC
 egov.payment.calculator.endpoint,case,payment-calculator/v1/join-case/fees/_calculate,SERVICE-SPECIFIC
@@ -447,6 +470,8 @@ task.join.case.approved.topic,case,join-case-approved-state,SERVICE-SPECIFIC
 task.join.case.rejected.topic,case,join-case-rejected-state,SERVICE-SPECIFIC
 task.kafka.join.case.update.topic,case,update-task-application,SERVICE-SPECIFIC
 tracing.url,case,http://jaeger-collector.backbone:14250,SERVICE-SPECIFIC
+update.expiry.date.topic,inportal-survey,update-reminder-later-topic,SERVICE-SPECIFIC
+update.survey.tracker.topic,inportal-survey,update-survey-tracker-topic,SERVICE-SPECIFIC
 user.oauth.url,case,https://dristi-kerala-dev.pucar.org/user/oauth/token?_=1713357247536,SERVICE-SPECIFIC
 witness.kafka.create.topic,case,save-witness-application,SERVICE-SPECIFIC
 witness.kafka.update.topic,case,update-witness-application,SERVICE-SPECIFIC
@@ -454,6 +479,7 @@ otel.exporter.otlp.endpoint,Notification,http://jaeger-collector.tracing:4318,SH
 otel.exporter.otlp.endpoint,ab-diary,http://jaeger-collector.tracing:4318,SHARED
 otel.exporter.otlp.endpoint,bank-details,http://jaeger-collector.tracing:4318,SHARED
 otel.exporter.otlp.endpoint,case,http://jaeger-collector.tracing:4318,SHARED
+otel.exporter.otlp.endpoint,inportal-survey,http://jaeger-collector.tracing:4318,SHARED
 otel.exporter.otlp.endpoint,lock-svc,http://jaeger-collector.tracing:4318,SHARED
 otel.exporter.otlp.endpoint,order,http://jaeger-collector.tracing:4318,SHARED
 otel.exporter.otlp.endpoint,payment-calculator-svc,http://jaeger-collector.tracing:4318,SHARED
@@ -462,6 +488,7 @@ otel.exporter.otlp.protocol,Notification,http/protobuf,SHARED
 otel.exporter.otlp.protocol,ab-diary,http/protobuf,SHARED
 otel.exporter.otlp.protocol,bank-details,http/protobuf,SHARED
 otel.exporter.otlp.protocol,case,http/protobuf,SHARED
+otel.exporter.otlp.protocol,inportal-survey,http/protobuf,SHARED
 otel.exporter.otlp.protocol,lock-svc,http/protobuf,SHARED
 otel.exporter.otlp.protocol,order,http/protobuf,SHARED
 otel.exporter.otlp.protocol,payment-calculator-svc,http/protobuf,SHARED
@@ -470,6 +497,7 @@ otel.instrumentation.kafka.enabled,Notification,true,SHARED
 otel.instrumentation.kafka.enabled,ab-diary,true,SHARED
 otel.instrumentation.kafka.enabled,bank-details,true,SHARED
 otel.instrumentation.kafka.enabled,case,true,SHARED
+otel.instrumentation.kafka.enabled,inportal-survey,true,SHARED
 otel.instrumentation.kafka.enabled,lock-svc,true,SHARED
 otel.instrumentation.kafka.enabled,order,true,SHARED
 otel.instrumentation.kafka.enabled,payment-calculator-svc,true,SHARED
@@ -478,6 +506,7 @@ otel.instrumentation.kafka.experimental-span-attributes,Notification,true,SHARED
 otel.instrumentation.kafka.experimental-span-attributes,ab-diary,true,SHARED
 otel.instrumentation.kafka.experimental-span-attributes,bank-details,true,SHARED
 otel.instrumentation.kafka.experimental-span-attributes,case,true,SHARED
+otel.instrumentation.kafka.experimental-span-attributes,inportal-survey,true,SHARED
 otel.instrumentation.kafka.experimental-span-attributes,lock-svc,true,SHARED
 otel.instrumentation.kafka.experimental-span-attributes,order,true,SHARED
 otel.instrumentation.kafka.experimental-span-attributes,payment-calculator-svc,true,SHARED
@@ -486,6 +515,7 @@ otel.logs.exporter,Notification,none,SHARED
 otel.logs.exporter,ab-diary,none,SHARED
 otel.logs.exporter,bank-details,none,SHARED
 otel.logs.exporter,case,none,SHARED
+otel.logs.exporter,inportal-survey,none,SHARED
 otel.logs.exporter,lock-svc,none,SHARED
 otel.logs.exporter,order,none,SHARED
 otel.logs.exporter,payment-calculator-svc,none,SHARED
@@ -494,6 +524,7 @@ otel.metrics.exporter,Notification,none,SHARED
 otel.metrics.exporter,ab-diary,none,SHARED
 otel.metrics.exporter,bank-details,none,SHARED
 otel.metrics.exporter,case,none,SHARED
+otel.metrics.exporter,inportal-survey,none,SHARED
 otel.metrics.exporter,lock-svc,none,SHARED
 otel.metrics.exporter,order,none,SHARED
 otel.metrics.exporter,payment-calculator-svc,none,SHARED
@@ -502,6 +533,7 @@ otel.traces.exporter,Notification,otlp,SHARED
 otel.traces.exporter,ab-diary,otlp,SHARED
 otel.traces.exporter,bank-details,otlp,SHARED
 otel.traces.exporter,case,otlp,SHARED
+otel.traces.exporter,inportal-survey,otlp,SHARED
 otel.traces.exporter,lock-svc,otlp,SHARED
 otel.traces.exporter,order,otlp,SHARED
 otel.traces.exporter,payment-calculator-svc,otlp,SHARED

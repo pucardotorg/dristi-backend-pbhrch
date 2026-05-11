@@ -36,6 +36,11 @@ egov:
   sms:
     notification:
       topic: egov.core.notification.sms
+  case:
+    host: http://localhost:8099/
+    path: case/v1/_exists
+    search:
+      path: case/v1/_search
 drishti:
   postalhub:
     create:
