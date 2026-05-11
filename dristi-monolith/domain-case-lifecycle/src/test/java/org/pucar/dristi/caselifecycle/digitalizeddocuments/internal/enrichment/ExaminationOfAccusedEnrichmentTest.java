@@ -3,7 +3,8 @@ package org.pucar.dristi.caselifecycle.digitalizeddocuments.internal.enrichment;
 import org.pucar.dristi.common.models.AuditDetails;
 
 import org.pucar.dristi.caselifecycle.digitalizeddocuments.internal.util.DigitalizedDocumentUtil;
-import org.pucar.dristi.caselifecycle.digitalizeddocuments.internal.web.models.*;
+import org.pucar.dristi.common.contract.digitalizeddocuments.*;
+import org.pucar.dristi.common.contract.digitalizeddocuments.*;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
 import org.junit.jupiter.api.BeforeEach;

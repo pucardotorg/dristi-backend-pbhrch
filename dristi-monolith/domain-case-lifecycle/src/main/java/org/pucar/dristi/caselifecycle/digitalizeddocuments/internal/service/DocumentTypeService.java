@@ -1,7 +1,7 @@
 package org.pucar.dristi.caselifecycle.digitalizeddocuments.internal.service;
 
-import org.pucar.dristi.caselifecycle.digitalizeddocuments.internal.web.models.DigitalizedDocument;
-import org.pucar.dristi.caselifecycle.digitalizeddocuments.internal.web.models.DigitalizedDocumentRequest;
+import org.pucar.dristi.common.contract.digitalizeddocuments.DigitalizedDocument;
+import org.pucar.dristi.common.contract.digitalizeddocuments.DigitalizedDocumentRequest;
 import org.egov.tracer.model.CustomException;
 
 /**

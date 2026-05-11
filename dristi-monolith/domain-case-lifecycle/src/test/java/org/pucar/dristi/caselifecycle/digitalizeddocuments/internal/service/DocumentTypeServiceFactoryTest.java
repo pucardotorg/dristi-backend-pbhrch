@@ -1,6 +1,6 @@
 package org.pucar.dristi.caselifecycle.digitalizeddocuments.internal.service;
 
-import org.pucar.dristi.caselifecycle.digitalizeddocuments.internal.web.models.TypeEnum;
+import org.pucar.dristi.common.contract.digitalizeddocuments.TypeEnum;
 import org.egov.tracer.model.CustomException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

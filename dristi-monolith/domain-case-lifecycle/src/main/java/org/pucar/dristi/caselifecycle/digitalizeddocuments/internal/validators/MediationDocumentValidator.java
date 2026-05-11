@@ -1,9 +1,9 @@
 package org.pucar.dristi.caselifecycle.digitalizeddocuments.internal.validators;
 
 import org.pucar.dristi.caselifecycle.digitalizeddocuments.internal.repository.DigitalizedDocumentRepository;
-import org.pucar.dristi.caselifecycle.digitalizeddocuments.internal.web.models.DigitalizedDocument;
-import org.pucar.dristi.caselifecycle.digitalizeddocuments.internal.web.models.MediationDetails;
-import org.pucar.dristi.caselifecycle.digitalizeddocuments.internal.web.models.MediationPartyDetails;
+import org.pucar.dristi.common.contract.digitalizeddocuments.DigitalizedDocument;
+import org.pucar.dristi.common.contract.digitalizeddocuments.MediationDetails;
+import org.pucar.dristi.common.contract.digitalizeddocuments.MediationPartyDetails;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.tracer.model.CustomException;
 import org.springframework.stereotype.Component;
@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import static org.pucar.dristi.caselifecycle.digitalizeddocuments.internal.config.ServiceConstants.*;
 
 import org.pucar.dristi.common.models.Document;
+import org.pucar.dristi.common.contract.digitalizeddocuments.Order;
 @Component
 @Slf4j
 public class MediationDocumentValidator {

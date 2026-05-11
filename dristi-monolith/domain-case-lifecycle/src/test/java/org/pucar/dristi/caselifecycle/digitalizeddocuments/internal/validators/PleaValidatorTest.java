@@ -1,7 +1,7 @@
 package org.pucar.dristi.caselifecycle.digitalizeddocuments.internal.validators;
 
 import org.pucar.dristi.caselifecycle.digitalizeddocuments.internal.repository.DigitalizedDocumentRepository;
-import org.pucar.dristi.caselifecycle.digitalizeddocuments.internal.web.models.DigitalizedDocument;
+import org.pucar.dristi.common.contract.digitalizeddocuments.DigitalizedDocument;
 import org.egov.tracer.model.CustomException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

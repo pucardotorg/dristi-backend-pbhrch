@@ -1,9 +1,9 @@
 package org.pucar.dristi.caselifecycle.digitalizeddocuments.internal.repository.querybuilder;
 
-import org.pucar.dristi.caselifecycle.digitalizeddocuments.internal.web.models.DigitalizedDocumentSearchCriteria;
-import org.pucar.dristi.caselifecycle.digitalizeddocuments.internal.web.models.Order;
-import org.pucar.dristi.caselifecycle.digitalizeddocuments.internal.web.models.Pagination;
-import org.pucar.dristi.caselifecycle.digitalizeddocuments.internal.web.models.TypeEnum;
+import org.pucar.dristi.common.contract.digitalizeddocuments.DigitalizedDocumentSearchCriteria;
+import org.pucar.dristi.common.contract.digitalizeddocuments.Order;
+import org.pucar.dristi.common.contract.digitalizeddocuments.Pagination;
+import org.pucar.dristi.common.contract.digitalizeddocuments.TypeEnum;
 import org.egov.tracer.model.CustomException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

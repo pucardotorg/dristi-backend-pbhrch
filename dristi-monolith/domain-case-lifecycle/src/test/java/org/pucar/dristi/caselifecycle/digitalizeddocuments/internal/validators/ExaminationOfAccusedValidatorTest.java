@@ -1,9 +1,9 @@
 package org.pucar.dristi.caselifecycle.digitalizeddocuments.internal.validators;
 
 import org.pucar.dristi.caselifecycle.digitalizeddocuments.internal.repository.DigitalizedDocumentRepository;
-import org.pucar.dristi.caselifecycle.digitalizeddocuments.internal.web.models.DigitalizedDocument;
-import org.pucar.dristi.caselifecycle.digitalizeddocuments.internal.web.models.DigitalizedDocumentRequest;
-import org.pucar.dristi.caselifecycle.digitalizeddocuments.internal.web.models.ExaminationOfAccusedDetails;
+import org.pucar.dristi.common.contract.digitalizeddocuments.DigitalizedDocument;
+import org.pucar.dristi.common.contract.digitalizeddocuments.DigitalizedDocumentRequest;
+import org.pucar.dristi.common.contract.digitalizeddocuments.ExaminationOfAccusedDetails;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
 import org.egov.tracer.model.CustomException;

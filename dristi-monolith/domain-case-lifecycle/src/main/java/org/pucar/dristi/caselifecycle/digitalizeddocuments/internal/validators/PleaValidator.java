@@ -1,7 +1,7 @@
 package org.pucar.dristi.caselifecycle.digitalizeddocuments.internal.validators;
 
 import org.pucar.dristi.caselifecycle.digitalizeddocuments.internal.repository.DigitalizedDocumentRepository;
-import org.pucar.dristi.caselifecycle.digitalizeddocuments.internal.web.models.DigitalizedDocument;
+import org.pucar.dristi.common.contract.digitalizeddocuments.DigitalizedDocument;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.tracer.model.CustomException;
 import org.springframework.stereotype.Component;

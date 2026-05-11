@@ -1,4 +1,5 @@
-package org.pucar.dristi.caselifecycle.digitalizeddocuments.internal.web.models;
+// HAND-CURATED — lifted by Phase 35 (contract-lift)
+package org.pucar.dristi.common.contract.digitalizeddocuments;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -10,16 +11,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class DigitalizedDocumentsCriteria {
-    @JsonProperty("documentNumber")
-    private String documentNumber = null;
-
+public class CoordinateCriteria {
     @JsonProperty("fileStoreId")
-    private String fileStoreId = null;
+    private String fileStoreId;
 
     @JsonProperty("placeholder")
-    private String placeholder = null;
+    private String placeholder;
 
     @JsonProperty("tenantId")
-    private String tenantId = null;
+    private String tenantId;
 }

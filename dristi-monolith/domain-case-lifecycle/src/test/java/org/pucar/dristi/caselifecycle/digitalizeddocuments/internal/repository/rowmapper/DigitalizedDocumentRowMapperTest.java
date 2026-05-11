@@ -1,9 +1,9 @@
 package org.pucar.dristi.caselifecycle.digitalizeddocuments.internal.repository.rowmapper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.pucar.dristi.caselifecycle.digitalizeddocuments.internal.web.models.DigitalizedDocument;
+import org.pucar.dristi.common.contract.digitalizeddocuments.DigitalizedDocument;
 import org.pucar.dristi.common.models.Document;
-import org.pucar.dristi.caselifecycle.digitalizeddocuments.internal.web.models.TypeEnum;
+import org.pucar.dristi.common.contract.digitalizeddocuments.TypeEnum;
 import org.egov.tracer.model.CustomException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

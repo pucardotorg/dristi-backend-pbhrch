@@ -2,8 +2,8 @@ package org.pucar.dristi.caselifecycle.digitalizeddocuments.internal.enrichment;
 
 import org.pucar.dristi.caselifecycle.digitalizeddocuments.internal.util.DigitalizedDocumentUtil;
 import org.pucar.dristi.common.models.AuditDetails;
-import org.pucar.dristi.caselifecycle.digitalizeddocuments.internal.web.models.DigitalizedDocument;
-import org.pucar.dristi.caselifecycle.digitalizeddocuments.internal.web.models.DigitalizedDocumentRequest;
+import org.pucar.dristi.common.contract.digitalizeddocuments.DigitalizedDocument;
+import org.pucar.dristi.common.contract.digitalizeddocuments.DigitalizedDocumentRequest;
 import org.pucar.dristi.common.models.Document;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

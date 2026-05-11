@@ -8,7 +8,8 @@ import org.pucar.dristi.caselifecycle.digitalizeddocuments.internal.util.CipherU
 import org.pucar.dristi.caselifecycle.digitalizeddocuments.internal.util.ESignUtil;
 import org.pucar.dristi.common.util.FileStoreUtil;
 import org.pucar.dristi.caselifecycle.digitalizeddocuments.internal.util.XmlRequestGenerator;
-import org.pucar.dristi.caselifecycle.digitalizeddocuments.internal.web.models.*;
+import org.pucar.dristi.common.contract.digitalizeddocuments.*;
+import org.pucar.dristi.common.contract.digitalizeddocuments.*;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;

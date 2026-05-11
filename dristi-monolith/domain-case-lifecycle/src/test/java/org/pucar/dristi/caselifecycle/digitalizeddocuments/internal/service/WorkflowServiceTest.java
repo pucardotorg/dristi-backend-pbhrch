@@ -3,9 +3,9 @@ package org.pucar.dristi.caselifecycle.digitalizeddocuments.internal.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.pucar.dristi.caselifecycle.digitalizeddocuments.internal.config.Configuration;
 import org.pucar.dristi.common.repository.ServiceRequestRepository;
-import org.pucar.dristi.caselifecycle.digitalizeddocuments.internal.web.models.DigitalizedDocument;
+import org.pucar.dristi.common.contract.digitalizeddocuments.DigitalizedDocument;
 import org.pucar.dristi.common.models.workflow.WorkflowObject;
-import org.pucar.dristi.caselifecycle.digitalizeddocuments.internal.web.models.TypeEnum;
+import org.pucar.dristi.common.contract.digitalizeddocuments.TypeEnum;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
 import org.egov.common.contract.workflow.ProcessInstance;
@@ -25,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
+import org.pucar.dristi.common.contract.digitalizeddocuments.DigitalizedDocumentRequest;
 class WorkflowServiceTest {
 
     @Mock private ObjectMapper mapper;
@@ -72,7 +73,7 @@ class WorkflowServiceTest {
         when(mapper.convertValue(any(), eq(ProcessInstanceResponse.class)))
                 .thenReturn(response);
 
-        service.updateWorkflowStatus(org.pucar.dristi.caselifecycle.digitalizeddocuments.internal.web.models.DigitalizedDocumentRequest.builder()
+        service.updateWorkflowStatus(org.pucar.dristi.common.contract.digitalizeddocuments.DigitalizedDocumentRequest.builder()
                 .requestInfo(requestInfo)
                 .digitalizedDocument(document)
                 .build());
@@ -88,7 +89,7 @@ class WorkflowServiceTest {
                 .thenThrow(new CustomException("WF_ERR", "boom"));
 
         CustomException ex = assertThrows(CustomException.class, () ->
-                service.updateWorkflowStatus(org.pucar.dristi.caselifecycle.digitalizeddocuments.internal.web.models.DigitalizedDocumentRequest.builder()
+                service.updateWorkflowStatus(org.pucar.dristi.common.contract.digitalizeddocuments.DigitalizedDocumentRequest.builder()
                         .requestInfo(requestInfo)
                         .digitalizedDocument(document)
                         .build())

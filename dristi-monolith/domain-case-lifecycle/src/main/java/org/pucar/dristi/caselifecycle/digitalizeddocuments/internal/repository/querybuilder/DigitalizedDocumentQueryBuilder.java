@@ -1,8 +1,8 @@
 package org.pucar.dristi.caselifecycle.digitalizeddocuments.internal.repository.querybuilder;
 
-import org.pucar.dristi.caselifecycle.digitalizeddocuments.internal.web.models.DigitalizedDocumentSearchCriteria;
-import org.pucar.dristi.caselifecycle.digitalizeddocuments.internal.web.models.Pagination;
-import org.pucar.dristi.caselifecycle.digitalizeddocuments.internal.web.models.TypeEnum;
+import org.pucar.dristi.common.contract.digitalizeddocuments.DigitalizedDocumentSearchCriteria;
+import org.pucar.dristi.common.contract.digitalizeddocuments.Pagination;
+import org.pucar.dristi.common.contract.digitalizeddocuments.TypeEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.tracer.model.CustomException;
 import org.springframework.stereotype.Component;
@@ -84,7 +84,7 @@ public class DigitalizedDocumentQueryBuilder {
         try {
             String id = criteria.getId();
             String documentNumber = criteria.getDocumentNumber();
-            org.pucar.dristi.caselifecycle.digitalizeddocuments.internal.web.models.TypeEnum type = criteria.getType();
+            TypeEnum type = criteria.getType();
             String tenantId = criteria.getTenantId();
 
             StringBuilder query = new StringBuilder(BASE_EXIST_QUERY);

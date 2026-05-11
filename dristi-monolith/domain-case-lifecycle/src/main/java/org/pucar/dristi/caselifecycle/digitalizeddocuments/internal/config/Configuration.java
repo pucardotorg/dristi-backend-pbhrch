@@ -88,14 +88,6 @@ public class Configuration {
     @Value("${egov.hrms.search.endpoint}")
     private String hrmsEndPoint;
 
-    //Case Config
-    @Value("${egov.case.host}")
-    private String caseHost;
-
-    @Value("${egov.case.search.endpoint}")
-    private String caseSearchPath;
-
-
     //URLShortening
     @Value("${egov.url.shortner.host}")
     private String urlShortnerHost;

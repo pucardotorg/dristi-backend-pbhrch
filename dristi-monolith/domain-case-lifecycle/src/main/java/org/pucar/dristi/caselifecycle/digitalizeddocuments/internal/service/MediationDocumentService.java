@@ -11,7 +11,8 @@ import org.pucar.dristi.caselifecycle.digitalizeddocuments.internal.util.CaseUti
 import org.pucar.dristi.common.util.FileStoreUtil;
 import org.pucar.dristi.common.util.UrlShortenerUtil;
 import org.pucar.dristi.caselifecycle.digitalizeddocuments.internal.validators.MediationDocumentValidator;
-import org.pucar.dristi.caselifecycle.digitalizeddocuments.internal.web.models.*;
+import org.pucar.dristi.common.contract.digitalizeddocuments.*;
+import org.pucar.dristi.common.contract.digitalizeddocuments.*;
 import org.pucar.dristi.caselifecycle.digitalizeddocuments.internal.web.models.sms.SmsTemplateData;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;

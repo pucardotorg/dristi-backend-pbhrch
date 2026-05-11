@@ -2,7 +2,7 @@ package org.pucar.dristi.caselifecycle.digitalizeddocuments.internal.enrichment;
 
 import org.pucar.dristi.caselifecycle.digitalizeddocuments.internal.util.DigitalizedDocumentUtil;
 import org.pucar.dristi.common.models.AuditDetails;
-import org.pucar.dristi.caselifecycle.digitalizeddocuments.internal.web.models.DigitalizedDocumentRequest;
+import org.pucar.dristi.common.contract.digitalizeddocuments.DigitalizedDocumentRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
