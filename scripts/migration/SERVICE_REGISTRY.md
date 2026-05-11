@@ -77,7 +77,7 @@ External-system integrations.
 
 | Service | Files | Status | `--module` | `--subdomain` | Notes |
 |---|---:|---|---|---|---|
-| `payment-calculator-svc` | 107 | pending | `payments` | `calculator` | |
+| `payment-calculator-svc` | 107 | **done** | `payments` | `calculator` | First cross-Maven-module `*Api` consumer (calculator → `CaseApi`). Surfaced Rule 31a (`@NamedInterface("api")` for cross-Maven-module access) and Rule 41 (subdomain `Configuration`/`*Util`/`*Service` bean-name qualifier). Added `BeanNameCollisionTest` (PR #65) as static catch-net for Rule 41 |
 
 ## De-scoped (NOT migrated)
 
