@@ -15,17 +15,6 @@ otel:
       server:
         ignore-urls: /hearing/health,/hearing/prometheus
 spring:
-  datasource:
-    writer:
-      url: jdbc:postgresql://localhost:5432/hearing
-      username: postgres
-      password: root
-      driver-class-name: org.postgresql.Driver
-    reader:
-      url: jdbc:postgresql://localhost:5432/hearing
-      username: postgres
-      password: root
-      driver-class-name: org.postgresql.Driver
   redis:
     host: localhost
     port: 6379
