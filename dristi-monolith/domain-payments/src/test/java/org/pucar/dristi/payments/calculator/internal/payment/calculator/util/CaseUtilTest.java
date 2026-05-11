@@ -1,11 +1,7 @@
 package org.pucar.dristi.payments.calculator.internal.payment.calculator.util;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.pucar.dristi.payments.calculator.internal.payment.calculator.config.Configuration;
-import org.pucar.dristi.payments.calculator.internal.payment.calculator.helper.CaseSearchRequestTestBuilder;
-import org.pucar.dristi.payments.calculator.internal.payment.calculator.web.models.CaseSearchRequest;
 import org.egov.common.contract.request.RequestInfo;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,71 +9,55 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.web.client.RestTemplate;
+import org.pucar.dristi.caselifecycle.cases.CaseApi;
+import org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseCriteria;
+import org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseListResponse;
+import org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseSearchRequest;
+import org.pucar.dristi.caselifecycle.cases.internal.web.models.CourtCase;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class CaseUtilTest {
 
+    @Mock
+    private CaseApi caseApi;
 
     @Mock
     private ObjectMapper mapper;
-
-    @Mock
-    private RestTemplate restTemplate;
-
-    @Mock
-    private Configuration configs;
 
     @InjectMocks
     private CaseUtil caseUtil;
 
     @Test
-    @DisplayName("test search case details")
-    public void testSearchCaseDetails() throws JsonProcessingException {
-        CaseSearchRequest caseSearchRequest = CaseSearchRequestTestBuilder.builder()
-                .withCriteriaAndRequestInfo("123", "KL-123").build();
-
-        Map<String, Object> responseMap = new HashMap<>();
-        responseMap.put("criteria", List.of(Map.of("responseList", List.of(Map.of("caseId", "123")))));
-        when(restTemplate.postForObject(anyString(), any(), eq(Map.class))).thenReturn(responseMap);
-        when(mapper.writeValueAsString(any())).thenAnswer(invocation -> new ObjectMapper().writeValueAsString(invocation.getArgument(0)));
-        when(mapper.readTree(anyString())).thenAnswer(invocation -> new ObjectMapper().readTree(invocation.getArgument(0).toString()));
-        JsonNode jsonNode = caseUtil.searchCaseDetails(caseSearchRequest);
-
-        assertEquals("123", jsonNode.get("caseId").asText());
-    }
-
-    @Test
     @DisplayName("test get advocate for litigant")
-    public void testGetAdvocateForLitigant() throws JsonProcessingException {
+    public void testGetAdvocateForLitigant() {
         RequestInfo requestInfo = new RequestInfo();
         String filingNumber = "KL-123";
         String tenantId = "pb";
-        Map<String, Object> responseMap = new HashMap<>();
 
-        Map<String, Object> response = new HashMap<>();
-        response.put("caseId", "123");
-        response.put("litigants", List.of(Map.of("individualId", "1")));
-        response.put("representatives", List.of(Map.of("isActive",true,"representing", List.of(Map.of("individualId", "1","isActive",true)))));
+        Map<String, Object> caseAsMap = new HashMap<>();
+        caseAsMap.put("caseId", "123");
+        caseAsMap.put("litigants", List.of(Map.of("individualId", "1")));
+        caseAsMap.put("representatives", List.of(Map.of(
+                "isActive", true,
+                "representing", List.of(Map.of("individualId", "1", "isActive", true)))));
+        JsonNode caseJson = new ObjectMapper().valueToTree(caseAsMap);
 
-        responseMap.put("criteria", List.of(Map.of("responseList", List.of(response))));
+        CourtCase courtCase = CourtCase.builder().build();
+        CaseCriteria criteria = CaseCriteria.builder().responseList(List.of(courtCase)).build();
+        CaseListResponse response = CaseListResponse.builder().criteria(List.of(criteria)).build();
 
-        when(configs.getCaseHost()).thenReturn("https://casehost.com");
-        when(configs.getCaseSearchPath()).thenReturn("/case/v1/_search");
-        when(mapper.writeValueAsString(any())).thenAnswer(invocation -> new ObjectMapper().writeValueAsString(invocation.getArgument(0)));
-        when(mapper.readTree(anyString())).thenAnswer(invocation -> new ObjectMapper().readTree(invocation.getArgument(0).toString()));
-        when(restTemplate.postForObject(anyString(), any(), eq(Map.class))).thenReturn(responseMap);
+        when(caseApi.search(any(CaseSearchRequest.class))).thenReturn(response);
+        when(mapper.valueToTree(any())).thenReturn(caseJson);
+
         Map<String, List<JsonNode>> result = caseUtil.getAdvocateForLitigant(requestInfo, filingNumber, tenantId);
         assertEquals(1, result.size());
     }
-
 }

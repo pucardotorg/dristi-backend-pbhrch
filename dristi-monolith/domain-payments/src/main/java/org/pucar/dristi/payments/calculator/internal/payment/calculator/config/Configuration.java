@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Import;
 import org.springframework.stereotype.Component;
 
-@Component
+@Component("calculatorConfiguration")
 @Data
 @Import({TracerConfiguration.class})
 @NoArgsConstructor
@@ -35,15 +35,5 @@ public class Configuration {
 
     @Value("${drishti.summon.pages.count}")
     private Integer numberOfPgOfSummon;
-
-    // Case Config
-    @Value("${egov.case.host}")
-    private String caseHost;
-
-    @Value("${egov.case.path}")
-    private String caseExistsPath;
-
-    @Value("${egov.case.search.path}")
-    private String caseSearchPath;
 
 }

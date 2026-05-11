@@ -3,7 +3,7 @@ package org.pucar.dristi.payments.calculator.internal.payment.calculator.config;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
-@Component
+@Component("calculatorServiceConstants")
 @NoArgsConstructor
 public class ServiceConstants {
 

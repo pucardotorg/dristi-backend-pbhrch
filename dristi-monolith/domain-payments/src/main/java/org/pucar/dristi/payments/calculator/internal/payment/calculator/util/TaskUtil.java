@@ -17,7 +17,7 @@ import java.util.*;
 import static org.pucar.dristi.payments.calculator.internal.payment.calculator.config.ServiceConstants.*;
 
 import org.pucar.dristi.common.util.MdmsUtil;
-@Component
+@Component("calculatorTaskUtil")
 public class TaskUtil {
 
     private final MdmsUtil mdmsUtil;
