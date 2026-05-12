@@ -14,7 +14,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.egov.tracer.config.TracerConfiguration;
 import org.apache.tika.Tika;
 
-@Configuration
+@Configuration("bailbondMainConfiguration")
 @Import({TracerConfiguration.class})
 public class MainConfiguration {
 

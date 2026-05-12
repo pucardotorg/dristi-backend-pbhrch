@@ -41,7 +41,7 @@ Core case-lifecycle domain — the bulk of DRISTI.
 | `order-management` | 268 | pending | `case-lifecycle` | `ordermanagement` | depends on `order` |
 | `task-management` | 153 | pending | `case-lifecycle` | `taskmanagement` | depends on `task` |
 | `analytics` | 146 | pending | `case-lifecycle` | `analytics` | depends on `case` |
-| `bail-bond` | 105 | pending | `case-lifecycle` | `bailbond` | depends on `case` |
+| `bail-bond` | 105 | **done** | `case-lifecycle` | `bailbond` | Phase 35 contract-lift (29 DTOs); CaseUtil swap from `cases.internal.service.CaseService` to `cases.CaseApi.search()` (Rule 3 + 32); Rule 41 follow-ups for `MainConfiguration` + 12 other stereotypes; bailbond `@ApplicationModule` added |
 | `transformer` | 122 | pending | `case-lifecycle` | `analytics` | merge into `analytics` subdomain |
 | `Notification` | 48 | **done** | `case-lifecycle` | `notification` | First migration by an extended-team contributor; surfaced empty-package, YAML-stability, and pipeline-output staging gaps fixed in 5fb67371 |
 | `digitalized-documents` | 105 | pending | `case-lifecycle` | `digitalizeddocuments` | |

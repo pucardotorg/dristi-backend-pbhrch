@@ -7,7 +7,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.egov.common.contract.models.AuditDetails;
 
 /**
  * DRISTI's Document model — used by FileStoreUtil's

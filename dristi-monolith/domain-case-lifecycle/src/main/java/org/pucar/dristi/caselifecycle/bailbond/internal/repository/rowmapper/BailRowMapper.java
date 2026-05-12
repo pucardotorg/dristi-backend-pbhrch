@@ -82,7 +82,7 @@ public class BailRowMapper implements ResultSetExtractor<List<Bail>> {
                 // ⬇️ Add Bail Document
                 String bailDocId = rs.getString("bailDocId");
                 if (bailDocId != null) {
-                    org.egov.common.contract.models.AuditDetails bailDocAuditDetails = org.egov.common.contract.models.AuditDetails.builder()
+                    AuditDetails bailDocAuditDetails = AuditDetails.builder()
                             .createdBy(rs.getString("bailDocCreatedBy"))
                             .lastModifiedBy(rs.getString("bailDocLastModifiedBy"))
                             .createdTime(rs.getLong("bailDocCreatedTime"))
@@ -155,7 +155,7 @@ public class BailRowMapper implements ResultSetExtractor<List<Bail>> {
                     // Add surety document if present
                     String suretyDocId = rs.getString("suretyDocId");
                     if (suretyDocId != null) {
-                        org.egov.common.contract.models.AuditDetails suretyDocAuditDetails = org.egov.common.contract.models.AuditDetails.builder()
+                        AuditDetails suretyDocAuditDetails = AuditDetails.builder()
                                 .createdBy(rs.getString("suretyDocCreatedBy"))
                                 .lastModifiedBy(rs.getString("suretyDocLastModifiedBy"))
                                 .createdTime(rs.getLong("suretyDocCreatedTime"))

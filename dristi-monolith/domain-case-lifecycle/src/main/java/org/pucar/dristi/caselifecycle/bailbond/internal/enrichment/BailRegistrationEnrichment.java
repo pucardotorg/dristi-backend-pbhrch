@@ -100,13 +100,13 @@ public class BailRegistrationEnrichment {
         if(ObjectUtils.isEmpty(document.getTenantId())){
             document.setTenantId(rootTenantId);
         }
-        org.egov.common.contract.models.AuditDetails auditDetails = document.getAuditDetails();
+        AuditDetails auditDetails = document.getAuditDetails();
 
         Long currentTime = System.currentTimeMillis();
         String userUuid = requestInfo.getUserInfo().getUuid();
 
         if (ObjectUtils.isEmpty(auditDetails)) {
-            auditDetails = org.egov.common.contract.models.AuditDetails.builder()
+            auditDetails = AuditDetails.builder()
                     .createdBy(userUuid)
                     .createdTime(currentTime)
                     .lastModifiedBy(userUuid)

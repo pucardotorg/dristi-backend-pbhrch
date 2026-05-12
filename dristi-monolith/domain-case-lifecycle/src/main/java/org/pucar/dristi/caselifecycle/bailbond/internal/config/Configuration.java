@@ -112,13 +112,6 @@ public class Configuration {
     @Value("${egov.workflow.bail.business.service.name}")
     private String bailBusinessServiceName;
 
-    //Case Config
-    @Value("${egov.case.host}")
-    private String caseHost;
-
-    @Value("${egov.case.search.endpoint}")
-    private String caseSearchPath;
-
     @Value("${egov.enc.mdms.security.policy.bail.encrypt}")
     private String bailEncrypt;
 

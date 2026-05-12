@@ -4,14 +4,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.pucar.dristi.caselifecycle.cases.internal.service.CaseService;
+import org.pucar.dristi.caselifecycle.cases.CaseApi;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.CourtCase;
 import org.pucar.dristi.common.contract.bailbond.CaseCriteria;
 import org.pucar.dristi.common.contract.bailbond.CaseSearchRequest;
 import org.egov.tracer.model.CustomException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.stubbing.Answer;
 
 import java.util.Collections;
 import java.util.List;
@@ -23,15 +22,15 @@ import static org.mockito.Mockito.*;
 
 public class CaseUtilTest {
 
-    private CaseService caseService;
+    private CaseApi caseApi;
     private ObjectMapper objectMapper;
     private CaseUtil caseUtil;
 
     @BeforeEach
     void setup() {
-        caseService = mock(CaseService.class);
+        caseApi = mock(CaseApi.class);
         objectMapper = new ObjectMapper();
-        caseUtil = new CaseUtil(caseService, objectMapper);
+        caseUtil = new CaseUtil(caseApi, objectMapper);
     }
 
     @Test
@@ -39,12 +38,12 @@ public class CaseUtilTest {
         CourtCase courtCase = new CourtCase();
         courtCase.setCourtId("COURT-123");
 
-        doAnswer((Answer<Void>) invocation -> {
+        doAnswer(invocation -> {
             org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseSearchRequest req =
                     invocation.getArgument(0);
             req.getCriteria().get(0).setResponseList(Collections.singletonList(courtCase));
             return null;
-        }).when(caseService).searchCases(any());
+        }).when(caseApi).search(any());
 
         CaseSearchRequest request = CaseSearchRequest.builder()
                 .criteria(List.of(CaseCriteria.builder().filingNumber("FN-001").defaultFields(true).build()))
@@ -58,7 +57,7 @@ public class CaseUtilTest {
 
     @Test
     void testSearchCaseDetails_InvalidStructure_ThrowsCustomException() {
-        // searchCases is void and does nothing — responseList stays null
+        // caseApi.search not stubbed — responseList stays null
         CaseSearchRequest request = CaseSearchRequest.builder()
                 .criteria(List.of(CaseCriteria.builder().build()))
                 .build();
@@ -71,7 +70,7 @@ public class CaseUtilTest {
 
     @Test
     void testSearchCaseDetails_ExceptionDuringProcessing_ThrowsCustomException() {
-        doThrow(new RuntimeException("Service down")).when(caseService).searchCases(any());
+        doThrow(new RuntimeException("Service down")).when(caseApi).search(any());
 
         CaseSearchRequest request = CaseSearchRequest.builder()
                 .criteria(List.of(CaseCriteria.builder().build()))

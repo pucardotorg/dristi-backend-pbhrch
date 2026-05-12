@@ -1,2 +1,5 @@
-dristi-monolith\domain-case-lifecycle\src\main\java\org\pucar\dristi\caselifecycle\bailbond\internal\util\CaseUtil.java  uses ['CaseHost', 'CaseSearchPath']
-
+# dristi-monolith\domain-case-lifecycle\src\main\java\org\pucar\dristi\caselifecycle\bailbond\internal\util\CaseUtil.java
+#   was: uses ['CaseHost', 'CaseSearchPath']
+#   resolved: Rule 32 converted CaseUtil to call cases.CaseApi.search() directly;
+#             dropped egov.case.host / egov.case.search.endpoint config and the
+#             cases.internal.service.CaseService import (Rule 3 boundary fix).

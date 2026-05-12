@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.pucar.dristi.common.contract.bailbond.CaseCriteria;
 import org.pucar.dristi.common.contract.bailbond.CaseSearchRequest;
-import org.pucar.dristi.caselifecycle.cases.internal.service.CaseService;
+import org.pucar.dristi.caselifecycle.cases.CaseApi;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.tracer.model.CustomException;
@@ -19,7 +19,7 @@ import static org.pucar.dristi.caselifecycle.bailbond.internal.config.ServiceCon
 @Slf4j
 @AllArgsConstructor
 public class CaseUtil {
-    private final CaseService caseService;
+    private final CaseApi caseApi;
     private final ObjectMapper mapper;
 
     public JsonNode searchCaseDetails(CaseSearchRequest caseSearchRequest) {
@@ -31,7 +31,7 @@ public class CaseUtil {
                             .flow(caseSearchRequest.getFlow())
                             .build();
 
-            caseService.searchCases(casesRequest);
+            caseApi.search(casesRequest);
 
             List<org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseCriteria> resultCriteria =
                     casesRequest.getCriteria();

@@ -110,7 +110,6 @@
             <version>1.0.9-SNAPSHOT</version>
         </dependency>
 
-
         <!-- Spring Modulith: only @NamedInterface package-info markers; the
              actual modulith verifier lives in dristi-app (test scope). -->
         <dependency>
