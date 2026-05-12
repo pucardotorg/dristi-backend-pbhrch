@@ -1,3 +1,4 @@
+// HAND-CURATED — renamed from FileStoreUtil (Rule 13: PDFBox methods absent from canonical kept service-local)
 package org.pucar.dristi.caselifecycle.ctc.internal.util;
 
 import lombok.extern.slf4j.Slf4j;
