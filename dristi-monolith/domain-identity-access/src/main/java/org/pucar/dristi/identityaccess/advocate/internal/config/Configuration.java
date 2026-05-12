@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 
 import org.pucar.dristi.common.contract.advocate.Advocate;
-@Component("advocateConfiguration")
+@Component
 @Data
 @Import({ TracerConfiguration.class })
 @NoArgsConstructor

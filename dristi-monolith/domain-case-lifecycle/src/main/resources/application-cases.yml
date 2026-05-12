@@ -106,6 +106,11 @@ egov:
         endpoint: /filestore/v1/files
       delete:
         endpoint: /filestore/v1/files/delete
+  advocate:
+    host: http://localhost:8080/
+    path: advocate/v1/_search
+    clerk:
+      path: /advocate/clerk/v1/_search
   workflow:
     host: http://localhost:8083
     transition:

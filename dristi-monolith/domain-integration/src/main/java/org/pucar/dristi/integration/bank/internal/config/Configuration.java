@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-@Component("bankConfiguration")
+@Component
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

@@ -222,6 +222,13 @@ public class Configuration {
     @Value("${egov.individual.search.path}")
     private String individualSearchEndpoint;
 
+    //advocate
+    @Value("${egov.advocate.host}")
+    private String advocateHost;
+
+    @Value("${egov.advocate.path}")
+    private String advocatePath;
+
     @Value("${egov.tenantId}")
     private String tenantId;
 

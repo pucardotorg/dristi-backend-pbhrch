@@ -63,11 +63,6 @@ egov:
       search:
         path: /egov-workflow-v2/egov-wf/businessservice/_search
 
-  hrms:
-    host: http://localhost:8090
-    search:
-      endpoint: /egov-hrms/employees/_search
-
   url:
     shortner:
       host: http://localhost:8081
