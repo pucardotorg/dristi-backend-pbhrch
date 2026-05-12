@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 
+import org.pucar.dristi.common.contract.hearing.Hearing;
+import org.pucar.dristi.common.contract.hearing.Order;
 @Component("hearingConfiguration")
 @Import({TracerConfiguration.class})
 @Setter
@@ -122,15 +124,6 @@ public class Configuration {
     @Value("${egov.mdms.hearing.type.master.name}")
     private String mdmsHearingTypeMasterName;
 
-    // Case Config
-    @Value("${egov.case.host}")
-    private String caseHost;
-
-    @Value("${egov.case.path}")
-    private String caseExistsPath;
-
-    @Value("${egov.case.search.path}")
-    private String caseSearchPath;
 
     // Application Config
     @Value("${egov.application.host}")
@@ -215,12 +208,6 @@ public class Configuration {
     @Value("${egov.inbox.search.endpoint}")
     private String indexSearchEndPoint;
 
-    // Advocate Config
-    @Value("${egov.advocate.host}")
-    private String advocateHost;
-
-    @Value("${egov.advocate.path}")
-    private String advocatePath;
 
 
     @Value("${egov.indexer.es.username}")

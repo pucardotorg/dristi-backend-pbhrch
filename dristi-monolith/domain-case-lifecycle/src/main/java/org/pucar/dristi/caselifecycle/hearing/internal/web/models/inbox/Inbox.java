@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import java.util.Map;
 
 
+import org.pucar.dristi.common.contract.hearing.ProcessInstance;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

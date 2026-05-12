@@ -15,6 +15,7 @@ import org.pucar.dristi.caselifecycle.hearing.internal.config.Configuration;
 import org.pucar.dristi.common.kafka.Producer;
 import org.pucar.dristi.common.repository.ServiceRequestRepository;
 import org.pucar.dristi.caselifecycle.hearing.internal.web.models.*;
+import org.pucar.dristi.common.contract.hearing.*;
 import org.pucar.dristi.caselifecycle.hearing.internal.web.models.demand.*;
 import org.pucar.dristi.caselifecycle.hearing.internal.web.models.orders.*;
 import org.pucar.dristi.caselifecycle.hearing.internal.web.models.orders.Order;
@@ -112,7 +113,7 @@ public class OrderUtil {
 
         OrderSearchRequest searchRequest = OrderSearchRequest.builder()
                 .criteria(criteria)
-                .pagination(Pagination.builder().limit(100.0).offSet(0.0).order(org.pucar.dristi.caselifecycle.hearing.internal.web.models.Order.ASC).sortBy("createdDate").build())
+                .pagination(Pagination.builder().limit(100.0).offSet(0.0).order(org.pucar.dristi.common.contract.hearing.Order.ASC).sortBy("createdDate").build())
                 .build();
 
         OrderListResponse response = getOrders(searchRequest);
@@ -132,7 +133,7 @@ public class OrderUtil {
 
         OrderSearchRequest orderSearchRequest = OrderSearchRequest.builder()
                 .criteria(orderCriteria)
-                .pagination(Pagination.builder().limit(100.0).offSet(0.0).order(org.pucar.dristi.caselifecycle.hearing.internal.web.models.Order.ASC).sortBy("createdDate").build())
+                .pagination(Pagination.builder().limit(100.0).offSet(0.0).order(org.pucar.dristi.common.contract.hearing.Order.ASC).sortBy("createdDate").build())
                 .build();
 
         OrderListResponse orderListResponse = getOrders(orderSearchRequest);

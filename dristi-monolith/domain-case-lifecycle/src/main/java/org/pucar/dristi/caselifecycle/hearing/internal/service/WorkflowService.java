@@ -11,6 +11,7 @@ import org.egov.tracer.model.CustomException;
 import org.pucar.dristi.caselifecycle.hearing.internal.config.Configuration;
 import org.pucar.dristi.common.repository.ServiceRequestRepository;
 import org.pucar.dristi.caselifecycle.hearing.internal.web.models.*;
+import org.pucar.dristi.common.contract.hearing.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -134,16 +135,16 @@ public class WorkflowService {
         }
     }
 
-    // Rule 29C pt.5: history fetch uses hearing-local ProcessInstance (has auditDetails for duration calc)
-    public List<org.pucar.dristi.caselifecycle.hearing.internal.web.models.ProcessInstance> getProcessInstances(
+    // Rule 29C pt.5: uses lifted ProcessInstance (common.contract.hearing) which has auditDetails for duration calc
+    public List<org.pucar.dristi.common.contract.hearing.ProcessInstance> getProcessInstances(
             RequestInfo requestInfo, String tenantId, String businessId) {
         try {
             RequestInfoWrapper requestInfoWrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
             StringBuilder url = getSearchURLForProcessInstanceWithParams(tenantId, businessId);
             url.append("&history=true");
             Object res = repository.fetchResult(url, requestInfoWrapper);
-            org.pucar.dristi.caselifecycle.hearing.internal.web.models.ProcessInstanceResponse response =
-                    mapper.convertValue(res, org.pucar.dristi.caselifecycle.hearing.internal.web.models.ProcessInstanceResponse.class);
+            org.pucar.dristi.common.contract.hearing.ProcessInstanceResponse response =
+                    mapper.convertValue(res, org.pucar.dristi.common.contract.hearing.ProcessInstanceResponse.class);
             if (response != null && !CollectionUtils.isEmpty(response.getProcessInstances())
                     && response.getProcessInstances().get(0) != null)
                 return response.getProcessInstances();

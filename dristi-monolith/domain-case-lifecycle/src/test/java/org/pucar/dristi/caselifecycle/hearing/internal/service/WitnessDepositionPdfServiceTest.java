@@ -19,6 +19,7 @@ import org.pucar.dristi.caselifecycle.hearing.internal.repository.HearingReposit
 import org.pucar.dristi.caselifecycle.hearing.internal.util.CaseUtil;
 import org.pucar.dristi.caselifecycle.hearing.internal.util.PdfRequestUtil;
 import org.pucar.dristi.caselifecycle.hearing.internal.web.models.*;
+import org.pucar.dristi.common.contract.hearing.*;
 import org.springframework.core.io.ByteArrayResource;
 
 import java.lang.reflect.Method;

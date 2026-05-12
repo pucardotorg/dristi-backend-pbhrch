@@ -10,9 +10,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.postgresql.util.PGobject;
-import org.pucar.dristi.caselifecycle.hearing.internal.web.models.Attendee;
-import org.pucar.dristi.caselifecycle.hearing.internal.web.models.Hearing;
-import org.pucar.dristi.caselifecycle.hearing.internal.web.models.PresidedBy;
+import org.pucar.dristi.common.contract.hearing.Attendee;
+import org.pucar.dristi.common.contract.hearing.Hearing;
+import org.pucar.dristi.common.contract.hearing.PresidedBy;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

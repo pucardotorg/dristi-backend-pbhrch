@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.egov.common.contract.request.RequestInfo;
-import org.pucar.dristi.caselifecycle.hearing.internal.web.models.Pagination;
+import org.pucar.dristi.common.contract.hearing.Pagination;
 
 @Getter
 @Setter

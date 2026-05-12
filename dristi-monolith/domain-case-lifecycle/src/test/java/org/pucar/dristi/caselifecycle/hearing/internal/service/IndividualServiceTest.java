@@ -9,8 +9,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.pucar.dristi.caselifecycle.hearing.internal.config.Configuration;
 import org.pucar.dristi.caselifecycle.hearing.internal.util.IndividualUtil;
-import org.pucar.dristi.caselifecycle.hearing.internal.web.models.IndividualSearch;
-import org.pucar.dristi.caselifecycle.hearing.internal.web.models.IndividualSearchRequest;
+import org.pucar.dristi.common.contract.hearing.IndividualSearch;
+import org.pucar.dristi.common.contract.hearing.IndividualSearchRequest;
 
 import org.egov.common.contract.request.RequestInfo;
 

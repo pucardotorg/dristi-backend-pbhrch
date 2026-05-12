@@ -9,7 +9,7 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.model.ServiceCallException;
 import org.pucar.dristi.caselifecycle.hearing.internal.config.Configuration;
 import org.pucar.dristi.common.repository.ServiceRequestRepository;
-import org.pucar.dristi.caselifecycle.hearing.internal.web.models.BulkReschedule;
+import org.pucar.dristi.common.contract.hearing.BulkReschedule;
 import org.pucar.dristi.caselifecycle.hearing.internal.web.models.OpenHearing;
 import org.pucar.dristi.caselifecycle.hearing.internal.web.models.inbox.*;
 import org.springframework.stereotype.Component;
@@ -24,6 +24,7 @@ import java.util.*;
 import static org.pucar.dristi.caselifecycle.hearing.internal.config.ServiceConstants.EXTERNAL_SERVICE_EXCEPTION;
 import static org.pucar.dristi.caselifecycle.hearing.internal.config.ServiceConstants.SEARCHER_SERVICE_EXCEPTION;
 
+import org.pucar.dristi.common.contract.hearing.Hearing;
 @Component("hearingInboxUtil")
 @Slf4j
 public class InboxUtil {

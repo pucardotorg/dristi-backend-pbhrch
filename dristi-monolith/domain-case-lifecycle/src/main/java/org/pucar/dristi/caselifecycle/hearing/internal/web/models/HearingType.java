@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 
 
+import org.pucar.dristi.common.contract.hearing.Hearing;
 /**
  * a case can have multiple hearings. this represents one of the many hearings related to the case
  */

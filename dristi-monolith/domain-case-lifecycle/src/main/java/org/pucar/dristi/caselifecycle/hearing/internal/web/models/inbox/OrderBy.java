@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.pucar.dristi.caselifecycle.hearing.internal.web.models.Order;
+import org.pucar.dristi.common.contract.hearing.Order;
 
 @Data
 @AllArgsConstructor

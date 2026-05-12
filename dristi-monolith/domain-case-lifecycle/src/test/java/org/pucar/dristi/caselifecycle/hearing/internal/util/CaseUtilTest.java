@@ -1,134 +1,109 @@
 package org.pucar.dristi.caselifecycle.hearing.internal.util;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.pucar.dristi.caselifecycle.hearing.internal.web.models.CaseExists;
-import org.pucar.dristi.caselifecycle.hearing.internal.web.models.CaseSearchRequest;
-import org.springframework.web.client.RestTemplate;
-import org.pucar.dristi.caselifecycle.hearing.internal.config.Configuration;
-import org.pucar.dristi.caselifecycle.hearing.internal.web.models.CaseExistsRequest;
-import org.pucar.dristi.caselifecycle.hearing.internal.web.models.CaseExistsResponse;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.pucar.dristi.caselifecycle.cases.CaseApi;
+import org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseListResponse;
+import org.pucar.dristi.common.contract.hearing.CaseCriteria;
+import org.pucar.dristi.common.contract.hearing.CaseExists;
+import org.pucar.dristi.common.contract.hearing.CaseExistsRequest;
+import org.pucar.dristi.common.contract.hearing.CaseExistsResponse;
+import org.pucar.dristi.common.contract.hearing.CaseSearchRequest;
 import org.egov.tracer.model.CustomException;
 
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 class CaseUtilTest {
 
     @Mock
-    private RestTemplate restTemplate;
+    private CaseApi caseApi;
 
     @Mock
     private ObjectMapper mapper;
 
-    @Mock
-    private Configuration configs;
-
     @InjectMocks
     private CaseUtil caseUtil;
 
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.initMocks(this);
-    }
-
     @Test
     void testFetchCaseDetails_Success() {
-        // Arrange
         CaseExistsRequest request = new CaseExistsRequest();
-        CaseExistsResponse expectedResponse = new CaseExistsResponse();
-        expectedResponse.setCriteria(Collections.singletonList(new CaseExists()));
+        CaseExists criterion = new CaseExists();
+        criterion.setFilingNumber("FN-001");
+        request.setCriteria(Collections.singletonList(criterion));
 
-        String host = "http://example.com";
-        String path = "/caseExists";
-        String fullUri = host + path;
+        org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseExistsResponse casesResponse =
+                new org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseExistsResponse();
+        org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseExists casesExists =
+                new org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseExists();
+        casesExists.setFilingNumber("FN-001");
+        casesExists.setExists(true);
+        casesResponse.setCriteria(Collections.singletonList(casesExists));
 
-        Map<String, Object> responseObject = new HashMap<>();
-        responseObject.put("exists", true);
+        when(caseApi.exists(any())).thenReturn(casesResponse);
 
-        when(configs.getCaseHost()).thenReturn(host);
-        when(configs.getCaseExistsPath()).thenReturn(path);
-        when(restTemplate.postForObject(eq(fullUri), eq(request), eq(Map.class))).thenReturn(responseObject);
-        when(mapper.convertValue(responseObject, CaseExistsResponse.class)).thenReturn(expectedResponse);
+        CaseExistsResponse result = caseUtil.fetchCaseDetails(request);
 
-        // Act
-        CaseExistsResponse actualResponse = caseUtil.fetchCaseDetails(request);
-
-        // Assert
-        assertNotNull(actualResponse);
-        assertFalse(actualResponse.getCriteria().isEmpty());    }
+        assertNotNull(result);
+        assertFalse(result.getCriteria().isEmpty());
+        assertTrue(result.getCriteria().get(0).getExists());
+    }
 
     @Test
     void testFetchCaseDetails_Exception() {
-        // Arrange
         CaseExistsRequest request = new CaseExistsRequest();
-        String errorMessage = "Error while fetching case details";
+        request.setCriteria(new ArrayList<>());
 
-        String host = "http://example.com";
-        String path = "/caseExists";
-        String fullUri = host + path;
+        when(caseApi.exists(any())).thenThrow(new RuntimeException("service error"));
 
-        when(configs.getCaseHost()).thenReturn(host);
-        when(configs.getCaseExistsPath()).thenReturn(path);
-        when(restTemplate.postForObject(eq(fullUri), eq(request), eq(Map.class))).thenThrow(new RuntimeException(errorMessage));
-
-        // Act & Assert
-        CustomException exception = assertThrows(CustomException.class, () -> caseUtil.fetchCaseDetails(request));
-        assertEquals(errorMessage, exception.getMessage());
+        assertThrows(CustomException.class, () -> caseUtil.fetchCaseDetails(request));
     }
 
     @Test
-    void testSearchCaseDetails_Success() throws JsonProcessingException {
-        // Arrange
+    void testSearchCaseDetails_Success() throws Exception {
         CaseSearchRequest request = new CaseSearchRequest();
-        JsonNode expectedResponse = new ObjectMapper().readTree("{\"criteria\":[{\"responseList\":[{\"caseId\":\"123\"}]}]}");
+        CaseCriteria criteria = new CaseCriteria();
+        criteria.setFilingNumber("FN-001");
+        request.setCriteria(Collections.singletonList(criteria));
 
-        String host = "http://example.com";
-        String path = "/caseSearch";
-        String fullUri = host + path;
+        doAnswer(invocation -> {
+            org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseSearchRequest casesReq = invocation.getArgument(0);
+            org.pucar.dristi.caselifecycle.cases.internal.web.models.CourtCase courtCase =
+                    new org.pucar.dristi.caselifecycle.cases.internal.web.models.CourtCase();
+            List<org.pucar.dristi.caselifecycle.cases.internal.web.models.CourtCase> responseList = Collections.singletonList(courtCase);
+            casesReq.getCriteria().get(0).setResponseList(responseList);
+            return new CaseListResponse();
+        }).when(caseApi).search(any());
 
-        Map<String, Object> responseObject = new HashMap<>();
-        responseObject.put("criteria", Collections.singletonList(new CaseExists()));
+        ObjectMapper realMapper = new ObjectMapper();
+        when(mapper.writeValueAsString(any())).thenAnswer(inv -> realMapper.writeValueAsString(inv.getArgument(0)));
+        when(mapper.readTree(anyString())).thenAnswer(inv -> realMapper.readTree((String) inv.getArgument(0)));
 
-        when(configs.getCaseHost()).thenReturn(host);
-        when(configs.getCaseSearchPath()).thenReturn(path);
-        when(restTemplate.postForObject(eq(fullUri), eq(request), eq(Map.class))).thenReturn(responseObject);
-        when(mapper.readTree(mapper.writeValueAsString(responseObject))).thenReturn(expectedResponse);
+        JsonNode result = caseUtil.searchCaseDetails(request);
 
-        // Act
-        JsonNode actualResponse = caseUtil.searchCaseDetails(request);
-
-        // Assert
-        assertNotNull(actualResponse);
-        assertEquals("123", actualResponse.get("caseId").asText());
+        assertNotNull(result);
+        verify(caseApi).search(any());
     }
 
     @Test
-    void testSearchCaseDetails_Exception() throws JsonProcessingException {
-        // Arrange
+    void testSearchCaseDetails_Exception() {
         CaseSearchRequest request = new CaseSearchRequest();
-        String errorMessage = "Error while fetching case details";
+        request.setCriteria(new ArrayList<>());
 
-        String host = "http://example.com";
-        String path = "/caseSearch";
-        String fullUri = host + path;
+        when(caseApi.search(any())).thenThrow(new RuntimeException("search error"));
 
-        when(configs.getCaseHost()).thenReturn(host);
-        when(configs.getCaseSearchPath()).thenReturn(path);
-        when(restTemplate.postForObject(eq(fullUri), eq(request), eq(Map.class))).thenThrow(new RuntimeException(errorMessage));
-
-        // Act & Assert
-        CustomException exception = assertThrows(CustomException.class, () -> caseUtil.searchCaseDetails(request));
-        assertEquals(errorMessage, exception.getMessage());
+        assertThrows(CustomException.class, () -> caseUtil.searchCaseDetails(request));
     }
 }

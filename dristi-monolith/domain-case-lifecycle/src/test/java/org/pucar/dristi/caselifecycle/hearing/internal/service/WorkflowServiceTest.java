@@ -15,8 +15,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.pucar.dristi.caselifecycle.hearing.internal.config.Configuration;
 import org.pucar.dristi.common.repository.ServiceRequestRepository;
-import org.pucar.dristi.caselifecycle.hearing.internal.web.models.Hearing;
-import org.pucar.dristi.caselifecycle.hearing.internal.web.models.HearingRequest;
+import org.pucar.dristi.common.contract.hearing.Hearing;
+import org.pucar.dristi.common.contract.hearing.HearingRequest;
 import org.pucar.dristi.common.models.workflow.WorkflowObject;
 
 import java.util.ArrayList;
