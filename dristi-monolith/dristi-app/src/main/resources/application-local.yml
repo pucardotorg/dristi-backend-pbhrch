@@ -5,15 +5,14 @@
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://178.236.185.120:5432/phc_db
+    url: jdbc:postgresql://localhost:5432/pucar
     username: postgres
-    password: MFGGf1j&aq}[@)bB!74OQ
+    password: admin
 
   flyway:
-    url: jdbc:postgresql://178.236.185.120:5432/phc_db
+    url: jdbc:postgresql://localhost:5432/pucar
     user: postgres
-    password: MFGGf1j&aq}[@)bB!74O
-    enabled: false
+    password: admin
 
   kafka:
     bootstrap-servers: localhost:9092
@@ -24,12 +23,12 @@ spring:
 # any accidental call fast-fails with a 404 instead of hanging.
 egov:
   individual:
-    host: http://localhost:8020/
+    host: http://localhost:8081/
     search:
       path: individual/v1/_search
 
   user:
-    host: http://localhost:8082
+    host: http://localhost:8086
     context:
       path: /user/users
     create:
@@ -45,11 +44,11 @@ egov:
       endpoint: /egov-mdms-service/v1/_search
 
   idgen:
-    host: http://localhost:8084
+    host: http://localhost:8085
     path: /egov-idgen/id/_generate
 
   filestore:
-    host: http://localhost:8085
+    host: http://localhost:8081
     path: /filestore/v1/files
   file:
     store:
@@ -71,8 +70,8 @@ egov:
 
   url:
     shortner:
-      host: http://localhost:8081
-      endpoint: /egov-url-shortener/shortener
+      host: http://localhost:8087
+      endpoint: /egov-url-shortening/shortener
 
 # Lock-svc specific
 pucar:

@@ -107,7 +107,7 @@ egov:
       delete:
         endpoint: /filestore/v1/files/delete
   advocate:
-    host: http://localhost:8010/
+    host: http://localhost:8080/
     path: advocate/v1/_search
     clerk:
       path: /advocate/clerk/v1/_search
@@ -491,7 +491,7 @@ process:
 dristi:
   advocate:
     office:
-      host: http://localhost:8092
+      host: http://localhost:8082
       search:
         member:
           endpoint: /advocate-office-management/v1/_searchMember
