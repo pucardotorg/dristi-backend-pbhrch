@@ -3,7 +3,7 @@ package org.pucar.dristi.integration.esign.internal.repository;
 
 import lombok.extern.slf4j.Slf4j;
 import org.pucar.dristi.integration.esign.internal.repository.rowmapper.EsignRowMapper;
-import org.pucar.dristi.integration.esign.internal.web.models.ESignParameter;
+import org.pucar.dristi.common.contract.esign.ESignParameter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;

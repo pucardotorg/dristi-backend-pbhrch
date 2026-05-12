@@ -1,4 +1,5 @@
-package org.pucar.dristi.integration.esign.internal.web.models;
+// HAND-CURATED — lifted by Phase 35 (contract-lift)
+package org.pucar.dristi.common.contract.esign;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -11,14 +12,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CoordinateCriteria {
+public class File {
 
     @JsonProperty("fileStoreId")
     private String fileStoreId;
 
     @JsonProperty("tenantId")
     private String tenantId;
-
-    @JsonProperty("placeholder")
-    private String placeholder;
 }

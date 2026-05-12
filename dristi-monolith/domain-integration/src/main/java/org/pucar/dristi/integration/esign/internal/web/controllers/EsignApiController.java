@@ -9,7 +9,7 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.pucar.dristi.integration.esign.internal.service.ESignService;
 import org.pucar.dristi.common.util.ResponseInfoFactory;
-import org.pucar.dristi.integration.esign.internal.web.models.*;
+import org.pucar.dristi.common.contract.esign.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

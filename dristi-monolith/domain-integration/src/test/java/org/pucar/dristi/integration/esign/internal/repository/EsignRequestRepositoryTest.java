@@ -1,7 +1,7 @@
 package org.pucar.dristi.integration.esign.internal.repository;
 
 import org.pucar.dristi.integration.esign.internal.repository.rowmapper.EsignRowMapper;
-import org.pucar.dristi.integration.esign.internal.web.models.ESignParameter;
+import org.pucar.dristi.common.contract.esign.ESignParameter;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

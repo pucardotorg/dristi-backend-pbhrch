@@ -1,4 +1,6 @@
-package org.pucar.dristi.integration.esign.internal.web.models;
+// HAND-CURATED — lifted by Phase 35 (contract-lift)
+package org.pucar.dristi.common.contract.esign;
+
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.Valid;
@@ -7,26 +9,20 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.egov.common.contract.request.RequestInfo;
-import org.springframework.validation.annotation.Validated;
 
-/**
- * ESignRequest
- */
-@Validated
-@jakarta.annotation.Generated(value = "org.egov.codegen.SpringBootCodegen", date = "2024-06-19T13:37:37.165763478+05:30[Asia/Kolkata]")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ESignRequest {
+public class SignDocRequest {
 
     @JsonProperty("RequestInfo")
     @Valid
     private RequestInfo requestInfo = null;
 
-    @JsonProperty("ESignParameter")
+    @JsonProperty("SignDocParameter")
     @Valid
-    private ESignParameter eSignParameter = null;
+    private SignDocParameter eSignParameter = null;
 
 
 }

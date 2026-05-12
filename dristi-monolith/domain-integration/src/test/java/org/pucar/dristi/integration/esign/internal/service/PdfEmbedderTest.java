@@ -2,7 +2,7 @@ package org.pucar.dristi.integration.esign.internal.service;
 
 import com.itextpdf.text.pdf.PdfSignatureAppearance;
 import org.pucar.dristi.integration.esign.internal.util.FileStoreUtil;
-import org.pucar.dristi.integration.esign.internal.web.models.ESignParameter;
+import org.pucar.dristi.common.contract.esign.ESignParameter;
 import org.egov.common.contract.models.AuditDetails;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

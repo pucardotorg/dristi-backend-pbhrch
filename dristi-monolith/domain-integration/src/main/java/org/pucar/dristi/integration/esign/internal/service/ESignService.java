@@ -13,6 +13,7 @@ import org.pucar.dristi.integration.esign.internal.repository.EsignRequestReposi
 import org.pucar.dristi.integration.esign.internal.util.FileStoreUtil;
 import org.pucar.dristi.integration.esign.internal.util.XmlFormDataSetter;
 import org.pucar.dristi.integration.esign.internal.web.models.*;
+import org.pucar.dristi.common.contract.esign.*;
 import org.egov.common.contract.models.AuditDetails;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.model.CustomException;

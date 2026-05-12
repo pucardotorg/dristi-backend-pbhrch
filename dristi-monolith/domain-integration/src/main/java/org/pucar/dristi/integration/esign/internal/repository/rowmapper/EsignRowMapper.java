@@ -1,6 +1,6 @@
 package org.pucar.dristi.integration.esign.internal.repository.rowmapper;
 
-import org.pucar.dristi.integration.esign.internal.web.models.ESignParameter;
+import org.pucar.dristi.common.contract.esign.ESignParameter;
 import org.egov.common.contract.models.AuditDetails;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
