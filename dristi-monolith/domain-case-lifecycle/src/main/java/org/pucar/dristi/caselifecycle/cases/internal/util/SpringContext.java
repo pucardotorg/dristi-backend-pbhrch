@@ -5,7 +5,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
-@Component
+@Component("casesSpringContext")
 public class SpringContext implements ApplicationContextAware {
 
     private static ApplicationContext context;
