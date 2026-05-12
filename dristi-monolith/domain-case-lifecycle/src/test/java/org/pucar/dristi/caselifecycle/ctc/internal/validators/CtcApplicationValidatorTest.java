@@ -16,8 +16,9 @@ import org.pucar.dristi.caselifecycle.ctc.internal.config.Configuration;
 import org.pucar.dristi.caselifecycle.ctc.internal.repository.CtcApplicationRepository;
 import org.pucar.dristi.caselifecycle.ctc.internal.util.CaseUtil;
 import org.pucar.dristi.caselifecycle.ctc.internal.web.models.*;
-import org.pucar.dristi.caselifecycle.ctc.internal.web.models.courtcase.AdvocateMapping;
-import org.pucar.dristi.caselifecycle.ctc.internal.web.models.courtcase.CourtCase;
+import org.pucar.dristi.common.contract.ctc.*;
+import org.pucar.dristi.caselifecycle.cases.internal.web.models.AdvocateMapping;
+import org.pucar.dristi.caselifecycle.cases.internal.web.models.CourtCase;
 
 import java.util.*;
 

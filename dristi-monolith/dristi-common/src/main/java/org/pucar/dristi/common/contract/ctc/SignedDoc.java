@@ -1,0 +1,43 @@
+// HAND-CURATED — lifted by Phase 35 (contract-lift)
+package org.pucar.dristi.common.contract.ctc;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+public class SignedDoc {
+
+    @JsonProperty("docId")
+    @NotNull
+    private String docId;
+
+    @JsonProperty("signedDocData")
+    @NotNull
+    private String signedDocData;
+
+    @JsonProperty("signed")
+    @NotNull
+    private Boolean signed;
+
+    @JsonProperty("tenantId")
+    private String tenantId;
+
+    @JsonProperty("ctcApplicationNumber")
+    private String ctcApplicationNumber;
+
+    @JsonProperty("filingNumber")
+    private String filingNumber;
+
+    @JsonProperty("courtId")
+    private String courtId;
+
+    @JsonProperty("errorMsg")
+    private String errorMsg;
+}

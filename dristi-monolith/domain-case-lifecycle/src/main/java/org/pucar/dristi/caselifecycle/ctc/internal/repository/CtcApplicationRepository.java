@@ -6,6 +6,7 @@ import org.egov.tracer.model.CustomException;
 import org.pucar.dristi.caselifecycle.ctc.internal.repository.querybuilder.CtcApplicationQueryBuilder;
 import org.pucar.dristi.caselifecycle.ctc.internal.repository.rowmapper.*;
 import org.pucar.dristi.caselifecycle.ctc.internal.web.models.*;
+import org.pucar.dristi.common.contract.ctc.*;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 

@@ -6,6 +6,7 @@ import org.egov.tracer.model.CustomException;
 import org.pucar.dristi.caselifecycle.ctc.internal.service.CtcApplicationService;
 import org.pucar.dristi.common.util.ResponseInfoFactory;
 import org.pucar.dristi.caselifecycle.ctc.internal.web.models.*;
+import org.pucar.dristi.common.contract.ctc.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

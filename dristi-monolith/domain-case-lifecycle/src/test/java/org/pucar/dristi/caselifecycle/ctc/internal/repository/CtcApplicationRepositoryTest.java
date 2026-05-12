@@ -10,6 +10,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.pucar.dristi.caselifecycle.ctc.internal.repository.querybuilder.CtcApplicationQueryBuilder;
 import org.pucar.dristi.caselifecycle.ctc.internal.repository.rowmapper.CtcApplicationRowMapper;
 import org.pucar.dristi.caselifecycle.ctc.internal.web.models.*;
+import org.pucar.dristi.common.contract.ctc.*;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.*;

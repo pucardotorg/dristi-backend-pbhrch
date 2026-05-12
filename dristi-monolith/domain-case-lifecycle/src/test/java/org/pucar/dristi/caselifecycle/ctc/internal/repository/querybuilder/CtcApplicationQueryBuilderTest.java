@@ -3,9 +3,9 @@ package org.pucar.dristi.caselifecycle.ctc.internal.repository.querybuilder;
 import org.egov.tracer.model.CustomException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.pucar.dristi.caselifecycle.ctc.internal.web.models.CtcApplicationSearchCriteria;
-import org.pucar.dristi.caselifecycle.ctc.internal.web.models.OrderPagination;
-import org.pucar.dristi.caselifecycle.ctc.internal.web.models.Pagination;
+import org.pucar.dristi.common.contract.ctc.CtcApplicationSearchCriteria;
+import org.pucar.dristi.common.contract.ctc.OrderPagination;
+import org.pucar.dristi.common.contract.ctc.Pagination;
 
 import java.util.ArrayList;
 import java.util.List;

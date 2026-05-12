@@ -11,7 +11,7 @@ import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.pucar.dristi.caselifecycle.ctc.internal.config.Configuration;
 import org.pucar.dristi.common.util.IdgenUtil;
-import org.pucar.dristi.caselifecycle.ctc.internal.web.models.CtcApplication;
+import org.pucar.dristi.common.contract.ctc.CtcApplication;
 
 import java.util.List;
 

@@ -17,6 +17,7 @@ import org.pucar.dristi.caselifecycle.ctc.internal.repository.CtcApplicationRepo
 import org.pucar.dristi.common.repository.ServiceRequestRepository;
 import org.pucar.dristi.caselifecycle.ctc.internal.util.*;
 import org.pucar.dristi.caselifecycle.ctc.internal.web.models.*;
+import org.pucar.dristi.common.contract.ctc.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

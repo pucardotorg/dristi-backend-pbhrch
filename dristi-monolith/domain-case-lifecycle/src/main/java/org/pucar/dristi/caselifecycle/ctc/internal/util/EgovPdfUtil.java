@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.model.CustomException;
 import org.pucar.dristi.caselifecycle.ctc.internal.config.Configuration;
-import org.pucar.dristi.caselifecycle.ctc.internal.web.models.CtcApplication;
+import org.pucar.dristi.common.contract.ctc.CtcApplication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;

@@ -2,16 +2,19 @@ package org.pucar.dristi.caselifecycle.ctc.internal.util;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jayway.jsonpath.JsonPath;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.model.CustomException;
-import org.pucar.dristi.caselifecycle.ctc.internal.config.Configuration;
-import org.pucar.dristi.common.repository.ServiceRequestRepository;
-import org.pucar.dristi.caselifecycle.ctc.internal.web.models.courtcase.*;
+import org.pucar.dristi.caselifecycle.cases.CaseApi;
+import org.pucar.dristi.caselifecycle.cases.internal.web.models.AdvocateMapping;
+import org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseCriteria;
+import org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseListResponse;
+import org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseSearchRequest;
+import org.pucar.dristi.caselifecycle.cases.internal.web.models.CourtCase;
+import org.pucar.dristi.caselifecycle.cases.internal.web.models.Party;
+import org.pucar.dristi.caselifecycle.cases.internal.web.models.POAHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
 
@@ -21,74 +24,17 @@ import static org.pucar.dristi.caselifecycle.ctc.internal.config.ServiceConstant
 @Component("ctcCaseUtil")
 public class CaseUtil {
 
-    private final RestTemplate restTemplate;
-
     private final ObjectMapper mapper;
 
-    private final Configuration configs;
-
-    private final ServiceRequestRepository repository;
+    private final CaseApi caseApi;
 
     @Autowired
-    public CaseUtil(RestTemplate restTemplate, Configuration configs, ObjectMapper mapper, ServiceRequestRepository repository) {
-        this.restTemplate = restTemplate;
-        this.configs = configs;
+    public CaseUtil(ObjectMapper mapper, CaseApi caseApi) {
         this.mapper = mapper;
-        this.repository = repository;
-    }
-
-    public List<CaseSummaryList> fetchCaseList(RequestInfo requestInfo, String caseNumber, String courtId) {
-        StringBuilder uri = new StringBuilder();
-        uri.append(configs.getCaseHost()).append(configs.getCaseListSearchPath());
-
-        CaseSummaryListRequest request = new CaseSummaryListRequest();
-        request.setRequestInfo(requestInfo);
-        CaseSummaryListCriteria caseCriteria = new CaseSummaryListCriteria();
-        caseCriteria.setSearchByCnrAndCaseNumber(caseNumber);
-        caseCriteria.setCourtId(courtId);
-        request.setCriteria(caseCriteria);
-
-        Object response = new HashMap<>();
-        CaseSummaryListResponse caseResponse = new CaseSummaryListResponse();
-        try {
-            response = restTemplate.postForObject(uri.toString(), request, Map.class);
-            caseResponse = mapper.convertValue(response, CaseSummaryListResponse.class);
-        } catch (Exception e) {
-            log.error("ERROR_WHILE_FETCHING_FROM_CASE :: {}", e.toString());
-        }
-
-        if (caseResponse.getCaseList().isEmpty())
-            return new ArrayList<>();
-        return caseResponse.getCaseList();
-    }
-
-    public JsonNode searchCaseDetails(CaseSearchRequest caseSearchRequest) {
-        StringBuilder uri = new StringBuilder();
-        uri.append(configs.getCaseHost()).append(configs.getCaseSearchPath());
-
-        Object response = new HashMap<>();
-        JsonNode caseList = null;
-        try {
-            response = restTemplate.postForObject(uri.toString(), caseSearchRequest, Map.class);
-            JsonNode jsonNode = mapper.readTree(mapper.writeValueAsString(response));
-            JsonNode criteria = jsonNode.get("criteria");
-            if (criteria == null || criteria.isEmpty() || !criteria.get(0).has("responseList")) {
-                throw new CustomException(ERROR_WHILE_FETCHING_FROM_CASE, "Invalid response structure");
-            }
-            caseList = criteria.get(0).get("responseList");
-            if (caseList.isEmpty()) {
-                return null;
-            }
-            return caseList.get(0);
-        } catch (Exception e) {
-            log.error(ERROR_WHILE_FETCHING_FROM_CASE, e);
-            throw new CustomException(ERROR_WHILE_FETCHING_FROM_CASE, e.getMessage());
-        }
+        this.caseApi = caseApi;
     }
 
     public CourtCase getCase(String filingNumber, String courtId, RequestInfo requestInfo) {
-        StringBuilder uri = new StringBuilder();
-        uri.append(configs.getCaseHost()).append(configs.getCaseSearchPath());
         CaseSearchRequest request = CaseSearchRequest.builder()
                 .requestInfo(requestInfo)
                 .criteria(Collections.singletonList(CaseCriteria.builder()
@@ -98,9 +44,8 @@ public class CaseUtil {
                         .build()))
                 .build();
         try {
-            Object response = repository.fetchResult(uri, request);
-            CaseListResponse caseListResponse = mapper.convertValue(response, CaseListResponse.class);
-            return Optional.ofNullable(caseListResponse)
+            CaseListResponse response = caseApi.search(request);
+            return Optional.ofNullable(response)
                     .map(CaseListResponse::getCriteria)
                     .filter(list -> !list.isEmpty())
                     .map(list -> list.get(0).getResponseList())
@@ -108,8 +53,8 @@ public class CaseUtil {
                     .map(list -> list.get(0))
                     .orElse(null);
         } catch (Exception e) {
-            log.error("Error executing case search query", e);
-            throw new CustomException("Error fetching case: ", e.getMessage());
+            log.error("Error fetching case", e);
+            throw new CustomException(ERROR_WHILE_FETCHING_FROM_CASE, e.getMessage());
         }
     }
 
@@ -210,5 +155,4 @@ public class CaseUtil {
 
         return uuidNameMap;
     }
-
 }

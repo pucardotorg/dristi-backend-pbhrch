@@ -10,7 +10,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.egov.common.contract.models.AuditDetails;
-import org.pucar.dristi.caselifecycle.ctc.internal.web.models.courtcase.StatuteSection;
+import org.pucar.dristi.caselifecycle.cases.internal.web.models.StatuteSection;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.ArrayList;

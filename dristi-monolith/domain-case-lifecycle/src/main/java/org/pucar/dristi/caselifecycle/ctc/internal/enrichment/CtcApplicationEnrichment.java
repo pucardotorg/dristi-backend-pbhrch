@@ -6,7 +6,7 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.model.CustomException;
 import org.pucar.dristi.caselifecycle.ctc.internal.config.Configuration;
 import org.pucar.dristi.common.util.IdgenUtil;
-import org.pucar.dristi.caselifecycle.ctc.internal.web.models.CtcApplication;
+import org.pucar.dristi.common.contract.ctc.CtcApplication;
 import org.pucar.dristi.common.models.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

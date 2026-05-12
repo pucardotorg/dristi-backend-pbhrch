@@ -2,8 +2,8 @@ package org.pucar.dristi.caselifecycle.ctc.internal.repository.querybuilder;
 
 import lombok.extern.slf4j.Slf4j;
 import org.egov.tracer.model.CustomException;
-import org.pucar.dristi.caselifecycle.ctc.internal.web.models.CtcApplicationSearchCriteria;
-import org.pucar.dristi.caselifecycle.ctc.internal.web.models.Pagination;
+import org.pucar.dristi.common.contract.ctc.CtcApplicationSearchCriteria;
+import org.pucar.dristi.common.contract.ctc.Pagination;
 import org.springframework.stereotype.Service;
 
 import java.sql.Types;
