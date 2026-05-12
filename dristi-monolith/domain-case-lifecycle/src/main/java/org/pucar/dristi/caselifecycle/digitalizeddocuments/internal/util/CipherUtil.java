@@ -14,7 +14,7 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Base64;
 
-@Component
+@Component("digitalizeddocumentsCipherUtil")
 @Slf4j
 public class CipherUtil {
 

@@ -1,0 +1,18 @@
+package org.pucar.dristi.caselifecycle.bailbond.internal.web.models;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.validation.annotation.Validated;
+
+@Validated
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+public class EmailRecipientData {
+    private String type;
+    private String name;
+    private String email;
+}

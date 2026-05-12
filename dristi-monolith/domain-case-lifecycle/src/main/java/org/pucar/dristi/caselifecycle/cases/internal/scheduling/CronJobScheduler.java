@@ -38,7 +38,7 @@ import java.util.concurrent.Future;
 import static org.pucar.dristi.caselifecycle.cases.internal.config.ServiceConstants.CASE_REASSIGNED;
 import static org.pucar.dristi.caselifecycle.cases.internal.config.ServiceConstants.ERRORS_PENDING;
 
-@Component
+@Component("casesCronJobScheduler")
 @Slf4j
 @EnableScheduling
 public class CronJobScheduler {

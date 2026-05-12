@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 import static org.pucar.dristi.caselifecycle.digitalizeddocuments.internal.config.ServiceConstants.*;
 @Slf4j
-@Component
+@Component("digitalizeddocumentsXmlRequestGenerator")
 public class XmlRequestGenerator {
 
 

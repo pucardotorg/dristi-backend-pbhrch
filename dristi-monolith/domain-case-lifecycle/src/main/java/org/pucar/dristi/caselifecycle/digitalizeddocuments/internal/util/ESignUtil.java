@@ -16,7 +16,7 @@ import java.util.List;
 import static org.pucar.dristi.caselifecycle.digitalizeddocuments.internal.config.ServiceConstants.ESIGN_SERVICE_EXCEPTION;
 
 
-@Component
+@Component("digitalizeddocumentsESignUtil")
 @Slf4j
 public class ESignUtil {
 
