@@ -16,7 +16,7 @@ import java.util.List;
 import static org.pucar.dristi.caselifecycle.bailbond.internal.config.ServiceConstants.ESIGN_SERVICE_EXCEPTION;
 
 
-@Component
+@Component("bailbondESignUtil")
 @Slf4j
 public class ESignUtil {
 

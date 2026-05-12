@@ -1,0 +1,3 @@
+dristi-monolith\domain-case-lifecycle\src\main\java\org\pucar\dristi\caselifecycle\ctc\internal\util\CaseUtil.java  uses ['CaseHost', 'CaseListSearchPath', 'CaseSearchPath']
+dristi-monolith\domain-case-lifecycle\src\main\java\org\pucar\dristi\caselifecycle\ctc\internal\util\EtreasuryUtil.java  uses ['EtreasuryHost']
+dristi-monolith\domain-case-lifecycle\src\main\java\org\pucar\dristi\caselifecycle\ctc\internal\util\IndexerUtils.java  uses ['BulkPath']

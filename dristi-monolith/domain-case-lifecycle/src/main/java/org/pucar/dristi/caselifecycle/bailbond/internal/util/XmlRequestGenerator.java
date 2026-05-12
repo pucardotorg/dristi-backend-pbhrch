@@ -20,7 +20,7 @@ import static org.pucar.dristi.caselifecycle.bailbond.internal.config.ServiceCon
 
 
 @Slf4j
-@Component
+@Component("bailbondXmlRequestGenerator")
 public class XmlRequestGenerator {
 
 
