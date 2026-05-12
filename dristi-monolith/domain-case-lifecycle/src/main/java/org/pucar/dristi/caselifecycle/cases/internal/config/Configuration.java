@@ -75,16 +75,6 @@ public class Configuration {
 	@Value("${egov.filestore.path}")
 	private String fileStorePath;
 
-	// Advocate Config
-	@Value("${egov.advocate.host}")
-	private String advocateHost;
-
-	@Value("${egov.advocate.path}")
-	private String advocatePath;
-
-	@Value("${egov.advocate.clerk.path}")
-	private String advocateClerkPath;
-
     //Individual Service
     @Value("${egov.individual.host}")
     private String individualHost;
@@ -98,12 +88,7 @@ public class Configuration {
     @Value("${egov.individual.search.path}")
     private String individualSearchEndpoint;
 
-    // Advocate Office Management Config
-    @Value("${dristi.advocate.office.host}")
-    private String advocateOfficeHost;
 
-    @Value("${dristi.advocate.office.search.member.endpoint}")
-    private String advocateOfficeSearchMemberEndpoint;
 
     @Value("${egov.individual.update.path}")
     private String individualUpdateEndpoint;

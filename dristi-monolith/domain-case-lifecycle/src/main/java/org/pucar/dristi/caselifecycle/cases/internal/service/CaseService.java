@@ -25,6 +25,7 @@ import org.pucar.dristi.common.kafka.Producer;
 import org.pucar.dristi.caselifecycle.cases.internal.repository.AdvocateOfficeCaseMemberRepository;
 import org.pucar.dristi.caselifecycle.cases.internal.repository.CaseRepository;
 import org.pucar.dristi.caselifecycle.cases.internal.util.*;
+import org.pucar.dristi.identityaccess.advocate.AdvocateApi;
 import org.pucar.dristi.common.util.DateUtil;
 import org.pucar.dristi.common.util.RequestInfoUtil;
 import org.pucar.dristi.caselifecycle.cases.internal.validators.CaseRegistrationValidator;
@@ -87,7 +88,7 @@ public class CaseService {
 
     private final IndividualService individualService;
 
-    private final AdvocateUtil advocateUtil;
+    private final AdvocateApi advocateApi;
     private final TaskUtil taskUtil;
     private final HearingUtil hearingUtil;
     private final UserService userService;
@@ -117,7 +118,7 @@ public class CaseService {
                        HearingUtil analyticsUtil,
                        UserService userService,
                        PaymentCalculaterUtil paymentCalculaterUtil,
-                       ObjectMapper objectMapper, CacheService cacheService, EnrichmentService enrichmentService, SmsNotificationService notificationService, IndividualService individualService, AdvocateUtil advocateUtil, EvidenceUtil evidenceUtil, EvidenceValidator evidenceValidator, CaseUtil caseUtil, FileStoreUtil fileStoreUtil, DateUtil dateUtil, InboxUtil inboxUtil, AdvocateOfficeCaseMemberRepository advocateOfficeCaseMemberRepository, org.pucar.dristi.caselifecycle.cases.internal.enrichment.AdvocateDetailBlockBuilder advocateDetailBlockBuilder) {
+                       ObjectMapper objectMapper, CacheService cacheService, EnrichmentService enrichmentService, SmsNotificationService notificationService, IndividualService individualService, AdvocateApi advocateApi, EvidenceUtil evidenceUtil, EvidenceValidator evidenceValidator, CaseUtil caseUtil, FileStoreUtil fileStoreUtil, DateUtil dateUtil, InboxUtil inboxUtil, AdvocateOfficeCaseMemberRepository advocateOfficeCaseMemberRepository, org.pucar.dristi.caselifecycle.cases.internal.enrichment.AdvocateDetailBlockBuilder advocateDetailBlockBuilder) {
         this.validator = validator;
         this.enrichmentUtil = enrichmentUtil;
         this.caseRepository = caseRepository;
@@ -135,7 +136,7 @@ public class CaseService {
         this.enrichmentService = enrichmentService;
         this.notificationService = notificationService;
         this.individualService = individualService;
-        this.advocateUtil = advocateUtil;
+        this.advocateApi = advocateApi;
         this.evidenceUtil = evidenceUtil;
         this.evidenceValidator = evidenceValidator;
         this.caseUtil = caseUtil;
@@ -1240,7 +1241,7 @@ public class CaseService {
             );
         }
         if (!advocateId.isEmpty()) {
-            individualIds.addAll(advocateUtil.getAdvocate(caseRequest.getRequestInfo(), advocateId.stream().toList()));
+            individualIds.addAll(advocateApi.getAdvocateIndividualIds(caseRequest.getRequestInfo(), advocateId.stream().toList()));
         }
     }
 
@@ -2350,8 +2351,8 @@ public class CaseService {
                 }
 
             });
-            List<Advocate> advocatesList = advocateUtil.fetchAdvocatesById(joinCaseRequest.getRequestInfo(), joinCaseData.getRepresentative().getAdvocateId());
-            Advocate joinCaseAdvocate = advocatesList.get(0);
+            var advocatesList = advocateApi.searchAdvocatesById(joinCaseRequest.getRequestInfo(), joinCaseData.getRepresentative().getAdvocateId());
+            var joinCaseAdvocate = advocatesList.get(0);
 
             List<Individual> individualsList = individualService.getIndividualsByIndividualId(joinCaseRequest.getRequestInfo(), joinCaseAdvocate.getIndividualId());
             Individual individual = individualsList.get(0);
@@ -2630,12 +2631,16 @@ public class CaseService {
 
                 // Add the advocate to the block's advocate list
                 try {
-                    List<Advocate> advocatesList = advocateUtil.fetchAdvocatesById(requestInfo, joinCaseRepresentative.getAdvocateId());
-                    if (advocatesList != null && !advocatesList.isEmpty()) {
-                        Advocate joinCaseAdvocate = advocatesList.get(0);
+                    var registrations = advocateApi.searchAdvocatesById(requestInfo, joinCaseRepresentative.getAdvocateId());
+                    if (registrations != null && !registrations.isEmpty()) {
+                        var registration = registrations.get(0);
+                        org.pucar.dristi.caselifecycle.cases.internal.web.models.Advocate joinCaseAdvocate =
+                                new org.pucar.dristi.caselifecycle.cases.internal.web.models.Advocate();
+                        joinCaseAdvocate.setId(registration.getId());
+                        joinCaseAdvocate.setIndividualId(registration.getIndividualId());
                         // enrich advocate with individual details
                         try {
-                            List<Individual> individualsList = individualService.getIndividualsByIndividualId(requestInfo, joinCaseAdvocate.getIndividualId());
+                            List<Individual> individualsList = individualService.getIndividualsByIndividualId(requestInfo, registration.getIndividualId());
                             if (individualsList != null && !individualsList.isEmpty()) {
                                 Individual individual = individualsList.get(0);
                                 joinCaseAdvocate.setFirstName(individual.getName().getGivenName());
@@ -2789,8 +2794,8 @@ public class CaseService {
 
         JoinCaseTaskRequest taskJoinCase = new JoinCaseTaskRequest();
 
-        List<Advocate> advocatesList = advocateUtil.fetchAdvocatesById(joinCaseRequest.getRequestInfo(), joinCaseData.getRepresentative().getAdvocateId());
-        Advocate joinCaseAdvocate = advocatesList.get(0);
+        var advocatesList = advocateApi.searchAdvocatesById(joinCaseRequest.getRequestInfo(), joinCaseData.getRepresentative().getAdvocateId());
+        var joinCaseAdvocate = advocatesList.get(0);
 
         List<Individual> individualsList = individualService.getIndividualsByIndividualId(joinCaseRequest.getRequestInfo(), joinCaseAdvocate.getIndividualId());
         Individual individual = individualsList.get(0);
@@ -2833,8 +2838,8 @@ public class CaseService {
                     ReplacementAdvocateDetails replacementAdvocateDetails = new ReplacementAdvocateDetails();
                     replacementAdvocateDetails.setAdvocateUuid(advocateId);
 
-                    List<Advocate> replacedvocatesList = advocateUtil.fetchAdvocatesById(joinCaseRequest.getRequestInfo(), advocateId);
-                    Advocate replaceAdvocate = replacedvocatesList.get(0);
+                    var replacedvocatesList = advocateApi.searchAdvocatesById(joinCaseRequest.getRequestInfo(), advocateId);
+                    var replaceAdvocate = replacedvocatesList.get(0);
 
                     List<Individual> individualList = individualService.getIndividualsByIndividualId(joinCaseRequest.getRequestInfo(), replaceAdvocate.getIndividualId());
                     Individual individualAdvocate = individualList.get(0);
@@ -2913,8 +2918,8 @@ public class CaseService {
         JoinCaseTaskRequest taskJoinCase = new JoinCaseTaskRequest();
 
         //Set advocate details
-        List<Advocate> advocatesList = advocateUtil.fetchAdvocatesById(joinCaseRequest.getRequestInfo(), advocateId);
-        Advocate joinCaseAdvocate = advocatesList.get(0);
+        var advocatesList = advocateApi.searchAdvocatesById(joinCaseRequest.getRequestInfo(), advocateId);
+        var joinCaseAdvocate = advocatesList.get(0);
 
         List<Individual> individualsList = individualService.getIndividualsByIndividualId(joinCaseRequest.getRequestInfo(), joinCaseAdvocate.getIndividualId());
         Individual individual = individualsList.get(0);
@@ -2980,7 +2985,7 @@ public class CaseService {
     }
 
     private TaskResponse createTaskAdvocate(JoinCaseV2Request joinCaseRequest, String replaceAdvocateId, List<RepresentingJoinCase> representingJoinCaseList, CourtCase courtCase) throws JsonProcessingException {
-        String individualIdForAdvocate = advocateUtil.getAdvocate(joinCaseRequest.getRequestInfo(), List.of(replaceAdvocateId)).stream().findFirst().orElse(null);
+        String individualIdForAdvocate = advocateApi.getAdvocateIndividualIds(joinCaseRequest.getRequestInfo(), List.of(replaceAdvocateId)).stream().findFirst().orElse(null);
         String userUUID = individualService.getIndividualsByIndividualId(joinCaseRequest.getRequestInfo(), individualIdForAdvocate).get(0).getUserUuid();
 
         TaskRequest taskRequest = new TaskRequest();
@@ -3000,8 +3005,8 @@ public class CaseService {
 
         JoinCaseTaskRequest taskJoinCase = new JoinCaseTaskRequest();
 
-        List<Advocate> advocatesList = advocateUtil.fetchAdvocatesById(joinCaseRequest.getRequestInfo(), joinCaseData.getRepresentative().getAdvocateId());
-        Advocate joinCaseAdvocate = advocatesList.get(0);
+        var advocatesList = advocateApi.searchAdvocatesById(joinCaseRequest.getRequestInfo(), joinCaseData.getRepresentative().getAdvocateId());
+        var joinCaseAdvocate = advocatesList.get(0);
 
         List<Individual> individualsList = individualService.getIndividualsByIndividualId(joinCaseRequest.getRequestInfo(), joinCaseAdvocate.getIndividualId());
         Individual individual = individualsList.get(0);
@@ -3042,8 +3047,8 @@ public class CaseService {
             ReplacementAdvocateDetails replacementAdvocateDetails = new ReplacementAdvocateDetails();
             replacementAdvocateDetails.setAdvocateUuid(replaceAdvocateId);
 
-            List<Advocate> replacedvocatesList = advocateUtil.fetchAdvocatesById(joinCaseRequest.getRequestInfo(), replaceAdvocateId);
-            Advocate replaceAdvocate = replacedvocatesList.get(0);
+            var replacedvocatesList = advocateApi.searchAdvocatesById(joinCaseRequest.getRequestInfo(), replaceAdvocateId);
+            var replaceAdvocate = replacedvocatesList.get(0);
 
             List<Individual> individualList = individualService.getIndividualsByIndividualId(joinCaseRequest.getRequestInfo(), replaceAdvocate.getIndividualId());
             Individual individualAdvocate = individualList.get(0);
@@ -3563,8 +3568,8 @@ public class CaseService {
 
             JoinCaseTaskRequest taskJoinCase = new JoinCaseTaskRequest();
 
-            List<Advocate> advocatesList = advocateUtil.fetchAdvocatesById(joinCaseRequest.getRequestInfo(), joinCaseData.getRepresentative().getAdvocateId());
-            Advocate joinCaseAdvocate = advocatesList.get(0);
+            var advocatesList = advocateApi.searchAdvocatesById(joinCaseRequest.getRequestInfo(), joinCaseData.getRepresentative().getAdvocateId());
+            var joinCaseAdvocate = advocatesList.get(0);
 
             List<Individual> individualsList = individualService.getIndividualsByIndividualId(joinCaseRequest.getRequestInfo(), joinCaseAdvocate.getIndividualId());
             Individual individual = individualsList.get(0);
@@ -3601,8 +3606,8 @@ public class CaseService {
                         ReplacementAdvocateDetails replacementAdvocateDetails = new ReplacementAdvocateDetails();
                         replacementAdvocateDetails.setAdvocateUuid(advocateId);
 
-                        List<Advocate> replacedvocatesList = advocateUtil.fetchAdvocatesById(joinCaseRequest.getRequestInfo(), advocateId);
-                        Advocate replaceAdvocate = replacedvocatesList.get(0);
+                        var replacedvocatesList = advocateApi.searchAdvocatesById(joinCaseRequest.getRequestInfo(), advocateId);
+                        var replaceAdvocate = replacedvocatesList.get(0);
 
                         List<Individual> individualList = individualService.getIndividualsByIndividualId(joinCaseRequest.getRequestInfo(), replaceAdvocate.getIndividualId());
                         Individual individualAdvocate = individualList.get(0);
@@ -5719,7 +5724,7 @@ public class CaseService {
     }
 
     private AdvocateDetails enrichAdvocateDetailsInJoinCaseTaskRequest(IndividualDetails
-                                                                               individualDetails, Advocate joinCaseAdvocate, Individual individual,
+                                                                               individualDetails, org.pucar.dristi.common.contract.advocate.Advocate joinCaseAdvocate, Individual individual,
                                                                        JoinCaseDataV2 joinCaseData) {
         return AdvocateDetails.builder()
                 .barRegistrationNumber(joinCaseAdvocate.getBarRegistrationNumber())
@@ -5892,7 +5897,7 @@ public class CaseService {
                         .filter(mapping -> mapping.getAdvocateId().equalsIgnoreCase(replacementAdvocateDetails.getAdvocateUuid()))
                         .findFirst().isEmpty();
 
-                String individualIdOfAdvocate = advocateUtil.getAdvocate(requestInfo, List.of(replacementAdvocateDetails.getAdvocateUuid())).stream().findFirst().orElse(null);
+                String individualIdOfAdvocate = advocateApi.getAdvocateIndividualIds(requestInfo, List.of(replacementAdvocateDetails.getAdvocateUuid())).stream().findFirst().orElse(null);
 
                 boolean isAccusedAdvocate = !replacementDetails.getLitigantDetails().getPartyType().contains("complainant");
 

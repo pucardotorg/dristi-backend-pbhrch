@@ -1,0 +1,14 @@
+# Classes lifted from internal/web/models/ to dristi-common/contract/<subdomain>/
+org.pucar.dristi.common.contract.esign.Coordinate
+org.pucar.dristi.common.contract.esign.CoordinateCriteria
+org.pucar.dristi.common.contract.esign.CoordinateRequest
+org.pucar.dristi.common.contract.esign.CoordinateResponse
+org.pucar.dristi.common.contract.esign.ESignParameter
+org.pucar.dristi.common.contract.esign.ESignRequest
+org.pucar.dristi.common.contract.esign.ESignResponse
+org.pucar.dristi.common.contract.esign.ESignXmlForm
+org.pucar.dristi.common.contract.esign.File
+org.pucar.dristi.common.contract.esign.SignDocParameter
+org.pucar.dristi.common.contract.esign.SignDocRequest
+org.pucar.dristi.common.contract.esign.StorageResponse
+org.pucar.dristi.common.contract.esign.package-info
