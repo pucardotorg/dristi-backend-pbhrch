@@ -47,7 +47,7 @@ egov:
           orders: NonRepeatingCompositeOrders
     itemtext: ItemText
   hrms:
-    host: https://dev.digit.org
+    host: http://localhost:8090
     search:
       endpoint: /egov-hrms/employees/_search
   user:
@@ -73,7 +73,7 @@ egov:
       delete:
         endpoint: /filestore/v1/files/delete
   advocate:
-    host: http://localhost:8080/
+    host: http://localhost:8010/
     path: advocate/v1/_search
   case:
     host: http://localhost:9090/

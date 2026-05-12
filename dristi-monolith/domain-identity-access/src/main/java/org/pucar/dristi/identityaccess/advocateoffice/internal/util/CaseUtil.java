@@ -11,6 +11,13 @@ import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+// CIRCULAR-DEP BLOCKER: Converting these REST calls to direct CaseApi calls requires
+// domain-identity-access to depend on domain-case-lifecycle. That creates a compile-time
+// cycle because domain-case-lifecycle already depends on domain-identity-access for
+// AdvocateOfficeApi. The target methods in domain-case-lifecycle are:
+//   AdvocateOfficeCaseMemberService.searchCaseMembers()  → /case/v1/_searchCaseMember
+//   AdvocateOfficeCaseMemberService.processCaseMember()  → /case/v1/_processCaseMember
+// Conversion is deferred until the bidirectional dependency is resolved.
 @Component
 @Slf4j
 public class CaseUtil {

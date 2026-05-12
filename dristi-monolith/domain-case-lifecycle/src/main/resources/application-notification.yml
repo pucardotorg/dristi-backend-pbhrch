@@ -44,7 +44,7 @@ egov:
     search:
       endpoint: /egov-mdms-service/v1/_search
   hrms:
-    host: https://dev.digit.org
+    host: http://localhost:8090
     search:
       endpoint: /egov-hrms/employees/_search
   user:

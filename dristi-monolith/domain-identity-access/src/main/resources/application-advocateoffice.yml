@@ -85,13 +85,6 @@ dristi:
     host: http://localhost:8081
     search:
       endpoint: /individual/v1/_search
-  advocate:
-    host: http://localhost:8053
-    search:
-      endpoint: /advocate/v1/_search
-    clerk:
-      search:
-        endpoint: /advocate/clerk/v1/_search
   case:
     host: http://localhost:9091
     member:

@@ -92,16 +92,6 @@ public class Configuration {
     private String individualSearchEndPoint;
 
 
-    //Advocate Config
-    @Value("${dristi.advocate.host}")
-    private String advocateHost;
-
-    @Value("${dristi.advocate.search.endpoint}")
-    private String advocateSearchEndPoint;
-
-    @Value("${dristi.advocate.clerk.search.endpoint}")
-    private String advocateClerkSearchEndPoint;
-
     //Case Service Config
     @Value("${dristi.case.host}")
     private String caseHost;

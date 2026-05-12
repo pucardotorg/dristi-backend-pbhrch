@@ -1,14 +1,15 @@
 package org.pucar.dristi.identityaccess.advocateoffice.internal.enrichment;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import org.pucar.dristi.identityaccess.advocate.AdvocateApi;
 import org.pucar.dristi.identityaccess.advocateoffice.internal.config.Configuration;
-import org.pucar.dristi.identityaccess.advocateoffice.internal.util.AdvocateUtil;
+import org.pucar.dristi.common.contract.advocate.Advocate;
+import org.pucar.dristi.common.contract.advocate.AdvocateClerk;
 import org.pucar.dristi.common.util.IndividualUtil;
 import org.pucar.dristi.common.contract.advocateoffice.AddMember;
 import org.pucar.dristi.common.contract.advocateoffice.AddMemberRequest;
 import org.pucar.dristi.common.contract.advocateoffice.LeaveOffice;
 import org.pucar.dristi.common.contract.advocateoffice.LeaveOfficeRequest;
-import org.pucar.dristi.common.contract.advocateoffice.UpdateMemberAccess;
 import org.pucar.dristi.common.contract.advocateoffice.UpdateMemberAccessRequest;
 import org.pucar.dristi.common.contract.advocateoffice.MemberType;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.UUID;
 
 import static org.pucar.dristi.identityaccess.advocateoffice.internal.config.ServiceConstants.*;
@@ -28,27 +30,26 @@ import static org.pucar.dristi.identityaccess.advocateoffice.internal.config.Ser
 @Slf4j
 public class AdvocateOfficeEnrichment {
 
-    private final AdvocateUtil advocateUtil;
+    private final AdvocateApi advocateApi;
     private final IndividualUtil individualUtil;
     private final Configuration configuration;
 
     @Autowired
-    public AdvocateOfficeEnrichment(AdvocateUtil advocateUtil,
+    public AdvocateOfficeEnrichment(AdvocateApi advocateApi,
                                     @Qualifier("commonIndividualUtil") IndividualUtil individualUtil,
                                     Configuration configuration) {
-        this.advocateUtil = advocateUtil;
+        this.advocateApi = advocateApi;
         this.individualUtil = individualUtil;
         this.configuration = configuration;
     }
 
-    private String getIndividualIdFromAdvocateId(RequestInfo requestInfo, String tenantId, String advocateId){
-        JsonNode advocate = advocateUtil.searchAdvocateById(requestInfo, tenantId, advocateId);
-        if (advocate == null) {
+    private String getIndividualIdFromAdvocateId(RequestInfo requestInfo, String advocateId) {
+        List<Advocate> advocates = advocateApi.searchAdvocatesById(requestInfo, advocateId);
+        if (advocates.isEmpty()) {
             throw new CustomException(ADVOCATE_NOT_FOUND,
                     String.format("Advocate not found for advocate id %s", advocateId));
         }
-
-        return advocateUtil.getIndividualId(advocate);
+        return advocates.get(0).getIndividualId();
     }
 
     private String getUserUuidFromIndividualId(RequestInfo requestInfo, String tenantId, String individualId) {
@@ -74,14 +75,13 @@ public class AdvocateOfficeEnrichment {
         return userUuidNode.asText();
     }
 
-    private String getIndividualIdFromClerkId(RequestInfo requestInfo, String tenantId, String clerkId){
-        JsonNode clerk = advocateUtil.searchClerkById(requestInfo, tenantId, clerkId);
-        if (clerk == null) {
+    private String getIndividualIdFromClerkId(RequestInfo requestInfo, String tenantId, String clerkId) {
+        List<AdvocateClerk> clerks = advocateApi.searchClerksById(requestInfo, tenantId, clerkId);
+        if (clerks.isEmpty()) {
             throw new CustomException(ADVOCATE_CLERK_NOT_FOUND,
                     String.format("Advocate clerk not found for clerk id %s", clerkId));
         }
-
-        return advocateUtil.getIndividualId(clerk);
+        return clerks.get(0).getIndividualId();
     }
 
     public void enrichAddMemberRequest(AddMemberRequest request) {
@@ -105,7 +105,7 @@ public class AdvocateOfficeEnrichment {
         String tenantId = addMember.getTenantId();
         String advocateId = addMember.getOfficeAdvocateId().toString();
 
-        String advocateIndividualId = getIndividualIdFromAdvocateId(requestInfo, tenantId, advocateId);
+        String advocateIndividualId = getIndividualIdFromAdvocateId(requestInfo, advocateId);
         String advocateUserUuid = getUserUuidFromIndividualId(requestInfo, tenantId, advocateIndividualId);
         addMember.setOfficeAdvocateUserUuid(UUID.fromString(advocateUserUuid));
         log.info("Enriched officeAdvocateUserUuid: {} for officeAdvocateId: {}", advocateUserUuid, addMember.getOfficeAdvocateId());
@@ -119,7 +119,7 @@ public class AdvocateOfficeEnrichment {
 
         String memberIndividualId;
         if (addMember.getMemberType() == MemberType.ADVOCATE) {
-            memberIndividualId = getIndividualIdFromAdvocateId(requestInfo, tenantId, memberId);
+            memberIndividualId = getIndividualIdFromAdvocateId(requestInfo, memberId);
         } else {
             memberIndividualId = getIndividualIdFromClerkId(requestInfo, tenantId, memberId);
         }

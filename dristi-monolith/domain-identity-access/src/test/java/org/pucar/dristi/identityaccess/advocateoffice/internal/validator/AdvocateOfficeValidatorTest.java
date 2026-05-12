@@ -1,9 +1,8 @@
 package org.pucar.dristi.identityaccess.advocateoffice.internal.validator;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.pucar.dristi.identityaccess.advocate.AdvocateApi;
+import org.pucar.dristi.common.contract.advocate.AdvocateClerk;
 import org.pucar.dristi.identityaccess.advocateoffice.internal.repository.AdvocateOfficeRepository;
-import org.pucar.dristi.identityaccess.advocateoffice.internal.util.AdvocateUtil;
 import org.pucar.dristi.common.contract.advocateoffice.*;
 import org.pucar.dristi.common.contract.advocateoffice.*;
 import org.pucar.dristi.common.contract.advocateoffice.AccessType;
@@ -34,7 +33,7 @@ class AdvocateOfficeValidatorTest {
     private AdvocateOfficeRepository advocateOfficeRepository;
 
     @Mock
-    private AdvocateUtil advocateUtil;
+    private AdvocateApi advocateApi;
 
     @InjectMocks
     private AdvocateOfficeValidator validator;
@@ -108,24 +107,17 @@ class AdvocateOfficeValidatorTest {
                 .build();
     }
 
-    private JsonNode createActiveNode() {
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.valueToTree(Map.of("isActive", true));
-    }
-
     @Test
     void testValidateAddMemberRequest_Success() {
-        JsonNode activeAdvocate = createActiveNode();
-        JsonNode activeClerk = createActiveNode();
-        when(advocateUtil.searchAdvocateById(any(), anyString(), anyString())).thenReturn(activeAdvocate);
-        when(advocateUtil.searchClerkById(any(), anyString(), anyString())).thenReturn(activeClerk);
-        when(advocateUtil.isActive(any())).thenReturn(true);
+        AdvocateClerk activeClerk = AdvocateClerk.builder().isActive(true).build();
+        when(advocateApi.advocateExists(any(), anyString())).thenReturn(true);
+        when(advocateApi.searchClerksById(any(), anyString(), anyString())).thenReturn(List.of(activeClerk));
         when(advocateOfficeRepository.getMembers(any(), any())).thenReturn(Collections.emptyList());
 
         assertDoesNotThrow(() -> validator.validateAddMemberRequest(addMemberRequest));
 
-        verify(advocateUtil, times(1)).searchAdvocateById(any(), anyString(), anyString());
-        verify(advocateUtil, times(1)).searchClerkById(any(), anyString(), anyString());
+        verify(advocateApi, times(1)).advocateExists(any(), anyString());
+        verify(advocateApi, times(1)).searchClerksById(any(), anyString(), anyString());
         verify(advocateOfficeRepository, times(1)).getMembers(any(), any());
     }
 
@@ -163,7 +155,7 @@ class AdvocateOfficeValidatorTest {
 
     @Test
     void testValidateAddMemberRequest_AdvocateNotFound() {
-        when(advocateUtil.searchAdvocateById(any(), anyString(), anyString())).thenReturn(null);
+        when(advocateApi.advocateExists(any(), anyString())).thenReturn(false);
 
         CustomException exception = assertThrows(CustomException.class, () -> {
             validator.validateAddMemberRequest(addMemberRequest);
@@ -174,12 +166,10 @@ class AdvocateOfficeValidatorTest {
 
     @Test
     void testValidateAddMemberRequest_MemberAlreadyExists() {
-        JsonNode activeAdvocate = createActiveNode();
-        JsonNode activeClerk = createActiveNode();
-        when(advocateUtil.searchAdvocateById(any(), anyString(), anyString())).thenReturn(activeAdvocate);
-        when(advocateUtil.searchClerkById(any(), anyString(), anyString())).thenReturn(activeClerk);
-        when(advocateUtil.isActive(any())).thenReturn(true);
-        
+        AdvocateClerk activeClerk = AdvocateClerk.builder().isActive(true).build();
+        when(advocateApi.advocateExists(any(), anyString())).thenReturn(true);
+        when(advocateApi.searchClerksById(any(), anyString(), anyString())).thenReturn(List.of(activeClerk));
+
         List<AddMember> existingMembers = Collections.singletonList(
                 AddMember.builder()
                         .id(UUID.randomUUID())
@@ -201,15 +191,13 @@ class AdvocateOfficeValidatorTest {
     void testValidateAddMemberRequest_AdvocateMemberType() {
         addMemberRequest.getAddMember().setMemberType(MemberType.ADVOCATE);
 
-        JsonNode activeAdvocate = createActiveNode();
-        when(advocateUtil.searchAdvocateById(any(), anyString(), anyString())).thenReturn(activeAdvocate);
-        when(advocateUtil.isActive(any())).thenReturn(true);
+        when(advocateApi.advocateExists(any(), anyString())).thenReturn(true);
         when(advocateOfficeRepository.getMembers(any(), any())).thenReturn(Collections.emptyList());
 
         assertDoesNotThrow(() -> validator.validateAddMemberRequest(addMemberRequest));
 
-        verify(advocateUtil, times(2)).searchAdvocateById(any(), anyString(), anyString());
-        verify(advocateUtil, never()).searchClerkById(any(), anyString(), anyString());
+        verify(advocateApi, times(2)).advocateExists(any(), anyString());
+        verify(advocateApi, never()).searchClerksById(any(), anyString(), anyString());
     }
 
     @Test

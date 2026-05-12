@@ -2,8 +2,10 @@ package org.pucar.dristi.identityaccess.advocateoffice.internal.enrichment;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.pucar.dristi.identityaccess.advocate.AdvocateApi;
 import org.pucar.dristi.identityaccess.advocateoffice.internal.config.Configuration;
-import org.pucar.dristi.identityaccess.advocateoffice.internal.util.AdvocateUtil;
+import org.pucar.dristi.common.contract.advocate.Advocate;
+import org.pucar.dristi.common.contract.advocate.AdvocateClerk;
 import org.pucar.dristi.common.util.IndividualUtil;
 import org.pucar.dristi.common.contract.advocateoffice.AddMember;
 import org.pucar.dristi.common.contract.advocateoffice.AddMemberRequest;
@@ -20,6 +22,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -32,7 +35,7 @@ import static org.mockito.Mockito.when;
 class AdvocateOfficeEnrichmentTest {
 
     @Mock
-    private AdvocateUtil advocateUtil;
+    private AdvocateApi advocateApi;
 
     @Mock
     private IndividualUtil individualUtil;
@@ -96,11 +99,10 @@ class AdvocateOfficeEnrichmentTest {
     @Test
     void testEnrichAddMemberRequest_AddsIdAndAuditDetails() {
         // Mock the advocate and individual searches
-        JsonNode advocateNode = createMockNode("ind-123", "user-123");
-        JsonNode clerkNode = createMockNode("ind-456", "user-456");
-        when(advocateUtil.searchAdvocateById(any(), anyString(), anyString())).thenReturn(advocateNode);
-        when(advocateUtil.searchClerkById(any(), anyString(), anyString())).thenReturn(clerkNode);
-        when(advocateUtil.getIndividualId(any())).thenReturn("ind-123", "ind-456");
+        Advocate mockAdvocate = Advocate.builder().individualId("ind-123").isActive(true).build();
+        AdvocateClerk mockClerk = AdvocateClerk.builder().individualId("ind-456").isActive(true).build();
+        when(advocateApi.searchAdvocatesById(any(), anyString())).thenReturn(List.of(mockAdvocate));
+        when(advocateApi.searchClerksById(any(), anyString(), anyString())).thenReturn(List.of(mockClerk));
         JsonNode advocateIndividualNode = createMockNode("ind-123", "550e8400-e29b-41d4-a716-446655440000");
         JsonNode memberIndividualNode = createMockNode("ind-456", "660e8400-e29b-41d4-a716-446655440000");
         when(configuration.getIndividualHost()).thenReturn("http://localhost");
@@ -130,11 +132,10 @@ class AdvocateOfficeEnrichmentTest {
     @Test
     void testEnrichAddMemberRequest_GeneratesUniqueIds() {
         // Mock the advocate and individual searches
-        JsonNode advocateNode = createMockNode("ind-123", "user-123");
-        JsonNode clerkNode = createMockNode("ind-456", "user-456");
-        when(advocateUtil.searchAdvocateById(any(), anyString(), anyString())).thenReturn(advocateNode);
-        when(advocateUtil.searchClerkById(any(), anyString(), anyString())).thenReturn(clerkNode);
-        when(advocateUtil.getIndividualId(any())).thenReturn("ind-123", "ind-456");
+        Advocate mockAdvocate = Advocate.builder().individualId("ind-123").isActive(true).build();
+        AdvocateClerk mockClerk = AdvocateClerk.builder().individualId("ind-456").isActive(true).build();
+        when(advocateApi.searchAdvocatesById(any(), anyString())).thenReturn(List.of(mockAdvocate));
+        when(advocateApi.searchClerksById(any(), anyString(), anyString())).thenReturn(List.of(mockClerk));
         JsonNode advocateIndividualNode = createMockNode("ind-123", "550e8400-e29b-41d4-a716-446655440000");
         JsonNode memberIndividualNode = createMockNode("ind-456", "660e8400-e29b-41d4-a716-446655440000");
         when(configuration.getIndividualHost()).thenReturn("http://localhost");
@@ -209,11 +210,10 @@ class AdvocateOfficeEnrichmentTest {
     @Test
     void testEnrichAddMemberRequest_AuditDetailsWithDifferentUsers() {
         // Mock the advocate and individual searches
-        JsonNode advocateNode = createMockNode("ind-123", "user-123");
-        JsonNode clerkNode = createMockNode("ind-456", "user-456");
-        when(advocateUtil.searchAdvocateById(any(), anyString(), anyString())).thenReturn(advocateNode);
-        when(advocateUtil.searchClerkById(any(), anyString(), anyString())).thenReturn(clerkNode);
-        when(advocateUtil.getIndividualId(any())).thenReturn("ind-123", "ind-456");
+        Advocate mockAdvocate = Advocate.builder().individualId("ind-123").isActive(true).build();
+        AdvocateClerk mockClerk = AdvocateClerk.builder().individualId("ind-456").isActive(true).build();
+        when(advocateApi.searchAdvocatesById(any(), anyString())).thenReturn(List.of(mockAdvocate));
+        when(advocateApi.searchClerksById(any(), anyString(), anyString())).thenReturn(List.of(mockClerk));
         JsonNode advocateIndividualNode = createMockNode("ind-123", "550e8400-e29b-41d4-a716-446655440000");
         JsonNode memberIndividualNode = createMockNode("ind-456", "660e8400-e29b-41d4-a716-446655440000");
         when(configuration.getIndividualHost()).thenReturn("http://localhost");
@@ -262,11 +262,10 @@ class AdvocateOfficeEnrichmentTest {
     @Test
     void testEnrichAddMemberRequest_IsActiveSetToTrue() {
         // Mock the advocate and individual searches
-        JsonNode advocateNode = createMockNode("ind-123", "user-123");
-        JsonNode clerkNode = createMockNode("ind-456", "user-456");
-        when(advocateUtil.searchAdvocateById(any(), anyString(), anyString())).thenReturn(advocateNode);
-        when(advocateUtil.searchClerkById(any(), anyString(), anyString())).thenReturn(clerkNode);
-        when(advocateUtil.getIndividualId(any())).thenReturn("ind-123", "ind-456");
+        Advocate mockAdvocate = Advocate.builder().individualId("ind-123").isActive(true).build();
+        AdvocateClerk mockClerk = AdvocateClerk.builder().individualId("ind-456").isActive(true).build();
+        when(advocateApi.searchAdvocatesById(any(), anyString())).thenReturn(List.of(mockAdvocate));
+        when(advocateApi.searchClerksById(any(), anyString(), anyString())).thenReturn(List.of(mockClerk));
         JsonNode advocateIndividualNode = createMockNode("ind-123", "550e8400-e29b-41d4-a716-446655440000");
         JsonNode memberIndividualNode = createMockNode("ind-456", "660e8400-e29b-41d4-a716-446655440000");
         when(configuration.getIndividualHost()).thenReturn("http://localhost");

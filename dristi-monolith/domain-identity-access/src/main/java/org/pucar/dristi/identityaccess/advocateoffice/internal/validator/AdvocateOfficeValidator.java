@@ -1,8 +1,7 @@
 package org.pucar.dristi.identityaccess.advocateoffice.internal.validator;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import org.pucar.dristi.identityaccess.advocate.AdvocateApi;
 import org.pucar.dristi.identityaccess.advocateoffice.internal.repository.AdvocateOfficeRepository;
-import org.pucar.dristi.identityaccess.advocateoffice.internal.util.AdvocateUtil;
 import org.pucar.dristi.common.contract.advocateoffice.*;
 import org.pucar.dristi.common.contract.advocateoffice.*;
 import org.pucar.dristi.common.contract.advocateoffice.MemberType;
@@ -23,12 +22,12 @@ import static org.pucar.dristi.identityaccess.advocateoffice.internal.config.Ser
 public class AdvocateOfficeValidator {
 
     private final AdvocateOfficeRepository advocateOfficeRepository;
-    private final AdvocateUtil advocateUtil;
+    private final AdvocateApi advocateApi;
 
     @Autowired
-    public AdvocateOfficeValidator(AdvocateOfficeRepository advocateOfficeRepository, AdvocateUtil advocateUtil) {
+    public AdvocateOfficeValidator(AdvocateOfficeRepository advocateOfficeRepository, AdvocateApi advocateApi) {
         this.advocateOfficeRepository = advocateOfficeRepository;
-        this.advocateUtil = advocateUtil;
+        this.advocateApi = advocateApi;
     }
 
     private void validateRequestInfo(RequestInfo requestInfo){
@@ -49,22 +48,14 @@ public class AdvocateOfficeValidator {
     }
 
     private void validateActiveAdvocateById(RequestInfo requestInfo, String tenantId, String advocateId) {
-        JsonNode advocate = advocateUtil.searchAdvocateById(requestInfo, tenantId, advocateId);
-        if (advocate == null) {
-            throw new CustomException(ADVOCATE_NOT_FOUND, ADVOCATE_NOT_FOUND_MESSAGE);
-        }
-        if (!advocateUtil.isActive(advocate)) {
+        if (!advocateApi.advocateExists(requestInfo, advocateId)) {
             throw new CustomException(ADVOCATE_NOT_FOUND, ADVOCATE_NOT_FOUND_MESSAGE);
         }
     }
 
     private void validateActiveMemberById(RequestInfo requestInfo, String tenantId, MemberType memberType, String memberId) {
         if (MemberType.ADVOCATE_CLERK.equals(memberType)) {
-            JsonNode advocateClerk = advocateUtil.searchClerkById(requestInfo, tenantId, memberId);
-            if (advocateClerk == null) {
-                throw new CustomException(ADVOCATE_CLERK_NOT_FOUND, ADVOCATE_CLERK_NOT_FOUND_MESSAGE);
-            }
-            if (!advocateUtil.isActive(advocateClerk)) {
+            if (advocateApi.searchClerksById(requestInfo, tenantId, memberId).isEmpty()) {
                 throw new CustomException(ADVOCATE_CLERK_NOT_FOUND, ADVOCATE_CLERK_NOT_FOUND_MESSAGE);
             }
         } else {
