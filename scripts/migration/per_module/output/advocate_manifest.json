@@ -1,0 +1,32 @@
+{
+  "service": "advocate",
+  "source_dir": "dristi-services/advocate",
+  "target_module": "identity-access",
+  "target_subdomain": "advocate",
+  "current_package": "org.pucar.dristi",
+  "target_package": "org.pucar.dristi.identityaccess.advocate",
+  "main_file_count": 59,
+  "test_file_count": 27,
+  "has_spring_boot_main": true,
+  "duplicated_protected_classes": [
+    "MdmsUtil",
+    "IdgenUtil",
+    "WorkflowUtil",
+    "UserUtil",
+    "UrlShortenerUtil",
+    "IndividualUtil",
+    "ResponseInfoFactory",
+    "KafkaProducerService",
+    "ServiceRequestRepository"
+  ],
+  "rest_call_files": [
+    "dristi-services/advocate/src/main/java/org/pucar/dristi/repository/ServiceRequestRepository.java",
+    "dristi-services/advocate/src/main/java/org/pucar/dristi/service/WorkflowService.java",
+    "dristi-services/advocate/src/main/java/org/pucar/dristi/service/SmsNotificationService.java",
+    "dristi-services/advocate/src/main/java/org/pucar/dristi/util/UserUtil.java",
+    "dristi-services/advocate/src/main/java/org/pucar/dristi/util/IndividualUtil.java",
+    "dristi-services/advocate/src/main/java/org/pucar/dristi/util/IdgenUtil.java",
+    "dristi-services/advocate/src/main/java/org/pucar/dristi/util/WorkflowUtil.java"
+  ],
+  "source_context_path": "/advocate"
+}

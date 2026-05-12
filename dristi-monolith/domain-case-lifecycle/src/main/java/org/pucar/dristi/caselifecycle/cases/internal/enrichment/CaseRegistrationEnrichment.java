@@ -14,6 +14,7 @@ import org.pucar.dristi.caselifecycle.cases.internal.repository.CaseRepositoryV2
 import org.pucar.dristi.caselifecycle.cases.internal.service.IndividualService;
 import org.pucar.dristi.caselifecycle.cases.internal.util.*;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.*;
+import org.pucar.dristi.identityaccess.advocate.AdvocateApi;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.advocateoffice.OfficeMember;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.enums.MemberType;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.v2.*;
@@ -38,7 +39,7 @@ import org.pucar.dristi.common.models.Document;
 public class CaseRegistrationEnrichment {
 
     private IndividualService individualService;
-    private AdvocateUtil advocateUtil;
+    private AdvocateApi advocateApi;
     private AdvocateOfficeUtil advocateOfficeUtil;
     private IdgenUtil idgenUtil;
     private CaseUtil caseUtil;
@@ -49,11 +50,11 @@ public class CaseRegistrationEnrichment {
     private final CaseRepositoryV2 caseRepositoryV2;
 
     @Autowired
-    public CaseRegistrationEnrichment(IndividualService individualService, AdvocateUtil advocateUtil,
+    public CaseRegistrationEnrichment(IndividualService individualService, AdvocateApi advocateApi,
                                       AdvocateOfficeUtil advocateOfficeUtil, IdgenUtil idgenUtil,
                                       CaseUtil caseUtil, Configuration config, EtreasuryUtil etreasuryUtil, HrmsUtil hrmsUtil, ObjectMapper objectMapper, CaseRepositoryV2 caseRepositoryV2) {
         this.individualService = individualService;
-        this.advocateUtil = advocateUtil;
+        this.advocateApi = advocateApi;
         this.advocateOfficeUtil = advocateOfficeUtil;
         this.idgenUtil = idgenUtil;
         this.caseUtil = caseUtil;
@@ -573,7 +574,7 @@ public class CaseRegistrationEnrichment {
                 .anyMatch(role -> ADVOCATE_CLERK_ROLE.equals(role.getCode()));
 
         if (isAdvocate) {
-            List<Advocate> advocates = advocateUtil.fetchAdvocatesByIndividualId(requestInfo, individualId);
+            var advocates = advocateApi.searchAdvocatesByIndividualId(requestInfo, individualId);
             if (!advocates.isEmpty()) {
                 String advocateId = advocates.get(0).getId().toString();
                 for (CaseCriteria element : searchRequest.getCriteria()) {
@@ -633,7 +634,7 @@ public class CaseRegistrationEnrichment {
                 .anyMatch(role -> ADVOCATE_CLERK_ROLE.equals(role.getCode()));
 
         if (isAdvocate) {
-            List<Advocate> advocates = advocateUtil.fetchAdvocatesByIndividualId(requestInfo, individualId);
+            var advocates = advocateApi.searchAdvocatesByIndividualId(requestInfo, individualId);
             if (!advocates.isEmpty()) {
                 String advocateId = advocates.get(0).getId().toString();
                 criteria.setAdvocateId(advocateId);
@@ -692,7 +693,7 @@ public class CaseRegistrationEnrichment {
                 criteria.setIsMemberActiveInCase(isMemberActiveInCase != null && isMemberActiveInCase);
             } else {
                 // If no officeAdvocateId, use advocateId for regular advocate search
-                List<Advocate> advocates = advocateUtil.fetchAdvocatesByIndividualId(requestInfo, individualId);
+                var advocates = advocateApi.searchAdvocatesByIndividualId(requestInfo, individualId);
                 if (!advocates.isEmpty()) {
                     String advocateId = advocates.get(0).getId().toString();
                     criteria.setAdvocateId(advocateId);

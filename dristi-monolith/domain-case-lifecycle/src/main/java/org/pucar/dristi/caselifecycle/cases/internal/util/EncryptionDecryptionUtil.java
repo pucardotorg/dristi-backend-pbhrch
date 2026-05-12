@@ -9,8 +9,9 @@ import org.egov.tracer.model.CustomException;
 import org.pucar.dristi.caselifecycle.cases.internal.config.Configuration;
 import org.pucar.dristi.caselifecycle.cases.internal.config.ServiceConstants;
 import org.pucar.dristi.caselifecycle.cases.internal.service.IndividualService;
-import org.pucar.dristi.caselifecycle.cases.internal.web.models.Advocate;
+import org.pucar.dristi.common.contract.advocate.Advocate;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.AdvocateMapping;
+import org.pucar.dristi.identityaccess.advocate.AdvocateApi;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.CourtCase;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.Party;
 import org.pucar.dristi.common.util.RequestInfoUtil;
@@ -34,7 +35,7 @@ public class EncryptionDecryptionUtil {
     private final String stateLevelTenantId;
     private final boolean abacEnabled;
     private final IndividualService individualService;
-    private final AdvocateUtil advocateUtil;
+    private final AdvocateApi advocateApi;
     private final Configuration config;
 
     @Autowired
@@ -42,12 +43,12 @@ public class EncryptionDecryptionUtil {
                                     @Value("${state.level.tenant.id}") String stateLevelTenantId,
                                     @Value("${decryption.abac.enabled}") boolean abacEnabled,
                                     IndividualService individualService,
-                                    AdvocateUtil advocateUtil, Configuration config) {
+                                    AdvocateApi advocateApi, Configuration config) {
         this.encryptionService = encryptionService;
         this.stateLevelTenantId = stateLevelTenantId;
         this.abacEnabled = abacEnabled;
         this.individualService = individualService;
-        this.advocateUtil = advocateUtil;
+        this.advocateApi = advocateApi;
         this.config = config;
     }
 
@@ -158,7 +159,7 @@ public class EncryptionDecryptionUtil {
         List<AdvocateMapping> advocates = courtCase.getRepresentatives();
 
         if (isUserAdvocate && advocates != null) {
-            List<Advocate> advocateResponse = advocateUtil.fetchAdvocatesByIndividualId(requestInfo,individualId);
+            List<Advocate> advocateResponse = advocateApi.searchAdvocatesByIndividualId(requestInfo, individualId);
 
             return advocates.stream().anyMatch(advocateMapping -> advocateMapping.getAdvocateId().equalsIgnoreCase(advocateResponse.get(0).getId().toString()));
         }
