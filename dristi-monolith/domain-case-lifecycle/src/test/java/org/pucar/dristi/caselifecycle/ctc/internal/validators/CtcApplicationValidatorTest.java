@@ -14,7 +14,7 @@ import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.pucar.dristi.caselifecycle.ctc.internal.config.Configuration;
 import org.pucar.dristi.caselifecycle.ctc.internal.repository.CtcApplicationRepository;
-import org.pucar.dristi.caselifecycle.ctc.internal.util.CaseUtil;
+import org.pucar.dristi.caselifecycle.ctc.internal.util.CtcCaseHelper;
 import org.pucar.dristi.caselifecycle.ctc.internal.web.models.*;
 import org.pucar.dristi.common.contract.ctc.*;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.AdvocateMapping;
@@ -29,7 +29,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class CtcApplicationValidatorTest {
 
-    @Mock private CaseUtil caseUtil;
+    @Mock private CtcCaseHelper ctcCaseHelper;
     @Spy  private ObjectMapper objectMapper = new ObjectMapper();
     @Mock private CtcApplicationRepository repository;
     @Mock private Configuration configuration;
@@ -76,8 +76,8 @@ class CtcApplicationValidatorTest {
     @Test
     void validateCreateRequest_shouldCallValidateAndEnrichUser() {
         CourtCase courtCase = new CourtCase();
-        when(caseUtil.getCase("FIL-001", "KLKM52", requestInfo)).thenReturn(courtCase);
-        when(caseUtil.extractComplainantUuids(courtCase)).thenReturn(Map.of("user-1", "John"));
+        when(ctcCaseHelper.getCase("FIL-001", "KLKM52", requestInfo)).thenReturn(courtCase);
+        when(ctcCaseHelper.extractComplainantUuids(courtCase)).thenReturn(Map.of("user-1", "John"));
 
         CtcApplicationRequest request = CtcApplicationRequest.builder()
                 .requestInfo(requestInfo).ctcApplication(application).build();
@@ -141,7 +141,7 @@ class CtcApplicationValidatorTest {
 
     @Test
     void validateAndEnrichUser_shouldSetNotPartyWhenCaseNotFound() {
-        when(caseUtil.getCase(anyString(), anyString(), any())).thenReturn(null);
+        when(ctcCaseHelper.getCase(anyString(), anyString(), any())).thenReturn(null);
         when(configuration.getOutsiderDesignation()).thenReturn("Outside Petitioner");
 
         validator.validateAndEnrichUser(requestInfo, application);
@@ -153,8 +153,8 @@ class CtcApplicationValidatorTest {
     @Test
     void validateAndEnrichUser_shouldMatchComplainant() {
         CourtCase courtCase = new CourtCase();
-        when(caseUtil.getCase("FIL-001", "KLKM52", requestInfo)).thenReturn(courtCase);
-        when(caseUtil.extractComplainantUuids(courtCase)).thenReturn(Map.of("user-1", "John Doe"));
+        when(ctcCaseHelper.getCase("FIL-001", "KLKM52", requestInfo)).thenReturn(courtCase);
+        when(ctcCaseHelper.extractComplainantUuids(courtCase)).thenReturn(Map.of("user-1", "John Doe"));
 
         validator.validateAndEnrichUser(requestInfo, application);
 
@@ -166,9 +166,9 @@ class CtcApplicationValidatorTest {
     @Test
     void validateAndEnrichUser_shouldMatchRespondent() {
         CourtCase courtCase = new CourtCase();
-        when(caseUtil.getCase("FIL-001", "KLKM52", requestInfo)).thenReturn(courtCase);
-        when(caseUtil.extractComplainantUuids(courtCase)).thenReturn(Collections.emptyMap());
-        when(caseUtil.extractRespondentUuids(courtCase)).thenReturn(Map.of("user-1", "Jane"));
+        when(ctcCaseHelper.getCase("FIL-001", "KLKM52", requestInfo)).thenReturn(courtCase);
+        when(ctcCaseHelper.extractComplainantUuids(courtCase)).thenReturn(Collections.emptyMap());
+        when(ctcCaseHelper.extractRespondentUuids(courtCase)).thenReturn(Map.of("user-1", "Jane"));
 
         validator.validateAndEnrichUser(requestInfo, application);
 
@@ -180,10 +180,10 @@ class CtcApplicationValidatorTest {
     @Test
     void validateAndEnrichUser_shouldFallbackToPoaForCitizen() {
         CourtCase courtCase = new CourtCase();
-        when(caseUtil.getCase("FIL-001", "KLKM52", requestInfo)).thenReturn(courtCase);
-        when(caseUtil.extractComplainantUuids(courtCase)).thenReturn(Collections.emptyMap());
-        when(caseUtil.extractRespondentUuids(courtCase)).thenReturn(Collections.emptyMap());
-        when(caseUtil.extractPoaHolderUuids(courtCase)).thenReturn(Map.of("user-1", "POA Holder"));
+        when(ctcCaseHelper.getCase("FIL-001", "KLKM52", requestInfo)).thenReturn(courtCase);
+        when(ctcCaseHelper.extractComplainantUuids(courtCase)).thenReturn(Collections.emptyMap());
+        when(ctcCaseHelper.extractRespondentUuids(courtCase)).thenReturn(Collections.emptyMap());
+        when(ctcCaseHelper.extractPoaHolderUuids(courtCase)).thenReturn(Map.of("user-1", "POA Holder"));
 
         validator.validateAndEnrichUser(requestInfo, application);
 
@@ -208,7 +208,7 @@ class CtcApplicationValidatorTest {
         advocateMapping.setAdditionalDetails(additionalDetails);
         courtCase.setRepresentatives(List.of(advocateMapping));
 
-        when(caseUtil.getCase("FIL-001", "KLKM52", requestInfo)).thenReturn(courtCase);
+        when(ctcCaseHelper.getCase("FIL-001", "KLKM52", requestInfo)).thenReturn(courtCase);
 
         validator.validateAndEnrichUser(requestInfo, application);
 
@@ -225,8 +225,8 @@ class CtcApplicationValidatorTest {
 
         CourtCase courtCase = new CourtCase();
         courtCase.setRepresentatives(Collections.emptyList());
-        when(caseUtil.getCase("FIL-001", "KLKM52", requestInfo)).thenReturn(courtCase);
-        when(caseUtil.extractPoaHolderUuids(courtCase)).thenReturn(Map.of("user-1", "POA Person"));
+        when(ctcCaseHelper.getCase("FIL-001", "KLKM52", requestInfo)).thenReturn(courtCase);
+        when(ctcCaseHelper.extractPoaHolderUuids(courtCase)).thenReturn(Map.of("user-1", "POA Person"));
 
         validator.validateAndEnrichUser(requestInfo, application);
 
@@ -237,7 +237,7 @@ class CtcApplicationValidatorTest {
 
     @Test
     void validateAndEnrichUser_shouldThrowOnException() {
-        when(caseUtil.getCase(anyString(), anyString(), any())).thenThrow(new RuntimeException("case error"));
+        when(ctcCaseHelper.getCase(anyString(), anyString(), any())).thenThrow(new RuntimeException("case error"));
 
         assertThrows(CustomException.class, () -> validator.validateAndEnrichUser(requestInfo, application));
     }

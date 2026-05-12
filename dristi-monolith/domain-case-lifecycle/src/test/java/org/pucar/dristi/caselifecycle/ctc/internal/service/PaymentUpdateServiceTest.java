@@ -39,7 +39,7 @@ class PaymentUpdateServiceTest {
     @Mock private Configuration config;
     @Mock private ServiceRequestRepository serviceRequestRepository;
     @Mock private EtreasuryUtil etreasuryUtil;
-    @Mock private CaseUtil caseUtil;
+    @Mock private CtcCaseHelper ctcCaseHelper;
     @Mock private IndexerUtils indexerUtils;
     @Mock private CacheService cacheService;
 

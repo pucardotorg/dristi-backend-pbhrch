@@ -1,12 +1,9 @@
 package org.pucar.dristi.caselifecycle.ctc.internal.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
-import org.egov.common.contract.workflow.ProcessInstance;
-import org.egov.common.contract.workflow.ProcessInstanceResponse;
+import org.egov.common.contract.workflow.ProcessInstanceRequest;
 import org.egov.common.contract.workflow.State;
-import org.egov.common.contract.models.Workflow;
 import org.egov.tracer.model.CustomException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,9 +11,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.pucar.dristi.caselifecycle.ctc.internal.config.Configuration;
-import org.pucar.dristi.common.repository.ServiceRequestRepository;
 import org.pucar.dristi.caselifecycle.ctc.internal.web.models.*;
 import org.pucar.dristi.common.contract.ctc.*;
+import org.pucar.dristi.common.util.WorkflowUtil;
 
 import java.util.*;
 
@@ -26,11 +23,11 @@ import static org.mockito.Mockito.*;
 
 import org.pucar.dristi.common.models.workflow.WorkflowObject;
 import org.pucar.dristi.common.models.workflow.ProcessInstanceObject;
+
 @ExtendWith(MockitoExtension.class)
 class WorkflowServiceTest {
 
-    @Mock private ObjectMapper mapper;
-    @Mock private ServiceRequestRepository repository;
+    @Mock private WorkflowUtil workflowUtil;
     @Mock private Configuration config;
 
     @InjectMocks
@@ -54,8 +51,6 @@ class WorkflowServiceTest {
                 .workflow(workflow)
                 .build();
 
-        lenient().when(config.getWfHost()).thenReturn("http://localhost:8080");
-        lenient().when(config.getWfTransitionPath()).thenReturn("/workflow/process/_transition");
         lenient().when(config.getCtcBusinessName()).thenReturn("ctc");
         lenient().when(config.getCtcBusinessServiceName()).thenReturn("ctc-services");
     }
@@ -64,14 +59,7 @@ class WorkflowServiceTest {
     void updateWorkflowStatus_shouldSetStatusFromWorkflowResponse() {
         State state = new State();
         state.setState("APPROVED");
-
-        ProcessInstance pi = new ProcessInstance();
-        pi.setState(state);
-        ProcessInstanceResponse response = new ProcessInstanceResponse();
-        response.setProcessInstances(Collections.singletonList(pi));
-
-        when(repository.fetchResult(any(StringBuilder.class), any())).thenReturn(new HashMap<>());
-        when(mapper.convertValue(any(), eq(ProcessInstanceResponse.class))).thenReturn(response);
+        when(workflowUtil.callWorkFlow(any())).thenReturn(state);
 
         workflowService.updateWorkflowStatus(application, requestInfo);
 
@@ -80,19 +68,32 @@ class WorkflowServiceTest {
 
     @Test
     void updateWorkflowStatus_shouldThrowCustomExceptionOnError() {
-        when(repository.fetchResult(any(StringBuilder.class), any())).thenThrow(new RuntimeException("WF error"));
+        when(workflowUtil.callWorkFlow(any())).thenThrow(new RuntimeException("WF error"));
 
         assertThrows(CustomException.class, () -> workflowService.updateWorkflowStatus(application, requestInfo));
     }
 
     @Test
     void updateWorkflowStatus_shouldRethrowCustomException() {
-        when(repository.fetchResult(any(StringBuilder.class), any()))
+        when(workflowUtil.callWorkFlow(any()))
                 .thenThrow(new CustomException("WF_ERROR", "workflow error"));
 
         CustomException ex = assertThrows(CustomException.class,
                 () -> workflowService.updateWorkflowStatus(application, requestInfo));
         assertEquals("WF_ERROR", ex.getCode());
+    }
+
+    @Test
+    void callWorkFlow_shouldDelegateToCanonical() {
+        State expected = new State();
+        expected.setState("PENDING_PAYMENT");
+        ProcessInstanceRequest req = new ProcessInstanceRequest();
+        when(workflowUtil.callWorkFlow(req)).thenReturn(expected);
+
+        State result = workflowService.callWorkFlow(req);
+
+        assertEquals("PENDING_PAYMENT", result.getState());
+        verify(workflowUtil).callWorkFlow(req);
     }
 
     @Test
@@ -136,50 +137,5 @@ class WorkflowServiceTest {
         ProcessInstanceObject result = workflowService.getProcessInstance(application);
 
         assertNull(result.getAssignes());
-    }
-
-    @Test
-    void callWorkFlow_shouldReturnState() {
-        State state = new State();
-        state.setState("PENDING_PAYMENT");
-
-        ProcessInstance pi = new ProcessInstance();
-        pi.setState(state);
-        ProcessInstanceResponse response = new ProcessInstanceResponse();
-        response.setProcessInstances(Collections.singletonList(pi));
-
-        when(repository.fetchResult(any(StringBuilder.class), any())).thenReturn(new HashMap<>());
-        when(mapper.convertValue(any(), eq(ProcessInstanceResponse.class))).thenReturn(response);
-
-        State result = workflowService.callWorkFlow(null);
-
-        assertEquals("PENDING_PAYMENT", result.getState());
-    }
-
-    @Test
-    void callWorkFlow_shouldThrowCustomExceptionOnError() {
-        when(repository.fetchResult(any(StringBuilder.class), any())).thenThrow(new RuntimeException("error"));
-
-        assertThrows(CustomException.class, () -> workflowService.callWorkFlow(null));
-    }
-
-    @Test
-    void getWorkflowFromProcessInstance_shouldReturnNull_whenNull() {
-        assertNull(workflowService.getWorkflowFromProcessInstance(null));
-    }
-
-    @Test
-    void getWorkflowFromProcessInstance_shouldMapStateAndComment() {
-        State state = new State();
-        state.setState("APPROVED");
-
-        ProcessInstance pi = new ProcessInstance();
-        pi.setState(state);
-        pi.setComment("All good");
-
-        Workflow result = workflowService.getWorkflowFromProcessInstance(pi);
-
-        assertEquals("APPROVED", result.getAction());
-        assertEquals("All good", result.getComments());
     }
 }

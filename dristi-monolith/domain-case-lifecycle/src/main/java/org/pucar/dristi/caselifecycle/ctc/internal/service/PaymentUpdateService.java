@@ -42,7 +42,7 @@ public class PaymentUpdateService {
     private final Configuration config;
     private final ObjectMapper objectMapper;
     private final EtreasuryUtil etreasuryUtil;
-    private final CaseUtil caseUtil;
+    private final CtcCaseHelper ctcCaseHelper;
     private final IndexerUtils indexerUtils;
     private final CacheService cacheService;
 
@@ -51,7 +51,7 @@ public class PaymentUpdateService {
     @Autowired
     public PaymentUpdateService(WorkflowService workflowService, ObjectMapper mapper,
             CtcApplicationRepository repository, Producer producer, Configuration config, ObjectMapper objectMapper,
-            ServiceRequestRepository serviceRequestRepository, EtreasuryUtil etreasuryUtil, CaseUtil caseUtil,
+            ServiceRequestRepository serviceRequestRepository, EtreasuryUtil etreasuryUtil, CtcCaseHelper ctcCaseHelper,
             IndexerUtils indexerUtils, CacheService cacheService) {
         this.workflowService = workflowService;
         this.mapper = mapper;
@@ -61,7 +61,7 @@ public class PaymentUpdateService {
         this.objectMapper = objectMapper;
         this.serviceRequestRepository = serviceRequestRepository;
         this.etreasuryUtil = etreasuryUtil;
-        this.caseUtil = caseUtil;
+        this.ctcCaseHelper = ctcCaseHelper;
         this.indexerUtils = indexerUtils;
         this.cacheService = cacheService;
     }

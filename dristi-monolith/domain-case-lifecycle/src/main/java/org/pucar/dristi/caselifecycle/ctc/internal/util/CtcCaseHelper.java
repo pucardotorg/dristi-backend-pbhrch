@@ -21,15 +21,15 @@ import java.util.*;
 import static org.pucar.dristi.caselifecycle.ctc.internal.config.ServiceConstants.ERROR_WHILE_FETCHING_FROM_CASE;
 
 @Slf4j
-@Component("ctcCaseUtil")
-public class CaseUtil {
+@Component("ctcCaseHelper")
+public class CtcCaseHelper {
 
     private final ObjectMapper mapper;
 
     private final CaseApi caseApi;
 
     @Autowired
-    public CaseUtil(ObjectMapper mapper, CaseApi caseApi) {
+    public CtcCaseHelper(ObjectMapper mapper, CaseApi caseApi) {
         this.mapper = mapper;
         this.caseApi = caseApi;
     }

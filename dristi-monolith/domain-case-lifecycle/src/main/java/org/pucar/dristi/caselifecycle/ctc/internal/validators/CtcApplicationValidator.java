@@ -8,7 +8,7 @@ import org.egov.tracer.model.CustomException;
 import org.pucar.dristi.caselifecycle.ctc.internal.config.Configuration;
 import org.pucar.dristi.caselifecycle.ctc.internal.config.ServiceConstants;
 import org.pucar.dristi.caselifecycle.ctc.internal.repository.CtcApplicationRepository;
-import org.pucar.dristi.caselifecycle.ctc.internal.util.CaseUtil;
+import org.pucar.dristi.caselifecycle.ctc.internal.util.CtcCaseHelper;
 import org.pucar.dristi.caselifecycle.ctc.internal.web.models.*;
 import org.pucar.dristi.common.contract.ctc.*;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.AdvocateMapping;
@@ -28,14 +28,14 @@ import org.pucar.dristi.common.models.Document;
 @Slf4j
 public class CtcApplicationValidator {
 
-    private final CaseUtil caseUtil;
+    private final CtcCaseHelper ctcCaseHelper;
     private final ObjectMapper objectMapper;
     private final CtcApplicationRepository ctcApplicationRepository;
     private final Configuration configuration;
 
     @Autowired
-    public CtcApplicationValidator(CaseUtil caseUtil, ObjectMapper objectMapper, CtcApplicationRepository ctcApplicationRepository, Configuration configuration) {
-        this.caseUtil = caseUtil;
+    public CtcApplicationValidator(CtcCaseHelper ctcCaseHelper, ObjectMapper objectMapper, CtcApplicationRepository ctcApplicationRepository, Configuration configuration) {
+        this.ctcCaseHelper = ctcCaseHelper;
         this.objectMapper = objectMapper;
         this.ctcApplicationRepository = ctcApplicationRepository;
         this.configuration = configuration;
@@ -118,7 +118,7 @@ public class CtcApplicationValidator {
             boolean isAdvocate = requestInfo.getUserInfo().getRoles().stream()
                     .anyMatch(role -> role.getCode().equals(ADVOCATE_ROLE));
 
-            CourtCase courtCase = caseUtil.getCase(application.getFilingNumber(), application.getCourtId(), requestInfo);
+            CourtCase courtCase = ctcCaseHelper.getCase(application.getFilingNumber(), application.getCourtId(), requestInfo);
 
             if (courtCase == null) {
                 application.setPartyDesignation(configuration.getOutsiderDesignation());
@@ -166,12 +166,12 @@ public class CtcApplicationValidator {
 
         String userUuid = requestInfo.getUserInfo().getUuid();
 
-        Map<String, String> complainantUuids = caseUtil.extractComplainantUuids(courtCase);
+        Map<String, String> complainantUuids = ctcCaseHelper.extractComplainantUuids(courtCase);
         if (complainantUuids.containsKey(userUuid)) {
             return new UserMatchResult(complainantUuids.get(userUuid), COMPLAINANT);
         }
 
-        Map<String, String> respondentUuids = caseUtil.extractRespondentUuids(courtCase);
+        Map<String, String> respondentUuids = ctcCaseHelper.extractRespondentUuids(courtCase);
         if (respondentUuids.containsKey(userUuid)) {
             return new UserMatchResult(respondentUuids.get(userUuid), ACCUSED);
         }
@@ -212,7 +212,7 @@ public class CtcApplicationValidator {
 
     private UserMatchResult findUserFromPoaHolder(RequestInfo requestInfo, CourtCase courtCase) {
 
-        Map<String, String> uuidsNameMapping = caseUtil.extractPoaHolderUuids(courtCase);
+        Map<String, String> uuidsNameMapping = ctcCaseHelper.extractPoaHolderUuids(courtCase);
 
         String userUuid = requestInfo.getUserInfo().getUuid();
 
