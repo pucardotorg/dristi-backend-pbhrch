@@ -9,9 +9,9 @@ import org.egov.tracer.model.CustomException;
 import org.pucar.dristi.caselifecycle.cases.internal.config.Configuration;
 import org.pucar.dristi.caselifecycle.cases.internal.repository.CaseRepository;
 import org.pucar.dristi.caselifecycle.cases.internal.service.IndividualService;
-import org.pucar.dristi.caselifecycle.cases.internal.util.AdvocateOfficeUtil;
 import org.pucar.dristi.caselifecycle.locksvc.LockApi;
 import org.pucar.dristi.identityaccess.advocate.AdvocateApi;
+import org.pucar.dristi.identityaccess.advocateoffice.AdvocateOfficeApi;
 import org.pucar.dristi.common.util.FileStoreUtil;
 import org.pucar.dristi.common.util.MdmsUtil;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.*;
@@ -48,7 +48,7 @@ public class CaseRegistrationValidator {
 
     private AdvocateApi advocateApi;
 
-    private AdvocateOfficeUtil advocateOfficeUtil;
+    private AdvocateOfficeApi advocateOfficeApi;
 
     private Configuration config;
 
@@ -59,14 +59,14 @@ public class CaseRegistrationValidator {
     @Autowired
     public CaseRegistrationValidator(IndividualService indService, CaseRepository caseRepo,
                                      MdmsUtil mdmsUtil, FileStoreUtil fileStoreUtil, AdvocateApi advocateApi,
-                                     AdvocateOfficeUtil advocateOfficeUtil,
+                                     AdvocateOfficeApi advocateOfficeApi,
                                      Configuration config, LockApi lockApi, ObjectMapper objectMapper) {
         this.individualService = indService;
         this.repository = caseRepo;
         this.mdmsUtil = mdmsUtil;
         this.fileStoreUtil = fileStoreUtil;
         this.advocateApi = advocateApi;
-        this.advocateOfficeUtil = advocateOfficeUtil;
+        this.advocateOfficeApi = advocateOfficeApi;
         this.config = config;
         this.lockApi = lockApi;
         this.objectMapper = objectMapper;
@@ -207,7 +207,7 @@ public class CaseRegistrationValidator {
             // Check 2: Is the user a member of the advocate's office?
             if (!isAuthorized) {
                 try {
-                    isAuthorized = advocateOfficeUtil.isUserMemberOfAdvocateOffice(
+                    isAuthorized = advocateOfficeApi.isUserMemberOfAdvocateOffice(
                             requestInfo,
                             tenantId,
                             UUID.fromString(rep.getAdvocateId()),

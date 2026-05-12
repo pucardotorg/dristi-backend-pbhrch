@@ -1,0 +1,2 @@
+dristi-monolith/domain-identity-access/src/main/java/org/pucar/dristi/identityaccess/advocateoffice/internal/util/IndividualUtil.java has 2 method(s)/overload(s) absent from canonical: [('getUserUuid', 1), ('searchIndividualByIndividualId', 3)]
+dristi-monolith/domain-identity-access/src/main/java/org/pucar/dristi/identityaccess/advocateoffice/internal/util/IdgenUtil.java has 1 method(s)/overload(s) absent from canonical: [('getIdList', 5)]
