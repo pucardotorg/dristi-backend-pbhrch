@@ -72,4 +72,15 @@ public class Configuration {
     @Value("${esign.y.coordinate.offset}")
     private float eSignYCoordinateOffset;
 
+    // HAND-CURATED — interceptor port (PR 2)
+    // redirect-flow properties used by InterceptorApiController#redirectHandler.
+    // OAuth fields (oathHost/.../grantType) intentionally dropped: their only
+    // consumer was the interceptor's oAuthForDristi() bounce, which existed
+    // solely to authenticate the now-eliminated REST hop to e-sign-svc.
+    @Value("${drishti.esign.redirect.url}")
+    private String redirectUrl;
+
+    @Value("${drishti.esign.landing.page.redirect.url}")
+    private String landingPageRedirectUrl;
+
 }
