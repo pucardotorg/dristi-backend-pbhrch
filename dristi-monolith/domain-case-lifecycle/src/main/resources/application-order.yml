@@ -57,7 +57,7 @@ egov:
     create:
       path: /_createnovalidate
     search:
-      path: /user/v1/_search
+      path: /user/_search
     update:
       path: /_updatenovalidate
   idgen:

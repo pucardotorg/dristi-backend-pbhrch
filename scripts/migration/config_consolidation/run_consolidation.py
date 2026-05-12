@@ -108,6 +108,41 @@ DROP_INFRA_KEYS = {
 
 ALL_DROPPED = DROP_KEYS | DROP_INFRA_KEYS
 
+# Per-service dead keys: properties present in a service's upstream
+# application.properties but with no Java reader remaining in the
+# migrated subdomain because intra-DRISTI REST calls were rewritten as
+# direct *Api calls (PIPELINE_RULES.md rule 32 + rule 37). Without this
+# map, Pipeline 5 mechanically carries the dead config into the
+# subdomain overlay; the next migration's regen then re-introduces
+# whatever the prior REST→direct cleanup commit deleted by hand.
+#
+# Conventions:
+# - Outer key = source service name passed via --service (matches the
+#   directory under dristi-services/ or integration-services/, not the
+#   subdomain).
+# - Each entry is the set of property keys to drop FOR THIS SERVICE ONLY.
+#   Other services that legitimately read the same key are unaffected.
+# - Grow the map when a service's REST→direct conversion lands; cite
+#   the cleanup commit that originally removed the keys so future
+#   readers can verify the keys are still unread.
+SERVICE_DEAD_KEYS: dict[str, set[str]] = {
+    # d18c5b552 refactor(ab-diary): drop dead CaseUtil ...
+    # ab-diary now reads CaseApi directly; no @Value("${dristi.case...")
+    # consumers remain in caselifecycle/abdiary/internal/.
+    "ab-diary": {
+        "dristi.case.host",
+        "dristi.case.search.path",
+    },
+    # a60c86086 refactor(payment-calculator): REST→direct via CaseApi ...
+    # payment-calculator uses CaseApi directly; no @Value("${egov.case...")
+    # consumers remain in payments/calculator/internal/.
+    "payment-calculator-svc": {
+        "egov.case.host",
+        "egov.case.path",
+        "egov.case.search.path",
+    },
+}
+
 # Naming: subdomain prefix for the per-service yml file (matches the
 # Spring profile name).
 DEFAULT_SUBDOMAIN_OVERRIDES = {
@@ -294,8 +329,12 @@ def main() -> int:
     # all keys → {service: value}
     key_values: dict[str, dict[str, str]] = defaultdict(dict)
     for svc, props in by_service.items():
+        dead_for_svc = SERVICE_DEAD_KEYS.get(svc, set())
         for key, value in props.items():
             if key in ALL_DROPPED:
+                continue
+            if key in dead_for_svc:
+                # No reader in migrated subdomain (REST→direct cleanup).
                 continue
             key_values[key][svc] = value
 

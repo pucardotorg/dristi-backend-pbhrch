@@ -64,7 +64,7 @@ egov:
     update:
       path: /_updatenovalidate
   idgen:
-    host: http://localhost:8085
+    host: http://localhost:8081
     path: /egov-idgen/id/_generate
     digitalized:
       document:

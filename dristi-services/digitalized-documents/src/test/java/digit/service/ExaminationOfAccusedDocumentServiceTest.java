@@ -3,7 +3,7 @@ package digit.service;
 import digit.config.Configuration;
 import digit.enrichment.DigitalizedDocumentEnrichment;
 import digit.enrichment.ExaminationOfAccusedEnrichment;
-import org.pucar.dristi.common.kafka.Producer;
+import digit.kafka.Producer;
 import digit.util.FileStoreUtil;
 import digit.validators.ExaminationOfAccusedValidator;
 import digit.web.models.*;
