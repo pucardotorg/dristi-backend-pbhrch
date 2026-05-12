@@ -1,0 +1,24 @@
+# Classes lifted from internal/web/models/ to dristi-common/contract/<subdomain>/
+org.pucar.dristi.common.contract.advocateoffice.AddMember
+org.pucar.dristi.common.contract.advocateoffice.AddMemberRequest
+org.pucar.dristi.common.contract.advocateoffice.AddMemberResponse
+org.pucar.dristi.common.contract.advocateoffice.CaseMemberInfo
+org.pucar.dristi.common.contract.advocateoffice.CaseMemberSearchCriteria
+org.pucar.dristi.common.contract.advocateoffice.CaseMemberSearchRequest
+org.pucar.dristi.common.contract.advocateoffice.CaseMemberSearchResponse
+org.pucar.dristi.common.contract.advocateoffice.CheckMemberStatusRequest
+org.pucar.dristi.common.contract.advocateoffice.CheckMemberStatusResponse
+org.pucar.dristi.common.contract.advocateoffice.LeaveOffice
+org.pucar.dristi.common.contract.advocateoffice.LeaveOfficeRequest
+org.pucar.dristi.common.contract.advocateoffice.LeaveOfficeResponse
+org.pucar.dristi.common.contract.advocateoffice.MemberSearchCriteria
+org.pucar.dristi.common.contract.advocateoffice.MemberSearchRequest
+org.pucar.dristi.common.contract.advocateoffice.MemberSearchResponse
+org.pucar.dristi.common.contract.advocateoffice.Pagination
+org.pucar.dristi.common.contract.advocateoffice.ProcessCaseMember
+org.pucar.dristi.common.contract.advocateoffice.ProcessCaseMemberRequest
+org.pucar.dristi.common.contract.advocateoffice.ProcessCaseMemberResponse
+org.pucar.dristi.common.contract.advocateoffice.UpdateMemberAccess
+org.pucar.dristi.common.contract.advocateoffice.UpdateMemberAccessRequest
+org.pucar.dristi.common.contract.advocateoffice.UpdateMemberAccessResponse
+org.pucar.dristi.common.contract.advocateoffice.package-info

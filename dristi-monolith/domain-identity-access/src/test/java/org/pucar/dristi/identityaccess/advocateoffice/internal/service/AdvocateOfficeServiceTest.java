@@ -5,9 +5,10 @@ import org.pucar.dristi.identityaccess.advocateoffice.internal.enrichment.Advoca
 import org.pucar.dristi.common.kafka.Producer;
 import org.pucar.dristi.identityaccess.advocateoffice.internal.repository.AdvocateOfficeRepository;
 import org.pucar.dristi.identityaccess.advocateoffice.internal.validator.AdvocateOfficeValidator;
-import org.pucar.dristi.identityaccess.advocateoffice.internal.web.models.*;
-import org.pucar.dristi.identityaccess.advocateoffice.internal.web.models.enums.AccessType;
-import org.pucar.dristi.identityaccess.advocateoffice.internal.web.models.enums.MemberType;
+import org.pucar.dristi.common.contract.advocateoffice.*;
+import org.pucar.dristi.common.contract.advocateoffice.*;
+import org.pucar.dristi.common.contract.advocateoffice.AccessType;
+import org.pucar.dristi.common.contract.advocateoffice.MemberType;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
 import org.egov.tracer.model.CustomException;

@@ -2,9 +2,10 @@ package org.pucar.dristi.identityaccess.advocateoffice.internal.web.controllers;
 
 import org.pucar.dristi.identityaccess.advocateoffice.internal.service.AdvocateOfficeService;
 import org.pucar.dristi.common.util.ResponseInfoFactory;
-import org.pucar.dristi.identityaccess.advocateoffice.internal.web.models.*;
-import org.pucar.dristi.identityaccess.advocateoffice.internal.web.models.enums.AccessType;
-import org.pucar.dristi.identityaccess.advocateoffice.internal.web.models.enums.MemberType;
+import org.pucar.dristi.common.contract.advocateoffice.*;
+import org.pucar.dristi.common.contract.advocateoffice.*;
+import org.pucar.dristi.common.contract.advocateoffice.AccessType;
+import org.pucar.dristi.common.contract.advocateoffice.MemberType;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
 import org.egov.common.contract.response.ResponseInfo;

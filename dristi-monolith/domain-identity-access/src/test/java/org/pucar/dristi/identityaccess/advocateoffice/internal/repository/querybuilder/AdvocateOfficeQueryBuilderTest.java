@@ -1,9 +1,9 @@
 package org.pucar.dristi.identityaccess.advocateoffice.internal.repository.querybuilder;
 
-import org.pucar.dristi.identityaccess.advocateoffice.internal.web.models.MemberSearchCriteria;
-import org.pucar.dristi.identityaccess.advocateoffice.internal.web.models.Pagination;
-import org.pucar.dristi.identityaccess.advocateoffice.internal.web.models.enums.MemberType;
-import org.pucar.dristi.identityaccess.advocateoffice.internal.web.models.enums.Order;
+import org.pucar.dristi.common.contract.advocateoffice.MemberSearchCriteria;
+import org.pucar.dristi.common.contract.advocateoffice.Pagination;
+import org.pucar.dristi.common.contract.advocateoffice.MemberType;
+import org.pucar.dristi.common.contract.advocateoffice.Order;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

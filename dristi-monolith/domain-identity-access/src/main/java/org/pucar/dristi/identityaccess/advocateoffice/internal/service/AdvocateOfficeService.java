@@ -7,7 +7,8 @@ import org.pucar.dristi.identityaccess.advocateoffice.internal.repository.Advoca
 import org.pucar.dristi.identityaccess.advocateoffice.internal.util.CacheUtil;
 import org.pucar.dristi.identityaccess.advocateoffice.internal.util.CaseUtil;
 import org.pucar.dristi.identityaccess.advocateoffice.internal.validator.AdvocateOfficeValidator;
-import org.pucar.dristi.identityaccess.advocateoffice.internal.web.models.*;
+import org.pucar.dristi.common.contract.advocateoffice.*;
+import org.pucar.dristi.common.contract.advocateoffice.*;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;

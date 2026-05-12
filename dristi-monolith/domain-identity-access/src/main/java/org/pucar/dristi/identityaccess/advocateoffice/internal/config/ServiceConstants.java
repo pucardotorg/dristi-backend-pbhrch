@@ -4,6 +4,7 @@ package org.pucar.dristi.identityaccess.advocateoffice.internal.config;
 import org.springframework.stereotype.Component;
 
 
+import org.pucar.dristi.common.contract.advocateoffice.AddMember;
 @Component("advocateofficeServiceConstants")
 public class ServiceConstants {
 

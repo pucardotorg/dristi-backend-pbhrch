@@ -1,8 +1,8 @@
 package org.pucar.dristi.identityaccess.advocateoffice.internal.repository.rowmapper;
 
-import org.pucar.dristi.identityaccess.advocateoffice.internal.web.models.AddMember;
-import org.pucar.dristi.identityaccess.advocateoffice.internal.web.models.enums.AccessType;
-import org.pucar.dristi.identityaccess.advocateoffice.internal.web.models.enums.MemberType;
+import org.pucar.dristi.common.contract.advocateoffice.AddMember;
+import org.pucar.dristi.common.contract.advocateoffice.AccessType;
+import org.pucar.dristi.common.contract.advocateoffice.MemberType;
 import org.egov.tracer.model.CustomException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

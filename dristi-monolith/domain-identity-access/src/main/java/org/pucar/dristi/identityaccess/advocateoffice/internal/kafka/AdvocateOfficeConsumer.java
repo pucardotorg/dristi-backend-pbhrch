@@ -3,9 +3,10 @@ package org.pucar.dristi.identityaccess.advocateoffice.internal.kafka;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.pucar.dristi.identityaccess.advocateoffice.internal.service.AdvocateOfficeService;
 import org.pucar.dristi.identityaccess.advocateoffice.internal.util.CaseUtil;
-import org.pucar.dristi.identityaccess.advocateoffice.internal.web.models.*;
-import org.pucar.dristi.identityaccess.advocateoffice.internal.web.models.enums.CaseMappingFilterStatus;
-import org.pucar.dristi.identityaccess.advocateoffice.internal.web.models.enums.MemberType;
+import org.pucar.dristi.common.contract.advocateoffice.*;
+import org.pucar.dristi.common.contract.advocateoffice.*;
+import org.pucar.dristi.common.contract.advocateoffice.CaseMappingFilterStatus;
+import org.pucar.dristi.common.contract.advocateoffice.MemberType;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static org.pucar.dristi.identityaccess.advocateoffice.internal.web.models.enums.AccessType.ALL_CASES;
+import static org.pucar.dristi.common.contract.advocateoffice.AccessType.ALL_CASES;
 
 @Component
 @Slf4j

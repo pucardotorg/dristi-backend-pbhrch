@@ -1,8 +1,8 @@
 package org.pucar.dristi.identityaccess.advocateoffice.internal.repository.rowmapper;
 
-import org.pucar.dristi.identityaccess.advocateoffice.internal.web.models.AddMember;
-import org.pucar.dristi.identityaccess.advocateoffice.internal.web.models.enums.AccessType;
-import org.pucar.dristi.identityaccess.advocateoffice.internal.web.models.enums.MemberType;
+import org.pucar.dristi.common.contract.advocateoffice.AddMember;
+import org.pucar.dristi.common.contract.advocateoffice.AccessType;
+import org.pucar.dristi.common.contract.advocateoffice.MemberType;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.models.AuditDetails;
 import org.egov.tracer.model.CustomException;
