@@ -2,8 +2,9 @@ package org.pucar.dristi.identityaccess.advocateoffice.internal.enrichment;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.pucar.dristi.identityaccess.advocateoffice.internal.config.Configuration;
 import org.pucar.dristi.identityaccess.advocateoffice.internal.util.AdvocateUtil;
-import org.pucar.dristi.identityaccess.advocateoffice.internal.util.IndividualUtil;
+import org.pucar.dristi.common.util.IndividualUtil;
 import org.pucar.dristi.common.contract.advocateoffice.AddMember;
 import org.pucar.dristi.common.contract.advocateoffice.AddMemberRequest;
 import org.pucar.dristi.common.contract.advocateoffice.LeaveOffice;
@@ -35,6 +36,9 @@ class AdvocateOfficeEnrichmentTest {
 
     @Mock
     private IndividualUtil individualUtil;
+
+    @Mock
+    private Configuration configuration;
 
     @InjectMocks
     private AdvocateOfficeEnrichment enrichment;
@@ -94,13 +98,14 @@ class AdvocateOfficeEnrichmentTest {
         // Mock the advocate and individual searches
         JsonNode advocateNode = createMockNode("ind-123", "user-123");
         JsonNode clerkNode = createMockNode("ind-456", "user-456");
-        JsonNode individualNode = createMockNode("ind-123", "user-uuid-123");
-        
         when(advocateUtil.searchAdvocateById(any(), anyString(), anyString())).thenReturn(advocateNode);
         when(advocateUtil.searchClerkById(any(), anyString(), anyString())).thenReturn(clerkNode);
         when(advocateUtil.getIndividualId(any())).thenReturn("ind-123", "ind-456");
-        when(individualUtil.searchIndividualByIndividualId(any(), anyString(), anyString())).thenReturn(individualNode);
-        when(individualUtil.getUserUuid(any())).thenReturn("550e8400-e29b-41d4-a716-446655440000", "660e8400-e29b-41d4-a716-446655440000");
+        JsonNode advocateIndividualNode = createMockNode("ind-123", "550e8400-e29b-41d4-a716-446655440000");
+        JsonNode memberIndividualNode = createMockNode("ind-456", "660e8400-e29b-41d4-a716-446655440000");
+        when(configuration.getIndividualHost()).thenReturn("http://localhost");
+        when(configuration.getIndividualSearchEndPoint()).thenReturn("/individual/v1/_search");
+        when(individualUtil.getIndividual(any(), any())).thenReturn(advocateIndividualNode, memberIndividualNode);
 
         assertNull(addMemberRequest.getAddMember().getId());
         assertNull(addMemberRequest.getAddMember().getAuditDetails());
@@ -127,13 +132,14 @@ class AdvocateOfficeEnrichmentTest {
         // Mock the advocate and individual searches
         JsonNode advocateNode = createMockNode("ind-123", "user-123");
         JsonNode clerkNode = createMockNode("ind-456", "user-456");
-        JsonNode individualNode = createMockNode("ind-123", "user-uuid-123");
-        
         when(advocateUtil.searchAdvocateById(any(), anyString(), anyString())).thenReturn(advocateNode);
         when(advocateUtil.searchClerkById(any(), anyString(), anyString())).thenReturn(clerkNode);
         when(advocateUtil.getIndividualId(any())).thenReturn("ind-123", "ind-456");
-        when(individualUtil.searchIndividualByIndividualId(any(), anyString(), anyString())).thenReturn(individualNode);
-        when(individualUtil.getUserUuid(any())).thenReturn("550e8400-e29b-41d4-a716-446655440000", "660e8400-e29b-41d4-a716-446655440000");
+        JsonNode advocateIndividualNode = createMockNode("ind-123", "550e8400-e29b-41d4-a716-446655440000");
+        JsonNode memberIndividualNode = createMockNode("ind-456", "660e8400-e29b-41d4-a716-446655440000");
+        when(configuration.getIndividualHost()).thenReturn("http://localhost");
+        when(configuration.getIndividualSearchEndPoint()).thenReturn("/individual/v1/_search");
+        when(individualUtil.getIndividual(any(), any())).thenReturn(advocateIndividualNode, memberIndividualNode);
 
         UUID testOfficeAdvocateId1 = UUID.randomUUID();
         UUID testMemberId1 = UUID.randomUUID();
@@ -205,13 +211,14 @@ class AdvocateOfficeEnrichmentTest {
         // Mock the advocate and individual searches
         JsonNode advocateNode = createMockNode("ind-123", "user-123");
         JsonNode clerkNode = createMockNode("ind-456", "user-456");
-        JsonNode individualNode = createMockNode("ind-123", "user-uuid-123");
-        
         when(advocateUtil.searchAdvocateById(any(), anyString(), anyString())).thenReturn(advocateNode);
         when(advocateUtil.searchClerkById(any(), anyString(), anyString())).thenReturn(clerkNode);
         when(advocateUtil.getIndividualId(any())).thenReturn("ind-123", "ind-456");
-        when(individualUtil.searchIndividualByIndividualId(any(), anyString(), anyString())).thenReturn(individualNode);
-        when(individualUtil.getUserUuid(any())).thenReturn("550e8400-e29b-41d4-a716-446655440000", "660e8400-e29b-41d4-a716-446655440000");
+        JsonNode advocateIndividualNode = createMockNode("ind-123", "550e8400-e29b-41d4-a716-446655440000");
+        JsonNode memberIndividualNode = createMockNode("ind-456", "660e8400-e29b-41d4-a716-446655440000");
+        when(configuration.getIndividualHost()).thenReturn("http://localhost");
+        when(configuration.getIndividualSearchEndPoint()).thenReturn("/individual/v1/_search");
+        when(individualUtil.getIndividual(any(), any())).thenReturn(advocateIndividualNode, memberIndividualNode);
 
         String userUuid1 = "user-uuid-111";
         RequestInfo requestInfo1 = RequestInfo.builder()
@@ -257,13 +264,14 @@ class AdvocateOfficeEnrichmentTest {
         // Mock the advocate and individual searches
         JsonNode advocateNode = createMockNode("ind-123", "user-123");
         JsonNode clerkNode = createMockNode("ind-456", "user-456");
-        JsonNode individualNode = createMockNode("ind-123", "user-uuid-123");
-        
         when(advocateUtil.searchAdvocateById(any(), anyString(), anyString())).thenReturn(advocateNode);
         when(advocateUtil.searchClerkById(any(), anyString(), anyString())).thenReturn(clerkNode);
         when(advocateUtil.getIndividualId(any())).thenReturn("ind-123", "ind-456");
-        when(individualUtil.searchIndividualByIndividualId(any(), anyString(), anyString())).thenReturn(individualNode);
-        when(individualUtil.getUserUuid(any())).thenReturn("550e8400-e29b-41d4-a716-446655440000", "660e8400-e29b-41d4-a716-446655440000");
+        JsonNode advocateIndividualNode = createMockNode("ind-123", "550e8400-e29b-41d4-a716-446655440000");
+        JsonNode memberIndividualNode = createMockNode("ind-456", "660e8400-e29b-41d4-a716-446655440000");
+        when(configuration.getIndividualHost()).thenReturn("http://localhost");
+        when(configuration.getIndividualSearchEndPoint()).thenReturn("/individual/v1/_search");
+        when(individualUtil.getIndividual(any(), any())).thenReturn(advocateIndividualNode, memberIndividualNode);
 
         AddMember addMember = addMemberRequest.getAddMember();
         addMember.setIsActive(false);

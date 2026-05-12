@@ -8,7 +8,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.pucar.dristi.identityaccess.advocate.internal.config.Configuration;
-import org.pucar.dristi.identityaccess.advocate.internal.util.IndividualUtil;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.pucar.dristi.common.util.IndividualUtil;
 import org.pucar.dristi.common.contract.advocate.Advocate;
 import org.pucar.dristi.common.contract.advocate.AdvocateRequest;
 
@@ -16,19 +17,17 @@ import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
  class IndividualServiceTest {
 
     @Mock
-    IndividualUtil individualUtil;
-
-    @Mock
     Configuration configuration;
 
     @Mock
-    private  IndividualUtil individualUtils;
+    private IndividualUtil individualUtils;
 
     @InjectMocks
     IndividualService individualService;
@@ -48,9 +47,10 @@ import static org.mockito.Mockito.when;
         // Mock the behavior of dependent components
         when(configuration.getIndividualHost()).thenReturn("http://example.com");
         when(configuration.getIndividualSearchEndpoint()).thenReturn("/search");
+        when(individualUtils.getIndividual(any(), any())).thenReturn(new ObjectMapper().createObjectNode());
 
         // Call the method under test
-        Boolean result = individualService.searchIndividual(advocateRequest.getRequestInfo(),advocateRequest.getAdvocate().getIndividualId(), new HashMap<>());
+        Boolean result = individualService.searchIndividual(advocateRequest.getRequestInfo(), advocateRequest.getAdvocate().getIndividualId(), new HashMap<>());
 
         // Assertions
         assertNotNull(result);

@@ -1,8 +1,9 @@
 package org.pucar.dristi.identityaccess.advocateoffice.internal.enrichment;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import org.pucar.dristi.identityaccess.advocateoffice.internal.config.Configuration;
 import org.pucar.dristi.identityaccess.advocateoffice.internal.util.AdvocateUtil;
-import org.pucar.dristi.identityaccess.advocateoffice.internal.util.IndividualUtil;
+import org.pucar.dristi.common.util.IndividualUtil;
 import org.pucar.dristi.common.contract.advocateoffice.AddMember;
 import org.pucar.dristi.common.contract.advocateoffice.AddMemberRequest;
 import org.pucar.dristi.common.contract.advocateoffice.LeaveOffice;
@@ -16,6 +17,7 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
@@ -28,11 +30,15 @@ public class AdvocateOfficeEnrichment {
 
     private final AdvocateUtil advocateUtil;
     private final IndividualUtil individualUtil;
+    private final Configuration configuration;
 
     @Autowired
-    public AdvocateOfficeEnrichment(AdvocateUtil advocateUtil, IndividualUtil individualUtil) {
+    public AdvocateOfficeEnrichment(AdvocateUtil advocateUtil,
+                                    @Qualifier("commonIndividualUtil") IndividualUtil individualUtil,
+                                    Configuration configuration) {
         this.advocateUtil = advocateUtil;
         this.individualUtil = individualUtil;
+        this.configuration = configuration;
     }
 
     private String getIndividualIdFromAdvocateId(RequestInfo requestInfo, String tenantId, String advocateId){
@@ -45,14 +51,27 @@ public class AdvocateOfficeEnrichment {
         return advocateUtil.getIndividualId(advocate);
     }
 
-    private String getUserUuidFromIndividualId(RequestInfo requestInfo, String tenantId, String individualId){
-        JsonNode individual = individualUtil.searchIndividualByIndividualId(requestInfo, tenantId, individualId);
-        if (individual == null) {
+    private String getUserUuidFromIndividualId(RequestInfo requestInfo, String tenantId, String individualId) {
+        StringBuilder uri = new StringBuilder(configuration.getIndividualHost())
+                .append(configuration.getIndividualSearchEndPoint())
+                .append("?limit=1&offset=0&tenantId=").append(tenantId);
+
+        java.util.Map<String, Object> individual = new java.util.HashMap<>();
+        individual.put("individualId", individualId);
+        java.util.Map<String, Object> request = new java.util.HashMap<>();
+        request.put("RequestInfo", requestInfo);
+        request.put("Individual", individual);
+
+        JsonNode node = individualUtil.getIndividual(request, uri);
+        if (node == null || node.isMissingNode() || node.isEmpty()) {
             throw new CustomException(INDIVIDUAL_NOT_FOUND,
                     String.format("Individual not found for individual id %s", individualId));
         }
-
-        return individualUtil.getUserUuid(individual);
+        JsonNode userUuidNode = node.path("userUuid");
+        if (userUuidNode.isMissingNode() || userUuidNode.isNull() || userUuidNode.asText().isBlank()) {
+            return null;
+        }
+        return userUuidNode.asText();
     }
 
     private String getIndividualIdFromClerkId(RequestInfo requestInfo, String tenantId, String clerkId){
