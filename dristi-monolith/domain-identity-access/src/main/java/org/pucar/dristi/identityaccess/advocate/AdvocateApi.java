@@ -2,6 +2,7 @@ package org.pucar.dristi.identityaccess.advocate;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.pucar.dristi.common.contract.advocate.Advocate;
+import org.pucar.dristi.common.contract.advocate.AdvocateClerk;
 
 import java.util.List;
 import java.util.Set;
@@ -45,4 +46,13 @@ public interface AdvocateApi {
      * @param advocateIds list of advocate registration UUIDs to look up
      */
     Set<String> getAdvocateIndividualIds(RequestInfo requestInfo, List<String> advocateIds);
+
+    /**
+     * Returns active advocate clerks with the given registration ID.
+     *
+     * @param requestInfo eGov request envelope carrying caller identity
+     * @param tenantId    tenant identifier scoping the search
+     * @param clerkId     advocate clerk registration UUID
+     */
+    List<AdvocateClerk> searchClerksById(RequestInfo requestInfo, String tenantId, String clerkId);
 }

@@ -483,13 +483,6 @@ process:
     specific:
       access:
         topic: process-case-specific-access
-dristi:
-  advocate:
-    office:
-      host: http://localhost:8082
-      search:
-        member:
-          endpoint: /advocate-office-management/v1/_searchMember
 batch:
   size: 50
 egov.enc.mdms.security.policy.court.case.new: CourtCaseNew

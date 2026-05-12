@@ -1,4 +1,5 @@
-package org.pucar.dristi.caselifecycle.cases.internal.web.models.advocateoffice;
+// HAND-CURATED — lifted by Phase 35 (contract-lift)
+package org.pucar.dristi.common.contract.advocateoffice;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.Valid;
@@ -8,24 +9,18 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.egov.common.contract.request.RequestInfo;
-import org.pucar.dristi.caselifecycle.cases.internal.web.models.Pagination;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public class MemberSearchRequest {
+public class ProcessCaseMemberRequest {
 
     @JsonProperty("RequestInfo")
-    @NotNull
-    @Valid
     private RequestInfo requestInfo;
 
-    @JsonProperty("searchCriteria")
+    @JsonProperty("processCaseMember")
     @Valid
-    private MemberSearchCriteria searchCriteria;
-
-    @JsonProperty("pagination")
-    @Valid
-    private Pagination pagination;
+    @NotNull
+    private ProcessCaseMember processCaseMember;
 }

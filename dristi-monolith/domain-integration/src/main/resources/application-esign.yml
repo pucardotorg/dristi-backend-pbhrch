@@ -84,11 +84,14 @@ esign:
   y:
     coordinate:
       offset: 20
-# HAND-CURATED — interceptor port (PR 2). Drishti.esign.{host,endpoint}
+# HAND-CURATED — interceptor port (PR 2 + monolith/main merge). Drishti.esign.{host,endpoint}
 # intentionally NOT carried over from esign-interceptor — those keys
 # pointed at the now-eliminated REST hop and have no consumer post-Rule-32.
 # drishti.oath.* + dristhi.oath.* (typo preserved upstream) also dropped
 # along with InterceptorService.oAuthForDristi().
+# Note: run_consolidation.py does not yet handle two-source-services-into-
+# one-subdomain. Tier 2 follow-up to teach the script to merge same-subdomain
+# property sets; for now these keys must be re-added by hand after every regen.
 drishti:
   esign:
     redirect:

@@ -1,4 +1,5 @@
-package org.pucar.dristi.caselifecycle.cases.internal.web.models.advocateoffice;
+// HAND-CURATED — lifted by Phase 35 (contract-lift)
+package org.pucar.dristi.common.contract.advocateoffice;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.Valid;
@@ -7,11 +8,16 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.egov.common.contract.response.ResponseInfo;
-import org.pucar.dristi.caselifecycle.cases.internal.web.models.Pagination;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * MemberSearchResponse
+ */
+@Validated
+@jakarta.annotation.Generated(value = "org.egov.codegen.SpringBootCodegen", date = "2026-01-20T20:30:21.456282080+05:30[Asia/Kolkata]")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -20,24 +26,25 @@ public class MemberSearchResponse {
 
     @JsonProperty("ResponseInfo")
     @Valid
-    private ResponseInfo responseInfo;
+    private ResponseInfo responseInfo = null;
 
     @JsonProperty("members")
     @Valid
-    private List<OfficeMember> members;
+    private List<AddMember> members = null;
 
     @JsonProperty("pagination")
     @Valid
-    private Pagination pagination;
+    private Pagination pagination = null;
 
     @JsonProperty("totalCount")
-    private Integer totalCount;
+    private Integer totalCount = null;
 
-    public MemberSearchResponse addMembersItem(OfficeMember membersItem) {
+    public MemberSearchResponse addMembersItem(AddMember membersItem) {
         if (this.members == null) {
             this.members = new ArrayList<>();
         }
         this.members.add(membersItem);
         return this;
     }
+
 }

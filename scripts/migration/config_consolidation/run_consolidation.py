@@ -150,12 +150,39 @@ SERVICE_DEAD_KEYS: dict[str, set[str]] = {
         "egov.advocate.host",
         "egov.advocate.path",
         "egov.advocate.clerk.path",
+        # 8e1e2c2c3 (advocate-office-management) deleted cases/AdvocateOfficeUtil
+        # — the REST helper that read these. No @Value consumer remains in
+        # caselifecycle/cases/internal/ for `dristi.advocate.office.*`.
+        "dristi.advocate.office.host",
+        "dristi.advocate.office.search.member.endpoint",
     },
     "order": {
         "egov.advocate.host",
         "egov.advocate.path",
     },
+    # 8e1e2c2c3 refactor(advocate-office-management): uplift AdvocateUtil
+    # REST→AdvocateApi direct calls. advocateoffice now reads AdvocateApi
+    # directly; no @Value("${dristi.advocate...") consumers remain in
+    # identityaccess/advocateoffice/internal/. Pipeline 5 would otherwise
+    # re-add these dead keys on every subsequent regen.
+    "advocate-office-management": {
+        "dristi.advocate.host",
+        "dristi.advocate.search.endpoint",
+        "dristi.advocate.clerk.search.endpoint",
+    },
 }
+
+# Note (two-source-into-one-subdomain): e-sign-svc + esign-interceptor both
+# map to subdomain `esign`. The current consolidation algorithm processes
+# services sequentially and writes per-subdomain yml per service, so passing
+# `--service esign-interceptor` along with `--service e-sign-svc` lets the
+# second writer overwrite the first. Until the script learns to merge
+# same-subdomain key sets, esign-interceptor's interceptor-only keys
+# (`drishti.esign.redirect.url`, `drishti.esign.landing.page.redirect.url`)
+# are hand-curated into `application-esign.yml` post-regen with a `# HAND-CURATED`
+# block; the dead `drishti.esign.host`/`endpoint` and `drishti.oath.*` /
+# `dristhi.oath.*` keys are simply not carried over (Rule 32 + `oAuthForDristi`
+# removal). Tracked as a Tier 2 pipeline follow-up.
 
 # Naming: subdomain prefix for the per-service yml file (matches the
 # Spring profile name).
