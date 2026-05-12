@@ -1,11 +1,11 @@
-# 78 keys with different values across services
+# 76 keys with different values across services
 # Per-service profile YAML resolves them via Spring's profile-overlay rules.
 
 allowed.content.types
   bail-bond=application/pdf,application/x-pdf | digitalized-documents=application/pdf,application/x-pdf
 
 app.timezone
-  Notification=Asia/Kolkata | ab-diary=Asia/Kolkata | advocate=Asia/Kolkata | bail-bond=Asia/Kolkata | case=Asia/Kolkata | digitalized-documents=Asia/Kolkata | inportal-survey=Asia/Kolkata | lock-svc=Asia/Kolkata | order=Asia/Kolkata | payment-calculator-svc=Asia/Kolkata | template-configuration=Asia/Kolkata
+  Notification=Asia/Kolkata | ab-diary=Asia/Kolkata | advocate=Asia/Kolkata | bail-bond=Asia/Kolkata | case=Asia/Kolkata | digitalized-documents=Asia/Kolkata | e-sign-svc=Asia/Kolkata | inportal-survey=Asia/Kolkata | lock-svc=Asia/Kolkata | order=Asia/Kolkata | payment-calculator-svc=Asia/Kolkata | template-configuration=Asia/Kolkata
 
 app.zone.id
   ab-diary=Asia/Kolkata | bail-bond=Asia/Kolkata | case=Asia/Kolkata | digitalized-documents=Asia/Kolkata | epost-tracker=Asia/Kolkata | order=Asia/Kolkata
@@ -24,12 +24,6 @@ dristi.esign.signature.width
 
 egov-state-level-tenant-id
   epost-tracker=pb | inportal-survey=pb
-
-egov.advocate.host
-  case=http://localhost:8080/ | order=http://localhost:8080/
-
-egov.advocate.path
-  case=advocate/v1/_search | order=advocate/v1/_search
 
 egov.base.url
   bail-bond=/ui/citizen/dristi/home/bail-bond-sign | digitalized-documents=/ui/citizen/dristi/home/digitalized-document-sign
@@ -65,7 +59,7 @@ egov.file.store.save.endpoint
   ab-diary=/filestore/v1/files | case=/filestore/v1/files | epost-tracker=/filestore/v1/files
 
 egov.filestore.host
-  Notification=https://dev.digit.org | ab-diary=http://localhost:8081/ | bail-bond=http://localhost:8085/ | case=http://localhost:8085/ | digitalized-documents=http://localhost:8090 | epost-tracker=http://localhost:8082 | order=http://localhost:8085/
+  Notification=https://dev.digit.org | ab-diary=http://localhost:8081/ | bail-bond=http://localhost:8085/ | case=http://localhost:8085/ | digitalized-documents=http://localhost:8090 | e-sign-svc=http://localhost:8052/ | epost-tracker=http://localhost:8082 | order=http://localhost:8085/
 
 egov.filestore.path
   ab-diary=filestore/v1/files/id? | bail-bond=filestore/v1/files/id? | case=filestore/v1/files/id? | order=filestore/v1/files/id?
@@ -74,7 +68,7 @@ egov.filestore.save.endpoint
   bail-bond=/filestore/v1/files | digitalized-documents=/filestore/v1/files
 
 egov.filestore.search.endpoint
-  bail-bond=/filestore/v1/files/id | digitalized-documents=/filestore/v1/files/id
+  bail-bond=/filestore/v1/files/id | digitalized-documents=/filestore/v1/files/id | e-sign-svc=filestore/v1/files/id
 
 egov.hearing.host
   case=http://localhost:8080/ | order=http://localhost:9091/
@@ -128,10 +122,10 @@ egov.long.url
   bail-bond=%s?tenant=%s&bailbondId=%s | digitalized-documents=%s?tenant=%s&digitalizedDocumentId=%s&type=%s
 
 egov.mdms.host
-  Notification=https://dev.digit.org | ab-diary=https://dev.digit.org | advocate=http://localhost:8085 | bail-bond=http://localhost:8084 | case=http://localhost:8084 | digitalized-documents=https://dev.digit.org | epost-tracker=http://localhost:8090 | inportal-survey=http://localhost:8081 | lock-svc=https://dev.digit.org | order=http://localhost:8084 | payment-calculator-svc=http://localhost:8020
+  Notification=https://dev.digit.org | ab-diary=https://dev.digit.org | advocate=http://localhost:8085 | bail-bond=http://localhost:8084 | case=http://localhost:8084 | digitalized-documents=https://dev.digit.org | e-sign-svc=https://dev.digit.org | epost-tracker=http://localhost:8090 | inportal-survey=http://localhost:8081 | lock-svc=https://dev.digit.org | order=http://localhost:8084 | payment-calculator-svc=http://localhost:8020
 
 egov.mdms.search.endpoint
-  Notification=/egov-mdms-service/v1/_search | ab-diary=/egov-mdms-service/v1/_search | advocate=/egov-mdms-service/v1/_search | bail-bond=/egov-mdms-service/v1/_search | case=/egov-mdms-service/v1/_search | digitalized-documents=/egov-mdms-service/v1/_search | epost-tracker=/egov-mdms-service/v1/_search | inportal-survey=/egov-mdms-service/v1/_search | lock-svc=/egov-mdms-service/v1/_search | order=/egov-mdms-service/v1/_search | payment-calculator-svc=/egov-mdms-service/v1/_search
+  Notification=/egov-mdms-service/v1/_search | ab-diary=/egov-mdms-service/v1/_search | advocate=/egov-mdms-service/v1/_search | bail-bond=/egov-mdms-service/v1/_search | case=/egov-mdms-service/v1/_search | digitalized-documents=/egov-mdms-service/v1/_search | e-sign-svc=/egov-mdms-service/v1/_search | epost-tracker=/egov-mdms-service/v1/_search | inportal-survey=/egov-mdms-service/v1/_search | lock-svc=/egov-mdms-service/v1/_search | order=/egov-mdms-service/v1/_search | payment-calculator-svc=/egov-mdms-service/v1/_search
 
 egov.pdf.service.create.endpoint
   ab-diary=/pdf-service/v1/_createnosave | epost-tracker=/pdf-service/v1/_createnosave
@@ -143,7 +137,7 @@ egov.sms.notification.admission.hearing.scheduled.template.id
   case=1107173140979241046 | order=1107173140979241046
 
 egov.sms.notification.topic
-  Notification=egov.core.notification.sms | ab-diary=egov.core.notification.sms | advocate=egov.core.notification.sms | bail-bond=egov.core.notification.sms | case=egov.core.notification.sms | digitalized-documents=egov.core.notification.sms | inportal-survey=egov.core.notification.sms | order=egov.core.notification.sms | payment-calculator-svc=egov.core.notification.sms
+  Notification=egov.core.notification.sms | ab-diary=egov.core.notification.sms | advocate=egov.core.notification.sms | bail-bond=egov.core.notification.sms | case=egov.core.notification.sms | digitalized-documents=egov.core.notification.sms | e-sign-svc=egov.core.notification.sms | inportal-survey=egov.core.notification.sms | order=egov.core.notification.sms | payment-calculator-svc=egov.core.notification.sms
 
 egov.tenantId
   ab-diary=pb | order=pb
@@ -191,46 +185,46 @@ is.workflow.enabled
   Notification=true | ab-diary=true | advocate=true | bail-bond=true | case=true | digitalized-documents=true | order=true
 
 kafka.consumer.config.auto_commit
-  Notification=true | ab-diary=true | advocate=true | bail-bond=true | case=true | digitalized-documents=true | epost-tracker=true | inportal-survey=true | lock-svc=true | order=true | payment-calculator-svc=true | template-configuration=true
+  Notification=true | ab-diary=true | advocate=true | bail-bond=true | case=true | digitalized-documents=true | e-sign-svc=true | epost-tracker=true | inportal-survey=true | lock-svc=true | order=true | payment-calculator-svc=true | template-configuration=true
 
 kafka.consumer.config.auto_commit_interval
-  Notification=100 | ab-diary=100 | advocate=100 | bail-bond=100 | case=100 | digitalized-documents=100 | epost-tracker=100 | inportal-survey=100 | lock-svc=100 | order=100 | payment-calculator-svc=100 | template-configuration=100
+  Notification=100 | ab-diary=100 | advocate=100 | bail-bond=100 | case=100 | digitalized-documents=100 | e-sign-svc=100 | epost-tracker=100 | inportal-survey=100 | lock-svc=100 | order=100 | payment-calculator-svc=100 | template-configuration=100
 
 kafka.consumer.config.auto_offset_reset
-  Notification=earliest | ab-diary=earliest | advocate=earliest | bail-bond=earliest | case=earliest | digitalized-documents=earliest | epost-tracker=earliest | inportal-survey=earliest | lock-svc=earliest | order=earliest | payment-calculator-svc=earliest | template-configuration=earliest
+  Notification=earliest | ab-diary=earliest | advocate=earliest | bail-bond=earliest | case=earliest | digitalized-documents=earliest | e-sign-svc=earliest | epost-tracker=earliest | inportal-survey=earliest | lock-svc=earliest | order=earliest | payment-calculator-svc=earliest | template-configuration=earliest
 
 kafka.consumer.config.session_timeout
-  Notification=15000 | ab-diary=15000 | advocate=15000 | bail-bond=15000 | case=15000 | digitalized-documents=15000 | epost-tracker=15000 | inportal-survey=15000 | lock-svc=15000 | order=15000 | payment-calculator-svc=15000 | template-configuration=15000
+  Notification=15000 | ab-diary=15000 | advocate=15000 | bail-bond=15000 | case=15000 | digitalized-documents=15000 | e-sign-svc=15000 | epost-tracker=15000 | inportal-survey=15000 | lock-svc=15000 | order=15000 | payment-calculator-svc=15000 | template-configuration=15000
 
 kafka.producer.config.batch_size_config
-  Notification=16384 | ab-diary=16384 | advocate=16384 | bail-bond=16384 | case=16384 | digitalized-documents=16384 | epost-tracker=16384 | inportal-survey=16384 | lock-svc=16384 | order=16384 | payment-calculator-svc=16384 | template-configuration=16384
+  Notification=16384 | ab-diary=16384 | advocate=16384 | bail-bond=16384 | case=16384 | digitalized-documents=16384 | e-sign-svc=16384 | epost-tracker=16384 | inportal-survey=16384 | lock-svc=16384 | order=16384 | payment-calculator-svc=16384 | template-configuration=16384
 
 kafka.producer.config.buffer_memory_config
-  Notification=33554432 | ab-diary=33554432 | advocate=33554432 | bail-bond=33554432 | case=33554432 | digitalized-documents=33554432 | epost-tracker=33554432 | inportal-survey=33554432 | lock-svc=33554432 | order=33554432 | payment-calculator-svc=33554432 | template-configuration=33554432
+  Notification=33554432 | ab-diary=33554432 | advocate=33554432 | bail-bond=33554432 | case=33554432 | digitalized-documents=33554432 | e-sign-svc=33554432 | epost-tracker=33554432 | inportal-survey=33554432 | lock-svc=33554432 | order=33554432 | payment-calculator-svc=33554432 | template-configuration=33554432
 
 kafka.producer.config.linger_ms_config
-  Notification=1 | ab-diary=1 | advocate=1 | bail-bond=1 | case=1 | digitalized-documents=1 | epost-tracker=1 | inportal-survey=1 | lock-svc=1 | order=1 | payment-calculator-svc=1 | template-configuration=1
+  Notification=1 | ab-diary=1 | advocate=1 | bail-bond=1 | case=1 | digitalized-documents=1 | e-sign-svc=1 | epost-tracker=1 | inportal-survey=1 | lock-svc=1 | order=1 | payment-calculator-svc=1 | template-configuration=1
 
 kafka.producer.config.retries_config
-  Notification=0 | ab-diary=0 | advocate=0 | bail-bond=0 | case=0 | digitalized-documents=0 | epost-tracker=0 | inportal-survey=0 | lock-svc=0 | order=0 | payment-calculator-svc=0 | template-configuration=0
+  Notification=0 | ab-diary=0 | advocate=0 | bail-bond=0 | case=0 | digitalized-documents=0 | e-sign-svc=0 | epost-tracker=0 | inportal-survey=0 | lock-svc=0 | order=0 | payment-calculator-svc=0 | template-configuration=0
 
 kafka.topics.consumer
   Notification=service-consumer-topic | ab-diary=service-consumer-topic | advocate=save-advocate-application | bail-bond=service-consumer-topic | digitalized-documents=service-consumer-topic | inportal-survey=service-consumer-topic
 
 kafka.topics.receipt.create
-  Notification=dss-collection | ab-diary=dss-collection | advocate=dss-collection | bail-bond=dss-collection | case=egov.collection.payment-create | digitalized-documents=dss-collection | inportal-survey=dss-collection | lock-svc=dss-collection | order=dss-collection | payment-calculator-svc=dss-collection
+  Notification=dss-collection | ab-diary=dss-collection | advocate=dss-collection | bail-bond=dss-collection | case=egov.collection.payment-create | digitalized-documents=dss-collection | e-sign-svc=dss-collection | inportal-survey=dss-collection | lock-svc=dss-collection | order=dss-collection | payment-calculator-svc=dss-collection
 
 logging.level.root
-  Notification=INFO | ab-diary=INFO | advocate=INFO | bail-bond=INFO | case=INFO | epost-tracker=INFO | inportal-survey=INFO | lock-svc=INFO | order=INFO | payment-calculator-svc=INFO | template-configuration=INFO
+  Notification=INFO | ab-diary=INFO | advocate=INFO | bail-bond=INFO | case=INFO | e-sign-svc=INFO | epost-tracker=INFO | inportal-survey=INFO | lock-svc=INFO | order=INFO | payment-calculator-svc=INFO | template-configuration=INFO
 
 logging.loki.enabled
-  Notification=false | ab-diary=false | advocate=false | bail-bond=false | case=false | epost-tracker=false | inportal-survey=false | lock-svc=false | order=false | payment-calculator-svc=false | template-configuration=false
+  Notification=false | ab-diary=false | advocate=false | bail-bond=false | case=false | e-sign-svc=false | epost-tracker=false | inportal-survey=false | lock-svc=false | order=false | payment-calculator-svc=false | template-configuration=false
 
 logging.loki.url
-  Notification=http://localhost:3100/loki/api/v1/push | ab-diary=http://localhost:3100/loki/api/v1/push | advocate=http://localhost:3100/loki/api/v1/push | bail-bond=http://localhost:3100/loki/api/v1/push | case=http://localhost:3100/loki/api/v1/push | epost-tracker=http://localhost:3100/loki/api/v1/push | inportal-survey=http://localhost:3100/loki/api/v1/push | lock-svc=http://localhost:3100/loki/api/v1/push | order=http://localhost:3100/loki/api/v1/push | payment-calculator-svc=http://localhost:3100/loki/api/v1/push | template-configuration=http://localhost:3100/loki/api/v1/push
+  Notification=http://localhost:3100/loki/api/v1/push | ab-diary=http://localhost:3100/loki/api/v1/push | advocate=http://localhost:3100/loki/api/v1/push | bail-bond=http://localhost:3100/loki/api/v1/push | case=http://localhost:3100/loki/api/v1/push | e-sign-svc=http://localhost:3100/loki/api/v1/push | epost-tracker=http://localhost:3100/loki/api/v1/push | inportal-survey=http://localhost:3100/loki/api/v1/push | lock-svc=http://localhost:3100/loki/api/v1/push | order=http://localhost:3100/loki/api/v1/push | payment-calculator-svc=http://localhost:3100/loki/api/v1/push | template-configuration=http://localhost:3100/loki/api/v1/push
 
 otel.instrumentation.http.server.ignore-urls
-  Notification=/notification/health,/notification/prometheus | ab-diary=/ab-diary/health,/ab-diary/prometheus | advocate=/advocate/health,/advocate/prometheus | bail-bond=/bail-bond/health,/bail-bond/prometheus | bank-details=/bank-details/health,/bank-details/prometheus | case=/case/health,/case/prometheus | digitalized-documents=/digitalized-documents/health,/digitalized-documents/prometheus | epost-tracker=/epost-tracker/health,/epost-tracker/prometheus | inportal-survey=/inportal-survey/health,/inportal-survey/prometheus | lock-svc=/lock-svc/health,/lock-svc/prometheus | order=/order/health,/order/prometheus | payment-calculator-svc=/payment-calculator/health,/payment-calculator/prometheus | template-configuration=/template-configuration/health,/template-configuration/prometheus
+  Notification=/notification/health,/notification/prometheus | ab-diary=/ab-diary/health,/ab-diary/prometheus | advocate=/advocate/health,/advocate/prometheus | bail-bond=/bail-bond/health,/bail-bond/prometheus | bank-details=/bank-details/health,/bank-details/prometheus | case=/case/health,/case/prometheus | digitalized-documents=/digitalized-documents/health,/digitalized-documents/prometheus | e-sign-svc=/e-sign-svc/health,/e-sign-svc/prometheus | epost-tracker=/epost-tracker/health,/epost-tracker/prometheus | inportal-survey=/inportal-survey/health,/inportal-survey/prometheus | lock-svc=/lock-svc/health,/lock-svc/prometheus | order=/order/health,/order/prometheus | payment-calculator-svc=/payment-calculator/health,/payment-calculator/prometheus | template-configuration=/template-configuration/health,/template-configuration/prometheus
 
 state.level.tenant.id
   bail-bond=pb | case=pb

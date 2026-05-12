@@ -141,6 +141,20 @@ SERVICE_DEAD_KEYS: dict[str, set[str]] = {
         "egov.case.path",
         "egov.case.search.path",
     },
+    # e1d23287d chore(advocate): drop dead REST config ...
+    # cases + order switched to AdvocateApi (Rule 32) during the advocate
+    # migration; no @Value("${egov.advocate...") consumers remain in
+    # caselifecycle/cases or caselifecycle/order internal/. Pipeline 5
+    # would otherwise re-add these dead keys on every subsequent regen.
+    "case": {
+        "egov.advocate.host",
+        "egov.advocate.path",
+        "egov.advocate.clerk.path",
+    },
+    "order": {
+        "egov.advocate.host",
+        "egov.advocate.path",
+    },
 }
 
 # Naming: subdomain prefix for the per-service yml file (matches the
