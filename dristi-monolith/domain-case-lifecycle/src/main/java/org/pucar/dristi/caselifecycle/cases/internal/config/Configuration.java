@@ -75,16 +75,6 @@ public class Configuration {
 	@Value("${egov.filestore.path}")
 	private String fileStorePath;
 
-	// Advocate Config
-	@Value("${egov.advocate.host}")
-	private String advocateHost;
-
-	@Value("${egov.advocate.path}")
-	private String advocatePath;
-
-	@Value("${egov.advocate.clerk.path}")
-	private String advocateClerkPath;
-
     //Individual Service
     @Value("${egov.individual.host}")
     private String individualHost;
