@@ -56,7 +56,7 @@ Core case-lifecycle domain — the bulk of DRISTI.
 
 | Service | Files | Status | `--module` | `--subdomain` | Notes |
 |---|---:|---|---|---|---|
-| `advocate` | 87 | pending | `identity-access` | `advocate` | |
+| `advocate` | 87 | **done** | `identity-access` | `advocate` | PR #67 merged to `monolith/main` as `40e5afcbd` on 2026-05-12. First `identity-access` subdomain — created `domain-identity-access` Maven module with `advocate` as its first occupant. 24 contract DTOs Phase-35-lifted to `dristi-common/contract/advocate/`. Exposed `AdvocateApi` (+ `@NamedInterface("api")` + `@ApplicationModule`); first non-case-lifecycle subdomain to ship a cross-Maven `*Api` (Rule 31 + 31a). 5 REST call sites in `cases` converted to direct `AdvocateApi.search()` per Rule 32 (`CaseRegistrationEnrichment`, `EncryptionDecryptionUtil`, `EnrichCaseWhenESign`, `CaseRegistrationValidator`, `CaseService`); REST utils deleted per Rule 38 (`cases/AdvocateUtil`, `order/AdvocateUtil`, `AdvocateUtilTest`); `domain-case-lifecycle/pom.xml` dependency added on `domain-identity-access`. Post-merge chore (`e1d23287d`) swept dead `advocateHost`/`advocatePath` `@Value` fields + YAML blocks from `cases`/`order` Configuration; moved `egov.hrms.host` localhost override into `application-local.yml`. `UserUtil.parseResponse(Map<S,O>)` and `IndividualUtil.individualCall(3-param UUID variant)` kept service-local |
 | `advocate-office-management` | 72 | pending | `identity-access` | `advocateoffice` | depends on `advocate` |
 
 ## domain-integration
