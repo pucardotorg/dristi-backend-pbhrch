@@ -124,6 +124,10 @@ egov:
   bulk:
     index:
       path: _bulk
+  case:
+    host: http://localhost:8099
+    search:
+      endpoint: /case/v1/_search
   enc:
     host: http://localhost:8095
     encrypt:
