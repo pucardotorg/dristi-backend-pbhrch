@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @Slf4j
-@Component
+@Component("casesEtreasuryUtil")
 public class EtreasuryUtil {
 
 	private RestTemplate restTemplate;

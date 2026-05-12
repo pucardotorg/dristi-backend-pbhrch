@@ -15,7 +15,7 @@ import java.util.Map;
 
 import static org.pucar.dristi.caselifecycle.order.internal.config.ServiceConstants.*;
 
-@Service
+@Service("orderLocalizationUtil")
 @Slf4j
 public class LocalizationUtil {
 

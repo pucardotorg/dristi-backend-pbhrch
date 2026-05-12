@@ -15,7 +15,7 @@ import java.util.Arrays;
 import java.util.Base64;
 
 
-@Component
+@Component("bailbondCipherUtil")
 @Slf4j
 public class CipherUtil {
 

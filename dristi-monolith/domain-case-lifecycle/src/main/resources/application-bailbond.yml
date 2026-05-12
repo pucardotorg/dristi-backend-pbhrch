@@ -10,7 +10,20 @@ app:
   zone:
     id: Asia/Kolkata
 otel:
+  traces:
+    exporter: otlp
+  logs:
+    exporter: none
+  metrics:
+    exporter: none
+  exporter:
+    otlp:
+      endpoint: http://jaeger-collector.tracing:4318
+      protocol: http/protobuf
   instrumentation:
+    kafka:
+      enabled: true
+      experimental-span-attributes: true
     http:
       server:
         ignore-urls: /bail-bond/health,/bail-bond/prometheus
@@ -124,6 +137,10 @@ egov:
   bulk:
     index:
       path: _bulk
+  case:
+    host: http://localhost:8099
+    search:
+      endpoint: /case/v1/_search
   enc:
     host: http://localhost:8095
     encrypt:
