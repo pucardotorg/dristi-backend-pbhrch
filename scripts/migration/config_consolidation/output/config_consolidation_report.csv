@@ -10,6 +10,7 @@ app.timezone,advocate-office-management,Asia/Kolkata,CONFLICT
 app.timezone,bail-bond,Asia/Kolkata,CONFLICT
 app.timezone,case,Asia/Kolkata,CONFLICT
 app.timezone,digitalized-documents,Asia/Kolkata,CONFLICT
+app.timezone,e-sign-svc,Asia/Kolkata,CONFLICT
 app.timezone,inportal-survey,Asia/Kolkata,CONFLICT
 app.timezone,lock-svc,Asia/Kolkata,CONFLICT
 app.timezone,order,Asia/Kolkata,CONFLICT
@@ -31,10 +32,6 @@ dristi.esign.signature.width,bail-bond,250,CONFLICT
 dristi.esign.signature.width,digitalized-documents,250,CONFLICT
 egov-state-level-tenant-id,epost-tracker,pb,CONFLICT
 egov-state-level-tenant-id,inportal-survey,pb,CONFLICT
-egov.advocate.host,case,http://localhost:8080/,CONFLICT
-egov.advocate.host,order,http://localhost:8080/,CONFLICT
-egov.advocate.path,case,advocate/v1/_search,CONFLICT
-egov.advocate.path,order,advocate/v1/_search,CONFLICT
 egov.base.url,bail-bond,/ui/citizen/dristi/home/bail-bond-sign,CONFLICT
 egov.base.url,digitalized-documents,/ui/citizen/dristi/home/digitalized-document-sign,CONFLICT
 egov.case.host,bail-bond,http://localhost:8099,CONFLICT
@@ -68,6 +65,7 @@ egov.filestore.host,ab-diary,http://localhost:8081/,CONFLICT
 egov.filestore.host,bail-bond,http://localhost:8085/,CONFLICT
 egov.filestore.host,case,http://localhost:8085/,CONFLICT
 egov.filestore.host,digitalized-documents,http://localhost:8090,CONFLICT
+egov.filestore.host,e-sign-svc,http://localhost:8052/,CONFLICT
 egov.filestore.host,epost-tracker,http://localhost:8082,CONFLICT
 egov.filestore.host,order,http://localhost:8085/,CONFLICT
 egov.filestore.path,ab-diary,filestore/v1/files/id?,CONFLICT
@@ -78,6 +76,7 @@ egov.filestore.save.endpoint,bail-bond,/filestore/v1/files,CONFLICT
 egov.filestore.save.endpoint,digitalized-documents,/filestore/v1/files,CONFLICT
 egov.filestore.search.endpoint,bail-bond,/filestore/v1/files/id,CONFLICT
 egov.filestore.search.endpoint,digitalized-documents,/filestore/v1/files/id,CONFLICT
+egov.filestore.search.endpoint,e-sign-svc,filestore/v1/files/id,CONFLICT
 egov.hearing.host,case,http://localhost:8080/,CONFLICT
 egov.hearing.host,order,http://localhost:9091/,CONFLICT
 egov.hearing.search.path,case,hearing/v1/search,CONFLICT
@@ -182,6 +181,7 @@ egov.mdms.host,advocate-office-management,http://localhost:8084,CONFLICT
 egov.mdms.host,bail-bond,http://localhost:8084,CONFLICT
 egov.mdms.host,case,http://localhost:8084,CONFLICT
 egov.mdms.host,digitalized-documents,https://dev.digit.org,CONFLICT
+egov.mdms.host,e-sign-svc,https://dev.digit.org,CONFLICT
 egov.mdms.host,epost-tracker,http://localhost:8090,CONFLICT
 egov.mdms.host,inportal-survey,http://localhost:8081,CONFLICT
 egov.mdms.host,lock-svc,https://dev.digit.org,CONFLICT
@@ -194,6 +194,7 @@ egov.mdms.search.endpoint,advocate-office-management,/egov-mdms-service/v1/_sear
 egov.mdms.search.endpoint,bail-bond,/egov-mdms-service/v1/_search,CONFLICT
 egov.mdms.search.endpoint,case,/egov-mdms-service/v1/_search,CONFLICT
 egov.mdms.search.endpoint,digitalized-documents,/egov-mdms-service/v1/_search,CONFLICT
+egov.mdms.search.endpoint,e-sign-svc,/egov-mdms-service/v1/_search,CONFLICT
 egov.mdms.search.endpoint,epost-tracker,/egov-mdms-service/v1/_search,CONFLICT
 egov.mdms.search.endpoint,inportal-survey,/egov-mdms-service/v1/_search,CONFLICT
 egov.mdms.search.endpoint,lock-svc,/egov-mdms-service/v1/_search,CONFLICT
@@ -212,6 +213,7 @@ egov.sms.notification.topic,advocate-office-management,egov.core.notification.sm
 egov.sms.notification.topic,bail-bond,egov.core.notification.sms,CONFLICT
 egov.sms.notification.topic,case,egov.core.notification.sms,CONFLICT
 egov.sms.notification.topic,digitalized-documents,egov.core.notification.sms,CONFLICT
+egov.sms.notification.topic,e-sign-svc,egov.core.notification.sms,CONFLICT
 egov.sms.notification.topic,inportal-survey,egov.core.notification.sms,CONFLICT
 egov.sms.notification.topic,order,egov.core.notification.sms,CONFLICT
 egov.sms.notification.topic,payment-calculator-svc,egov.core.notification.sms,CONFLICT
@@ -332,6 +334,7 @@ kafka.consumer.config.auto_commit,advocate-office-management,true,CONFLICT
 kafka.consumer.config.auto_commit,bail-bond,true,CONFLICT
 kafka.consumer.config.auto_commit,case,true,CONFLICT
 kafka.consumer.config.auto_commit,digitalized-documents,true,CONFLICT
+kafka.consumer.config.auto_commit,e-sign-svc,true,CONFLICT
 kafka.consumer.config.auto_commit,epost-tracker,true,CONFLICT
 kafka.consumer.config.auto_commit,inportal-survey,true,CONFLICT
 kafka.consumer.config.auto_commit,lock-svc,true,CONFLICT
@@ -345,6 +348,7 @@ kafka.consumer.config.auto_commit_interval,advocate-office-management,100,CONFLI
 kafka.consumer.config.auto_commit_interval,bail-bond,100,CONFLICT
 kafka.consumer.config.auto_commit_interval,case,100,CONFLICT
 kafka.consumer.config.auto_commit_interval,digitalized-documents,100,CONFLICT
+kafka.consumer.config.auto_commit_interval,e-sign-svc,100,CONFLICT
 kafka.consumer.config.auto_commit_interval,epost-tracker,100,CONFLICT
 kafka.consumer.config.auto_commit_interval,inportal-survey,100,CONFLICT
 kafka.consumer.config.auto_commit_interval,lock-svc,100,CONFLICT
@@ -358,6 +362,7 @@ kafka.consumer.config.auto_offset_reset,advocate-office-management,earliest,CONF
 kafka.consumer.config.auto_offset_reset,bail-bond,earliest,CONFLICT
 kafka.consumer.config.auto_offset_reset,case,earliest,CONFLICT
 kafka.consumer.config.auto_offset_reset,digitalized-documents,earliest,CONFLICT
+kafka.consumer.config.auto_offset_reset,e-sign-svc,earliest,CONFLICT
 kafka.consumer.config.auto_offset_reset,epost-tracker,earliest,CONFLICT
 kafka.consumer.config.auto_offset_reset,inportal-survey,earliest,CONFLICT
 kafka.consumer.config.auto_offset_reset,lock-svc,earliest,CONFLICT
@@ -371,6 +376,7 @@ kafka.consumer.config.session_timeout,advocate-office-management,15000,CONFLICT
 kafka.consumer.config.session_timeout,bail-bond,15000,CONFLICT
 kafka.consumer.config.session_timeout,case,15000,CONFLICT
 kafka.consumer.config.session_timeout,digitalized-documents,15000,CONFLICT
+kafka.consumer.config.session_timeout,e-sign-svc,15000,CONFLICT
 kafka.consumer.config.session_timeout,epost-tracker,15000,CONFLICT
 kafka.consumer.config.session_timeout,inportal-survey,15000,CONFLICT
 kafka.consumer.config.session_timeout,lock-svc,15000,CONFLICT
@@ -384,6 +390,7 @@ kafka.producer.config.batch_size_config,advocate-office-management,16384,CONFLIC
 kafka.producer.config.batch_size_config,bail-bond,16384,CONFLICT
 kafka.producer.config.batch_size_config,case,16384,CONFLICT
 kafka.producer.config.batch_size_config,digitalized-documents,16384,CONFLICT
+kafka.producer.config.batch_size_config,e-sign-svc,16384,CONFLICT
 kafka.producer.config.batch_size_config,epost-tracker,16384,CONFLICT
 kafka.producer.config.batch_size_config,inportal-survey,16384,CONFLICT
 kafka.producer.config.batch_size_config,lock-svc,16384,CONFLICT
@@ -397,6 +404,7 @@ kafka.producer.config.buffer_memory_config,advocate-office-management,33554432,C
 kafka.producer.config.buffer_memory_config,bail-bond,33554432,CONFLICT
 kafka.producer.config.buffer_memory_config,case,33554432,CONFLICT
 kafka.producer.config.buffer_memory_config,digitalized-documents,33554432,CONFLICT
+kafka.producer.config.buffer_memory_config,e-sign-svc,33554432,CONFLICT
 kafka.producer.config.buffer_memory_config,epost-tracker,33554432,CONFLICT
 kafka.producer.config.buffer_memory_config,inportal-survey,33554432,CONFLICT
 kafka.producer.config.buffer_memory_config,lock-svc,33554432,CONFLICT
@@ -410,6 +418,7 @@ kafka.producer.config.linger_ms_config,advocate-office-management,1,CONFLICT
 kafka.producer.config.linger_ms_config,bail-bond,1,CONFLICT
 kafka.producer.config.linger_ms_config,case,1,CONFLICT
 kafka.producer.config.linger_ms_config,digitalized-documents,1,CONFLICT
+kafka.producer.config.linger_ms_config,e-sign-svc,1,CONFLICT
 kafka.producer.config.linger_ms_config,epost-tracker,1,CONFLICT
 kafka.producer.config.linger_ms_config,inportal-survey,1,CONFLICT
 kafka.producer.config.linger_ms_config,lock-svc,1,CONFLICT
@@ -423,6 +432,7 @@ kafka.producer.config.retries_config,advocate-office-management,0,CONFLICT
 kafka.producer.config.retries_config,bail-bond,0,CONFLICT
 kafka.producer.config.retries_config,case,0,CONFLICT
 kafka.producer.config.retries_config,digitalized-documents,0,CONFLICT
+kafka.producer.config.retries_config,e-sign-svc,0,CONFLICT
 kafka.producer.config.retries_config,epost-tracker,0,CONFLICT
 kafka.producer.config.retries_config,inportal-survey,0,CONFLICT
 kafka.producer.config.retries_config,lock-svc,0,CONFLICT
@@ -443,6 +453,7 @@ kafka.topics.receipt.create,advocate-office-management,dss-collection,CONFLICT
 kafka.topics.receipt.create,bail-bond,dss-collection,CONFLICT
 kafka.topics.receipt.create,case,egov.collection.payment-create,CONFLICT
 kafka.topics.receipt.create,digitalized-documents,dss-collection,CONFLICT
+kafka.topics.receipt.create,e-sign-svc,dss-collection,CONFLICT
 kafka.topics.receipt.create,inportal-survey,dss-collection,CONFLICT
 kafka.topics.receipt.create,lock-svc,dss-collection,CONFLICT
 kafka.topics.receipt.create,order,dss-collection,CONFLICT
@@ -454,6 +465,7 @@ logging.level.root,ab-diary,INFO,CONFLICT
 logging.level.root,advocate,INFO,CONFLICT
 logging.level.root,bail-bond,INFO,CONFLICT
 logging.level.root,case,INFO,CONFLICT
+logging.level.root,e-sign-svc,INFO,CONFLICT
 logging.level.root,epost-tracker,INFO,CONFLICT
 logging.level.root,inportal-survey,INFO,CONFLICT
 logging.level.root,lock-svc,INFO,CONFLICT
@@ -465,6 +477,7 @@ logging.loki.enabled,ab-diary,false,CONFLICT
 logging.loki.enabled,advocate,false,CONFLICT
 logging.loki.enabled,bail-bond,false,CONFLICT
 logging.loki.enabled,case,false,CONFLICT
+logging.loki.enabled,e-sign-svc,false,CONFLICT
 logging.loki.enabled,epost-tracker,false,CONFLICT
 logging.loki.enabled,inportal-survey,false,CONFLICT
 logging.loki.enabled,lock-svc,false,CONFLICT
@@ -476,6 +489,7 @@ logging.loki.url,ab-diary,http://localhost:3100/loki/api/v1/push,CONFLICT
 logging.loki.url,advocate,http://localhost:3100/loki/api/v1/push,CONFLICT
 logging.loki.url,bail-bond,http://localhost:3100/loki/api/v1/push,CONFLICT
 logging.loki.url,case,http://localhost:3100/loki/api/v1/push,CONFLICT
+logging.loki.url,e-sign-svc,http://localhost:3100/loki/api/v1/push,CONFLICT
 logging.loki.url,epost-tracker,http://localhost:3100/loki/api/v1/push,CONFLICT
 logging.loki.url,inportal-survey,http://localhost:3100/loki/api/v1/push,CONFLICT
 logging.loki.url,lock-svc,http://localhost:3100/loki/api/v1/push,CONFLICT
@@ -490,6 +504,7 @@ otel.instrumentation.http.server.ignore-urls,bail-bond,"/bail-bond/health,/bail-
 otel.instrumentation.http.server.ignore-urls,bank-details,"/bank-details/health,/bank-details/prometheus",CONFLICT
 otel.instrumentation.http.server.ignore-urls,case,"/case/health,/case/prometheus",CONFLICT
 otel.instrumentation.http.server.ignore-urls,digitalized-documents,"/digitalized-documents/health,/digitalized-documents/prometheus",CONFLICT
+otel.instrumentation.http.server.ignore-urls,e-sign-svc,"/e-sign-svc/health,/e-sign-svc/prometheus",CONFLICT
 otel.instrumentation.http.server.ignore-urls,epost-tracker,"/epost-tracker/health,/epost-tracker/prometheus",CONFLICT
 otel.instrumentation.http.server.ignore-urls,inportal-survey,"/inportal-survey/health,/inportal-survey/prometheus",CONFLICT
 otel.instrumentation.http.server.ignore-urls,lock-svc,"/lock-svc/health,/lock-svc/prometheus",CONFLICT
@@ -543,11 +558,6 @@ diaryentry.kafka.update.topic,ab-diary,update-diary-entry,SERVICE-SPECIFIC
 drishti.postalhub.create.topic,payment-calculator-svc,postal-hub-create,SERVICE-SPECIFIC
 drishti.postalhub.update.topic,payment-calculator-svc,postal-hub-update,SERVICE-SPECIFIC
 drishti.summon.pages.count,payment-calculator-svc,2,SERVICE-SPECIFIC
-dristi.advocate.clerk.search.endpoint,advocate-office-management,/advocate/clerk/v1/_search,SERVICE-SPECIFIC
-dristi.advocate.host,advocate-office-management,http://localhost:8053,SERVICE-SPECIFIC
-dristi.advocate.office.host,case,http://localhost:8082,SERVICE-SPECIFIC
-dristi.advocate.office.search.member.endpoint,case,/advocate-office-management/v1/_searchMember,SERVICE-SPECIFIC
-dristi.advocate.search.endpoint,advocate-office-management,/advocate/v1/_search,SERVICE-SPECIFIC
 dristi.bar.registration.number.format,advocate,"^K/(?!0+/)(\\d{1,6})/\\d{4}$",SERVICE-SPECIFIC
 dristi.case.host,advocate-office-management,http://localhost:9091,SERVICE-SPECIFIC
 dristi.case.member.search.endpoint,advocate-office-management,/case/v1/_searchCaseMember,SERVICE-SPECIFIC
@@ -557,7 +567,6 @@ dristi.notification.create.topic,Notification,create-notification,SERVICE-SPECIF
 dristi.notification.update.topic,Notification,update-notification,SERVICE-SPECIFIC
 dristi.process.case.member.endpoint,advocate-office-management,/case/v1/_processCaseMember,SERVICE-SPECIFIC
 egov.additional.join.case.kafka.topic,case,join-case-update-case-additional-details,SERVICE-SPECIFIC
-egov.advocate.clerk.path,case,/advocate/clerk/v1/_search,SERVICE-SPECIFIC
 egov.analytics.host,case,http://localhost:8088/,SERVICE-SPECIFIC
 egov.analytics.path,case,/analytics/pending_task/v1/create,SERVICE-SPECIFIC
 egov.billing.host,case,http://localhost:8086,SERVICE-SPECIFIC
@@ -587,6 +596,8 @@ egov.evidence.host,case,http://localhost:8089,SERVICE-SPECIFIC
 egov.evidence.search.path,case,/evidence/v1/_search,SERVICE-SPECIFIC
 egov.filestore.case.module,case,case,SERVICE-SPECIFIC
 egov.filestore.caseDiary.module,ab-diary,caseDiary,SERVICE-SPECIFIC
+egov.filestore.create.endpoint,e-sign-svc,filestore/v1/files,SERVICE-SPECIFIC
+egov.filestore.delete.endpoint,e-sign-svc,/filestore/v1/files/delete,SERVICE-SPECIFIC
 egov.filestore.module,epost-tracker,epost-report,SERVICE-SPECIFIC
 egov.hearing.path,case,hearing/v1/update_transcript_additional_attendees,SERVICE-SPECIFIC
 egov.idgen.advConfig,advocate,user.registration.advocate,SERVICE-SPECIFIC
@@ -743,6 +754,20 @@ epost.sender.name,epost-tracker,24x7 ON court,SERVICE-SPECIFIC
 epost.sender.pin.code,epost-tracker,691013,SERVICE-SPECIFIC
 epost.sender.state,epost-tracker,Kerala,SERVICE-SPECIFIC
 epost.tracker.cron.expression,epost-tracker,0 0 1 1 * ?,SERVICE-SPECIFIC
+esign.create.topic,e-sign-svc,create-esign,SERVICE-SPECIFIC
+esign.position.offset,e-sign-svc,2,SERVICE-SPECIFIC
+esign.update.topic,e-sign-svc,update-esign,SERVICE-SPECIFIC
+esign.y.coordinate.offset,e-sign-svc,20,SERVICE-SPECIFIC
+esing.asp.id,e-sign-svc,ESGN-900,SERVICE-SPECIFIC
+esing.auth.mode,e-sign-svc,1,SERVICE-SPECIFIC
+esing.doc.info,e-sign-svc,My Document,SERVICE-SPECIFIC
+esing.ekyc.id.type,e-sign-svc,A,SERVICE-SPECIFIC
+esing.hash.algorithm,e-sign-svc,SHA256,SERVICE-SPECIFIC
+esing.id,e-sign-svc,1,SERVICE-SPECIFIC
+esing.response.sig.type,e-sign-svc,pkcs7,SERVICE-SPECIFIC
+esing.response.url,e-sign-svc,https://dristi-kerala-dev.pucar.org/esign-interceptor/v1/_intercept,SERVICE-SPECIFIC
+esing.sc,e-sign-svc,Y,SERVICE-SPECIFIC
+esing.ver,e-sign-svc,2.1,SERVICE-SPECIFIC
 etreasury.head.breakup.calculation.endpoint,case,/etreasury/payment/v1/_getHeadBreakDown,SERVICE-SPECIFIC
 etreasury.payment.receipt.endpoint,case,/etreasury/payment/v1/_getPaymentReceipt,SERVICE-SPECIFIC
 examination.of.accused.kafka.update.topic,digitalized-documents,update-examination-of-accused-document,SERVICE-SPECIFIC
@@ -773,6 +798,10 @@ razorpay.ifsc.api,bank-details,https://ifsc.razorpay.com/,SERVICE-SPECIFIC
 razorpay.ifsc.connect-timeout,bank-details,3000,SERVICE-SPECIFIC
 razorpay.ifsc.read-timeout,bank-details,5000,SERVICE-SPECIFIC
 schedule.cron.expression,ab-diary,0 59 23 * * *,SERVICE-SPECIFIC
+spring.datasource.enabled,e-sign-svc,false,SERVICE-SPECIFIC
+spring.http.converters.multipart.enabled,e-sign-svc,true,SERVICE-SPECIFIC
+spring.http.converters.multipart.serializer.class,e-sign-svc,org.springframework.http.converter.ByteArrayHttpMessageConverter,SERVICE-SPECIFIC
+spring.http.multipart.enabled,e-sign-svc,true,SERVICE-SPECIFIC
 task.join.case.approved.topic,case,join-case-approved-state,SERVICE-SPECIFIC
 task.join.case.rejected.topic,case,join-case-rejected-state,SERVICE-SPECIFIC
 task.kafka.join.case.update.topic,case,update-task-application,SERVICE-SPECIFIC
@@ -791,6 +820,7 @@ otel.exporter.otlp.endpoint,bail-bond,http://jaeger-collector.tracing:4318,SHARE
 otel.exporter.otlp.endpoint,bank-details,http://jaeger-collector.tracing:4318,SHARED
 otel.exporter.otlp.endpoint,case,http://jaeger-collector.tracing:4318,SHARED
 otel.exporter.otlp.endpoint,digitalized-documents,http://jaeger-collector.tracing:4318,SHARED
+otel.exporter.otlp.endpoint,e-sign-svc,http://jaeger-collector.tracing:4318,SHARED
 otel.exporter.otlp.endpoint,epost-tracker,http://jaeger-collector.tracing:4318,SHARED
 otel.exporter.otlp.endpoint,inportal-survey,http://jaeger-collector.tracing:4318,SHARED
 otel.exporter.otlp.endpoint,lock-svc,http://jaeger-collector.tracing:4318,SHARED
@@ -805,6 +835,7 @@ otel.exporter.otlp.protocol,bail-bond,http/protobuf,SHARED
 otel.exporter.otlp.protocol,bank-details,http/protobuf,SHARED
 otel.exporter.otlp.protocol,case,http/protobuf,SHARED
 otel.exporter.otlp.protocol,digitalized-documents,http/protobuf,SHARED
+otel.exporter.otlp.protocol,e-sign-svc,http/protobuf,SHARED
 otel.exporter.otlp.protocol,epost-tracker,http/protobuf,SHARED
 otel.exporter.otlp.protocol,inportal-survey,http/protobuf,SHARED
 otel.exporter.otlp.protocol,lock-svc,http/protobuf,SHARED
@@ -819,6 +850,7 @@ otel.instrumentation.kafka.enabled,bail-bond,true,SHARED
 otel.instrumentation.kafka.enabled,bank-details,true,SHARED
 otel.instrumentation.kafka.enabled,case,true,SHARED
 otel.instrumentation.kafka.enabled,digitalized-documents,true,SHARED
+otel.instrumentation.kafka.enabled,e-sign-svc,true,SHARED
 otel.instrumentation.kafka.enabled,epost-tracker,true,SHARED
 otel.instrumentation.kafka.enabled,inportal-survey,true,SHARED
 otel.instrumentation.kafka.enabled,lock-svc,true,SHARED
@@ -833,6 +865,7 @@ otel.instrumentation.kafka.experimental-span-attributes,bail-bond,true,SHARED
 otel.instrumentation.kafka.experimental-span-attributes,bank-details,true,SHARED
 otel.instrumentation.kafka.experimental-span-attributes,case,true,SHARED
 otel.instrumentation.kafka.experimental-span-attributes,digitalized-documents,true,SHARED
+otel.instrumentation.kafka.experimental-span-attributes,e-sign-svc,true,SHARED
 otel.instrumentation.kafka.experimental-span-attributes,epost-tracker,true,SHARED
 otel.instrumentation.kafka.experimental-span-attributes,inportal-survey,true,SHARED
 otel.instrumentation.kafka.experimental-span-attributes,lock-svc,true,SHARED
@@ -847,6 +880,7 @@ otel.logs.exporter,bail-bond,none,SHARED
 otel.logs.exporter,bank-details,none,SHARED
 otel.logs.exporter,case,none,SHARED
 otel.logs.exporter,digitalized-documents,none,SHARED
+otel.logs.exporter,e-sign-svc,none,SHARED
 otel.logs.exporter,epost-tracker,none,SHARED
 otel.logs.exporter,inportal-survey,none,SHARED
 otel.logs.exporter,lock-svc,none,SHARED
@@ -861,6 +895,7 @@ otel.metrics.exporter,bail-bond,none,SHARED
 otel.metrics.exporter,bank-details,none,SHARED
 otel.metrics.exporter,case,none,SHARED
 otel.metrics.exporter,digitalized-documents,none,SHARED
+otel.metrics.exporter,e-sign-svc,none,SHARED
 otel.metrics.exporter,epost-tracker,none,SHARED
 otel.metrics.exporter,inportal-survey,none,SHARED
 otel.metrics.exporter,lock-svc,none,SHARED
@@ -875,6 +910,7 @@ otel.traces.exporter,bail-bond,otlp,SHARED
 otel.traces.exporter,bank-details,otlp,SHARED
 otel.traces.exporter,case,otlp,SHARED
 otel.traces.exporter,digitalized-documents,otlp,SHARED
+otel.traces.exporter,e-sign-svc,otlp,SHARED
 otel.traces.exporter,epost-tracker,otlp,SHARED
 otel.traces.exporter,inportal-survey,otlp,SHARED
 otel.traces.exporter,lock-svc,otlp,SHARED
