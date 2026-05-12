@@ -31,7 +31,7 @@ Core case-lifecycle domain — the bulk of DRISTI.
 |---|---:|---|---|---|---|
 | `lock-svc` | 19 | **done** | `case-lifecycle` | `locksvc` | First test-drive |
 | `case` | 330 | **done** | `case-lifecycle` | `cases` | Largest service; pipeline hardened against it |
-| `hearing` | 196 | **done** | `case-lifecycle` | `hearing` | OrderUtil REST→direct (order svc); CaseUtil deferred pending case Phase 35 |
+| `hearing` | 196 | pending | `case-lifecycle` | `hearing` | |
 | `order` | 105 | **done** | `case-lifecycle` | `order` | First service to drive Phase 35 contract-lift; Rule 29 workflow harmonization |
 | `task` | 184 | pending | `case-lifecycle` | `task` | |
 | `evidence` | 161 | pending | `case-lifecycle` | `evidence` | |
@@ -46,9 +46,9 @@ Core case-lifecycle domain — the bulk of DRISTI.
 | `Notification` | 48 | **done** | `case-lifecycle` | `notification` | First migration by an extended-team contributor; surfaced empty-package, YAML-stability, and pipeline-output staging gaps fixed in 5fb67371 |
 | `digitalized-documents` | 105 | pending | `case-lifecycle` | `digitalizeddocuments` | |
 | `ctc` | 125 | pending | `case-lifecycle` | `ctc` | |
-| `template-configuration` | 29 | pending | `case-lifecycle` | `templateconfiguration` | |
-| `ab-diary` | 91 | pending | `case-lifecycle` | `abdiary` | |
-| `inportal-survey` | 43 | pending | `case-lifecycle` | `inportalsurvey` | |
+| `template-configuration` | 29 | **done** | `case-lifecycle` | `templateconfiguration` | First migration on the parallel-migration kickoff recipe; leaf-service path validated (no `*Api`, `@ApplicationModule` for boundary, Rule 40 scan clean) |
+| `ab-diary` | 91 | **done** | `case-lifecycle` | `abdiary` | Two-PR split (#66 structural+uplift, #68 dead-code sweep + Phase 4a revert). A-diary live; B-diary case-fetch deferred — wire `CaseApi` directly when resumed (Rule 32). FileStoreUtil lift to dristi-common deferred to its own Tier 3 PR |
+| `inportal-survey` | 43 | **done** | `case-lifecycle` | `inportalsurvey` | Second leaf service after `template-configuration` (0 intra-DRISTI REST calls); 12 contract DTOs Phase-35-lifted to `dristi-common/contract/inportalsurvey/`; `@ApplicationModule` boundary marker, no `*Api` (no callers yet). Merge resolution (PR #64) surfaced that Pipeline 5 mechanically re-adds REST host keys to subdomain overlays after REST→direct cleanup commits → `SERVICE_DEAD_KEYS` denylist added in `run_consolidation.py` (483b71f8c) so ab-diary's `dristi.case.*` and payment-calculator's `egov.case.*` stay suppressed across future regens |
 | `scheduler-svc` | 237 | pending | `case-lifecycle` | `scheduler` | depends on `hearing` |
 | `openapi` | 260 | pending | `case-lifecycle` | `openapi` | |
 
@@ -70,14 +70,14 @@ External-system integrations.
 | `njdg-transformer` | 157 | pending | `integration` | `njdg` | |
 | `icops_integration-kerala` | 89 | pending | `integration` | `icops` | |
 | `e-sign-svc` + `esign-interceptor` | 68 | pending | `integration` | `esign` | merge both source services into one subdomain |
-| `epost-tracker` | 73 | pending | `integration` | `epost` | |
+| `epost-tracker` | 73 | **done** | `integration` | `epost` | First domain-integration service to drive contract DTO lift; 20 hand-coded POJOs manually lifted to `dristi-common/contract/epost/` because source had no Swagger-generated DTOs (Phase 35 yielded zero). Rule 41 follow-up `5634d1cb9` qualified the 4 new epost stereotypes (Consumer/UserService/MdmsDataConfig/PdfServiceUtil); peer-side qualifier on order's `MdmsDataConfig` + abdiary's `PdfServiceUtil` deferred (each name has only 1 instance on main today, BeanNameCollisionTest green). REST→direct deferred: `SummonsHost` (summons-svc pending), `PdfServiceHost` (platform) |
 | `bank-details` | 15 | **done** | `integration` | `bank` | First non-case-lifecycle service; surfaced /migrate-service Rule 28 violation, fixed in PR #55 |
 
 ## domain-payments
 
 | Service | Files | Status | `--module` | `--subdomain` | Notes |
 |---|---:|---|---|---|---|
-| `payment-calculator-svc` | 107 | pending | `payments` | `calculator` | |
+| `payment-calculator-svc` | 107 | **done** | `payments` | `calculator` | First cross-Maven-module `*Api` consumer (calculator → `CaseApi`). Surfaced Rule 31a (`@NamedInterface("api")` for cross-Maven-module access) and Rule 41 (subdomain `Configuration`/`*Util`/`*Service` bean-name qualifier). Added `BeanNameCollisionTest` (PR #65) as static catch-net for Rule 41 |
 
 ## De-scoped (NOT migrated)
 

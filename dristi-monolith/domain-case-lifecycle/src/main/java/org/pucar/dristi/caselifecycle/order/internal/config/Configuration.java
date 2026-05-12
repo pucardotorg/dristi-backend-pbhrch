@@ -43,16 +43,6 @@ public class Configuration {
     @Value("${egov.idgen.path}")
     private String idGenPath;
 
-    // Case Config
-    @Value("${egov.case.host}")
-    private String caseHost;
-
-    @Value("${egov.case.path}")
-    private String casePath;
-
-    @Value("${egov.case.search.path}")
-    private String caseSearchPath;
-
     // Hearing Config
     @Value("${egov.hearing.host}")
     private String hearingHost;

@@ -1,0 +1,14 @@
+# Classes lifted from internal/web/models/ to dristi-common/contract/<subdomain>/
+org.pucar.dristi.common.contract.inportalsurvey.Eligibility
+org.pucar.dristi.common.contract.inportalsurvey.EligibilityRequest
+org.pucar.dristi.common.contract.inportalsurvey.EligibilityResponse
+org.pucar.dristi.common.contract.inportalsurvey.FeedBack
+org.pucar.dristi.common.contract.inportalsurvey.FeedBackRequest
+org.pucar.dristi.common.contract.inportalsurvey.FeedBackResponse
+org.pucar.dristi.common.contract.inportalsurvey.Rating
+org.pucar.dristi.common.contract.inportalsurvey.RemindMeLaterRequest
+org.pucar.dristi.common.contract.inportalsurvey.RemindMeLaterResponse
+org.pucar.dristi.common.contract.inportalsurvey.RequestInfoWrapper
+org.pucar.dristi.common.contract.inportalsurvey.SurveyTracker
+org.pucar.dristi.common.contract.inportalsurvey.SurveyTrackerRequest
+org.pucar.dristi.common.contract.inportalsurvey.package-info

@@ -1,0 +1,21 @@
+{
+  "service": "payment-calculator-svc",
+  "source_dir": "dristi-services/payment-calculator-svc",
+  "target_module": "payments",
+  "target_subdomain": "calculator",
+  "current_package": "drishti",
+  "target_package": "org.pucar.dristi.payments.calculator",
+  "main_file_count": 79,
+  "test_file_count": 27,
+  "has_spring_boot_main": true,
+  "duplicated_protected_classes": [
+    "MdmsUtil",
+    "ResponseInfoFactory",
+    "KafkaProducerService",
+    "ServiceRequestRepository"
+  ],
+  "rest_call_files": [
+    "dristi-services/payment-calculator-svc/src/main/java/drishti/payment/calculator/repository/ServiceRequestRepository.java"
+  ],
+  "source_context_path": "/payment-calculator"
+}

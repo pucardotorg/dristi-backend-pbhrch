@@ -1,7 +1,7 @@
 package digit.enrichment;
 
 import digit.util.DigitalizedDocumentUtil;
-import org.pucar.dristi.common.models.AuditDetails;
+import digit.web.models.AuditDetails;
 import digit.web.models.DigitalizedDocument;
 import digit.web.models.DigitalizedDocumentRequest;
 import digit.web.models.Document;

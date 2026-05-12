@@ -54,6 +54,10 @@ git status --short                                    # tree must be clean
 git rev-parse --abbrev-ref HEAD                       # branch name
 ls dristi-services/<service> 2>/dev/null \
   || ls integration-services/<service> 2>/dev/null    # source must exist
+git fetch origin
+git merge-base --is-ancestor origin/monolith/main HEAD \
+  && echo "branch is up to date" \
+  || echo "BEHIND monolith/main — merge it in first"
 ```
 
 Pre-flight rules:
@@ -63,6 +67,14 @@ Pre-flight rules:
   now (`git checkout -b monolith/<service>`).
 - **Source dir must exist** under `dristi-services/` or
   `integration-services/`. If neither, the service name is wrong.
+- **Branch must be up to date with `monolith/main`.** If `BEHIND`,
+  surface to user: *"`monolith/main` has moved since this branch
+  diverged. Merge it in (`git merge origin/monolith/main`), resolve
+  conflicts (typically just `application.yml` profile list), re-run
+  consolidation with cumulative `--service` list per Step 2.3, and
+  re-run Step 1 before proceeding."* Wait for confirmation. See
+  [PARALLEL_MIGRATION_PLAN.md §5](../../scripts/migration/PARALLEL_MIGRATION_PLAN.md)
+  for the manual merge recipe.
 
 ---
 
@@ -137,8 +149,13 @@ order resolves them; flag any that look behaviorally significant.
 Apply these if the service has them (each has bitten every prior
 migration):
 
-- **Flyway `_2` rename** if Gate 7 collides with an existing migration
-  version (Rule 24 collision rule).
+- **Flyway suffix / normalization** — consult
+  [scripts/migration/flyway-suffix-allocation.md](../../scripts/migration/flyway-suffix-allocation.md)
+  for this service's pre-allocated action. Apply Tier 1 actions
+  deterministically (collision suffix, zero-pad). For Tier 4 entries
+  (e.g. `casemanagement`, `openapi` ambiguous-year normalization),
+  surface the candidate target filename and ask the dev to confirm
+  via `git log` of the source SQL file.
 - **Canonical signature adapt** per Rule 26 — caller code that depends
   on a service-local signature of a now-canonical class needs editing
   (e.g. `MdmsUtil.fetchMdmsData` `Map<...>` return).
@@ -232,7 +249,86 @@ Verify Gate 8 still passes (no contract-suffixed classes left in
 grep -E "^(PASS|FAIL) Gate" /tmp/migration-<service>-c2.log
 ```
 
-### 3.2 Read REST calls and classify
+### 3.2 Declare `<Subdomain>Api` + `@ApplicationModule` (Rules 31, 33, 34)
+
+If any subdomain (already `done` or in-flight on a peer branch) calls
+into this service via REST, expose those methods on a top-level
+`<Subdomain>Api` so callers can switch from REST → direct in this PR
+(Rule 32 — at target-migration time).
+
+**Identify required methods.** Survey both sources:
+
+```bash
+# Grep `done` services' rest_calls for calls targeting <service>
+grep -l "<host-token-for-this-service>" \
+  scripts/migration/per_module/output/*_rest_calls.txt
+
+# Coordinator should also share peer branches' rest_calls files
+# (in-flight services may need methods now to avoid cross-PR coordination).
+```
+
+For each unique method, draft the `<Subdomain>Api` signature:
+- **Rule 33:** `RequestInfo` is an explicit first parameter — never thread-local.
+- **Rule 34:** parameter and return types are contract DTOs only —
+  Phase-35-lifted to `dristi-common/contract/<subdomain>/` (Rule 24)
+  or in-place via `@NamedInterface("contract")` (Rule 24a).
+- **Rule 35:** if the method is a *write* (mutates target state), STOP
+  — that's Tier 3, surface 2-3 design options to the dev.
+
+**Surface to dev before scaffolding:**
+
+> "Identified N REST calls into `<service>` from `done`/in-flight services
+> [list]. Proposed `<Subdomain>Api` shape:
+>   - `boolean methodA(RequestInfo, ...)`
+>   - `<DTO> methodB(RequestInfo, ...)`
+> Confirm before creating the interface + impl + ApplicationModule marker?"
+
+Wait for explicit OK. Then create three files (templates: `LockApi`,
+`OrderApi`, `CaseApi` from commit `7790b59c2`):
+
+- `<subdomain>/<Subdomain>Api.java` — top-level interface
+- `<subdomain>/internal/service/<Subdomain>ApiImpl.java` — thin delegate
+  to existing internal service classes; no new business logic
+- `<subdomain>/package-info.java` — `@ApplicationModule(displayName = "<Subdomain>")`
+
+If a needed method requires a Tier 3/4 decision Claude can't resolve
+(e.g. an in-flight caller wants a method that touches Rule 35
+territory), stop. Do not infer.
+
+If no other subdomain calls into this service (rare for case-lifecycle,
+normal for leaf integration services like `treasury-backend`), skip
+`<Subdomain>Api` entirely. Still add `@ApplicationModule` for boundary
+enforcement.
+
+### 3.3 Convert REST → direct (both directions)
+
+#### (a) `done` callers calling INTO `<service>` (Rule 32)
+
+For each `done` service identified in 3.2 that called into `<service>`
+via REST, edit its caller code in this PR:
+
+```java
+// BEFORE (in done service)
+@Autowired private <Service>Util util;
+... util.method(request)
+
+// AFTER
+@Autowired private <Subdomain>Api api;
+... api.method(requestInfo, ...)
+```
+
+- **Rule 38:** delete the REST helper util in the caller — don't keep
+  it as a one-line wrapper.
+- **Rule 36:** update caller's tests in the same diff — mock
+  `<Subdomain>Api`, not `RestTemplate`/`serviceRequestRepository`.
+- **Rule 37:** sweep dead code surfaced by the conversion (orphaned
+  DTOs, unused config keys, dead `@Autowired` fields).
+
+Show each caller diff before applying. Wait for OK on each.
+
+#### (b) `<service>`'s own REST calls TO `done` services
+
+Read `<service>_rest_calls.txt`:
 
 ```bash
 cat scripts/migration/per_module/output/<service>_rest_calls.txt 2>/dev/null
@@ -242,8 +338,11 @@ cat scripts/migration/per_module/output/<service>_contract_lift.txt 2>/dev/null
 For each REST call:
 - **Tier 1 to convert:** target service is already in the monolith
   (check SERVICE_REGISTRY for `done` rows) AND the call shape is
-  straightforward (typed DTO in/out). Do the conversion in the migrated
-  tree, show the diff.
+  straightforward (typed DTO in/out) AND the target's `*Api` exposes
+  the needed method. Switch to `@Autowired <Target>Api`. Show the diff.
+  If the target's `*Api` doesn't expose the needed method, **stop and
+  escalate per Rule 39 (Tier 4)** — dev decides whether to coordinate
+  cross-PR exposure or leave as REST temporarily.
 - **Tier 4 (ask user):** target service is unmigrated, or the call uses
   `Object`-typed payloads, or the host getter name is ambiguous. List
   these and ask which to convert.
@@ -254,7 +353,40 @@ If lifted DTOs need legacy deps in `dristi-common` (e.g.
 `digit-models`, `swagger-core:1.5.18`), add them to
 `dristi-monolith/dristi-common/pom.xml` per Rule 24's note.
 
-### 3.3 Build verification
+### 3.4 Build verification
+
+#### 3.4.1 Rule 40 mutation scan
+
+Before maven, scan for `RequestInfo` mutations introduced or exposed
+by REST→direct conversion. The pattern was dormant under REST
+(serialization severed the reference) but leaks across direct calls.
+
+```bash
+grep -rnE "(reqInfo|requestInfo|info)\.(setUserInfo\(|getUserInfo\(\)\.(set[A-Z]|getRoles\(\)\.(add|remove)\())" \
+  --include="*.java" \
+  dristi-monolith/domain-<module>/src/main/java/
+```
+
+For each hit, read the enclosing method and classify:
+- **Safe (Rule 40 exception):** the mutated `RequestInfo` was declared
+  via `RequestInfo X = new RequestInfo()` in the same scope. No leak. Skip.
+- **Tier 4 (must fix):** the `RequestInfo` originated from a parameter
+  or `*.getRequestInfo()` call. Surface to dev with the fix recipe:
+  ```java
+  // BEFORE
+  requestInfo.getUserInfo().getRoles().add(role);
+  downstream.setRequestInfo(requestInfo);
+
+  // AFTER
+  downstream.setRequestInfo(
+      RequestInfoUtil.withExtraRole(requestInfo, role));
+  ```
+  Wait for explicit OK per site. Apply only on confirmation.
+
+If any unresolved Tier 4 finds remain, do NOT proceed to 3.4.2 — maven
+won't fail on shared-reference mutations; the bug would slip past CI.
+
+#### 3.4.2 Maven verification
 
 ```bash
 cd dristi-monolith && \
@@ -265,11 +397,19 @@ cd dristi-monolith && \
   2>&1 | tail -200 > /tmp/mvn-test-<service>-c2.log
 echo "exit=$?"
 
+# Run dristi-app tests explicitly so ModuleStructureTest runs and
+# catches Rule 31 boundary violations *before* the package phase.
+mvn -B -pl dristi-app -am test \
+  -Dsurefire.failIfNoSpecifiedTests=false \
+  2>&1 | tail -200 > /tmp/mvn-app-test-<service>-c2.log
+grep "ModuleStructureTest\|structural violation" /tmp/mvn-app-test-<service>-c2.log || true
+echo "exit=$?"
+
 mvn -B -pl dristi-app -am package 2>&1 | tail -100 > /tmp/mvn-package-<service>-c2.log
 echo "exit=$?"
 ```
 
-### 3.4 C2 summary and pause
+### 3.5 C2 summary and pause
 
 Print the C2 summary (contracts lifted, REST calls converted /
 deferred / skipped, dristi-common deps added, build status) and
@@ -329,6 +469,16 @@ Test plan.
 
 - Failing gate at Step 2.1 or 3.1 → invoke `/debug-gate`, return when fixed.
 - Tier 3/4 decision needed → present, wait, do not act.
-- `mvn` failure at Step 2.5 or 3.3 → diagnose, do not commit.
+- `mvn` failure at Step 2.5 or 3.4.2 → diagnose, do not commit.
+- **`ModuleStructureTest` violation** at Step 3.4.2 → surface the violating
+  file + import line. Boundary breach is fixed by switching to the
+  target's `*Api` (Rule 31), not by silencing the test.
+- **Rule 40 mutation found** at Step 3.4.1 → STOP. Convert to
+  `RequestInfoUtil.withExtraRole/withUser` (defensive copy). Maven won't
+  catch shared-reference mutations.
+- **Cross-`*Api` method gap** at Step 3.2 or 3.3(b) → STOP. Surface
+  options per Rule 39: (a) coordinate with target's migrator to expose
+  the method, (b) leave as REST temporarily and file a follow-up. Do
+  not edit another subdomain's `*Api` from this branch.
 - User says "stop" or shows hesitation → stop immediately.
 - **Never collapse C1 + C2 into one commit** — Rule 28 violation.

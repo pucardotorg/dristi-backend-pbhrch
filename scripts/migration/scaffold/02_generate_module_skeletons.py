@@ -80,6 +80,16 @@ DOMAIN_MODULES = [
     "domain-payments",
 ]
 
+# Per-module cross-Maven-module domain deps. Keyed by the consuming
+# artifact; values are other domain-* artifactIds it depends on.
+# Added when a subdomain migration (Rule 32) needs to call another
+# subdomain's *Api whose maven module is different (Rule 31a). Every
+# manual `<dependency>` added to a domain-*/pom.xml must be recorded
+# here so the next scaffold regen doesn't clobber it.
+EXTRA_DEPS: dict[str, list[str]] = {
+    "domain-payments": ["domain-case-lifecycle"],
+}
+
 
 def module_pom(artifact: str, description: str) -> str:
     deps_block = ""
@@ -87,6 +97,14 @@ def module_pom(artifact: str, description: str) -> str:
         deps_block = f"""        <dependency>
             <groupId>{PARENT_GROUP}</groupId>
             <artifactId>dristi-common</artifactId>
+            <version>${{project.version}}</version>
+        </dependency>
+"""
+
+    for extra in EXTRA_DEPS.get(artifact, []):
+        deps_block += f"""        <dependency>
+            <groupId>{PARENT_GROUP}</groupId>
+            <artifactId>{extra}</artifactId>
             <version>${{project.version}}</version>
         </dependency>
 """
