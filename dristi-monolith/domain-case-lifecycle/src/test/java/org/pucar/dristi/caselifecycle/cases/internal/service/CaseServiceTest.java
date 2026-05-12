@@ -35,6 +35,8 @@ import org.pucar.dristi.caselifecycle.cases.internal.repository.AdvocateOfficeCa
 import org.pucar.dristi.caselifecycle.cases.internal.repository.CaseRepository;
 import org.pucar.dristi.common.repository.ServiceRequestRepository;
 import org.pucar.dristi.caselifecycle.cases.internal.util.*;
+import org.pucar.dristi.common.contract.advocate.Advocate;
+import org.pucar.dristi.identityaccess.advocate.AdvocateApi;
 import org.pucar.dristi.common.util.DateUtil;
 import org.pucar.dristi.caselifecycle.cases.internal.validators.CaseRegistrationValidator;
 import org.pucar.dristi.caselifecycle.cases.internal.validators.EvidenceValidator;
@@ -81,7 +83,7 @@ public class CaseServiceTest {
     private IndividualService individualService;
 
     @Mock
-    private AdvocateUtil advocateUtil;
+    private AdvocateApi advocateApi;
 
     @Mock
     private TaskUtil taskUtil;
@@ -193,8 +195,7 @@ public class CaseServiceTest {
         courtCase = new CourtCase();
         objectMapper = new ObjectMapper();
         enrichmentService = new EnrichmentService(new ArrayList<>());
-        OrderUtil orderUtil = new OrderUtil(null, null, null);
-    caseService = new CaseService(validator,enrichmentUtil,caseRepository,workflowService,config,producer,taskUtil,etreasuryUtil,encryptionDecryptionUtil, hearingUtil,userService,paymentCalculaterUtil,objectMapper,cacheService,enrichmentService, notificationService, individualService, advocateUtil, evidenceUtil, evidenceValidator,caseUtil,fileStoreUtil, orderUtil, dateUtil,inboxUtil, advocateOfficeCaseMemberRepository, advocateDetailBlockBuilder);
+    caseService = new CaseService(validator,enrichmentUtil,caseRepository,workflowService,config,producer,taskUtil,etreasuryUtil,encryptionDecryptionUtil, hearingUtil,userService,paymentCalculaterUtil,objectMapper,cacheService,enrichmentService, notificationService, individualService, advocateApi, evidenceUtil, evidenceValidator,caseUtil,fileStoreUtil, dateUtil,inboxUtil, advocateOfficeCaseMemberRepository, advocateDetailBlockBuilder);
 
         requestInfo = RequestInfo.builder()
                 .userInfo(User.builder().uuid("ba8767a6-7cb1-416b-803e-19cf9dca06bc").tenantId(TENANT_ID).build())
@@ -320,7 +321,7 @@ public class CaseServiceTest {
                 .thenReturn(CalculationRes.builder().calculation(Collections.emptyList()).build()); // No payment
 
         // Mock advocate/individual fetching needed by addAdvocateToCase/joinCaseNotifications
-        when(advocateUtil.fetchAdvocatesById(any(), anyString())).thenReturn(Collections.singletonList(Advocate.builder().individualId(ADVOCATE_INDIVIDUAL_ID).build()));
+        when(advocateApi.searchAdvocatesById(any(), anyString())).thenReturn(Collections.singletonList(Advocate.builder().individualId(ADVOCATE_INDIVIDUAL_ID).build()));
         when(individualService.getIndividualsByIndividualId(any(), eq(ADVOCATE_INDIVIDUAL_ID))).thenReturn(Collections.singletonList(Individual.builder().userUuid("adv-user-uuid").name(Name.builder().givenName("Adv").build()).mobileNumber("11111").build()));
         when(individualService.getIndividualsByIndividualId(any(), eq(REPRESENTING_INDIVIDUAL_ID))).thenReturn(Collections.singletonList(Individual.builder().userUuid("rep-user-uuid").name(Name.builder().givenName("Rep").build()).mobileNumber("22222").build()));
         when(hearingUtil.fetchHearingDetails(any())).thenReturn(Collections.emptyList()); // Assume no hearings for simplicity

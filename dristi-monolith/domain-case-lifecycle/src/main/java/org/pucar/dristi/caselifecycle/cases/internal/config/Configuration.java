@@ -75,16 +75,6 @@ public class Configuration {
 	@Value("${egov.filestore.path}")
 	private String fileStorePath;
 
-	// Advocate Config
-	@Value("${egov.advocate.host}")
-	private String advocateHost;
-
-	@Value("${egov.advocate.path}")
-	private String advocatePath;
-
-	@Value("${egov.advocate.clerk.path}")
-	private String advocateClerkPath;
-
     //Individual Service
     @Value("${egov.individual.host}")
     private String individualHost;
@@ -98,12 +88,7 @@ public class Configuration {
     @Value("${egov.individual.search.path}")
     private String individualSearchEndpoint;
 
-    // Advocate Office Management Config
-    @Value("${dristi.advocate.office.host}")
-    private String advocateOfficeHost;
 
-    @Value("${dristi.advocate.office.search.member.endpoint}")
-    private String advocateOfficeSearchMemberEndpoint;
 
     @Value("${egov.individual.update.path}")
     private String individualUpdateEndpoint;
@@ -378,12 +363,6 @@ public class Configuration {
 	@Value("${indexer.join.case.kafka.topic}")
 	private String joinCaseTopicIndexer;
 
-	@Value("${pucar.lock.host}")
-	private String lockSvcHost;
-
-	@Value("${pucar.lock.search.endpoint}")
-	private String lockEndPoint;
-
 	@Value("${egov.payment.calculator.host}")
 	private String paymentCalculatorHost;
 
@@ -458,13 +437,6 @@ public class Configuration {
 
 	@Value("${egov.sms.vakalatnama.filed.time}")
 	private String smsVakalatnamaFiledTime;
-
-	// Order
-	@Value("${egov.order.host}")
-	private String orderHost;
-
-	@Value("${egov.order.search.endpoint}")
-	private String orderSearchEndpoint;
 
 	@Value("${app.zone.id}")
 	private String zoneId;

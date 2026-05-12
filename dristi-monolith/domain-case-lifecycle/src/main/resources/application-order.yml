@@ -10,7 +10,20 @@ app:
   zone:
     id: Asia/Kolkata
 otel:
+  traces:
+    exporter: otlp
+  logs:
+    exporter: none
+  metrics:
+    exporter: none
+  exporter:
+    otlp:
+      endpoint: http://jaeger-collector.tracing:4318
+      protocol: http/protobuf
   instrumentation:
+    kafka:
+      enabled: true
+      experimental-span-attributes: true
     http:
       server:
         ignore-urls: /order/health,/order/prometheus
@@ -72,9 +85,6 @@ egov:
     store:
       delete:
         endpoint: /filestore/v1/files/delete
-  advocate:
-    host: http://localhost:8080/
-    path: advocate/v1/_search
   case:
     host: http://localhost:9090/
     path: case/v1/_exists

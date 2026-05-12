@@ -1,6 +1,5 @@
 package org.pucar.dristi.caselifecycle.cases.internal.validators;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -10,10 +9,10 @@ import org.egov.tracer.model.CustomException;
 import org.pucar.dristi.caselifecycle.cases.internal.config.Configuration;
 import org.pucar.dristi.caselifecycle.cases.internal.repository.CaseRepository;
 import org.pucar.dristi.caselifecycle.cases.internal.service.IndividualService;
-import org.pucar.dristi.caselifecycle.cases.internal.util.AdvocateOfficeUtil;
-import org.pucar.dristi.caselifecycle.cases.internal.util.AdvocateUtil;
+import org.pucar.dristi.caselifecycle.locksvc.LockApi;
+import org.pucar.dristi.identityaccess.advocate.AdvocateApi;
+import org.pucar.dristi.identityaccess.advocateoffice.AdvocateOfficeApi;
 import org.pucar.dristi.common.util.FileStoreUtil;
-import org.pucar.dristi.caselifecycle.cases.internal.util.LockUtil;
 import org.pucar.dristi.common.util.MdmsUtil;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.*;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.v2.Emails;
@@ -47,29 +46,29 @@ public class CaseRegistrationValidator {
 
     private FileStoreUtil fileStoreUtil;
 
-    private AdvocateUtil advocateUtil;
+    private AdvocateApi advocateApi;
 
-    private AdvocateOfficeUtil advocateOfficeUtil;
+    private AdvocateOfficeApi advocateOfficeApi;
 
     private Configuration config;
 
     private ObjectMapper objectMapper;
 
-    private final LockUtil lockUtil;
+    private final LockApi lockApi;
 
     @Autowired
     public CaseRegistrationValidator(IndividualService indService, CaseRepository caseRepo,
-                                     MdmsUtil mdmsUtil, FileStoreUtil fileStoreUtil, AdvocateUtil advocateUtil,
-                                     AdvocateOfficeUtil advocateOfficeUtil,
-                                     Configuration config, LockUtil lockUtil, ObjectMapper objectMapper) {
+                                     MdmsUtil mdmsUtil, FileStoreUtil fileStoreUtil, AdvocateApi advocateApi,
+                                     AdvocateOfficeApi advocateOfficeApi,
+                                     Configuration config, LockApi lockApi, ObjectMapper objectMapper) {
         this.individualService = indService;
         this.repository = caseRepo;
         this.mdmsUtil = mdmsUtil;
         this.fileStoreUtil = fileStoreUtil;
-        this.advocateUtil = advocateUtil;
-        this.advocateOfficeUtil = advocateOfficeUtil;
+        this.advocateApi = advocateApi;
+        this.advocateOfficeApi = advocateOfficeApi;
         this.config = config;
-        this.lockUtil = lockUtil;
+        this.lockApi = lockApi;
         this.objectMapper = objectMapper;
     }
 
@@ -125,13 +124,7 @@ public class CaseRegistrationValidator {
         String tenantId = caseRequest.getCases().getTenantId();
 
         // check the lock for case if there is lock then throw an exception
-        boolean isLocked;
-        try {
-            isLocked = lockUtil.isLockPresent(caseRequest.getRequestInfo(), uniqueId, tenantId);
-        } catch (JsonProcessingException e) {
-            throw new CustomException("JSON_PROCESSING_EXCEPTION", "Exception Occurred while processing json");
-        }
-        if (isLocked) {
+        if (lockApi.isLockPresent(caseRequest.getRequestInfo(), uniqueId, tenantId)) {
             throw new CustomException("CASE_LOCKED_EXCEPTION", "Case is locked please try after sometime");
         }
 
@@ -170,7 +163,7 @@ public class CaseRegistrationValidator {
         if (courtCase.getRepresentatives() != null && !courtCase.getRepresentatives().isEmpty()) {
             courtCase.getRepresentatives().forEach(rep -> {
                 if (rep.getAdvocateId() != null) {
-                    if (!advocateUtil.doesAdvocateExist(requestInfo, rep.getAdvocateId()))
+                    if (!advocateApi.advocateExists(requestInfo, rep.getAdvocateId()))
                         throw new CustomException(INVALID_ADVOCATE_ID, INVALID_ADVOCATE_DETAILS);
                 } else
                     throw new CustomException(INVALID_ADVOCATE_ID, INVALID_ADVOCATE_DETAILS);
@@ -200,9 +193,9 @@ public class CaseRegistrationValidator {
             boolean isAuthorized = false;
 
             // Check 1: Is the user the advocate themselves?
-            List<Advocate> advocates = advocateUtil.fetchAdvocatesById(requestInfo, rep.getAdvocateId());
+            var advocates = advocateApi.searchAdvocatesById(requestInfo, rep.getAdvocateId());
             if (!advocates.isEmpty()) {
-                Advocate advocate = advocates.get(0);
+                var advocate = advocates.get(0);
                 if (advocate.getIndividualId() != null) {
                     List<Individual> individuals = individualService.getIndividualsByIndividualId(requestInfo, advocate.getIndividualId());
                     if (!individuals.isEmpty() && userUuid.equals(individuals.get(0).getUserUuid())) {
@@ -214,7 +207,7 @@ public class CaseRegistrationValidator {
             // Check 2: Is the user a member of the advocate's office?
             if (!isAuthorized) {
                 try {
-                    isAuthorized = advocateOfficeUtil.isUserMemberOfAdvocateOffice(
+                    isAuthorized = advocateOfficeApi.isUserMemberOfAdvocateOffice(
                             requestInfo,
                             tenantId,
                             UUID.fromString(rep.getAdvocateId()),
@@ -328,7 +321,7 @@ public class CaseRegistrationValidator {
 
         if (representative.getAdvocateId() != null) {
             // validation for advocateId for representative
-            if (!advocateUtil.doesAdvocateExist(requestInfo, representative.getAdvocateId()))
+            if (!advocateApi.advocateExists(requestInfo, representative.getAdvocateId()))
                 throw new CustomException(INVALID_ADVOCATE_ID, INVALID_ADVOCATE_DETAILS);
         } else {
             throw new CustomException(INVALID_ADVOCATE_ID, INVALID_ADVOCATE_DETAILS);
@@ -353,7 +346,7 @@ public class CaseRegistrationValidator {
 
         if (representative.getAdvocateId() != null) {
             // validation for advocateId for representative
-            if (!advocateUtil.doesAdvocateExist(requestInfo, representative.getAdvocateId()))
+            if (!advocateApi.advocateExists(requestInfo, representative.getAdvocateId()))
                 throw new CustomException(INVALID_ADVOCATE_ID, INVALID_ADVOCATE_DETAILS);
         } else {
             throw new CustomException(INVALID_ADVOCATE_ID, INVALID_ADVOCATE_DETAILS);

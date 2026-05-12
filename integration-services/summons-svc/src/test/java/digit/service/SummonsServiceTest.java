@@ -2,7 +2,7 @@ package digit.service;
 
 import digit.config.Configuration;
 import digit.enrichment.SummonsDeliveryEnrichment;
-import org.pucar.dristi.common.kafka.Producer;
+import digit.kafka.Producer;
 import digit.repository.SummonsRepository;
 import digit.util.ExternalChannelUtil;
 import digit.util.FileStorageUtil;

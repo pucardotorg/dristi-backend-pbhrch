@@ -1,0 +1,17 @@
+{
+  "service": "template-configuration",
+  "source_dir": "dristi-services/template-configuration",
+  "target_module": "case-lifecycle",
+  "target_subdomain": "templateconfiguration",
+  "current_package": "org.pucar.dristi",
+  "target_package": "org.pucar.dristi.caselifecycle.templateconfiguration",
+  "main_file_count": 20,
+  "test_file_count": 7,
+  "has_spring_boot_main": true,
+  "duplicated_protected_classes": [
+    "ResponseInfoFactory",
+    "KafkaProducerService"
+  ],
+  "rest_call_files": [],
+  "source_context_path": "/template-configuration"
+}

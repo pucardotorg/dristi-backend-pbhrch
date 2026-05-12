@@ -10,10 +10,13 @@ import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONArray;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.model.CustomException;
+import org.pucar.dristi.caselifecycle.cases.CaseApi;
+import org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseExists;
+import org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseExistsRequest;
+import org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseExistsResponse;
 import org.pucar.dristi.caselifecycle.order.internal.config.Configuration;
 import org.pucar.dristi.caselifecycle.order.internal.config.MdmsDataConfig;
 import org.pucar.dristi.caselifecycle.order.internal.repository.OrderRepository;
-import org.pucar.dristi.caselifecycle.order.internal.util.CaseUtil;
 import org.pucar.dristi.common.util.FileStoreUtil;
 import org.pucar.dristi.common.util.MdmsUtil;
 import org.pucar.dristi.caselifecycle.order.internal.web.models.*;
@@ -33,7 +36,7 @@ import static org.pucar.dristi.caselifecycle.order.internal.config.ServiceConsta
 public class OrderRegistrationValidator {
     private OrderRepository repository;
 
-    private CaseUtil caseUtil;
+    private CaseApi caseApi;
     private FileStoreUtil fileStoreUtil;
 
     private Configuration configuration;
@@ -44,9 +47,9 @@ public class OrderRegistrationValidator {
     private final MdmsDataConfig mdmsDataConfig;
 
     @Autowired
-    public OrderRegistrationValidator(OrderRepository repository, CaseUtil caseUtil, FileStoreUtil fileStoreUtil, Configuration configuration, MdmsUtil mdmsUtil, ObjectMapper objectMapper, MdmsDataConfig mdmsDataConfig) {
+    public OrderRegistrationValidator(OrderRepository repository, CaseApi caseApi, FileStoreUtil fileStoreUtil, Configuration configuration, MdmsUtil mdmsUtil, ObjectMapper objectMapper, MdmsDataConfig mdmsDataConfig) {
         this.repository = repository;
-        this.caseUtil = caseUtil;
+        this.caseApi = caseApi;
         this.fileStoreUtil = fileStoreUtil;
         this.configuration = configuration;
         this.mdmsUtil = mdmsUtil;
@@ -60,7 +63,8 @@ public class OrderRegistrationValidator {
         if (ObjectUtils.isEmpty(orderRequest.getOrder().getStatuteSection()))
             throw new CustomException(CREATE_ORDER_ERR, "statute and section is mandatory for creating order");
 
-        if (!ADMINISTRATIVE.equalsIgnoreCase(orderRequest.getOrder().getOrderCategory()) && !caseUtil.fetchCaseDetails(requestInfo, orderRequest.getOrder().getCnrNumber(), orderRequest.getOrder().getFilingNumber())) {
+        if (!ADMINISTRATIVE.equalsIgnoreCase(orderRequest.getOrder().getOrderCategory())
+                && !caseExists(requestInfo, orderRequest.getOrder().getCnrNumber(), orderRequest.getOrder().getFilingNumber())) {
             throw new CustomException("INVALID_CASE_DETAILS", "Invalid Case");
         }
 
@@ -70,6 +74,20 @@ public class OrderRegistrationValidator {
         validateMDMSDocumentTypes(orderRequest);
 
         validateCompositeOrder(orderRequest);
+    }
+
+    private boolean caseExists(RequestInfo requestInfo, String cnrNumber, String filingNumber) {
+        CaseExists criterion = new CaseExists();
+        criterion.setCnrNumber(cnrNumber);
+        criterion.setFilingNumber(filingNumber);
+        CaseExistsRequest request = new CaseExistsRequest();
+        request.setRequestInfo(requestInfo);
+        request.setCriteria(Collections.singletonList(criterion));
+        CaseExistsResponse response = caseApi.exists(request);
+        return response != null
+                && response.getCriteria() != null
+                && !response.getCriteria().isEmpty()
+                && Boolean.TRUE.equals(response.getCriteria().get(0).getExists());
     }
 
     public void validateCompositeOrder(OrderRequest orderRequest) {

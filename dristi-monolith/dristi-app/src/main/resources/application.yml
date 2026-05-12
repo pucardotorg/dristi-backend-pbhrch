@@ -21,7 +21,7 @@ spring:
     # keys. `shared` carries values every consolidated service agrees on;
     # per-subdomain profiles (cases / locksvc / ...) overlay subdomain
     # config; `local` overrides DB/host/etc. for local dev.
-    active: shared,cases,locksvc,hearing,order,bank,notification,local
+    active: shared,cases,locksvc,order,bank,notification,templateconfiguration,advocate,abdiary,epost,calculator,inportalsurvey,bailbond,digitalizeddocuments,advocateoffice,esign,ctc,local
 
   jpa:
     show-sql: true
@@ -47,9 +47,19 @@ spring:
     locations:
       - classpath:/cases/db/migration/main
       - classpath:/locksvc/db/migration/main
-      - classpath:/hearing/db/migration/main
       - classpath:/order/db/migration/main
       - classpath:/notification/db/migration/main
+      - classpath:/templateconfiguration/db/migration/main
+      - classpath:/advocate/db/migration/main
+      - classpath:/abdiary/db/migration/main
+      - classpath:/epost/db/migration/main
+      - classpath:/calculator/db/migration/main
+      - classpath:/inportalsurvey/db/migration/main
+      - classpath:/bailbond/db/migration/main
+      - classpath:/digitalizeddocuments/db/migration/main
+      - classpath:/advocateoffice/db/migration/main
+      - classpath:/esign/db/migration/main
+      - classpath:/ctc/db/migration/main
     table: public-monolith
 
   kafka:

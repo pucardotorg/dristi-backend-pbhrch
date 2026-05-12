@@ -1,0 +1,2 @@
+dristi-monolith\domain-case-lifecycle\src\main\java\org\pucar\dristi\caselifecycle\ctc\internal\repository\ServiceRequestRepository.java has 1 method(s)/overload(s) absent from canonical: [('fetchResultGetForResource', 1)]
+dristi-monolith\domain-case-lifecycle\src\main\java\org\pucar\dristi\caselifecycle\ctc\internal\util\FileStoreUtil.java has 6 method(s)/overload(s) absent from canonical: [('countPages', 1), ('fetchFileAsBytes', 2), ('fetchFileStoreObjectById', 2), ('getTotalPageCount', 2), ('mergeFiles', 3), ('storeFileInFileStore', 2)]

@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import lombok.SneakyThrows;
-import org.pucar.dristi.caselifecycle.cases.internal.util.LockUtil;
+import org.pucar.dristi.caselifecycle.locksvc.LockApi;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.*;
 import org.egov.common.contract.models.Workflow;
 import org.egov.common.contract.request.RequestInfo;
@@ -38,7 +38,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.pucar.dristi.caselifecycle.cases.internal.config.Configuration;
 import org.pucar.dristi.caselifecycle.cases.internal.repository.CaseRepository;
 import org.pucar.dristi.caselifecycle.cases.internal.service.IndividualService;
-import org.pucar.dristi.caselifecycle.cases.internal.util.AdvocateUtil;
+import org.pucar.dristi.identityaccess.advocate.AdvocateApi;
 import org.pucar.dristi.common.util.FileStoreUtil;
 import org.pucar.dristi.common.util.MdmsUtil;
 
@@ -68,10 +68,10 @@ public class CaseRegistrationValidatorTest {
     private FileStoreUtil fileStoreUtil;
 
     @Mock
-    private LockUtil lockUtil;
+    private LockApi lockApi;
 
     @Mock
-    private AdvocateUtil advocateUtil;
+    private AdvocateApi advocateApi;
     private JoinCaseRequest joinCaseRequest;
     private RequestInfo requestInfo;
     private Party litigant;
@@ -144,7 +144,7 @@ public class CaseRegistrationValidatorTest {
         lenient().when(mdmsUtil.fetchMdmsData(requestInfo, "pg", "case", masterList)).thenReturn(mdmsRes);
         lenient().when(individualService.searchIndividual(requestInfo, "123")).thenReturn(true);
         lenient().when(fileStoreUtil.doesFileExist("pg", "123")).thenReturn(true);
-        lenient().when(advocateUtil.doesAdvocateExist(requestInfo, "123")).thenReturn(true);
+        lenient().when(advocateApi.advocateExists(requestInfo, "123")).thenReturn(true);
 
         // Validate the case registration
         assertDoesNotThrow(() -> validator.validateCaseRegistration(request));
@@ -343,7 +343,7 @@ public class CaseRegistrationValidatorTest {
 
         lenient().when(individualService.searchIndividual(new RequestInfo(), "123")).thenReturn(true);
         lenient().when(fileStoreUtil.doesFileExist("pg","123")).thenReturn(true);
-        lenient().when(advocateUtil.doesAdvocateExist(new RequestInfo(), "123")).thenReturn(true);
+        lenient().when(advocateApi.advocateExists(new RequestInfo(), "123")).thenReturn(true);
         lenient().when(configuration.getCaseBusinessServiceName()).thenReturn("case");
 
         lenient().when(caseRepository.getCases(any(), any())).thenReturn((List.of(CaseCriteria.builder().filingNumber(courtCase.getFilingNumber()).caseId(String.valueOf(courtCase.getId()))
@@ -377,7 +377,7 @@ public class CaseRegistrationValidatorTest {
         CaseRequest caseRequest = new CaseRequest();
         caseRequest.setCases(courtCase);
         caseRequest.setRequestInfo( RequestInfo.builder().userInfo(User.builder().id(1L).build()).build());
-        when(lockUtil.isLockPresent(any(),anyString(),anyString())).thenReturn(false);
+        when(lockApi.isLockPresent(any(),anyString(),anyString())).thenReturn(false);
 
         assertThrows(CustomException.class, () -> validator.validateUpdateRequest(caseRequest, Collections.singletonList(new CourtCase())));
     }
@@ -591,7 +591,7 @@ public class CaseRegistrationValidatorTest {
         document.setFileStore("validFileStore");
         representative.setTenantId("tenantId");
 
-        when(advocateUtil.doesAdvocateExist(requestInfo, "validId")).thenReturn(true);
+        when(advocateApi.advocateExists(requestInfo, "validId")).thenReturn(true);
         when(fileStoreUtil.doesFileExist("tenantId", "validFileStore")).thenReturn(true);
 
         assertTrue(validator.canRepresentativeJoinCase(joinCaseRequest));
@@ -601,7 +601,7 @@ public class CaseRegistrationValidatorTest {
     public void testValidateRepJoinCase_InvalidAdvocateId() {
         representative.setAdvocateId("invalidId");
 
-        when(advocateUtil.doesAdvocateExist(requestInfo, "invalidId")).thenReturn(false);
+        when(advocateApi.advocateExists(requestInfo, "invalidId")).thenReturn(false);
 
 
         CustomException exception = assertThrows(CustomException.class, () -> {
@@ -612,7 +612,7 @@ public class CaseRegistrationValidatorTest {
     @Test
     public void testValidateLitigantJoinCase_NullAdvocateId() {
 
-        lenient().when(advocateUtil.doesAdvocateExist(requestInfo, "ind_id")).thenReturn(false);
+        lenient().when(advocateApi.advocateExists(requestInfo, "ind_id")).thenReturn(false);
 
         CustomException exception = assertThrows(CustomException.class, () -> {
             validator.canRepresentativeJoinCase(joinCaseRequest);
@@ -627,7 +627,7 @@ public class CaseRegistrationValidatorTest {
         document.setFileStore("invalidFileStore");
         representative.setTenantId("tenantId");
 
-        when(advocateUtil.doesAdvocateExist(requestInfo, "validId")).thenReturn(true);
+        when(advocateApi.advocateExists(requestInfo, "validId")).thenReturn(true);
         when(fileStoreUtil.doesFileExist("tenantId", "invalidFileStore")).thenReturn(false);
         CustomException exception = assertThrows(CustomException.class, () -> {
             validator.canRepresentativeJoinCase(joinCaseRequest);
@@ -642,7 +642,7 @@ public class CaseRegistrationValidatorTest {
         representative.setDocuments(Collections.singletonList(document));
         representative.setTenantId("tenantId");
 
-        when(advocateUtil.doesAdvocateExist(requestInfo, "validId")).thenReturn(true);
+        when(advocateApi.advocateExists(requestInfo, "validId")).thenReturn(true);
         CustomException exception = assertThrows(CustomException.class, () -> {
             validator.canRepresentativeJoinCase(joinCaseRequest);
         });
@@ -665,7 +665,7 @@ public class CaseRegistrationValidatorTest {
         caseRequest.setCases(courtCase);
         caseRequest.setRequestInfo( RequestInfo.builder().userInfo(User.builder().id(1L).build()).build());
 
-        when(lockUtil.isLockPresent(any(),anyString(),anyString())).thenReturn(true);
+        when(lockApi.isLockPresent(any(),anyString(),anyString())).thenReturn(true);
         assertThrows(CustomException.class, () -> validator.validateUpdateRequest(caseRequest, Collections.singletonList(new CourtCase())));
     }
 }

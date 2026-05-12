@@ -1,0 +1,26 @@
+# Classes lifted from internal/web/models/ to dristi-common/contract/<subdomain>/
+org.pucar.dristi.common.contract.advocate.Advocate
+org.pucar.dristi.common.contract.advocate.AdvocateClerk
+org.pucar.dristi.common.contract.advocate.AdvocateClerkListResponse
+org.pucar.dristi.common.contract.advocate.AdvocateClerkRequest
+org.pucar.dristi.common.contract.advocate.AdvocateClerkResponse
+org.pucar.dristi.common.contract.advocate.AdvocateClerkSearchCriteria
+org.pucar.dristi.common.contract.advocate.AdvocateClerkSearchRequest
+org.pucar.dristi.common.contract.advocate.AdvocateListResponse
+org.pucar.dristi.common.contract.advocate.AdvocateRequest
+org.pucar.dristi.common.contract.advocate.AdvocateResponse
+org.pucar.dristi.common.contract.advocate.AdvocateSearchCriteria
+org.pucar.dristi.common.contract.advocate.AdvocateSearchRequest
+org.pucar.dristi.common.contract.advocate.AdvocateSimpleSearchRequest
+org.pucar.dristi.common.contract.advocate.Exclude
+org.pucar.dristi.common.contract.advocate.IdGenerationRequest
+org.pucar.dristi.common.contract.advocate.IdGenerationResponse
+org.pucar.dristi.common.contract.advocate.IdRequest
+org.pucar.dristi.common.contract.advocate.IdResponse
+org.pucar.dristi.common.contract.advocate.IndividualSearch
+org.pucar.dristi.common.contract.advocate.IndividualSearchRequest
+org.pucar.dristi.common.contract.advocate.Order
+org.pucar.dristi.common.contract.advocate.Pagination
+org.pucar.dristi.common.contract.advocate.RequestInfoWrapper
+org.pucar.dristi.common.contract.advocate.SMSRequest
+org.pucar.dristi.common.contract.advocate.package-info

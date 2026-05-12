@@ -35,6 +35,12 @@ public class CommonConfiguration {
     @Value("${egov.file.store.delete.endpoint:#{null}}")
     private String fileStoreDeleteEndPoint;
 
+    @Value("${egov.filestore.search.endpoint:#{null}}")
+    private String fileStoreSearchEndpoint;
+
+    @Value("${egov.filestore.save.endpoint:#{null}}")
+    private String fileStoreSaveEndPoint;
+
     @Value("${egov.mdms.host}")
     private String mdmsHost;
 
@@ -46,6 +52,18 @@ public class CommonConfiguration {
 
     @Value("${egov.url.shortner.endpoint:#{null}}")
     private String urlShortnerEndpoint;
+
+    @Value("${egov.url.shortener.expire.endpoint:#{null}}")
+    private String urlShortenerExpireEndpoint;
+
+    @Value("${domain.url:#{null}}")
+    private String domainUrl;
+
+    @Value("${egov.base.url:#{null}}")
+    private String baseUrl;
+
+    @Value("${egov.long.url:#{null}}")
+    private String longUrl;
 
     @Value("${egov.user.host}")
     private String userHost;
@@ -68,9 +86,6 @@ public class CommonConfiguration {
     @Value("${egov.workflow.businessservice.search.path:#{null}}")
     private String wfBusinessServiceSearchPath;
 
-    @Value("${egov.workflow.processinstance.search.path:#{null}}")
-    private String wfProcessInstanceSearchPath;
-
     @Value("${egov.individual.host:#{null}}")
     private String individualHost;
 
@@ -85,10 +100,16 @@ public class CommonConfiguration {
     public String getFileStoreHost() { return fileStoreHost; }
     public String getFileStorePath() { return fileStorePath; }
     public String getFileStoreDeleteEndPoint() { return fileStoreDeleteEndPoint; }
+    public String getFileStoreSearchEndpoint() { return fileStoreSearchEndpoint; }
+    public String getFileStoreSaveEndPoint() { return fileStoreSaveEndPoint; }
     public String getMdmsHost() { return mdmsHost; }
     public String getMdmsEndPoint() { return mdmsEndPoint; }
     public String getUrlShortnerHost() { return urlShortnerHost; }
     public String getUrlShortnerEndpoint() { return urlShortnerEndpoint; }
+    public String getUrlShortenerExpireEndpoint() { return urlShortenerExpireEndpoint; }
+    public String getDomainUrl() { return domainUrl; }
+    public String getBaseUrl() { return baseUrl; }
+    public String getLongUrl() { return longUrl; }
     public String getUserHost() { return userHost; }
     public String getUserCreateEndpoint() { return userCreateEndpoint; }
     public String getUserSearchEndpoint() { return userSearchEndpoint; }
@@ -96,7 +117,6 @@ public class CommonConfiguration {
     public String getWfHost() { return wfHost; }
     public String getWfTransitionPath() { return wfTransitionPath; }
     public String getWfBusinessServiceSearchPath() { return wfBusinessServiceSearchPath; }
-    public String getWfProcessInstanceSearchPath() { return wfProcessInstanceSearchPath; }
     public String getIndividualHost() { return individualHost; }
     public String getIndividualSearchEndpoint() { return individualSearchEndpoint; }
     public String getZoneId() { return zoneId; }

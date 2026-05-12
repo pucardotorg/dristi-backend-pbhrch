@@ -9,10 +9,12 @@ import org.egov.tracer.model.CustomException;
 import org.pucar.dristi.caselifecycle.cases.internal.config.Configuration;
 import org.pucar.dristi.caselifecycle.cases.internal.config.ServiceConstants;
 import org.pucar.dristi.caselifecycle.cases.internal.service.IndividualService;
-import org.pucar.dristi.caselifecycle.cases.internal.web.models.Advocate;
+import org.pucar.dristi.common.contract.advocate.Advocate;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.AdvocateMapping;
+import org.pucar.dristi.identityaccess.advocate.AdvocateApi;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.CourtCase;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.Party;
+import org.pucar.dristi.common.util.RequestInfoUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,13 +29,13 @@ import java.util.*;
 import static org.pucar.dristi.caselifecycle.cases.internal.config.ServiceConstants.*;
 
 @Slf4j
-@Component
+@Component("casesEncryptionDecryptionUtil")
 public class EncryptionDecryptionUtil {
     private final EncryptionService encryptionService;
     private final String stateLevelTenantId;
     private final boolean abacEnabled;
     private final IndividualService individualService;
-    private final AdvocateUtil advocateUtil;
+    private final AdvocateApi advocateApi;
     private final Configuration config;
 
     @Autowired
@@ -41,12 +43,12 @@ public class EncryptionDecryptionUtil {
                                     @Value("${state.level.tenant.id}") String stateLevelTenantId,
                                     @Value("${decryption.abac.enabled}") boolean abacEnabled,
                                     IndividualService individualService,
-                                    AdvocateUtil advocateUtil, Configuration config) {
+                                    AdvocateApi advocateApi, Configuration config) {
         this.encryptionService = encryptionService;
         this.stateLevelTenantId = stateLevelTenantId;
         this.abacEnabled = abacEnabled;
         this.individualService = individualService;
-        this.advocateUtil = advocateUtil;
+        this.advocateApi = advocateApi;
         this.config = config;
     }
 
@@ -88,7 +90,7 @@ public class EncryptionDecryptionUtil {
                 objectToDecrypt = Collections.singletonList(objectToDecrypt);
             }
             final User encrichedUserInfo = getEncrichedandCopiedUserInfo(requestInfo.getUserInfo());
-            requestInfo.setUserInfo(encrichedUserInfo);
+            requestInfo = RequestInfoUtil.withUser(requestInfo, encrichedUserInfo);
 
             Map<String, String> keyPurposeMap = getKeyToDecrypt(objectToDecrypt, requestInfo);
             String purpose = keyPurposeMap.get(ServiceConstants.PURPOSE);
@@ -157,7 +159,7 @@ public class EncryptionDecryptionUtil {
         List<AdvocateMapping> advocates = courtCase.getRepresentatives();
 
         if (isUserAdvocate && advocates != null) {
-            List<Advocate> advocateResponse = advocateUtil.fetchAdvocatesByIndividualId(requestInfo,individualId);
+            List<Advocate> advocateResponse = advocateApi.searchAdvocatesByIndividualId(requestInfo, individualId);
 
             return advocates.stream().anyMatch(advocateMapping -> advocateMapping.getAdvocateId().equalsIgnoreCase(advocateResponse.get(0).getId().toString()));
         }
@@ -210,13 +212,18 @@ public class EncryptionDecryptionUtil {
         List<Role> newRoleList = new ArrayList<>();
         if (userInfo.getRoles() != null) {
             for (Role role : userInfo.getRoles()) {
-                Role newRole = Role.builder().code(role.getCode()).name(role.getName()).id(role.getId()).build();
+                Role newRole = Role.builder()
+                        .code(role.getCode())
+                        .name(role.getName())
+                        .id(role.getId())
+                        .tenantId(role.getTenantId() != null ? role.getTenantId() : userInfo.getTenantId())
+                        .build();
                 newRoleList.add(newRole);
             }
         }
 
         if (newRoleList.stream().filter(role -> (role.getCode() != null) && (userInfo.getType() != null) && role.getCode().equalsIgnoreCase(userInfo.getType())).count() == 0) {
-            Role roleFromtype = Role.builder().code(userInfo.getType()).name(userInfo.getType()).build();
+            Role roleFromtype = Role.builder().code(userInfo.getType()).name(userInfo.getType()).tenantId(userInfo.getTenantId()).build();
             newRoleList.add(roleFromtype);
         }
 

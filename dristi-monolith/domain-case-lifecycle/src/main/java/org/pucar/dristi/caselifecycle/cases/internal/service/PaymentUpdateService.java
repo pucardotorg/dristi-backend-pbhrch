@@ -13,6 +13,7 @@ import org.pucar.dristi.caselifecycle.cases.internal.enrichment.CaseRegistration
 import org.pucar.dristi.common.kafka.Producer;
 import org.pucar.dristi.caselifecycle.cases.internal.repository.CaseRepository;
 import org.pucar.dristi.caselifecycle.cases.internal.util.EncryptionDecryptionUtil;
+import org.pucar.dristi.common.util.RequestInfoUtil;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.*;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.task.TaskRequest;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.task.TaskResponse;
@@ -31,7 +32,7 @@ import static org.pucar.dristi.caselifecycle.cases.internal.config.ServiceConsta
 
 import org.pucar.dristi.common.models.Document;
 @Slf4j
-@Service
+@Service("casesPaymentUpdateService")
 public class PaymentUpdateService {
 
     private WorkflowService workflowService;
@@ -147,11 +148,11 @@ public class PaymentUpdateService {
                     "No applications found for the consumerCode " + criteria.getFilingNumber());
 
         Role role = Role.builder().code("SYSTEM_ADMIN").tenantId(tenantId).build();
-        requestInfo.getUserInfo().getRoles().add(role);
+        RequestInfo enrichedRequestInfo = RequestInfoUtil.withExtraRole(requestInfo, role);
 
         caseCriterias.forEach(caseCriteria -> {
 
-            CaseSearchRequest updateRequest = CaseSearchRequest.builder().requestInfo(requestInfo)
+            CaseSearchRequest updateRequest = CaseSearchRequest.builder().requestInfo(enrichedRequestInfo)
                     .criteria(Collections.singletonList(caseCriteria)).build();
 
             ProcessInstanceRequest wfRequest = workflowService.getProcessInstanceForCasePayment(updateRequest,tenantId);
@@ -165,10 +166,10 @@ public class PaymentUpdateService {
             auditDetails.setLastModifiedBy(paymentDetail.getAuditDetails().getLastModifiedBy());
             auditDetails.setLastModifiedTime(paymentDetail.getAuditDetails().getLastModifiedTime());
             courtCase.setAuditdetails(auditDetails);
-            CourtCase decryptedCourtCase = encryptionDecryptionUtil.decryptObject(courtCase, configuration.getCaseDecryptSelf(), CourtCase.class, requestInfo);
+            CourtCase decryptedCourtCase = encryptionDecryptionUtil.decryptObject(courtCase, configuration.getCaseDecryptSelf(), CourtCase.class, enrichedRequestInfo);
 
             CaseRequest caseRequest = new CaseRequest();
-            caseRequest.setRequestInfo(requestInfo);
+            caseRequest.setRequestInfo(enrichedRequestInfo);
             caseRequest.setCases(decryptedCourtCase);
             if(UNDER_SCRUTINY.equalsIgnoreCase(courtCase.getStatus())) {
                 caseService.callNotificationService(caseRequest, CASE_FILED, null);
@@ -181,14 +182,14 @@ public class PaymentUpdateService {
             log.info("In Payment Update, Encrypting: {}", caseRequest.getCases().getId());
             caseRequest.setCases(encryptionDecryptionUtil.encryptObject(caseRequest.getCases(), configuration.getCourtCaseEncrypt(), CourtCase.class));
             // Merge stage/substage from Redis to prevent overwriting concurrent updates from updateCaseOverallStatus
-            CourtCase latestRedisCase = caseService.searchRedisCache(requestInfo, courtCase.getId().toString());
+            CourtCase latestRedisCase = caseService.searchRedisCache(enrichedRequestInfo, courtCase.getId().toString());
             if (latestRedisCase != null) {
                 caseRequest.getCases().setStage(latestRedisCase.getStage());
                 caseRequest.getCases().setSubstage(latestRedisCase.getSubstage());
                 caseRequest.getCases().setStageBackup(latestRedisCase.getStageBackup());
                 caseRequest.getCases().setSubstageBackup(latestRedisCase.getSubstageBackup());
             }
-            cacheService.save(requestInfo.getUserInfo().getTenantId() + ":" + courtCase.getId().toString(), caseRequest.getCases());
+            cacheService.save(enrichedRequestInfo.getUserInfo().getTenantId() + ":" + courtCase.getId().toString(), caseRequest.getCases());
             if(paymentReceipt!=null){
                 caseRequest.getCases().setDocuments(List.of(paymentReceipt));
             }

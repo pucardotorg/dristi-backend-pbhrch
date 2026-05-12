@@ -1,0 +1,23 @@
+{
+  "service": "e-sign-svc",
+  "source_dir": "integration-services/e-sign-svc",
+  "target_module": "integration",
+  "target_subdomain": "esign",
+  "current_package": "org.drishti.esign",
+  "target_package": "org.pucar.dristi.integration.esign",
+  "main_file_count": 37,
+  "test_file_count": 14,
+  "has_spring_boot_main": true,
+  "duplicated_protected_classes": [
+    "FileStoreUtil",
+    "ResponseInfoFactory",
+    "Producer",
+    "KafkaProducerService",
+    "ServiceRequestRepository"
+  ],
+  "rest_call_files": [
+    "integration-services/e-sign-svc/src/main/java/org/drishti/esign/repository/ServiceRequestRepository.java",
+    "integration-services/e-sign-svc/src/main/java/org/drishti/esign/util/FileStoreUtil.java"
+  ],
+  "source_context_path": "/e-sign-svc"
+}

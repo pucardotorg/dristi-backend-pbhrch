@@ -1,0 +1,36 @@
+{
+  "service": "ctc",
+  "source_dir": "dristi-services\\ctc",
+  "target_module": "case-lifecycle",
+  "target_subdomain": "ctc",
+  "current_package": "org.pucar.dristi",
+  "target_package": "org.pucar.dristi.caselifecycle.ctc",
+  "main_file_count": 113,
+  "test_file_count": 12,
+  "has_spring_boot_main": true,
+  "duplicated_protected_classes": [
+    "IdgenUtil",
+    "FileStoreUtil",
+    "IndividualUtil",
+    "ResponseInfoFactory",
+    "Producer",
+    "KafkaProducerService",
+    "ServiceRequestRepository",
+    "Document",
+    "Individual",
+    "WorkflowObject",
+    "ProcessInstanceObject"
+  ],
+  "rest_call_files": [
+    "dristi-services\\ctc\\src\\main\\java\\org\\pucar\\dristi\\repository\\ServiceRequestRepository.java",
+    "dristi-services\\ctc\\src\\main\\java\\org\\pucar\\dristi\\service\\PaymentUpdateService.java",
+    "dristi-services\\ctc\\src\\main\\java\\org\\pucar\\dristi\\service\\WorkflowService.java",
+    "dristi-services\\ctc\\src\\main\\java\\org\\pucar\\dristi\\util\\CaseUtil.java",
+    "dristi-services\\ctc\\src\\main\\java\\org\\pucar\\dristi\\util\\ESignUtil.java",
+    "dristi-services\\ctc\\src\\main\\java\\org\\pucar\\dristi\\util\\FileStoreUtil.java",
+    "dristi-services\\ctc\\src\\main\\java\\org\\pucar\\dristi\\util\\IdgenUtil.java",
+    "dristi-services\\ctc\\src\\main\\java\\org\\pucar\\dristi\\util\\IndividualUtil.java",
+    "dristi-services\\ctc\\src\\main\\java\\org\\pucar\\dristi\\util\\LocalizationUtil.java"
+  ],
+  "source_context_path": "/ctc"
+}

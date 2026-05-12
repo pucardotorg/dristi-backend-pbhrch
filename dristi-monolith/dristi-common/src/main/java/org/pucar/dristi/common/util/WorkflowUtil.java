@@ -11,7 +11,6 @@
 package org.pucar.dristi.common.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.extern.slf4j.Slf4j;
 import org.pucar.dristi.common.config.CommonConfiguration;
 import org.pucar.dristi.common.models.workflow.ProcessInstanceObject;
 import org.pucar.dristi.common.models.workflow.WorkflowObject;
@@ -38,7 +37,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@Slf4j
 @Service("commonWorkflowUtil")
 public class WorkflowUtil {
 
@@ -192,41 +190,6 @@ public class WorkflowUtil {
             users.add(user);
         });
         return users;
-    }
-
-    /**
-     * Fetches the workflow process-instance history for a business entity.
-     * The {@code targetType} parameter lets callers deserialize into a
-     * service-specific subtype (e.g. a type that includes {@code auditDetails}
-     * which the egov base {@link ProcessInstance} does not model).
-     * Returns an empty list when the workflow service returns no results.
-     * Requires {@code egov.workflow.processinstance.search.path} to be set.
-     */
-    public <T> List<T> getProcessInstance(RequestInfo requestInfo, String tenantId, String businessId, Class<T> targetType) {
-        try {
-            RequestInfoWrapper requestInfoWrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
-            StringBuilder url = new StringBuilder(configs.getWfHost());
-            url.append(configs.getWfProcessInstanceSearchPath());
-            url.append("?tenantId=").append(tenantId);
-            url.append("&businessIds=").append(businessId);
-            url.append("&history=true");
-            Object res = repository.fetchResult(url, requestInfoWrapper);
-            com.fasterxml.jackson.databind.JsonNode root = mapper.valueToTree(res);
-            com.fasterxml.jackson.databind.JsonNode instances = root.path("ProcessInstances");
-            if (instances.isMissingNode() || instances.isEmpty()) {
-                return Collections.emptyList();
-            }
-            List<T> result = new ArrayList<>();
-            for (com.fasterxml.jackson.databind.JsonNode node : instances) {
-                result.add(mapper.treeToValue(node, targetType));
-            }
-            return result;
-        } catch (CustomException e) {
-            throw e;
-        } catch (Exception e) {
-            log.error("Error fetching workflow process instance history: {}", e.toString());
-            throw new CustomException("WORKFLOW_SERVICE_EXCEPTION", e.toString());
-        }
     }
 
     /**

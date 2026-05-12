@@ -1,0 +1,34 @@
+{
+  "service": "bail-bond",
+  "source_dir": "dristi-services\\bail-bond",
+  "target_module": "case-lifecycle",
+  "target_subdomain": "bailbond",
+  "current_package": "digit",
+  "target_package": "org.pucar.dristi.caselifecycle.bailbond",
+  "main_file_count": 74,
+  "test_file_count": 28,
+  "has_spring_boot_main": true,
+  "duplicated_protected_classes": [
+    "IdgenUtil",
+    "FileStoreUtil",
+    "UrlShortenerUtil",
+    "ResponseInfoFactory",
+    "DateUtil",
+    "Producer",
+    "KafkaProducerService",
+    "ServiceRequestRepository",
+    "AuditDetails",
+    "Document",
+    "WorkflowObject",
+    "ProcessInstanceObject"
+  ],
+  "rest_call_files": [
+    "dristi-services\\bail-bond\\src\\main\\java\\digit\\repository\\ServiceRequestRepository.java",
+    "dristi-services\\bail-bond\\src\\main\\java\\digit\\service\\NotificationService.java",
+    "dristi-services\\bail-bond\\src\\main\\java\\digit\\service\\WorkflowService.java",
+    "dristi-services\\bail-bond\\src\\main\\java\\digit\\util\\ESignUtil.java",
+    "dristi-services\\bail-bond\\src\\main\\java\\digit\\util\\FileStoreUtil.java",
+    "dristi-services\\bail-bond\\src\\main\\java\\digit\\util\\IdgenUtil.java"
+  ],
+  "source_context_path": "/bail-bond"
+}

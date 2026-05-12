@@ -25,7 +25,9 @@ import org.pucar.dristi.common.kafka.Producer;
 import org.pucar.dristi.caselifecycle.cases.internal.repository.AdvocateOfficeCaseMemberRepository;
 import org.pucar.dristi.caselifecycle.cases.internal.repository.CaseRepository;
 import org.pucar.dristi.caselifecycle.cases.internal.util.*;
+import org.pucar.dristi.identityaccess.advocate.AdvocateApi;
 import org.pucar.dristi.common.util.DateUtil;
+import org.pucar.dristi.common.util.RequestInfoUtil;
 import org.pucar.dristi.caselifecycle.cases.internal.validators.CaseRegistrationValidator;
 import org.pucar.dristi.caselifecycle.cases.internal.validators.EvidenceValidator;
 import org.pucar.dristi.caselifecycle.cases.internal.web.OpenApiCaseSummary;
@@ -86,7 +88,7 @@ public class CaseService {
 
     private final IndividualService individualService;
 
-    private final AdvocateUtil advocateUtil;
+    private final AdvocateApi advocateApi;
     private final TaskUtil taskUtil;
     private final HearingUtil hearingUtil;
     private final UserService userService;
@@ -98,7 +100,6 @@ public class CaseService {
     private final CaseUtil caseUtil;
 
     private final FileStoreUtil fileStoreUtil;
-    private final OrderUtil orderUtil;
     private final DateUtil dateUtil;
     private final InboxUtil inboxUtil;
     private final AdvocateOfficeCaseMemberRepository advocateOfficeCaseMemberRepository;
@@ -117,7 +118,7 @@ public class CaseService {
                        HearingUtil analyticsUtil,
                        UserService userService,
                        PaymentCalculaterUtil paymentCalculaterUtil,
-                       ObjectMapper objectMapper, CacheService cacheService, EnrichmentService enrichmentService, SmsNotificationService notificationService, IndividualService individualService, AdvocateUtil advocateUtil, EvidenceUtil evidenceUtil, EvidenceValidator evidenceValidator, CaseUtil caseUtil, FileStoreUtil fileStoreUtil, OrderUtil orderUtil, DateUtil dateUtil, InboxUtil inboxUtil, AdvocateOfficeCaseMemberRepository advocateOfficeCaseMemberRepository, org.pucar.dristi.caselifecycle.cases.internal.enrichment.AdvocateDetailBlockBuilder advocateDetailBlockBuilder) {
+                       ObjectMapper objectMapper, CacheService cacheService, EnrichmentService enrichmentService, SmsNotificationService notificationService, IndividualService individualService, AdvocateApi advocateApi, EvidenceUtil evidenceUtil, EvidenceValidator evidenceValidator, CaseUtil caseUtil, FileStoreUtil fileStoreUtil, DateUtil dateUtil, InboxUtil inboxUtil, AdvocateOfficeCaseMemberRepository advocateOfficeCaseMemberRepository, org.pucar.dristi.caselifecycle.cases.internal.enrichment.AdvocateDetailBlockBuilder advocateDetailBlockBuilder) {
         this.validator = validator;
         this.enrichmentUtil = enrichmentUtil;
         this.caseRepository = caseRepository;
@@ -135,12 +136,11 @@ public class CaseService {
         this.enrichmentService = enrichmentService;
         this.notificationService = notificationService;
         this.individualService = individualService;
-        this.advocateUtil = advocateUtil;
+        this.advocateApi = advocateApi;
         this.evidenceUtil = evidenceUtil;
         this.evidenceValidator = evidenceValidator;
         this.caseUtil = caseUtil;
         this.fileStoreUtil = fileStoreUtil;
-        this.orderUtil = orderUtil;
         this.dateUtil = dateUtil;
         this.inboxUtil = inboxUtil;
         this.advocateOfficeCaseMemberRepository = advocateOfficeCaseMemberRepository;
@@ -500,14 +500,18 @@ public class CaseService {
             if (lastSigned) {
                 log.info("Last e-sign for case {}", caseRequest.getCases().getId());
                 Calculation calculation = compareCalculationAndCreateDemand(caseRequest);
-                caseRequest.getRequestInfo().getUserInfo().getRoles().add(Role.builder().id(123L).code(SYSTEM).name(SYSTEM).tenantId(caseRequest.getCases().getTenantId()).build());
+                Role systemRole = Role.builder().id(123L).code(SYSTEM).name(SYSTEM).tenantId(caseRequest.getCases().getTenantId()).build();
+                RequestInfo systemRequestInfo = RequestInfoUtil.withExtraRole(caseRequest.getRequestInfo(), systemRole);
                 if (calculation != null) {
                     caseRequest.getCases().getWorkflow().setAction(E_SIGN_COMPLETE_WITH_PAYMENT);
                 } else {
                     caseRequest.getCases().getWorkflow().setAction(E_SIGN_COMPLETE);
                 }
                 log.info("Updating workflow status for case {} in last e-sign", caseRequest.getCases().getId());
-                workflowService.updateWorkflowStatus(caseRequest);
+                workflowService.updateWorkflowStatus(CaseRequest.builder()
+                        .requestInfo(systemRequestInfo)
+                        .cases(caseRequest.getCases())
+                        .build());
             }
 
             checkItsLastResponse(caseRequest);
@@ -993,10 +997,14 @@ public class CaseService {
             }
 
             log.info("Last response submitted by accused for case {}", caseRequest.getCases().getId());
-            caseRequest.getRequestInfo().getUserInfo().getRoles().add(Role.builder().id(123L).code(SYSTEM).name(SYSTEM).tenantId(caseRequest.getCases().getTenantId()).build());
+            Role systemRole = Role.builder().id(123L).code(SYSTEM).name(SYSTEM).tenantId(caseRequest.getCases().getTenantId()).build();
+            RequestInfo systemRequestInfo = RequestInfoUtil.withExtraRole(caseRequest.getRequestInfo(), systemRole);
             caseRequest.getCases().getWorkflow().setAction(RESPONSE_COMPLETE);
             log.info("Updating workflow status for case {} in last response submission", caseRequest.getCases().getId());
-            workflowService.updateWorkflowStatus(caseRequest);
+            workflowService.updateWorkflowStatus(CaseRequest.builder()
+                    .requestInfo(systemRequestInfo)
+                    .cases(caseRequest.getCases())
+                    .build());
         }
     }
 
@@ -1233,7 +1241,7 @@ public class CaseService {
             );
         }
         if (!advocateId.isEmpty()) {
-            individualIds.addAll(advocateUtil.getAdvocate(caseRequest.getRequestInfo(), advocateId.stream().toList()));
+            individualIds.addAll(advocateApi.getAdvocateIndividualIds(caseRequest.getRequestInfo(), advocateId.stream().toList()));
         }
     }
 
@@ -2343,8 +2351,8 @@ public class CaseService {
                 }
 
             });
-            List<Advocate> advocatesList = advocateUtil.fetchAdvocatesById(joinCaseRequest.getRequestInfo(), joinCaseData.getRepresentative().getAdvocateId());
-            Advocate joinCaseAdvocate = advocatesList.get(0);
+            var advocatesList = advocateApi.searchAdvocatesById(joinCaseRequest.getRequestInfo(), joinCaseData.getRepresentative().getAdvocateId());
+            var joinCaseAdvocate = advocatesList.get(0);
 
             List<Individual> individualsList = individualService.getIndividualsByIndividualId(joinCaseRequest.getRequestInfo(), joinCaseAdvocate.getIndividualId());
             Individual individual = individualsList.get(0);
@@ -2371,8 +2379,8 @@ public class CaseService {
             scheduledHearings.forEach(hearing -> {
                 Optional.ofNullable(hearing.getAttendees()).orElse(new ArrayList<>()).add(newAttendee);
                 HearingRequest hearingRequest = new HearingRequest();
-                joinCaseRequest.getRequestInfo().getUserInfo().getRoles().add(Role.builder().code("HEARING_SCHEDULER").name("HEARING_SCHEDULER").tenantId(joinCaseData.getTenantId()).build());
-                hearingRequest.setRequestInfo(joinCaseRequest.getRequestInfo());
+                Role hearingSchedulerRole = Role.builder().code("HEARING_SCHEDULER").name("HEARING_SCHEDULER").tenantId(joinCaseData.getTenantId()).build();
+                hearingRequest.setRequestInfo(RequestInfoUtil.withExtraRole(joinCaseRequest.getRequestInfo(), hearingSchedulerRole));
                 hearingRequest.setHearing(hearing);
                 hearingUtil.updateTranscriptAdditionalAttendees(hearingRequest);
 
@@ -2623,12 +2631,16 @@ public class CaseService {
 
                 // Add the advocate to the block's advocate list
                 try {
-                    List<Advocate> advocatesList = advocateUtil.fetchAdvocatesById(requestInfo, joinCaseRepresentative.getAdvocateId());
-                    if (advocatesList != null && !advocatesList.isEmpty()) {
-                        Advocate joinCaseAdvocate = advocatesList.get(0);
+                    var registrations = advocateApi.searchAdvocatesById(requestInfo, joinCaseRepresentative.getAdvocateId());
+                    if (registrations != null && !registrations.isEmpty()) {
+                        var registration = registrations.get(0);
+                        org.pucar.dristi.caselifecycle.cases.internal.web.models.Advocate joinCaseAdvocate =
+                                new org.pucar.dristi.caselifecycle.cases.internal.web.models.Advocate();
+                        joinCaseAdvocate.setId(registration.getId());
+                        joinCaseAdvocate.setIndividualId(registration.getIndividualId());
                         // enrich advocate with individual details
                         try {
-                            List<Individual> individualsList = individualService.getIndividualsByIndividualId(requestInfo, joinCaseAdvocate.getIndividualId());
+                            List<Individual> individualsList = individualService.getIndividualsByIndividualId(requestInfo, registration.getIndividualId());
                             if (individualsList != null && !individualsList.isEmpty()) {
                                 Individual individual = individualsList.get(0);
                                 joinCaseAdvocate.setFirstName(individual.getName().getGivenName());
@@ -2782,8 +2794,8 @@ public class CaseService {
 
         JoinCaseTaskRequest taskJoinCase = new JoinCaseTaskRequest();
 
-        List<Advocate> advocatesList = advocateUtil.fetchAdvocatesById(joinCaseRequest.getRequestInfo(), joinCaseData.getRepresentative().getAdvocateId());
-        Advocate joinCaseAdvocate = advocatesList.get(0);
+        var advocatesList = advocateApi.searchAdvocatesById(joinCaseRequest.getRequestInfo(), joinCaseData.getRepresentative().getAdvocateId());
+        var joinCaseAdvocate = advocatesList.get(0);
 
         List<Individual> individualsList = individualService.getIndividualsByIndividualId(joinCaseRequest.getRequestInfo(), joinCaseAdvocate.getIndividualId());
         Individual individual = individualsList.get(0);
@@ -2826,8 +2838,8 @@ public class CaseService {
                     ReplacementAdvocateDetails replacementAdvocateDetails = new ReplacementAdvocateDetails();
                     replacementAdvocateDetails.setAdvocateUuid(advocateId);
 
-                    List<Advocate> replacedvocatesList = advocateUtil.fetchAdvocatesById(joinCaseRequest.getRequestInfo(), advocateId);
-                    Advocate replaceAdvocate = replacedvocatesList.get(0);
+                    var replacedvocatesList = advocateApi.searchAdvocatesById(joinCaseRequest.getRequestInfo(), advocateId);
+                    var replaceAdvocate = replacedvocatesList.get(0);
 
                     List<Individual> individualList = individualService.getIndividualsByIndividualId(joinCaseRequest.getRequestInfo(), replaceAdvocate.getIndividualId());
                     Individual individualAdvocate = individualList.get(0);
@@ -2882,8 +2894,7 @@ public class CaseService {
         taskRequest.setTask(task);
         RequestInfo requestInfo = joinCaseRequest.getRequestInfo();
         Role role = Role.builder().code("TASK_CREATOR").name("TASK_CREATOR").tenantId(joinCaseAdvocate.getTenantId()).build();
-        requestInfo.getUserInfo().getRoles().add(role);
-        taskRequest.setRequestInfo(requestInfo);
+        taskRequest.setRequestInfo(RequestInfoUtil.withExtraRole(requestInfo, role));
         return taskUtil.callCreateTask(taskRequest);
     }
 
@@ -2907,8 +2918,8 @@ public class CaseService {
         JoinCaseTaskRequest taskJoinCase = new JoinCaseTaskRequest();
 
         //Set advocate details
-        List<Advocate> advocatesList = advocateUtil.fetchAdvocatesById(joinCaseRequest.getRequestInfo(), advocateId);
-        Advocate joinCaseAdvocate = advocatesList.get(0);
+        var advocatesList = advocateApi.searchAdvocatesById(joinCaseRequest.getRequestInfo(), advocateId);
+        var joinCaseAdvocate = advocatesList.get(0);
 
         List<Individual> individualsList = individualService.getIndividualsByIndividualId(joinCaseRequest.getRequestInfo(), joinCaseAdvocate.getIndividualId());
         Individual individual = individualsList.get(0);
@@ -2965,8 +2976,7 @@ public class CaseService {
         taskRequest.setTask(task);
         RequestInfo requestInfo = joinCaseRequest.getRequestInfo();
         Role role = Role.builder().code("TASK_CREATOR").name("TASK_CREATOR").tenantId(joinCaseAdvocate.getTenantId()).build();
-        requestInfo.getUserInfo().getRoles().add(role);
-        taskRequest.setRequestInfo(requestInfo);
+        taskRequest.setRequestInfo(RequestInfoUtil.withExtraRole(requestInfo, role));
         return taskUtil.callCreateTask(taskRequest);
     }
 
@@ -2975,7 +2985,7 @@ public class CaseService {
     }
 
     private TaskResponse createTaskAdvocate(JoinCaseV2Request joinCaseRequest, String replaceAdvocateId, List<RepresentingJoinCase> representingJoinCaseList, CourtCase courtCase) throws JsonProcessingException {
-        String individualIdForAdvocate = advocateUtil.getAdvocate(joinCaseRequest.getRequestInfo(), List.of(replaceAdvocateId)).stream().findFirst().orElse(null);
+        String individualIdForAdvocate = advocateApi.getAdvocateIndividualIds(joinCaseRequest.getRequestInfo(), List.of(replaceAdvocateId)).stream().findFirst().orElse(null);
         String userUUID = individualService.getIndividualsByIndividualId(joinCaseRequest.getRequestInfo(), individualIdForAdvocate).get(0).getUserUuid();
 
         TaskRequest taskRequest = new TaskRequest();
@@ -2995,8 +3005,8 @@ public class CaseService {
 
         JoinCaseTaskRequest taskJoinCase = new JoinCaseTaskRequest();
 
-        List<Advocate> advocatesList = advocateUtil.fetchAdvocatesById(joinCaseRequest.getRequestInfo(), joinCaseData.getRepresentative().getAdvocateId());
-        Advocate joinCaseAdvocate = advocatesList.get(0);
+        var advocatesList = advocateApi.searchAdvocatesById(joinCaseRequest.getRequestInfo(), joinCaseData.getRepresentative().getAdvocateId());
+        var joinCaseAdvocate = advocatesList.get(0);
 
         List<Individual> individualsList = individualService.getIndividualsByIndividualId(joinCaseRequest.getRequestInfo(), joinCaseAdvocate.getIndividualId());
         Individual individual = individualsList.get(0);
@@ -3037,8 +3047,8 @@ public class CaseService {
             ReplacementAdvocateDetails replacementAdvocateDetails = new ReplacementAdvocateDetails();
             replacementAdvocateDetails.setAdvocateUuid(replaceAdvocateId);
 
-            List<Advocate> replacedvocatesList = advocateUtil.fetchAdvocatesById(joinCaseRequest.getRequestInfo(), replaceAdvocateId);
-            Advocate replaceAdvocate = replacedvocatesList.get(0);
+            var replacedvocatesList = advocateApi.searchAdvocatesById(joinCaseRequest.getRequestInfo(), replaceAdvocateId);
+            var replaceAdvocate = replacedvocatesList.get(0);
 
             List<Individual> individualList = individualService.getIndividualsByIndividualId(joinCaseRequest.getRequestInfo(), replaceAdvocate.getIndividualId());
             Individual individualAdvocate = individualList.get(0);
@@ -3076,8 +3086,7 @@ public class CaseService {
         taskRequest.setTask(task);
         RequestInfo requestInfo = joinCaseRequest.getRequestInfo();
         Role role = Role.builder().code("TASK_CREATOR").name("TASK_CREATOR").tenantId(joinCaseAdvocate.getTenantId()).build();
-        requestInfo.getUserInfo().getRoles().add(role);
-        taskRequest.setRequestInfo(requestInfo);
+        taskRequest.setRequestInfo(RequestInfoUtil.withExtraRole(requestInfo, role));
         return taskUtil.callCreateTask(taskRequest);
     }
 
@@ -3152,8 +3161,7 @@ public class CaseService {
         taskRequest.setTask(task);
         RequestInfo requestInfo = joinCaseRequest.getRequestInfo();
         Role role = Role.builder().code("TASK_CREATOR").name("TASK_CREATOR").tenantId(joinCaseData.getTenantId()).build();
-        requestInfo.getUserInfo().getRoles().add(role);
-        taskRequest.setRequestInfo(requestInfo);
+        taskRequest.setRequestInfo(RequestInfoUtil.withExtraRole(requestInfo, role));
         return taskUtil.callCreateTask(taskRequest);
     }
 
@@ -3390,8 +3398,8 @@ public class CaseService {
         scheduledHearings.forEach(hearing -> {
             Optional.ofNullable(hearing.getAttendees()).orElse(new ArrayList<>()).addAll(newAttendees);
             HearingRequest hearingRequest = new HearingRequest();
-            requestInfo.getUserInfo().getRoles().add(Role.builder().code("HEARING_SCHEDULER").name("HEARING_SCHEDULER").tenantId(joinCaseData.getTenantId()).build());
-            hearingRequest.setRequestInfo(requestInfo);
+            Role hearingSchedulerRole = Role.builder().code("HEARING_SCHEDULER").name("HEARING_SCHEDULER").tenantId(joinCaseData.getTenantId()).build();
+            hearingRequest.setRequestInfo(RequestInfoUtil.withExtraRole(requestInfo, hearingSchedulerRole));
             hearingRequest.setHearing(hearing);
             log.info("updating hearing :: {}", hearing);
             hearingUtil.updateTranscriptAdditionalAttendees(hearingRequest);
@@ -3560,8 +3568,8 @@ public class CaseService {
 
             JoinCaseTaskRequest taskJoinCase = new JoinCaseTaskRequest();
 
-            List<Advocate> advocatesList = advocateUtil.fetchAdvocatesById(joinCaseRequest.getRequestInfo(), joinCaseData.getRepresentative().getAdvocateId());
-            Advocate joinCaseAdvocate = advocatesList.get(0);
+            var advocatesList = advocateApi.searchAdvocatesById(joinCaseRequest.getRequestInfo(), joinCaseData.getRepresentative().getAdvocateId());
+            var joinCaseAdvocate = advocatesList.get(0);
 
             List<Individual> individualsList = individualService.getIndividualsByIndividualId(joinCaseRequest.getRequestInfo(), joinCaseAdvocate.getIndividualId());
             Individual individual = individualsList.get(0);
@@ -3598,8 +3606,8 @@ public class CaseService {
                         ReplacementAdvocateDetails replacementAdvocateDetails = new ReplacementAdvocateDetails();
                         replacementAdvocateDetails.setAdvocateUuid(advocateId);
 
-                        List<Advocate> replacedvocatesList = advocateUtil.fetchAdvocatesById(joinCaseRequest.getRequestInfo(), advocateId);
-                        Advocate replaceAdvocate = replacedvocatesList.get(0);
+                        var replacedvocatesList = advocateApi.searchAdvocatesById(joinCaseRequest.getRequestInfo(), advocateId);
+                        var replaceAdvocate = replacedvocatesList.get(0);
 
                         List<Individual> individualList = individualService.getIndividualsByIndividualId(joinCaseRequest.getRequestInfo(), replaceAdvocate.getIndividualId());
                         Individual individualAdvocate = individualList.get(0);
@@ -3654,8 +3662,7 @@ public class CaseService {
             taskRequest.setTask(task);
             RequestInfo requestInfo = joinCaseRequest.getRequestInfo();
             Role role = Role.builder().code("TASK_CREATOR").name("TASK_CREATOR").tenantId(joinCaseAdvocate.getTenantId()).build();
-            requestInfo.getUserInfo().getRoles().add(role);
-            taskRequest.setRequestInfo(requestInfo);
+            taskRequest.setRequestInfo(RequestInfoUtil.withExtraRole(requestInfo, role));
             return taskUtil.callCreateTask(taskRequest);
 
         } catch (Exception e) {
@@ -5717,7 +5724,7 @@ public class CaseService {
     }
 
     private AdvocateDetails enrichAdvocateDetailsInJoinCaseTaskRequest(IndividualDetails
-                                                                               individualDetails, Advocate joinCaseAdvocate, Individual individual,
+                                                                               individualDetails, org.pucar.dristi.common.contract.advocate.Advocate joinCaseAdvocate, Individual individual,
                                                                        JoinCaseDataV2 joinCaseData) {
         return AdvocateDetails.builder()
                 .barRegistrationNumber(joinCaseAdvocate.getBarRegistrationNumber())
@@ -5878,8 +5885,8 @@ public class CaseService {
             newAttendee.setType("Advocate");
             Optional.ofNullable(hearing.getAttendees()).orElse(new ArrayList<>()).add(newAttendee);
             HearingRequest hearingRequest = new HearingRequest();
-            requestInfo.getUserInfo().getRoles().add(Role.builder().code("HEARING_SCHEDULER").name("HEARING_SCHEDULER").tenantId(courtCase.getTenantId()).build());
-            hearingRequest.setRequestInfo(requestInfo);
+            Role hearingSchedulerRole = Role.builder().code("HEARING_SCHEDULER").name("HEARING_SCHEDULER").tenantId(courtCase.getTenantId()).build();
+            hearingRequest.setRequestInfo(RequestInfoUtil.withExtraRole(requestInfo, hearingSchedulerRole));
             hearingRequest.setHearing(hearing);
 
             // remove the old advocate from the hearing if he is no more part of the case
@@ -5890,7 +5897,7 @@ public class CaseService {
                         .filter(mapping -> mapping.getAdvocateId().equalsIgnoreCase(replacementAdvocateDetails.getAdvocateUuid()))
                         .findFirst().isEmpty();
 
-                String individualIdOfAdvocate = advocateUtil.getAdvocate(requestInfo, List.of(replacementAdvocateDetails.getAdvocateUuid())).stream().findFirst().orElse(null);
+                String individualIdOfAdvocate = advocateApi.getAdvocateIndividualIds(requestInfo, List.of(replacementAdvocateDetails.getAdvocateUuid())).stream().findFirst().orElse(null);
 
                 boolean isAccusedAdvocate = !replacementDetails.getLitigantDetails().getPartyType().contains("complainant");
 
