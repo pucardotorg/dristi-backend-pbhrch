@@ -15,4 +15,5 @@
  * {@code scripts/migration/FOLLOWUP_RETROLIFT_PATH_A.md}.
  */
 @org.springframework.modulith.ApplicationModule(displayName = "Case")
+@org.springframework.modulith.NamedInterface("api")
 package org.pucar.dristi.caselifecycle.cases;

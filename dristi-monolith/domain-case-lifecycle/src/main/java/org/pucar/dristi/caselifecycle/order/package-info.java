@@ -12,4 +12,5 @@
  * those types directly.
  */
 @org.springframework.modulith.ApplicationModule(displayName = "Order")
+@org.springframework.modulith.NamedInterface("api")
 package org.pucar.dristi.caselifecycle.order;

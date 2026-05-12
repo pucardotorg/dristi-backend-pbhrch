@@ -29,7 +29,7 @@ import java.util.*;
 import static org.pucar.dristi.caselifecycle.cases.internal.config.ServiceConstants.*;
 
 @Slf4j
-@Component
+@Component("casesEncryptionDecryptionUtil")
 public class EncryptionDecryptionUtil {
     private final EncryptionService encryptionService;
     private final String stateLevelTenantId;
