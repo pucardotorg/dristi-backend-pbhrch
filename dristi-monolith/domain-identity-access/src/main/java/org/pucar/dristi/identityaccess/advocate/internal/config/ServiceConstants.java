@@ -2,7 +2,7 @@ package org.pucar.dristi.identityaccess.advocate.internal.config;
 
 import org.springframework.stereotype.Component;
 
-@Component
+@Component("advocateServiceConstants")
 public class ServiceConstants {
 	// Private constructor to prevent instantiation
 	private ServiceConstants() {

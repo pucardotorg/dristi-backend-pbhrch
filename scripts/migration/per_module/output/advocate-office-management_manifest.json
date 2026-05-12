@@ -1,0 +1,31 @@
+{
+  "service": "advocate-office-management",
+  "source_dir": "dristi-services/advocate-office-management",
+  "target_module": "identity-access",
+  "target_subdomain": "advocateoffice",
+  "current_package": "digit",
+  "target_package": "org.pucar.dristi.identityaccess.advocateoffice",
+  "main_file_count": 53,
+  "test_file_count": 16,
+  "has_spring_boot_main": true,
+  "duplicated_protected_classes": [
+    "MdmsUtil",
+    "IdgenUtil",
+    "WorkflowUtil",
+    "UrlShortenerUtil",
+    "IndividualUtil",
+    "ResponseInfoFactory",
+    "Producer",
+    "KafkaProducerService",
+    "ServiceRequestRepository"
+  ],
+  "rest_call_files": [
+    "dristi-services/advocate-office-management/src/main/java/digit/repository/ServiceRequestRepository.java",
+    "dristi-services/advocate-office-management/src/main/java/digit/util/AdvocateUtil.java",
+    "dristi-services/advocate-office-management/src/main/java/digit/util/IndividualUtil.java",
+    "dristi-services/advocate-office-management/src/main/java/digit/util/IdgenUtil.java",
+    "dristi-services/advocate-office-management/src/main/java/digit/util/WorkflowUtil.java",
+    "dristi-services/advocate-office-management/src/main/java/digit/util/CaseUtil.java"
+  ],
+  "source_context_path": "/advocate-office-management"
+}
