@@ -5,13 +5,13 @@ add.member.kafka.create.topic
   advocate-office-management=add-advocate-office-member | case=add-advocate-office-member
 
 allowed.content.types
-  bail-bond=application/pdf,application/x-pdf | ctc=application/pdf | digitalized-documents=application/pdf,application/x-pdf
+  bail-bond=application/pdf,application/x-pdf | digitalized-documents=application/pdf,application/x-pdf
 
 app.timezone
-  Notification=Asia/Kolkata | ab-diary=Asia/Kolkata | advocate=Asia/Kolkata | advocate-office-management=Asia/Kolkata | bail-bond=Asia/Kolkata | case=Asia/Kolkata | ctc=Asia/Kolkata | digitalized-documents=Asia/Kolkata | e-sign-svc=Asia/Kolkata | inportal-survey=Asia/Kolkata | lock-svc=Asia/Kolkata | order=Asia/Kolkata | payment-calculator-svc=Asia/Kolkata | template-configuration=Asia/Kolkata
+  ab-diary=Asia/Kolkata | advocate=Asia/Kolkata | advocate-office-management=Asia/Kolkata | bail-bond=Asia/Kolkata | case=Asia/Kolkata | digitalized-documents=Asia/Kolkata | e-sign-svc=Asia/Kolkata | hearing=Asia/Kolkata | inportal-survey=Asia/Kolkata | lock-svc=Asia/Kolkata | notification=Asia/Kolkata | order=Asia/Kolkata | payment-calculator-svc=Asia/Kolkata | template-configuration=Asia/Kolkata
 
 app.zone.id
-  ab-diary=Asia/Kolkata | bail-bond=Asia/Kolkata | case=Asia/Kolkata | ctc=Asia/Kolkata | digitalized-documents=Asia/Kolkata | epost-tracker=Asia/Kolkata | order=Asia/Kolkata
+  ab-diary=Asia/Kolkata | bail-bond=Asia/Kolkata | case=Asia/Kolkata | digitalized-documents=Asia/Kolkata | epost-tracker=Asia/Kolkata | hearing=Asia/Kolkata | order=Asia/Kolkata
 
 court.name
   ab-diary=Special Court Of Judicial Magistrate of the First Class, for the trial of cases under section 138 of NI Act, 1881 at Kollam ("24X7 ON Court") | epost-tracker=Special Court Of Judicial Magistrate of the First Class, for the trial of cases under section 138 of NI Act, 1881 at Kollam (\"24X7 ON Court\")
@@ -20,10 +20,10 @@ domain.url
   bail-bond=http://localhost:3000 | digitalized-documents=https://dristi-kerala-dev.pucar.org/
 
 dristi.esign.signature.height
-  bail-bond=50 | ctc=50 | digitalized-documents=50
+  bail-bond=50 | digitalized-documents=50
 
 dristi.esign.signature.width
-  bail-bond=250 | ctc=250 | digitalized-documents=250
+  bail-bond=250 | digitalized-documents=250
 
 egov-state-level-tenant-id
   epost-tracker=pb | inportal-survey=pb
@@ -32,22 +32,31 @@ egov.base.url
   bail-bond=/ui/citizen/dristi/home/bail-bond-sign | digitalized-documents=/ui/citizen/dristi/home/digitalized-document-sign
 
 egov.bulk.index.path
-  bail-bond=_bulk | ctc=_bulk
+  bail-bond=_bulk | hearing=_bulk
 
 egov.case.host
-  bail-bond=http://localhost:8099 | ctc=http://localhost:9090/ | digitalized-documents=http://localhost:8099 | order=http://localhost:9090/
+  bail-bond=http://localhost:8099 | digitalized-documents=http://localhost:8099 | hearing=http://localhost:8099/ | order=http://localhost:9090/
+
+egov.case.outcome.topic
+  case=case-outcome-topic | hearing=case-outcome-topic
 
 egov.case.path
-  ctc=case/v1/_exists | order=case/v1/_exists
+  hearing=case/v1/_exists | order=case/v1/_exists
 
 egov.case.search.endpoint
   bail-bond=/case/v1/_search | digitalized-documents=/case/v1/_search
 
 egov.case.search.path
-  ctc=/case/v1/_search | order=/case/v1/_search
+  hearing=case/v1/_search | order=/case/v1/_search
 
 egov.courtId
-  case=KLKM52 | ctc=KLKM52 | order=KLKM52
+  case=KLKM52 | order=KLKM52
+
+egov.default.user.password
+  case=Dristi@123 | hearing=Dristi@123
+
+egov.default.user.username
+  case=case-cron-job | hearing=hearing-cron-job
 
 egov.enc.decrypt.endpoint
   bail-bond=/egov-enc-service/crypto/v1/_decrypt | case=/egov-enc-service/crypto/v1/_decrypt
@@ -59,106 +68,100 @@ egov.enc.host
   bail-bond=http://localhost:8095 | case=http://localhost:8095
 
 egov.esign.host
-  bail-bond=http://localhost:8052 | ctc=http://localhost:8052 | digitalized-documents=http://localhost:8052
+  bail-bond=http://localhost:8052 | digitalized-documents=http://localhost:8052
 
 egov.esign.location.endpoint
-  bail-bond=/e-sign-svc/v1/_getLocation | ctc=/e-sign-svc/v1/_getLocation | digitalized-documents=/e-sign-svc/v1/_getLocation
-
-egov.etreasury.demand.create.endpoint
-  case=/etreasury/payment/v1/_createDemand | ctc=/etreasury/payment/v1/_createDemand
-
-egov.etreasury.host
-  case=http://localhost:8876 | ctc=http://localhost:8090
+  bail-bond=/e-sign-svc/v1/_getLocation | digitalized-documents=/e-sign-svc/v1/_getLocation
 
 egov.file.store.delete.endpoint
-  Notification=/filestore/v1/files/delete | ab-diary=/filestore/v1/files/delete | bail-bond=/filestore/v1/files/delete | case=/filestore/v1/files/delete | ctc=/filestore/v1/files/delete | digitalized-documents=/filestore/v1/files/delete | order=/filestore/v1/files/delete
+  ab-diary=/filestore/v1/files/delete | bail-bond=/filestore/v1/files/delete | case=/filestore/v1/files/delete | digitalized-documents=/filestore/v1/files/delete | hearing=/filestore/v1/files/delete | notification=/filestore/v1/files/delete | order=/filestore/v1/files/delete
 
 egov.file.store.save.endpoint
   ab-diary=/filestore/v1/files | case=/filestore/v1/files | epost-tracker=/filestore/v1/files
 
 egov.filestore.host
-  Notification=https://dev.digit.org | ab-diary=http://localhost:8081/ | bail-bond=http://localhost:8085/ | case=http://localhost:8085/ | ctc=http://localhost:8085/ | digitalized-documents=http://localhost:8090 | e-sign-svc=http://localhost:8052/ | epost-tracker=http://localhost:8082 | order=http://localhost:8085/
+  ab-diary=http://localhost:8081/ | bail-bond=http://localhost:8085/ | case=http://localhost:8085/ | digitalized-documents=http://localhost:8090 | e-sign-svc=http://localhost:8052/ | epost-tracker=http://localhost:8082 | hearing=http://localhost:8085/ | notification=https://dev.digit.org | order=http://localhost:8085/
 
 egov.filestore.path
-  ab-diary=filestore/v1/files/id? | bail-bond=filestore/v1/files/id? | case=filestore/v1/files/id? | ctc=filestore/v1/files/id? | order=filestore/v1/files/id?
+  ab-diary=filestore/v1/files/id? | bail-bond=filestore/v1/files/id? | case=filestore/v1/files/id? | hearing=filestore/v1/files/id? | order=filestore/v1/files/id?
 
 egov.filestore.save.endpoint
-  bail-bond=/filestore/v1/files | ctc=/filestore/v1/files | digitalized-documents=/filestore/v1/files
+  bail-bond=/filestore/v1/files | digitalized-documents=/filestore/v1/files
 
 egov.filestore.search.endpoint
-  bail-bond=/filestore/v1/files/id | ctc=/filestore/v1/files/id | digitalized-documents=/filestore/v1/files/id | e-sign-svc=filestore/v1/files/id
+  bail-bond=/filestore/v1/files/id | digitalized-documents=/filestore/v1/files/id | e-sign-svc=filestore/v1/files/id
 
 egov.hearing.host
-  case=http://localhost:8080/ | ctc=http://localhost:9091/ | order=http://localhost:9091/
+  case=http://localhost:8080/ | order=http://localhost:9091/
 
 egov.hearing.search.path
-  case=hearing/v1/search | ctc=hearing/v1/search | order=hearing/v1/search
+  case=hearing/v1/search | order=hearing/v1/search
 
 egov.hrms.host
-  Notification=https://dev.digit.org | ab-diary=https://dev.digit.org | advocate=https://dev.digit.org | advocate-office-management=https://dev.digit.org | bail-bond=https://dev.digit.org | case=https://dev.digit.org | digitalized-documents=https://dev.digit.org | order=https://dev.digit.org
+  ab-diary=https://dev.digit.org | advocate=https://dev.digit.org | advocate-office-management=https://dev.digit.org | bail-bond=https://dev.digit.org | case=https://dev.digit.org | digitalized-documents=https://dev.digit.org | hearing=https://dev.digit.org | notification=https://dev.digit.org | order=https://dev.digit.org
 
 egov.hrms.search.endpoint
-  Notification=/egov-hrms/employees/_search | ab-diary=/egov-hrms/employees/_search | advocate=/egov-hrms/employees/_search | advocate-office-management=/egov-hrms/employees/_search | bail-bond=/egov-hrms/employees/_search | case=/egov-hrms/employees/_search | digitalized-documents=/egov-hrms/employees/_search | order=/egov-hrms/employees/_search
+  ab-diary=/egov-hrms/employees/_search | advocate=/egov-hrms/employees/_search | advocate-office-management=/egov-hrms/employees/_search | bail-bond=/egov-hrms/employees/_search | case=/egov-hrms/employees/_search | digitalized-documents=/egov-hrms/employees/_search | hearing=/egov-hrms/employees/_search | notification=/egov-hrms/employees/_search | order=/egov-hrms/employees/_search
 
 egov.idgen.host
-  Notification=https://dev.digit.org/ | ab-diary=https://dev.digit.org/ | advocate=http://localhost:8087/ | advocate-office-management=https://dev.digit.org/ | bail-bond=http://localhost:8090 | case=http://localhost:8082/ | ctc=http://localhost:8082/ | digitalized-documents=http://localhost:8081 | epost-tracker=http://egov-idgen:8080 | order=http://localhost:8082/
-
-egov.idgen.orderConfig
-  ctc=case.order.[TENANT_ID] | order=case.order.[TENANT_ID]
-
-egov.idgen.orderFormat
-  ctc=OR[SEQ_ORDER_[TENANT_ID]] | order=OR[SEQ_ORDER_[TENANT_ID]]
+  ab-diary=https://dev.digit.org/ | advocate=http://localhost:8087/ | advocate-office-management=https://dev.digit.org/ | bail-bond=http://localhost:8090 | case=http://localhost:8082/ | digitalized-documents=http://localhost:8081 | epost-tracker=http://egov-idgen:8080 | hearing=http://localhost:8082/ | notification=https://dev.digit.org/ | order=http://localhost:8082/
 
 egov.idgen.path
-  Notification=egov-idgen/id/_generate | ab-diary=egov-idgen/id/_generate | advocate=egov-idgen/id/_generate | advocate-office-management=egov-idgen/id/_generate | bail-bond=/egov-idgen/id/_generate | case=egov-idgen/id/_generate | ctc=egov-idgen/id/_generate | digitalized-documents=/egov-idgen/id/_generate | epost-tracker=/egov-idgen/id/_generate | order=egov-idgen/id/_generate
+  ab-diary=egov-idgen/id/_generate | advocate=egov-idgen/id/_generate | advocate-office-management=egov-idgen/id/_generate | bail-bond=/egov-idgen/id/_generate | case=egov-idgen/id/_generate | digitalized-documents=/egov-idgen/id/_generate | epost-tracker=/egov-idgen/id/_generate | hearing=egov-idgen/id/_generate | notification=egov-idgen/id/_generate | order=egov-idgen/id/_generate
+
+egov.inbox.host
+  case=http://localhost:8080 | hearing=http://localhost:8059
+
+egov.inbox.search.endpoint
+  case=/inbox/v2/index/_search | hearing=/inbox/v2/index/_search
 
 egov.indexer.es.password
-  bail-bond=8fwbD6HbJh6HU0oddsHm8TEI | ctc=8fwbD6HbJh6HU0oddsHm8TEI
+  bail-bond=8fwbD6HbJh6HU0oddsHm8TEI | hearing=8fwbD6HbJh6HU0oddsHm8TEI
 
 egov.indexer.es.username
-  bail-bond=elastic | ctc=elastic
+  bail-bond=elastic | hearing=elastic
 
 egov.individual.create.path
-  advocate=individual/v1/_create | case=individual/v1/_create | ctc=individual/v1/_create | order=individual/v1/_create
+  advocate=individual/v1/_create | case=individual/v1/_create | hearing=individual/v1/_create | order=individual/v1/_create
 
 egov.individual.host
-  advocate=http://localhost:8089/ | case=http://localhost:8081/ | ctc=http://localhost:8081/ | lock-svc=http://localhost:8081/ | order=http://localhost:8081/
+  advocate=http://localhost:8089/ | case=http://localhost:8081/ | hearing=http://localhost:8089/ | lock-svc=http://localhost:8081/ | order=http://localhost:8081/
 
 egov.individual.path
-  advocate=individual/v1/_create | case=individual/v1/_create | ctc=individual/v1/_create | order=individual/v1/_create
+  advocate=individual/v1/_create | case=individual/v1/_create | hearing=individual/v1/_create | order=individual/v1/_create
 
 egov.individual.search.path
-  advocate=individual/v1/_search | case=individual/v1/_search | ctc=individual/v1/_search | lock-svc=individual/v1/_search | order=individual/v1/_search
+  advocate=individual/v1/_search | case=individual/v1/_search | hearing=individual/v1/_search | lock-svc=individual/v1/_search | order=individual/v1/_search
 
 egov.individual.update.path
-  advocate=individual/v1/_update | case=individual/v1/_update | ctc=individual/v1/_update | order=individual/v1/_update
+  advocate=individual/v1/_update | case=individual/v1/_update | hearing=individual/v1/_update | order=individual/v1/_update
 
 egov.infra.indexer.host
-  bail-bond=http://localhost:9200/ | ctc=http://localhost:9200/
+  bail-bond=http://localhost:9200/ | hearing=http://localhost:9200/
 
 egov.localization.context.path
-  Notification=/localization/messages/v1 | ab-diary=/localization/messages/v1 | advocate=/localization/messages/v1 | advocate-office-management=/localization/messages/v1 | bail-bond=/localization/messages/v1 | case=/localization/messages/v1 | digitalized-documents=/localization/messages/v1 | order=/localization/messages/v1
+  ab-diary=/localization/messages/v1 | advocate=/localization/messages/v1 | advocate-office-management=/localization/messages/v1 | bail-bond=/localization/messages/v1 | case=/localization/messages/v1 | digitalized-documents=/localization/messages/v1 | hearing=/localization/messages/v1 | notification=/localization/messages/v1 | order=/localization/messages/v1
 
 egov.localization.host
-  Notification=https://dev.digit.org | ab-diary=https://dev.digit.org | advocate=https://dev.digit.org | advocate-office-management=https://dev.digit.org | bail-bond=https://dev.digit.org | case=https://dev.digit.org | ctc=http://localhost:8080 | digitalized-documents=https://dev.digit.org | order=http://localhost:8080
+  ab-diary=https://dev.digit.org | advocate=https://dev.digit.org | advocate-office-management=https://dev.digit.org | bail-bond=https://dev.digit.org | case=https://dev.digit.org | digitalized-documents=https://dev.digit.org | hearing=https://dev.digit.org | notification=https://dev.digit.org | order=http://localhost:8080
 
 egov.localization.search.endpoint
-  Notification=/_search | ab-diary=/_search | advocate=/_search | advocate-office-management=/_search | bail-bond=/_search | case=/localization/messages/v1/_search | ctc=/localization/messages/v1/_search | digitalized-documents=/_search | order=/_search
+  ab-diary=/_search | advocate=/_search | advocate-office-management=/_search | bail-bond=/_search | case=/localization/messages/v1/_search | digitalized-documents=/_search | hearing=/_search | notification=/_search | order=/_search
 
 egov.localization.statelevel
-  Notification=true | ab-diary=true | advocate=true | advocate-office-management=true | bail-bond=true | case=true | ctc=true | digitalized-documents=true | order=true
+  ab-diary=true | advocate=true | advocate-office-management=true | bail-bond=true | case=true | digitalized-documents=true | hearing=true | notification=true | order=true
 
 egov.localization.workDir.path
-  Notification=/localization/messages/v1 | ab-diary=/localization/messages/v1 | advocate=/localization/messages/v1 | advocate-office-management=/localization/messages/v1 | bail-bond=/localization/messages/v1 | case=/localization/messages/v1 | digitalized-documents=/localization/messages/v1 | order=/localization/messages/v1
+  ab-diary=/localization/messages/v1 | advocate=/localization/messages/v1 | advocate-office-management=/localization/messages/v1 | bail-bond=/localization/messages/v1 | case=/localization/messages/v1 | digitalized-documents=/localization/messages/v1 | hearing=/localization/messages/v1 | notification=/localization/messages/v1 | order=/localization/messages/v1
 
 egov.long.url
   bail-bond=%s?tenant=%s&bailbondId=%s | digitalized-documents=%s?tenant=%s&digitalizedDocumentId=%s&type=%s
 
 egov.mdms.host
-  Notification=https://dev.digit.org | ab-diary=https://dev.digit.org | advocate=http://localhost:8085 | advocate-office-management=http://localhost:8084 | bail-bond=http://localhost:8084 | case=http://localhost:8084 | ctc=http://localhost:8084 | digitalized-documents=https://dev.digit.org | e-sign-svc=https://dev.digit.org | epost-tracker=http://localhost:8090 | inportal-survey=http://localhost:8081 | lock-svc=https://dev.digit.org | order=http://localhost:8084 | payment-calculator-svc=http://localhost:8020
+  ab-diary=https://dev.digit.org | advocate=http://localhost:8085 | advocate-office-management=http://localhost:8084 | bail-bond=http://localhost:8084 | case=http://localhost:8084 | digitalized-documents=https://dev.digit.org | e-sign-svc=https://dev.digit.org | epost-tracker=http://localhost:8090 | hearing=http://localhost:8085 | inportal-survey=http://localhost:8081 | lock-svc=https://dev.digit.org | notification=https://dev.digit.org | order=http://localhost:8084 | payment-calculator-svc=http://localhost:8020
 
 egov.mdms.search.endpoint
-  Notification=/egov-mdms-service/v1/_search | ab-diary=/egov-mdms-service/v1/_search | advocate=/egov-mdms-service/v1/_search | advocate-office-management=/egov-mdms-service/v1/_search | bail-bond=/egov-mdms-service/v1/_search | case=/egov-mdms-service/v1/_search | ctc=/egov-mdms-service/v1/_search | digitalized-documents=/egov-mdms-service/v1/_search | e-sign-svc=/egov-mdms-service/v1/_search | epost-tracker=/egov-mdms-service/v1/_search | inportal-survey=/egov-mdms-service/v1/_search | lock-svc=/egov-mdms-service/v1/_search | order=/egov-mdms-service/v1/_search | payment-calculator-svc=/egov-mdms-service/v1/_search
+  ab-diary=/egov-mdms-service/v1/_search | advocate=/egov-mdms-service/v1/_search | advocate-office-management=/egov-mdms-service/v1/_search | bail-bond=/egov-mdms-service/v1/_search | case=/egov-mdms-service/v1/_search | digitalized-documents=/egov-mdms-service/v1/_search | e-sign-svc=/egov-mdms-service/v1/_search | epost-tracker=/egov-mdms-service/v1/_search | hearing=/egov-mdms-service/v1/_search | inportal-survey=/egov-mdms-service/v1/_search | lock-svc=/egov-mdms-service/v1/_search | notification=/egov-mdms-service/v1/_search | order=/egov-mdms-service/v1/_search | payment-calculator-svc=/egov-mdms-service/v1/_search
 
 egov.pdf.service.create.endpoint
   ab-diary=/pdf-service/v1/_createnosave | epost-tracker=/pdf-service/v1/_createnosave
@@ -169,129 +172,126 @@ egov.pdf.service.host
 egov.sms.notification.admission.hearing.scheduled.template.id
   case=1107173140979241046 | order=1107173140979241046
 
+egov.sms.notification.hearing.reScheduled.template.id
+  hearing=1107175326252933950 | order=1107175326252933950
+
+egov.sms.notification.judge.scheduled.variable.hearing.template.id
+  hearing=1107173141035526317 | order=1107173141035526317
+
 egov.sms.notification.topic
-  Notification=egov.core.notification.sms | ab-diary=egov.core.notification.sms | advocate=egov.core.notification.sms | advocate-office-management=egov.core.notification.sms | bail-bond=egov.core.notification.sms | case=egov.core.notification.sms | digitalized-documents=egov.core.notification.sms | e-sign-svc=egov.core.notification.sms | inportal-survey=egov.core.notification.sms | order=egov.core.notification.sms | payment-calculator-svc=egov.core.notification.sms
+  ab-diary=egov.core.notification.sms | advocate=egov.core.notification.sms | advocate-office-management=egov.core.notification.sms | bail-bond=egov.core.notification.sms | case=egov.core.notification.sms | digitalized-documents=egov.core.notification.sms | e-sign-svc=egov.core.notification.sms | hearing=egov.core.notification.sms | inportal-survey=egov.core.notification.sms | notification=egov.core.notification.sms | order=egov.core.notification.sms | payment-calculator-svc=egov.core.notification.sms
 
 egov.tenantId
-  ab-diary=pb | ctc=pb | order=pb
+  ab-diary=pb | order=pb
 
 egov.url.shortener.expire.endpoint
   bail-bond=/eus/expireTheURL | digitalized-documents=/eus/expireTheURL
 
 egov.url.shortner.endpoint
-  Notification=/egov-url-shortening/shortener | ab-diary=/egov-url-shortening/shortener | advocate=/egov-url-shortening/shortener | advocate-office-management=/egov-url-shortening/shortener | bail-bond=/eus/shortener | case=/egov-url-shortening/shortener | digitalized-documents=/eus/shortener | order=/egov-url-shortening/shortener
+  ab-diary=/egov-url-shortening/shortener | advocate=/egov-url-shortening/shortener | advocate-office-management=/egov-url-shortening/shortener | bail-bond=/eus/shortener | case=/egov-url-shortening/shortener | digitalized-documents=/eus/shortener | hearing=/egov-url-shortening/shortener | notification=/egov-url-shortening/shortener | order=/egov-url-shortening/shortener
 
 egov.url.shortner.host
-  Notification=https://dev.digit.org | ab-diary=https://dev.digit.org | advocate=https://dev.digit.org | advocate-office-management=https://dev.digit.org | bail-bond=http://localhost:8090 | case=https://dev.digit.org | digitalized-documents=http://localhost:8090 | order=https://dev.digit.org
+  ab-diary=https://dev.digit.org | advocate=https://dev.digit.org | advocate-office-management=https://dev.digit.org | bail-bond=http://localhost:8090 | case=https://dev.digit.org | digitalized-documents=http://localhost:8090 | hearing=https://dev.digit.org | notification=https://dev.digit.org | order=https://dev.digit.org
 
 egov.user.context.path
-  Notification=/user/users | ab-diary=/user/users | advocate=/user/users | advocate-office-management=/user/users | bail-bond=/user/users | case=/user/users | digitalized-documents=/user/users | lock-svc=/user/users | order=/user/users
+  ab-diary=/user/users | advocate=/user/users | advocate-office-management=/user/users | bail-bond=/user/users | case=/user/users | digitalized-documents=/user/users | hearing=/user/users | lock-svc=/user/users | notification=/user/users | order=/user/users
 
 egov.user.create.path
-  Notification=/_createnovalidate | ab-diary=/_createnovalidate | advocate=/_createnovalidate | advocate-office-management=/_createnovalidate | bail-bond=/_createnovalidate | case=/_createnovalidate | digitalized-documents=/_createnovalidate | epost-tracker=/user/users/_createnovalidate | lock-svc=/_createnovalidate | order=/_createnovalidate
+  ab-diary=/_createnovalidate | advocate=/_createnovalidate | advocate-office-management=/_createnovalidate | bail-bond=/_createnovalidate | case=/_createnovalidate | digitalized-documents=/_createnovalidate | epost-tracker=/user/users/_createnovalidate | hearing=/_createnovalidate | lock-svc=/_createnovalidate | notification=/_createnovalidate | order=/_createnovalidate
 
 egov.user.host
-  Notification=https://dev.digit.org | ab-diary=https://dev.digit.org | advocate=http://localhost:8086 | advocate-office-management=https://dev.digit.org | bail-bond=https://dev.digit.org | case=http://localhost:8086 | digitalized-documents=https://dev.digit.org | epost-tracker=http://localhost:7090 | lock-svc=https://dev.digit.org | order=http://localhost:8086
+  ab-diary=https://dev.digit.org | advocate=http://localhost:8086 | advocate-office-management=https://dev.digit.org | bail-bond=https://dev.digit.org | case=http://localhost:8086 | digitalized-documents=https://dev.digit.org | epost-tracker=http://localhost:7090 | hearing=https://dev.digit.org | lock-svc=https://dev.digit.org | notification=https://dev.digit.org | order=http://localhost:8086
 
 egov.user.search.path
-  Notification=/user/_search | ab-diary=/user/v1/_search | advocate=/user/_search | advocate-office-management=/user/_search | bail-bond=/user/_search | case=/user/_search | digitalized-documents=/user/_search | epost-tracker=/user/v1/_search | lock-svc=/user/_search | order=/user/_search
+  ab-diary=/user/v1/_search | advocate=/user/_search | advocate-office-management=/user/_search | bail-bond=/user/_search | case=/user/_search | digitalized-documents=/user/_search | epost-tracker=/user/v1/_search | hearing=/user/_search | lock-svc=/user/_search | notification=/user/_search | order=/user/_search
 
 egov.user.update.path
-  Notification=/_updatenovalidate | ab-diary=/_updatenovalidate | advocate=/_updatenovalidate | advocate-office-management=/_updatenovalidate | bail-bond=/_updatenovalidate | case=/_updatenovalidate | digitalized-documents=/_updatenovalidate | lock-svc=/_updatenovalidate | order=/_updatenovalidate
+  ab-diary=/_updatenovalidate | advocate=/_updatenovalidate | advocate-office-management=/_updatenovalidate | bail-bond=/_updatenovalidate | case=/_updatenovalidate | digitalized-documents=/_updatenovalidate | hearing=/_updatenovalidate | lock-svc=/_updatenovalidate | notification=/_updatenovalidate | order=/_updatenovalidate
 
 egov.workflow.businessservice.search.path
-  Notification=/egov-workflow-v2/egov-wf/businessservice/_search | ab-diary=/egov-workflow-v2/egov-wf/businessservice/_search | advocate=/egov-workflow-v2/egov-wf/businessservice/_search | advocate-office-management=/egov-workflow-v2/egov-wf/businessservice/_search | bail-bond=/egov-workflow-v2/egov-wf/businessservice/_search | case=/egov-workflow-v2/egov-wf/businessservice/_search | ctc=/egov-workflow-v2/egov-wf/businessservice/_search | digitalized-documents=/egov-workflow-v2/egov-wf/businessservice/_search | order=/egov-workflow-v2/egov-wf/businessservice/_search
+  ab-diary=/egov-workflow-v2/egov-wf/businessservice/_search | advocate=/egov-workflow-v2/egov-wf/businessservice/_search | advocate-office-management=/egov-workflow-v2/egov-wf/businessservice/_search | bail-bond=/egov-workflow-v2/egov-wf/businessservice/_search | case=/egov-workflow-v2/egov-wf/businessservice/_search | digitalized-documents=/egov-workflow-v2/egov-wf/businessservice/_search | hearing=/egov-workflow-v2/egov-wf/businessservice/_search | notification=/egov-workflow-v2/egov-wf/businessservice/_search | order=/egov-workflow-v2/egov-wf/businessservice/_search
 
 egov.workflow.host
-  Notification=https://dev.digit.org | ab-diary=http://localhost:9000 | advocate=http://localhost:8088 | advocate-office-management=https://dev.digit.org | bail-bond=https://dev.digit.org | case=http://localhost:8083 | ctc=http://localhost:8083 | digitalized-documents=http://localhost:8050 | order=http://localhost:8083
+  ab-diary=http://localhost:9000 | advocate=http://localhost:8088 | advocate-office-management=https://dev.digit.org | bail-bond=https://dev.digit.org | case=http://localhost:8083 | digitalized-documents=http://localhost:8050 | hearing=http://localhost:8083 | notification=https://dev.digit.org | order=http://localhost:8083
 
 egov.workflow.processinstance.search.path
-  Notification=/egov-workflow-v2/egov-wf/process/_search | ab-diary=/egov-workflow-v2/egov-wf/process/_search | advocate=/egov-workflow-v2/egov-wf/process/_search | advocate-office-management=/egov-workflow-v2/egov-wf/process/_search | bail-bond=/egov-workflow-v2/egov-wf/process/_search | case=/egov-workflow-v2/egov-wf/process/_search | ctc=/egov-workflow-v2/egov-wf/process/_search | digitalized-documents=/egov-workflow-v2/egov-wf/process/_search | order=/egov-workflow-v2/egov-wf/process/_search
+  ab-diary=/egov-workflow-v2/egov-wf/process/_search | advocate=/egov-workflow-v2/egov-wf/process/_search | advocate-office-management=/egov-workflow-v2/egov-wf/process/_search | bail-bond=/egov-workflow-v2/egov-wf/process/_search | case=/egov-workflow-v2/egov-wf/process/_search | digitalized-documents=/egov-workflow-v2/egov-wf/process/_search | hearing=/egov-workflow-v2/egov-wf/process/_search | notification=/egov-workflow-v2/egov-wf/process/_search | order=/egov-workflow-v2/egov-wf/process/_search
 
 egov.workflow.transition.path
-  Notification=/egov-workflow-v2/egov-wf/process/_transition | ab-diary=/egov-workflow-v2/egov-wf/process/_transition | advocate=/egov-workflow-v2/egov-wf/process/_transition | advocate-office-management=/egov-workflow-v2/egov-wf/process/_transition | bail-bond=/egov-workflow-v2/egov-wf/process/_transition | case=/egov-workflow-v2/egov-wf/process/_transition | ctc=/egov-workflow-v2/egov-wf/process/_transition | digitalized-documents=/egov-workflow-v2/egov-wf/process/_transition | order=/egov-workflow-v2/egov-wf/process/_transition
+  ab-diary=/egov-workflow-v2/egov-wf/process/_transition | advocate=/egov-workflow-v2/egov-wf/process/_transition | advocate-office-management=/egov-workflow-v2/egov-wf/process/_transition | bail-bond=/egov-workflow-v2/egov-wf/process/_transition | case=/egov-workflow-v2/egov-wf/process/_transition | digitalized-documents=/egov-workflow-v2/egov-wf/process/_transition | hearing=/egov-workflow-v2/egov-wf/process/_transition | notification=/egov-workflow-v2/egov-wf/process/_transition | order=/egov-workflow-v2/egov-wf/process/_transition
 
 file.max.size
-  bail-bond=10485760 | ctc=10485760 | digitalized-documents=10485760
+  bail-bond=10485760 | digitalized-documents=10485760
+
+hearing.case.reference.number.update
+  case=update-case-reference-number | hearing=update-case-reference-number
 
 is.workflow.enabled
-  Notification=true | ab-diary=true | advocate=true | advocate-office-management=true | bail-bond=true | case=true | ctc=true | digitalized-documents=true | order=true
+  ab-diary=true | advocate=true | advocate-office-management=true | bail-bond=true | case=true | digitalized-documents=true | hearing=true | notification=true | order=true
 
 kafka.consumer.config.auto_commit
-  Notification=true | ab-diary=true | advocate=true | advocate-office-management=true | bail-bond=true | case=true | ctc=true | digitalized-documents=true | e-sign-svc=true | epost-tracker=true | inportal-survey=true | lock-svc=true | order=true | payment-calculator-svc=true | template-configuration=true
+  ab-diary=true | advocate=true | advocate-office-management=true | bail-bond=true | case=true | digitalized-documents=true | e-sign-svc=true | epost-tracker=true | hearing=true | inportal-survey=true | lock-svc=true | notification=true | order=true | payment-calculator-svc=true | template-configuration=true
 
 kafka.consumer.config.auto_commit_interval
-  Notification=100 | ab-diary=100 | advocate=100 | advocate-office-management=100 | bail-bond=100 | case=100 | ctc=100 | digitalized-documents=100 | e-sign-svc=100 | epost-tracker=100 | inportal-survey=100 | lock-svc=100 | order=100 | payment-calculator-svc=100 | template-configuration=100
+  ab-diary=100 | advocate=100 | advocate-office-management=100 | bail-bond=100 | case=100 | digitalized-documents=100 | e-sign-svc=100 | epost-tracker=100 | hearing=100 | inportal-survey=100 | lock-svc=100 | notification=100 | order=100 | payment-calculator-svc=100 | template-configuration=100
 
 kafka.consumer.config.auto_offset_reset
-  Notification=earliest | ab-diary=earliest | advocate=earliest | advocate-office-management=earliest | bail-bond=earliest | case=earliest | ctc=earliest | digitalized-documents=earliest | e-sign-svc=earliest | epost-tracker=earliest | inportal-survey=earliest | lock-svc=earliest | order=earliest | payment-calculator-svc=earliest | template-configuration=earliest
+  ab-diary=earliest | advocate=earliest | advocate-office-management=earliest | bail-bond=earliest | case=earliest | digitalized-documents=earliest | e-sign-svc=earliest | epost-tracker=earliest | hearing=earliest | inportal-survey=earliest | lock-svc=earliest | notification=earliest | order=earliest | payment-calculator-svc=earliest | template-configuration=earliest
 
 kafka.consumer.config.session_timeout
-  Notification=15000 | ab-diary=15000 | advocate=15000 | advocate-office-management=15000 | bail-bond=15000 | case=15000 | ctc=15000 | digitalized-documents=15000 | e-sign-svc=15000 | epost-tracker=15000 | inportal-survey=15000 | lock-svc=15000 | order=15000 | payment-calculator-svc=15000 | template-configuration=15000
+  ab-diary=15000 | advocate=15000 | advocate-office-management=15000 | bail-bond=15000 | case=15000 | digitalized-documents=15000 | e-sign-svc=15000 | epost-tracker=15000 | hearing=15000 | inportal-survey=15000 | lock-svc=15000 | notification=15000 | order=15000 | payment-calculator-svc=15000 | template-configuration=15000
 
 kafka.producer.config.batch_size_config
-  Notification=16384 | ab-diary=16384 | advocate=16384 | advocate-office-management=16384 | bail-bond=16384 | case=16384 | ctc=16384 | digitalized-documents=16384 | e-sign-svc=16384 | epost-tracker=16384 | inportal-survey=16384 | lock-svc=16384 | order=16384 | payment-calculator-svc=16384 | template-configuration=16384
+  ab-diary=16384 | advocate=16384 | advocate-office-management=16384 | bail-bond=16384 | case=16384 | digitalized-documents=16384 | e-sign-svc=16384 | epost-tracker=16384 | hearing=16384 | inportal-survey=16384 | lock-svc=16384 | notification=16384 | order=16384 | payment-calculator-svc=16384 | template-configuration=16384
 
 kafka.producer.config.buffer_memory_config
-  Notification=33554432 | ab-diary=33554432 | advocate=33554432 | advocate-office-management=33554432 | bail-bond=33554432 | case=33554432 | ctc=33554432 | digitalized-documents=33554432 | e-sign-svc=33554432 | epost-tracker=33554432 | inportal-survey=33554432 | lock-svc=33554432 | order=33554432 | payment-calculator-svc=33554432 | template-configuration=33554432
+  ab-diary=33554432 | advocate=33554432 | advocate-office-management=33554432 | bail-bond=33554432 | case=33554432 | digitalized-documents=33554432 | e-sign-svc=33554432 | epost-tracker=33554432 | hearing=33554432 | inportal-survey=33554432 | lock-svc=33554432 | notification=33554432 | order=33554432 | payment-calculator-svc=33554432 | template-configuration=33554432
 
 kafka.producer.config.linger_ms_config
-  Notification=1 | ab-diary=1 | advocate=1 | advocate-office-management=1 | bail-bond=1 | case=1 | ctc=1 | digitalized-documents=1 | e-sign-svc=1 | epost-tracker=1 | inportal-survey=1 | lock-svc=1 | order=1 | payment-calculator-svc=1 | template-configuration=1
+  ab-diary=1 | advocate=1 | advocate-office-management=1 | bail-bond=1 | case=1 | digitalized-documents=1 | e-sign-svc=1 | epost-tracker=1 | hearing=1 | inportal-survey=1 | lock-svc=1 | notification=1 | order=1 | payment-calculator-svc=1 | template-configuration=1
 
 kafka.producer.config.retries_config
-  Notification=0 | ab-diary=0 | advocate=0 | advocate-office-management=0 | bail-bond=0 | case=0 | ctc=0 | digitalized-documents=0 | e-sign-svc=0 | epost-tracker=0 | inportal-survey=0 | lock-svc=0 | order=0 | payment-calculator-svc=0 | template-configuration=0
+  ab-diary=0 | advocate=0 | advocate-office-management=0 | bail-bond=0 | case=0 | digitalized-documents=0 | e-sign-svc=0 | epost-tracker=0 | hearing=0 | inportal-survey=0 | lock-svc=0 | notification=0 | order=0 | payment-calculator-svc=0 | template-configuration=0
 
 kafka.topics.consumer
-  Notification=service-consumer-topic | ab-diary=service-consumer-topic | advocate=save-advocate-application | advocate-office-management=service-consumer-topic | bail-bond=service-consumer-topic | digitalized-documents=service-consumer-topic | inportal-survey=service-consumer-topic
+  ab-diary=service-consumer-topic | advocate=save-advocate-application | advocate-office-management=service-consumer-topic | bail-bond=service-consumer-topic | digitalized-documents=service-consumer-topic | inportal-survey=service-consumer-topic | notification=service-consumer-topic
 
 kafka.topics.receipt.create
-  Notification=dss-collection | ab-diary=dss-collection | advocate=dss-collection | advocate-office-management=dss-collection | bail-bond=dss-collection | case=egov.collection.payment-create | ctc=dss-collection | digitalized-documents=dss-collection | e-sign-svc=dss-collection | inportal-survey=dss-collection | lock-svc=dss-collection | order=dss-collection | payment-calculator-svc=dss-collection
+  ab-diary=dss-collection | advocate=dss-collection | advocate-office-management=dss-collection | bail-bond=dss-collection | case=egov.collection.payment-create | digitalized-documents=dss-collection | e-sign-svc=dss-collection | hearing=dss-collection | inportal-survey=dss-collection | lock-svc=dss-collection | notification=dss-collection | order=dss-collection | payment-calculator-svc=dss-collection
 
 leave.office.kafka.create.topic
   advocate-office-management=leave-advocate-office | case=leave-advocate-office
 
 logging.level.root
-  Notification=INFO | ab-diary=INFO | advocate=INFO | bail-bond=INFO | case=INFO | ctc=INFO | e-sign-svc=INFO | epost-tracker=INFO | inportal-survey=INFO | lock-svc=INFO | order=INFO | payment-calculator-svc=INFO | template-configuration=INFO
+  ab-diary=INFO | advocate=INFO | bail-bond=INFO | case=INFO | e-sign-svc=INFO | epost-tracker=INFO | hearing=INFO | inportal-survey=INFO | lock-svc=INFO | notification=INFO | order=INFO | payment-calculator-svc=INFO | template-configuration=INFO
 
 logging.loki.enabled
-  Notification=false | ab-diary=false | advocate=false | bail-bond=false | case=false | ctc=false | e-sign-svc=false | epost-tracker=false | inportal-survey=false | lock-svc=false | order=false | payment-calculator-svc=false | template-configuration=false
+  ab-diary=false | advocate=false | bail-bond=false | case=false | e-sign-svc=false | epost-tracker=false | hearing=false | inportal-survey=false | lock-svc=false | notification=false | order=false | payment-calculator-svc=false | template-configuration=false
 
 logging.loki.url
-  Notification=http://localhost:3100/loki/api/v1/push | ab-diary=http://localhost:3100/loki/api/v1/push | advocate=http://localhost:3100/loki/api/v1/push | bail-bond=http://localhost:3100/loki/api/v1/push | case=http://localhost:3100/loki/api/v1/push | ctc=http://localhost:3100/loki/api/v1/push | e-sign-svc=http://localhost:3100/loki/api/v1/push | epost-tracker=http://localhost:3100/loki/api/v1/push | inportal-survey=http://localhost:3100/loki/api/v1/push | lock-svc=http://localhost:3100/loki/api/v1/push | order=http://localhost:3100/loki/api/v1/push | payment-calculator-svc=http://localhost:3100/loki/api/v1/push | template-configuration=http://localhost:3100/loki/api/v1/push
+  ab-diary=http://localhost:3100/loki/api/v1/push | advocate=http://localhost:3100/loki/api/v1/push | bail-bond=http://localhost:3100/loki/api/v1/push | case=http://localhost:3100/loki/api/v1/push | e-sign-svc=http://localhost:3100/loki/api/v1/push | epost-tracker=http://localhost:3100/loki/api/v1/push | hearing=http://localhost:3100/loki/api/v1/push | inportal-survey=http://localhost:3100/loki/api/v1/push | lock-svc=http://localhost:3100/loki/api/v1/push | notification=http://localhost:3100/loki/api/v1/push | order=http://localhost:3100/loki/api/v1/push | payment-calculator-svc=http://localhost:3100/loki/api/v1/push | template-configuration=http://localhost:3100/loki/api/v1/push
 
-otel.exporter.otlp.endpoint
-  Notification=http://jaeger-collector.tracing:4318 | ab-diary=http://jaeger-collector.tracing:4318 | advocate=http://jaeger-collector.tracing:4318 | advocate-office-management=http://jaeger-collector.tracing:4318 | bail-bond=http://jaeger-collector.tracing:4318 | bank-details=http://jaeger-collector.tracing:4318 | case=http://jaeger-collector.tracing:4318 | digitalized-documents=http://jaeger-collector.tracing:4318 | e-sign-svc=http://jaeger-collector.tracing:4318 | epost-tracker=http://jaeger-collector.tracing:4318 | inportal-survey=http://jaeger-collector.tracing:4318 | lock-svc=http://jaeger-collector.tracing:4318 | order=http://jaeger-collector.tracing:4318 | payment-calculator-svc=http://jaeger-collector.tracing:4318 | template-configuration=http://jaeger-collector.tracing:4318
+lpr.case.details.update.kafka.topic
+  case=lpr-case-details-update | hearing=lpr-case-details-update
 
-otel.exporter.otlp.protocol
-  Notification=http/protobuf | ab-diary=http/protobuf | advocate=http/protobuf | advocate-office-management=http/protobuf | bail-bond=http/protobuf | bank-details=http/protobuf | case=http/protobuf | digitalized-documents=http/protobuf | e-sign-svc=http/protobuf | epost-tracker=http/protobuf | inportal-survey=http/protobuf | lock-svc=http/protobuf | order=http/protobuf | payment-calculator-svc=http/protobuf | template-configuration=http/protobuf
+notification.sms.enabled
+  case=true | hearing=true
 
 otel.instrumentation.http.server.ignore-urls
-  Notification=/notification/health,/notification/prometheus | ab-diary=/ab-diary/health,/ab-diary/prometheus | advocate=/advocate/health,/advocate/prometheus | advocate-office-management=/advocate-office-management/health,/advocate-office-management/prometheus | bail-bond=/bail-bond/health,/bail-bond/prometheus | bank-details=/bank-details/health,/bank-details/prometheus | case=/case/health,/case/prometheus | digitalized-documents=/digitalized-documents/health,/digitalized-documents/prometheus | e-sign-svc=/e-sign-svc/health,/e-sign-svc/prometheus | epost-tracker=/epost-tracker/health,/epost-tracker/prometheus | inportal-survey=/inportal-survey/health,/inportal-survey/prometheus | lock-svc=/lock-svc/health,/lock-svc/prometheus | order=/order/health,/order/prometheus | payment-calculator-svc=/payment-calculator/health,/payment-calculator/prometheus | template-configuration=/template-configuration/health,/template-configuration/prometheus
-
-otel.instrumentation.kafka.enabled
-  Notification=true | ab-diary=true | advocate=true | advocate-office-management=true | bail-bond=true | bank-details=true | case=true | digitalized-documents=true | e-sign-svc=true | epost-tracker=true | inportal-survey=true | lock-svc=true | order=true | payment-calculator-svc=true | template-configuration=true
-
-otel.instrumentation.kafka.experimental-span-attributes
-  Notification=true | ab-diary=true | advocate=true | advocate-office-management=true | bail-bond=true | bank-details=true | case=true | digitalized-documents=true | e-sign-svc=true | epost-tracker=true | inportal-survey=true | lock-svc=true | order=true | payment-calculator-svc=true | template-configuration=true
-
-otel.logs.exporter
-  Notification=none | ab-diary=none | advocate=none | advocate-office-management=none | bail-bond=none | bank-details=none | case=none | digitalized-documents=none | e-sign-svc=none | epost-tracker=none | inportal-survey=none | lock-svc=none | order=none | payment-calculator-svc=none | template-configuration=none
-
-otel.metrics.exporter
-  Notification=none | ab-diary=none | advocate=none | advocate-office-management=none | bail-bond=none | bank-details=none | case=none | digitalized-documents=none | e-sign-svc=none | epost-tracker=none | inportal-survey=none | lock-svc=none | order=none | payment-calculator-svc=none | template-configuration=none
-
-otel.traces.exporter
-  Notification=otlp | ab-diary=otlp | advocate=otlp | advocate-office-management=otlp | bail-bond=otlp | bank-details=otlp | case=otlp | digitalized-documents=otlp | e-sign-svc=otlp | epost-tracker=otlp | inportal-survey=otlp | lock-svc=otlp | order=otlp | payment-calculator-svc=otlp | template-configuration=otlp
+  ab-diary=/ab-diary/health,/ab-diary/prometheus | advocate=/advocate/health,/advocate/prometheus | advocate-office-management=/advocate-office-management/health,/advocate-office-management/prometheus | bail-bond=/bail-bond/health,/bail-bond/prometheus | bank-details=/bank-details/health,/bank-details/prometheus | case=/case/health,/case/prometheus | digitalized-documents=/digitalized-documents/health,/digitalized-documents/prometheus | e-sign-svc=/e-sign-svc/health,/e-sign-svc/prometheus | epost-tracker=/epost-tracker/health,/epost-tracker/prometheus | hearing=/hearing/health,/hearing/prometheus | inportal-survey=/inportal-survey/health,/inportal-survey/prometheus | lock-svc=/lock-svc/health,/lock-svc/prometheus | notification=/notification/health,/notification/prometheus | order=/order/health,/order/prometheus | payment-calculator-svc=/payment-calculator/health,/payment-calculator/prometheus | template-configuration=/template-configuration/health,/template-configuration/prometheus
 
 spring.redis.host
-  advocate-office-management=localhost | case=localhost | ctc=localhost
+  advocate-office-management=localhost | case=localhost | hearing=localhost
 
 spring.redis.port
-  advocate-office-management=6379 | case=6379 | ctc=6379
+  advocate-office-management=6379 | case=6379 | hearing=6379
 
 spring.redis.timeout
-  advocate-office-management=10 | case=10 | ctc=10
+  advocate-office-management=10 | case=10 | hearing=10
 
 state.level.tenant.id
-  bail-bond=pb | case=pb
+  bail-bond=pb | case=pb | hearing=pb
+
+user.oauth.url
+  case=https://dristi-kerala-dev.pucar.org/user/oauth/token?_=1713357247536 | hearing=https://dristi-kerala-dev.pucar.org/user/oauth/token?_=1713357247536
 

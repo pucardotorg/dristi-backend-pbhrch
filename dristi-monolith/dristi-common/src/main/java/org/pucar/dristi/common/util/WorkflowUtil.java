@@ -203,4 +203,5 @@ public class WorkflowUtil {
         ProcessInstanceResponse response = mapper.convertValue(optional, ProcessInstanceResponse.class);
         return response.getProcessInstances().get(0).getState();
     }
+
 }
