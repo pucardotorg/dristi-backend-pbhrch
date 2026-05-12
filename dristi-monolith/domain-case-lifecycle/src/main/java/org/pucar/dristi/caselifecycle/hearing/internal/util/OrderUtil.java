@@ -12,6 +12,7 @@ import org.egov.common.contract.request.Role;
 import org.egov.common.models.project.TaskResponse;
 import org.egov.tracer.model.CustomException;
 import org.pucar.dristi.caselifecycle.hearing.internal.config.Configuration;
+import org.pucar.dristi.common.util.RequestInfoUtil;
 import org.pucar.dristi.common.kafka.Producer;
 import org.pucar.dristi.common.repository.ServiceRequestRepository;
 import org.pucar.dristi.caselifecycle.hearing.internal.web.models.*;
@@ -70,13 +71,12 @@ public class OrderUtil {
         try {
             String hearingId = hearingRequest.getHearing().getHearingId();
             String tenantId = hearingRequest.getHearing().getTenantId();
-            RequestInfo requestInfo = hearingRequest.getRequestInfo();
             Role role = Role.builder()
                     .code(PAYMENT_COLLECTOR)
                     .name(PAYMENT_COLLECTOR)
                     .tenantId(tenantId)
                     .build();
-            requestInfo.getUserInfo().getRoles().add(role);
+            RequestInfo requestInfo = RequestInfoUtil.withExtraRole(hearingRequest.getRequestInfo(), role);
 
             if (hearingId == null) {
                 log.warn("Hearing ID is null. Skipping closing tasks.");
@@ -219,13 +219,12 @@ public class OrderUtil {
         try {
             String hearingId = hearingRequest.getHearing().getHearingId();
             String tenantId = hearingRequest.getHearing().getTenantId();
-            RequestInfo requestInfo = hearingRequest.getRequestInfo();
             Role role = Role.builder()
                     .code(PAYMENT_COLLECTOR)
                     .name(PAYMENT_COLLECTOR)
                     .tenantId(tenantId)
                     .build();
-            requestInfo.getUserInfo().getRoles().add(role);
+            RequestInfo requestInfo = RequestInfoUtil.withExtraRole(hearingRequest.getRequestInfo(), role);
 
             if (hearingId == null) {
                 log.warn("Hearing ID is null. Skipping the closing tasks process.");
@@ -432,9 +431,9 @@ public class OrderUtil {
         WorkflowObject workflow = new WorkflowObject();
         workflow.setAction(EXPIRE);
         taskManagement.setWorkflow(workflow);
-        requestInfo.getUserInfo().getRoles().add(Role.builder().code(SYSTEM_ADMIN).name(SYSTEM_ADMIN).tenantId(taskManagement.getTenantId()).build());
         TaskManagementRequest taskManagementRequest = TaskManagementRequest.builder()
-                .requestInfo(requestInfo)
+                .requestInfo(RequestInfoUtil.withExtraRole(requestInfo,
+                        Role.builder().code(SYSTEM_ADMIN).name(SYSTEM_ADMIN).tenantId(taskManagement.getTenantId()).build()))
                 .taskManagement(taskManagement)
                 .build();
         TaskManagementResponse response = taskManagementUtil.updateTaskManagement(taskManagementRequest);
