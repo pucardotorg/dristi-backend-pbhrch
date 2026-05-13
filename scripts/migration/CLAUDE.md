@@ -212,6 +212,20 @@ Pipeline and Maven output can be large. To keep context efficient:
   acknowledging the marker. The marker exists so re-runs preserve
   human edits; respect it.
 
+- **Do not commit without full-reactor verification.** Every `git commit`
+  on this monorepo must be preceded by a passing `mvn clean test` run
+  from the `dristi-monolith` root — **full reactor**, not
+  `-pl <module> -am`, not a hand-picked `-Dtest=` subset. The reactor
+  build covers all 7 modules (`dristi-monolith`, `dristi-common`,
+  `domain-identity-access`, `domain-case-lifecycle`, `domain-integration`,
+  `domain-payments`, `dristi-app`) and includes the structural gates
+  `BeanNameCollisionTest` + `ModuleStructureTest` in `dristi-app`.
+  Scoped builds (`-pl <module> -am`) and named-test runs are fine as an
+  inner debug loop; the **final** pre-commit run is full-reactor every
+  time. If a gate the change should trigger isn't wired up yet, surface
+  the gap and propose adding it — don't skip. The pre-commit summary
+  (next bullet) cites the verified state from this run.
+
 - **Do not commit without a pre-commit summary first** (Rule 30).
   Every `git commit` on a migration session must be preceded by a
   structured summary of files-added / files-deleted / files-modified /

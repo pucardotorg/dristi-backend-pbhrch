@@ -1,9 +1,10 @@
+// HAND-CURATED — Rule 24a shadow-import fix (PR #86 follow-up)
 package org.pucar.dristi.caselifecycle.ctc.internal.repository.rowmapper;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.egov.common.contract.models.AuditDetails;
+import org.pucar.dristi.common.models.AuditDetails;
 import org.egov.tracer.model.CustomException;
 import org.pucar.dristi.caselifecycle.ctc.internal.web.models.*;
 import org.pucar.dristi.common.contract.ctc.*;
