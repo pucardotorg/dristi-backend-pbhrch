@@ -2,8 +2,10 @@
 package org.pucar.dristi.common.contract.hearing;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.validation.annotation.Validated;
 
@@ -12,6 +14,8 @@ import org.springframework.validation.annotation.Validated;
 @Getter
 @Setter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class HearingCriteria {
 
     @JsonProperty("hearingId")

@@ -17,14 +17,14 @@ otel:
 spring:
   datasource:
     writer:
-      url: jdbc:postgresql://localhost:5432/hearing
+      url: jdbc:postgresql://localhost:5432/phc_db
       username: postgres
-      password: root
+      password: admin
       driver-class-name: org.postgresql.Driver
     reader:
-      url: jdbc:postgresql://localhost:5432/hearing
+      url: jdbc:postgresql://localhost:5432/phc_db
       username: postgres
-      password: root
+      password: admin
       driver-class-name: org.postgresql.Driver
   redis:
     host: localhost
