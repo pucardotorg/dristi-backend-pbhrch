@@ -1369,7 +1369,7 @@ def phase_7_validate(manifest: dict, target_dir: Path) -> tuple[int, list[str]]:
         cwd=MONOLITH_ROOT,
         capture_output=True,
         text=True,
-        shell=True,
+        shell=(os.name == "nt"),
     )
     if result.returncode != 0:
         fails.append("Gate 5 (mvn compile): dristi-common no longer compiles")
