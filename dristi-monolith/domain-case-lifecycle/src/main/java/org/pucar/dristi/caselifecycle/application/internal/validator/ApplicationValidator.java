@@ -5,6 +5,8 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.model.CustomException;
 import org.pucar.dristi.caselifecycle.application.internal.repository.ApplicationRepository;
 import org.pucar.dristi.caselifecycle.application.internal.util.CaseUtil;
+import org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseExists;
+import org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseExistsRequest;
 import org.pucar.dristi.common.util.FileStoreUtil;
 import org.pucar.dristi.caselifecycle.application.internal.util.OrderUtil;
 import org.pucar.dristi.caselifecycle.application.internal.web.models.*;

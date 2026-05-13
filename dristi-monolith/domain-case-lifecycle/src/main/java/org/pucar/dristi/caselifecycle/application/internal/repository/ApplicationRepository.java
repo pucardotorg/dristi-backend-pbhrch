@@ -14,6 +14,8 @@ import org.pucar.dristi.caselifecycle.application.internal.repository.rowMapper.
 import org.pucar.dristi.caselifecycle.application.internal.service.IndividualService;
 import org.pucar.dristi.caselifecycle.application.internal.util.AdvocateUtil;
 import org.pucar.dristi.caselifecycle.application.internal.util.CaseUtil;
+import org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseCriteria;
+import org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseSearchRequest;
 import org.pucar.dristi.caselifecycle.application.internal.web.models.*;
 import org.pucar.dristi.common.contract.application.*;
 import org.springframework.beans.factory.annotation.Autowired;

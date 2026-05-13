@@ -2,142 +2,111 @@ package org.pucar.dristi.caselifecycle.application.internal.util;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.egov.tracer.model.CustomException;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.pucar.dristi.caselifecycle.application.internal.config.Configuration;
-import org.pucar.dristi.common.contract.application.CaseExists;
-import org.pucar.dristi.common.contract.application.CaseExistsRequest;
-import org.pucar.dristi.common.contract.application.CaseExistsResponse;
-import org.pucar.dristi.common.contract.application.CaseSearchRequest;
-import org.springframework.web.client.RestTemplate;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.pucar.dristi.caselifecycle.cases.CaseApi;
+import org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseCriteria;
+import org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseExists;
+import org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseExistsRequest;
+import org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseExistsResponse;
+import org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseListResponse;
+import org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseSearchRequest;
+import org.pucar.dristi.caselifecycle.cases.internal.web.models.CourtCase;
 
 @ExtendWith(MockitoExtension.class)
 public class CaseUtilTest {
 
     @Mock
-    private RestTemplate restTemplate;
+    private CaseApi caseApi;
 
     @Mock
     private ObjectMapper mapper;
-
-    @Mock
-    private Configuration configs;
 
     @InjectMocks
     private CaseUtil caseUtil;
 
     @Test
-    void testFetchCaseDetailsSuccess(){
+    void testFetchCaseDetailsSuccess() {
         CaseExistsRequest request = new CaseExistsRequest();
-        Map<String, Object> response = new HashMap<>();
-        response.put("criteria", List.of(Map.of("exists", true)));
-        when(configs.getCaseHost()).thenReturn("http://localhost:8080");
-        when(configs.getCaseExistsPath()).thenReturn("/caseExists");
-        CaseExistsResponse caseExistsResponse = CaseExistsResponse.builder()
+        CaseExistsResponse response = CaseExistsResponse.builder()
                 .criteria(List.of(CaseExists.builder().exists(true).build()))
                 .build();
+        when(caseApi.exists(request)).thenReturn(response);
 
-        when(restTemplate.postForObject(any(String.class), eq(request), eq(Map.class)))
-                .thenReturn(response);
-        when(mapper.convertValue(response, CaseExistsResponse.class))
-                .thenReturn(caseExistsResponse);
-
-        Boolean result = caseUtil.fetchCaseDetails(request);
-        assertTrue(result);
+        assertTrue(caseUtil.fetchCaseDetails(request));
     }
 
     @Test
-    void testFetchCaseDetailsDoesNotExist(){
+    void testFetchCaseDetailsDoesNotExist() {
         CaseExistsRequest request = new CaseExistsRequest();
-        Map<String, Object> response = new HashMap<>();
-        response.put("criteria", List.of(Map.of("exists", false)));
-        when(configs.getCaseHost()).thenReturn("http://localhost:8080");
-        when(configs.getCaseExistsPath()).thenReturn("/caseExists");
-        CaseExistsResponse caseExistsResponse = CaseExistsResponse.builder()
+        CaseExistsResponse response = CaseExistsResponse.builder()
                 .criteria(List.of(CaseExists.builder().exists(false).build()))
                 .build();
+        when(caseApi.exists(request)).thenReturn(response);
 
-        when(restTemplate.postForObject(any(String.class), eq(request), eq(Map.class)))
-                .thenReturn(response);
-        when(mapper.convertValue(response, CaseExistsResponse.class))
-                .thenReturn(caseExistsResponse);
-
-        Boolean result = caseUtil.fetchCaseDetails(request);
-        assertFalse(result);
+        assertFalse(caseUtil.fetchCaseDetails(request));
     }
-
 
     @Test
     void testFetchCaseDetailsException() {
         CaseExistsRequest request = new CaseExistsRequest();
-        when(configs.getCaseHost()).thenReturn("http://localhost:8080");
-        when(configs.getCaseExistsPath()).thenReturn("/caseExists");
-        when(restTemplate.postForObject(any(String.class), eq(request), eq(Map.class)))
-                .thenThrow(new RuntimeException("Error"));
-        assertThrows(RuntimeException.class, () -> {
-            caseUtil.fetchCaseDetails(request);
-        });
+        when(caseApi.exists(request)).thenThrow(new RuntimeException("Error"));
+
+        assertThrows(CustomException.class, () -> caseUtil.fetchCaseDetails(request));
     }
 
     @Test
     void testSearchCaseDetails_Success() throws JsonProcessingException {
-        // Arrange
-        CaseSearchRequest request = new CaseSearchRequest();
-        JsonNode expectedResponse = new ObjectMapper().readTree("{\"criteria\":[{\"responseList\":[{\"caseId\":\"123\"}]}]}");
+        CaseSearchRequest request = CaseSearchRequest.builder()
+                .criteria(Collections.singletonList(CaseCriteria.builder().filingNumber("FN-001").build()))
+                .build();
 
-        String host = "http://example.com";
-        String path = "/caseSearch";
-        String fullUri = host + path;
+        CourtCase courtCase = new CourtCase();
+        CaseCriteria criteria = new CaseCriteria();
+        criteria.setResponseList(List.of(courtCase));
+        CaseListResponse listResponse = CaseListResponse.builder()
+                .criteria(List.of(criteria))
+                .build();
 
-        Map<String, Object> responseObject = new HashMap<>();
-        responseObject.put("criteria", Collections.singletonList(new CaseExists()));
+        JsonNode expectedNode = new ObjectMapper().readTree("{\"caseId\":\"123\"}");
+        when(caseApi.search(request)).thenReturn(listResponse);
+        when(mapper.valueToTree(courtCase)).thenReturn(expectedNode);
 
-        when(configs.getCaseHost()).thenReturn(host);
-        when(configs.getCaseSearchPath()).thenReturn(path);
-        when(restTemplate.postForObject(eq(fullUri), eq(request), eq(Map.class))).thenReturn(responseObject);
-        when(mapper.readTree(mapper.writeValueAsString(responseObject))).thenReturn(expectedResponse);
-
-        // Act
-        JsonNode actualResponse = caseUtil.searchCaseDetails(request);
-
-        // Assert
-        assertNotNull(actualResponse);
-        assertEquals("123", actualResponse.get("caseId").asText());
+        JsonNode result = caseUtil.searchCaseDetails(request);
+        assertNotNull(result);
+        assertEquals("123", result.get("caseId").asText());
     }
 
     @Test
-    void testSearchCaseDetails_Exception() throws JsonProcessingException {
-        // Arrange
+    void testSearchCaseDetails_Exception() {
         CaseSearchRequest request = new CaseSearchRequest();
-        String errorMessage = "Error while fetching case details";
+        when(caseApi.search(request)).thenThrow(new RuntimeException("Error fetching case"));
 
-        String host = "http://example.com";
-        String path = "/caseSearch";
-        String fullUri = host + path;
+        assertThrows(CustomException.class, () -> caseUtil.searchCaseDetails(request));
+    }
 
-        when(configs.getCaseHost()).thenReturn(host);
-        when(configs.getCaseSearchPath()).thenReturn(path);
-        when(restTemplate.postForObject(eq(fullUri), eq(request), eq(Map.class))).thenThrow(new RuntimeException(errorMessage));
+    @Test
+    void testSearchCaseDetails_EmptyResponseList() {
+        CaseSearchRequest request = new CaseSearchRequest();
+        CaseCriteria criteria = new CaseCriteria();
+        criteria.setResponseList(Collections.emptyList());
+        CaseListResponse listResponse = CaseListResponse.builder()
+                .criteria(List.of(criteria))
+                .build();
+        when(caseApi.search(request)).thenReturn(listResponse);
 
-        // Act & Assert
-        CustomException exception = assertThrows(CustomException.class, () -> caseUtil.searchCaseDetails(request));
-        assertEquals(errorMessage, exception.getMessage());
+        assertNull(caseUtil.searchCaseDetails(request));
     }
 }

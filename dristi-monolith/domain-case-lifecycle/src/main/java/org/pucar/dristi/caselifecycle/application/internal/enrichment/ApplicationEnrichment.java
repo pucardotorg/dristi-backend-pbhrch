@@ -7,6 +7,8 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.model.CustomException;
 import org.pucar.dristi.caselifecycle.application.internal.config.Configuration;
 import org.pucar.dristi.caselifecycle.application.internal.util.CaseUtil;
+import org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseCriteria;
+import org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseSearchRequest;
 import org.pucar.dristi.common.util.DateUtil;
 import org.pucar.dristi.common.util.IdgenUtil;
 import org.pucar.dristi.caselifecycle.application.internal.web.models.*;

@@ -16,6 +16,8 @@ import org.pucar.dristi.common.kafka.Producer;
 import org.pucar.dristi.caselifecycle.application.internal.repository.ApplicationRepository;
 import org.pucar.dristi.caselifecycle.application.internal.util.CaseUtil;
 import org.pucar.dristi.caselifecycle.application.internal.util.SmsNotificationUtil;
+import org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseCriteria;
+import org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseSearchRequest;
 import org.pucar.dristi.caselifecycle.application.internal.web.models.*;
 import org.pucar.dristi.common.contract.application.*;
 import org.pucar.dristi.common.util.RequestInfoUtil;

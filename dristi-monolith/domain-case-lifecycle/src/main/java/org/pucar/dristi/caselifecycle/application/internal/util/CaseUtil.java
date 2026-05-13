@@ -3,78 +3,58 @@ package org.pucar.dristi.caselifecycle.application.internal.util;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.model.CustomException;
-import org.pucar.dristi.caselifecycle.application.internal.config.Configuration;
-import org.pucar.dristi.common.contract.application.CaseExists;
-import org.pucar.dristi.common.contract.application.CaseExistsRequest;
-import org.pucar.dristi.common.contract.application.CaseExistsResponse;
-import org.pucar.dristi.common.contract.application.CaseSearchRequest;
+import org.pucar.dristi.caselifecycle.cases.CaseApi;
+import org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseExistsRequest;
+import org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseExistsResponse;
+import org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseListResponse;
+import org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseSearchRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static org.pucar.dristi.caselifecycle.application.internal.config.ServiceConstants.*;
 
 @Slf4j
 @Component("applicationCaseUtil")
 public class CaseUtil {
-    private final RestTemplate restTemplate;
+
+    private final CaseApi caseApi;
     private final ObjectMapper mapper;
-    private final Configuration configs;
 
     @Autowired
-    public CaseUtil(RestTemplate restTemplate, ObjectMapper mapper, Configuration configs) {
-        this.restTemplate = restTemplate;
+    public CaseUtil(CaseApi caseApi, ObjectMapper mapper) {
+        this.caseApi = caseApi;
         this.mapper = mapper;
-        this.configs = configs;
     }
 
     public Boolean fetchCaseDetails(CaseExistsRequest caseExistsRequest) {
-        StringBuilder uri = new StringBuilder();
-        uri.append(configs.getCaseHost()).append(configs.getCaseExistsPath());
-
-        Object response = new HashMap<>();
-        CaseExistsResponse caseExistsResponse = new CaseExistsResponse();
         try {
-            response = restTemplate.postForObject(uri.toString(), caseExistsRequest, Map.class);
-            caseExistsResponse = mapper.convertValue(response, CaseExistsResponse.class);
+            CaseExistsResponse response = caseApi.exists(caseExistsRequest);
+            return response.getCriteria().get(0).getExists();
+        } catch (CustomException e) {
+            throw e;
         } catch (Exception e) {
             log.error(ERROR_WHILE_FETCHING_FROM_CASE, e);
             throw new CustomException(ERROR_WHILE_FETCHING_FROM_CASE, e.getMessage());
-
         }
-        return caseExistsResponse.getCriteria().get(0).getExists();
     }
 
     public JsonNode searchCaseDetails(CaseSearchRequest caseSearchRequest) {
-        StringBuilder uri = new StringBuilder();
-        uri.append(configs.getCaseHost()).append(configs.getCaseSearchPath());
-
         try {
-            Object response = restTemplate.postForObject(uri.toString(), caseSearchRequest, Map.class);
-            if (response == null) {
+            CaseListResponse response = caseApi.search(caseSearchRequest);
+            if (response == null || response.getCriteria() == null || response.getCriteria().isEmpty()) {
                 throw new CustomException(ERROR_WHILE_FETCHING_FROM_CASE, "Received null response from case search");
             }
-
-            JsonNode jsonNode = mapper.readTree(mapper.writeValueAsString(response));
-            JsonNode criteria = jsonNode.get("criteria");
-            if (criteria == null || criteria.size() == 0 || !criteria.get(0).has("responseList")) {
-                throw new CustomException(ERROR_WHILE_FETCHING_FROM_CASE, "Invalid response structure");
+            List<org.pucar.dristi.caselifecycle.cases.internal.web.models.CourtCase> responseList =
+                    response.getCriteria().get(0).getResponseList();
+            if (responseList == null || responseList.isEmpty()) {
+                return null;
             }
-
-            JsonNode caseList = criteria.get(0).get("responseList");
-            if (caseList.size() == 0) {
-                return null; // or throw an exception, depending on your requirements
-            }
-
-            // Returning the first item. Consider returning the whole list if needed.
-            return caseList.get(0);
+            return mapper.valueToTree(responseList.get(0));
+        } catch (CustomException e) {
+            throw e;
         } catch (Exception e) {
             log.error(ERROR_WHILE_FETCHING_FROM_CASE, e);
             throw new CustomException(ERROR_WHILE_FETCHING_FROM_CASE, e.getMessage());

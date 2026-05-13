@@ -96,12 +96,6 @@ public class Configuration {
     @Value("${egov.sms.notification.topic}")
     private String smsNotificationTopic;
 
-    // Case Config
-    @Value("${egov.case.host}")
-    private String caseHost;
-
-    @Value("${egov.case.path}")
-    private String caseExistsPath;
 
     //Application topic
     @Value("${application.kafka.create.topic}")
@@ -157,10 +151,6 @@ public class Configuration {
 
     @Value("${egov.idgen.cmpFormat}")
     private String cmpFormat;
-
-    // Path for searching cases
-    @Value("${egov.case.search.path}")
-    private String caseSearchPath;
 
     @Value("${egov.workflow.delay.condonation.business.service.name}")
     private String delayCondonationBusinessServiceName;
