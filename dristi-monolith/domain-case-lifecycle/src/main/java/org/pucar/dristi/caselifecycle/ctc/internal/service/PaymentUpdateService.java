@@ -1,3 +1,4 @@
+// HAND-CURATED — Rule 40 RequestInfo defensive-copy + Rule 24a shadow-import fix (PR #86 follow-up)
 package org.pucar.dristi.caselifecycle.ctc.internal.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -6,7 +7,6 @@ import digit.models.coremodels.Bill;
 import digit.models.coremodels.PaymentDetail;
 import digit.models.coremodels.PaymentRequest;
 import lombok.extern.slf4j.Slf4j;
-import org.egov.common.contract.models.AuditDetails;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.Role;
 import org.egov.tracer.model.CustomException;
@@ -14,7 +14,9 @@ import org.pucar.dristi.caselifecycle.ctc.internal.config.Configuration;
 import org.pucar.dristi.caselifecycle.ctc.internal.config.ServiceConstants;
 import org.pucar.dristi.common.kafka.Producer;
 import org.pucar.dristi.caselifecycle.ctc.internal.repository.CtcApplicationRepository;
+import org.pucar.dristi.common.models.AuditDetails;
 import org.pucar.dristi.common.repository.ServiceRequestRepository;
+import org.pucar.dristi.common.util.RequestInfoUtil;
 import org.pucar.dristi.caselifecycle.ctc.internal.util.*;
 import org.pucar.dristi.caselifecycle.ctc.internal.web.models.*;
 import org.pucar.dristi.common.contract.ctc.*;
@@ -119,10 +121,15 @@ public class PaymentUpdateService {
             }
         }
 
-        Role role = Role.builder().code("SYSTEM_ADMIN").tenantId(tenantId).build();
-        Role role2 = Role.builder().code("SYSTEM").tenantId(tenantId).build();
-        requestInfo.getUserInfo().getRoles().add(role);
-        requestInfo.getUserInfo().getRoles().add(role2);
+        // Rule 40: defensive-copy RequestInfo before appending system roles. The
+        // incoming requestInfo is unwrapped from a Kafka payment payload and may be
+        // referenced by other consumers — mutating its roles list in place would
+        // leak the elevated SYSTEM_ADMIN/SYSTEM roles to downstream code.
+        Role adminRole  = Role.builder().code("SYSTEM_ADMIN").tenantId(tenantId).build();
+        Role systemRole = Role.builder().code("SYSTEM").tenantId(tenantId).build();
+        RequestInfo enrichedRequestInfo = RequestInfoUtil.withExtraRole(
+                RequestInfoUtil.withExtraRole(requestInfo, adminRole),
+                systemRole);
 
         AuditDetails auditDetails = ctcApplication.getAuditDetails();
         auditDetails.setLastModifiedBy(paymentDetail.getAuditDetails().getLastModifiedBy());
@@ -135,12 +142,12 @@ public class PaymentUpdateService {
         if (ctcApplication.getIsPartyToCase()) {
             workflow.setAction("MAKE_PAYMENT_FOR_SEND_FOR_ISSUE");
             ctcApplication.setWorkflow(workflow);
-            workflowService.updateWorkflowStatus(ctcApplication, requestInfo);
+            workflowService.updateWorkflowStatus(ctcApplication, enrichedRequestInfo);
             indexerUtils.pushIssueCtcDocumentsToIndex(ctcApplication);
         } else {
             workflow.setAction("MAKE_PAYMENT_FOR_SEND_FOR_APPROVAL");
             ctcApplication.setWorkflow(workflow);
-            workflowService.updateWorkflowStatus(ctcApplication, requestInfo);
+            workflowService.updateWorkflowStatus(ctcApplication, enrichedRequestInfo);
 
             // Push tracker data to ctc-application-tracker index
             List<String> searchableFields = new ArrayList<>();
@@ -166,7 +173,7 @@ public class PaymentUpdateService {
         Document paymentReceipt = null;
         try {
             if (ONLINE.equalsIgnoreCase(paymentMode)) {
-                paymentReceipt = getPaymentReceipt(requestInfo, paymentDetail.getBillId(), consumerCode);
+                paymentReceipt = getPaymentReceipt(enrichedRequestInfo, paymentDetail.getBillId(), consumerCode);
             }
             if (paymentReceipt != null) {
                 ctcApplication.setPaymentReceipt(paymentReceipt);
@@ -175,7 +182,7 @@ public class PaymentUpdateService {
             log.error("Error while generating payment receipt: {}", e.getMessage());
         }
 
-        CtcApplicationRequest ctcApplicationRequest = CtcApplicationRequest.builder().requestInfo(requestInfo)
+        CtcApplicationRequest ctcApplicationRequest = CtcApplicationRequest.builder().requestInfo(enrichedRequestInfo)
                 .ctcApplication(ctcApplication).build();
         producer.push(config.getUpdateCtcApplicationTopic(), ctcApplicationRequest);
 

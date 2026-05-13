@@ -1,8 +1,9 @@
+// HAND-CURATED — Rule 24a RequestInfoWrapper shadow-import fix (PR #86 follow-up)
 package org.pucar.dristi.caselifecycle.ctc.internal.util;
 
 import com.jayway.jsonpath.JsonPath;
 import lombok.extern.slf4j.Slf4j;
-import org.egov.common.contract.models.RequestInfoWrapper;
+import org.pucar.dristi.common.contract.ctc.RequestInfoWrapper;
 import org.egov.common.contract.request.RequestInfo;
 import org.pucar.dristi.caselifecycle.ctc.internal.config.Configuration;
 import org.pucar.dristi.common.repository.ServiceRequestRepository;

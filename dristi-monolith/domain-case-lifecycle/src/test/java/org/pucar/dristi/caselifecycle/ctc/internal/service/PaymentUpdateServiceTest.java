@@ -1,3 +1,4 @@
+// HAND-CURATED — Rule 40 regression guard + Rule 24a shadow-import fix (PR #86 follow-up)
 package org.pucar.dristi.caselifecycle.ctc.internal.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -5,7 +6,7 @@ import digit.models.coremodels.Bill;
 import digit.models.coremodels.PaymentDetail;
 import digit.models.coremodels.PaymentRequest;
 import digit.models.coremodels.Payment;
-import org.egov.common.contract.models.AuditDetails;
+import org.pucar.dristi.common.models.AuditDetails;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.Role;
 import org.egov.common.contract.request.User;
@@ -125,7 +126,7 @@ class PaymentUpdateServiceTest {
 
         paymentUpdateService.process(record);
 
-        verify(workflowService).updateWorkflowStatus(any(CtcApplication.class), eq(requestInfo));
+        verify(workflowService).updateWorkflowStatus(any(CtcApplication.class), any(RequestInfo.class));
         verify(producer).push(eq("update-topic"), any(CtcApplicationRequest.class));
         verify(cacheService).saveInRedisCache(ctcApplication);
     }
@@ -213,7 +214,7 @@ class PaymentUpdateServiceTest {
     // ---- Roles enrichment ----
 
     @Test
-    void process_shouldAddSystemRolesToRequestInfo() {
+    void process_shouldAddSystemRolesToEnrichedRequestInfoWithoutMutatingOriginal() {
         paymentRequest = buildPaymentRequest("CA-001_CTC_APPLICATION_FEE", "ctc-services");
         record = new HashMap<>();
 
@@ -224,9 +225,17 @@ class PaymentUpdateServiceTest {
 
         paymentUpdateService.process(record);
 
-        List<Role> roles = requestInfo.getUserInfo().getRoles();
-        assertTrue(roles.stream().anyMatch(r -> "SYSTEM_ADMIN".equals(r.getCode())));
-        assertTrue(roles.stream().anyMatch(r -> "SYSTEM".equals(r.getCode())));
+        // The defensive copy passed to workflowService must carry both system roles.
+        ArgumentCaptor<RequestInfo> reqCaptor = ArgumentCaptor.forClass(RequestInfo.class);
+        verify(workflowService).updateWorkflowStatus(any(CtcApplication.class), reqCaptor.capture());
+        List<Role> enrichedRoles = reqCaptor.getValue().getUserInfo().getRoles();
+        assertTrue(enrichedRoles.stream().anyMatch(r -> "SYSTEM_ADMIN".equals(r.getCode())));
+        assertTrue(enrichedRoles.stream().anyMatch(r -> "SYSTEM".equals(r.getCode())));
+
+        // Rule 40 regression guard: the caller's original RequestInfo must not be mutated.
+        List<Role> originalRoles = requestInfo.getUserInfo().getRoles();
+        assertEquals(1, originalRoles.size());
+        assertEquals("CITIZEN", originalRoles.get(0).getCode());
     }
 
     // ---- Cache miss → DB fallback ----
@@ -246,7 +255,7 @@ class PaymentUpdateServiceTest {
 
         verify(repository).getCtcApplication(any());
         verify(cacheService, times(2)).saveInRedisCache(ctcApplication);
-        verify(workflowService).updateWorkflowStatus(any(CtcApplication.class), eq(requestInfo));
+        verify(workflowService).updateWorkflowStatus(any(CtcApplication.class), any(RequestInfo.class));
     }
 
     // ---- Application not found in DB ----
@@ -315,7 +324,7 @@ class PaymentUpdateServiceTest {
         paymentUpdateService.process(record);
 
         verify(cacheService).searchRedisCache("APP-123");
-        verify(workflowService).updateWorkflowStatus(eq(app), eq(requestInfo));
+        verify(workflowService).updateWorkflowStatus(eq(app), any(RequestInfo.class));
     }
 
     // ---- Not party to case tracker includes searchable fields ----
@@ -413,6 +422,6 @@ class PaymentUpdateServiceTest {
         paymentUpdateService.process(record);
 
         // Only one call to updateWorkflowStatus for the matching payment detail
-        verify(workflowService, times(1)).updateWorkflowStatus(any(CtcApplication.class), eq(requestInfo));
+        verify(workflowService, times(1)).updateWorkflowStatus(any(CtcApplication.class), any(RequestInfo.class));
     }
 }
