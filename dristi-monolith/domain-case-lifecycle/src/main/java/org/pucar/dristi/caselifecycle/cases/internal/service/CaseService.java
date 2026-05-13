@@ -25,7 +25,11 @@ import org.pucar.dristi.common.kafka.Producer;
 import org.pucar.dristi.caselifecycle.cases.internal.repository.AdvocateOfficeCaseMemberRepository;
 import org.pucar.dristi.caselifecycle.cases.internal.repository.CaseRepository;
 import org.pucar.dristi.caselifecycle.cases.internal.util.*;
+import org.pucar.dristi.common.contract.treasury.BreakDown;
+import org.pucar.dristi.common.contract.treasury.Calculation;
+import org.pucar.dristi.common.contract.treasury.DemandCreateRequest;
 import org.pucar.dristi.identityaccess.advocate.AdvocateApi;
+import org.pucar.dristi.integration.treasury.TreasuryApi;
 import org.pucar.dristi.common.util.DateUtil;
 import org.pucar.dristi.common.util.RequestInfoUtil;
 import org.pucar.dristi.caselifecycle.cases.internal.validators.CaseRegistrationValidator;
@@ -77,7 +81,7 @@ public class CaseService {
     private final WorkflowService workflowService;
     private final Configuration config;
     private final Producer producer;
-    private final EtreasuryUtil etreasuryUtil;
+    private final TreasuryApi treasuryApi;
     private final EncryptionDecryptionUtil encryptionDecryptionUtil;
     private final ObjectMapper objectMapper;
     private final CacheService cacheService;
@@ -113,7 +117,7 @@ public class CaseService {
                        Configuration config,
                        Producer producer,
                        TaskUtil taskUtil,
-                       EtreasuryUtil etreasuryUtil,
+                       TreasuryApi treasuryApi,
                        EncryptionDecryptionUtil encryptionDecryptionUtil,
                        HearingUtil analyticsUtil,
                        UserService userService,
@@ -126,7 +130,7 @@ public class CaseService {
         this.config = config;
         this.producer = producer;
         this.taskUtil = taskUtil;
-        this.etreasuryUtil = etreasuryUtil;
+        this.treasuryApi = treasuryApi;
         this.encryptionDecryptionUtil = encryptionDecryptionUtil;
         this.hearingUtil = analyticsUtil;
         this.userService = userService;
@@ -3740,7 +3744,15 @@ public class CaseService {
         ObjectNode taskDetailsNodeFromResponse = objectMapper.convertValue(taskResponse.getTask().getTaskDetails(), ObjectNode.class);
         String consumerCode = taskDetailsNodeFromResponse.get("consumerCode").asText();
 
-        etreasuryUtil.createDemand(joinCaseRequest, consumerCode, calculationList);
+        DemandCreateRequest joinDemandRequest = DemandCreateRequest.builder()
+                .requestInfo(joinCaseRequest.getRequestInfo())
+                .filingNumber(joinCaseRequest.getJoinCaseData().getFilingNumber())
+                .calculation(calculationList)
+                .consumerCode(consumerCode)
+                .tenantId(joinCaseRequest.getJoinCaseData().getTenantId())
+                .entityType("task-payment")
+                .build();
+        treasuryApi.createDemand(joinCaseRequest.getRequestInfo(), joinDemandRequest);
 
         return taskResponse.getTask().getTaskNumber();
 
@@ -5957,7 +5969,7 @@ public class CaseService {
             CalculationRes newCalculation = getCalculation(body.getCases(), body.getRequestInfo());
 
             String lastSubmissionConsumerCode = getLastSubmissionConsumerCode(body) != null ? getLastSubmissionConsumerCode(body) : body.getCases().getFilingNumber() + "_CASE_FILING";
-            Calculation oldCalculation = etreasuryUtil.getHeadBreakupCalculation(lastSubmissionConsumerCode, body.getRequestInfo());
+            Calculation oldCalculation = treasuryApi.getHeadBreakDownCalculation(body.getRequestInfo(), lastSubmissionConsumerCode);
 
             if (oldCalculation == null) {
                 log.info("No previous calculation found for caseId: {}, for creating new demand", body.getCases().getId());
@@ -6055,7 +6067,7 @@ public class CaseService {
                     .lastSubmissionConsumerCode(lastSubmissionConsumerCode)
                     .build();
 
-            etreasuryUtil.createDemand(demandCreateRequest);
+            treasuryApi.createDemand(demandCreateRequest.getRequestInfo(), demandCreateRequest);
         } catch (Exception e) {
             log.error("Error while creating demand for caseId: {}, error: {}", body.getCases().getId(), e.getMessage());
             throw new CustomException("ERROR_CREATING_DEMAND", "Error while creating demand for caseId: " + body.getCases().getId() + ", error: " + e.getMessage());

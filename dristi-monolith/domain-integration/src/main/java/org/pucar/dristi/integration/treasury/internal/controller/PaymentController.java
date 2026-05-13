@@ -1,8 +1,8 @@
 package org.pucar.dristi.integration.treasury.internal.controller;
 
 import org.egov.common.contract.models.Document;
+import org.pucar.dristi.common.contract.treasury.DemandCreateRequest;
 import org.pucar.dristi.integration.treasury.internal.model.*;
-import org.pucar.dristi.integration.treasury.internal.model.demand.DemandCreateRequest;
 import org.pucar.dristi.integration.treasury.internal.model.demand.DemandResponse;
 import org.pucar.dristi.integration.treasury.internal.service.PaymentService;
 import org.pucar.dristi.common.util.ResponseInfoFactory;

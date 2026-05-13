@@ -2,7 +2,7 @@ package org.pucar.dristi.integration.treasury.internal.repository;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.pucar.dristi.integration.treasury.internal.model.Calculation;
+import org.pucar.dristi.common.contract.treasury.Calculation;
 import org.pucar.dristi.integration.treasury.internal.model.TreasuryMapping;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;

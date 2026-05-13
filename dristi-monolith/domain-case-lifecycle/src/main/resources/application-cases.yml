@@ -328,11 +328,6 @@ egov:
       path: /evidence/v1/_create
     search:
       path: /evidence/v1/_search
-  etreasury:
-    host: http://localhost:8876
-    demand:
-      create:
-        endpoint: /etreasury/payment/v1/_createDemand
   poa:
     join:
       case:
@@ -431,14 +426,6 @@ pucar:
     host: http://localhost:8080/
     search:
       endpoint: /lock-svc/v1/_get
-etreasury:
-  payment:
-    receipt:
-      endpoint: /etreasury/payment/v1/_getPaymentReceipt
-  head:
-    breakup:
-      calculation:
-        endpoint: /etreasury/payment/v1/_getHeadBreakDown
 tracing:
   url: http://jaeger-collector.backbone:14250
 application:

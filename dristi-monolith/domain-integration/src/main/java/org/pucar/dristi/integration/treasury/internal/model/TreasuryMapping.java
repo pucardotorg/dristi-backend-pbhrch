@@ -2,6 +2,7 @@ package org.pucar.dristi.integration.treasury.internal.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
+import org.pucar.dristi.common.contract.treasury.Calculation;
 
 
 @Getter

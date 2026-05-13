@@ -15,6 +15,7 @@ import org.pucar.dristi.caselifecycle.cases.internal.service.IndividualService;
 import org.pucar.dristi.caselifecycle.cases.internal.util.*;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.*;
 import org.pucar.dristi.identityaccess.advocate.AdvocateApi;
+import org.pucar.dristi.integration.treasury.TreasuryApi;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.advocateoffice.OfficeMember;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.enums.MemberType;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.v2.*;
@@ -45,14 +46,14 @@ public class CaseRegistrationEnrichment {
     private CaseUtil caseUtil;
     private Configuration config;
     private HrmsUtil hrmsUtil;
-    private final EtreasuryUtil etreasuryUtil;
+    private final TreasuryApi treasuryApi;
     private final ObjectMapper objectMapper;
     private final CaseRepositoryV2 caseRepositoryV2;
 
     @Autowired
     public CaseRegistrationEnrichment(IndividualService individualService, AdvocateApi advocateApi,
                                       AdvocateOfficeUtil advocateOfficeUtil, IdgenUtil idgenUtil,
-                                      CaseUtil caseUtil, Configuration config, EtreasuryUtil etreasuryUtil, HrmsUtil hrmsUtil, ObjectMapper objectMapper, CaseRepositoryV2 caseRepositoryV2) {
+                                      CaseUtil caseUtil, Configuration config, TreasuryApi treasuryApi, HrmsUtil hrmsUtil, ObjectMapper objectMapper, CaseRepositoryV2 caseRepositoryV2) {
         this.individualService = individualService;
         this.advocateApi = advocateApi;
         this.advocateOfficeUtil = advocateOfficeUtil;
@@ -60,7 +61,7 @@ public class CaseRegistrationEnrichment {
         this.caseUtil = caseUtil;
         this.config = config;
         this.hrmsUtil = hrmsUtil;
-        this.etreasuryUtil = etreasuryUtil;
+        this.treasuryApi = treasuryApi;
         this.objectMapper = objectMapper;
         this.caseRepositoryV2 = caseRepositoryV2;
     }
@@ -717,9 +718,9 @@ public class CaseRegistrationEnrichment {
     public Document enrichCasePaymentReceipt(CaseRequest caseRequest, String id, String consumerCode){
         try {
             log.info("Enriching payment receipt for case with id: {}", id);
-            JsonNode paymentReceipt = etreasuryUtil.getPaymentReceipt(caseRequest.getRequestInfo(), id);
+            Document paymentReceipt = treasuryApi.getPaymentReceipt(caseRequest.getRequestInfo(), id);
             Document paymentReceiptDocument = Document.builder()
-                    .fileStore(paymentReceipt.get("Document").get("fileStore").textValue())
+                    .fileStore(paymentReceipt.getFileStore())
                     .documentType(PAYMENT_RECEIPT)
                     .isActive(true)
                     .additionalDetails(getAdditionalDetails(consumerCode))

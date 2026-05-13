@@ -10,6 +10,9 @@ import org.egov.common.contract.request.RequestInfo;
 import org.pucar.dristi.integration.treasury.internal.config.PaymentConfiguration;
 import org.pucar.dristi.integration.treasury.internal.enrichment.TreasuryEnrichment;
 import org.pucar.dristi.common.kafka.Producer;
+import org.pucar.dristi.common.contract.treasury.BreakDown;
+import org.pucar.dristi.common.contract.treasury.Calculation;
+import org.pucar.dristi.common.contract.treasury.DemandCreateRequest;
 import org.pucar.dristi.integration.treasury.internal.model.demand.*;
 import org.pucar.dristi.integration.treasury.internal.repository.TreasuryMappingRepository;
 import org.pucar.dristi.integration.treasury.internal.repository.TreasuryPaymentRepository;
@@ -44,7 +47,9 @@ import java.util.stream.Collectors;
 import static org.pucar.dristi.integration.treasury.internal.config.ServiceConstants.*;
 
 import org.pucar.dristi.common.util.MdmsUtil;
+import org.pucar.dristi.common.util.RequestInfoUtil;
 import org.pucar.dristi.common.models.individual.Individual;
+import org.egov.common.contract.request.User;
 @Service
 @Slf4j
 public class PaymentService {
@@ -276,12 +281,19 @@ public class PaymentService {
             log.info("Saved TreasuryParams as response blob for departmentId: {}", authSek.getDepartmentId());
 
             treasuryEnrichment.enrichTreasuryPaymentData(data, requestInfo);
-            requestInfo.getUserInfo().setTenantId(config.getEgovStateTenantId());
+            User src = requestInfo.getUserInfo();
+            User userWithTenant = User.builder()
+                    .id(src.getId()).userName(src.getUserName()).name(src.getName())
+                    .type(src.getType()).mobileNumber(src.getMobileNumber()).emailId(src.getEmailId())
+                    .roles(src.getRoles()).uuid(src.getUuid())
+                    .tenantId(config.getEgovStateTenantId())
+                    .build();
+            RequestInfo enrichedRequestInfo = RequestInfoUtil.withUser(requestInfo, userWithTenant);
 
-            log.info("Request info: {}", requestInfo);
+            log.info("Request info: {}", enrichedRequestInfo);
 
             TreasuryPaymentRequest request = TreasuryPaymentRequest.builder()
-                    .requestInfo(requestInfo)
+                    .requestInfo(enrichedRequestInfo)
                     .treasuryPaymentData(data)
                     .build();
 

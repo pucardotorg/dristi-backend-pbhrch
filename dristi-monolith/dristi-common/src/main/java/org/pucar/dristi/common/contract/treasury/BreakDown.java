@@ -1,4 +1,4 @@
-package org.pucar.dristi.caselifecycle.cases.internal.web.models;
+package org.pucar.dristi.common.contract.treasury;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,9 +8,9 @@ import lombok.NoArgsConstructor;
 import java.util.Map;
 
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 public class BreakDown {
 
     private String type;
