@@ -20,10 +20,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.pucar.dristi.caselifecycle.application.internal.config.Configuration;
-import org.pucar.dristi.caselifecycle.application.internal.web.models.CaseExists;
-import org.pucar.dristi.caselifecycle.application.internal.web.models.CaseExistsRequest;
-import org.pucar.dristi.caselifecycle.application.internal.web.models.CaseExistsResponse;
-import org.pucar.dristi.caselifecycle.application.internal.web.models.CaseSearchRequest;
+import org.pucar.dristi.common.contract.application.CaseExists;
+import org.pucar.dristi.common.contract.application.CaseExistsRequest;
+import org.pucar.dristi.common.contract.application.CaseExistsResponse;
+import org.pucar.dristi.common.contract.application.CaseSearchRequest;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;

@@ -1,0 +1,5 @@
+dristi-monolith\domain-case-lifecycle\src\main\java\org\pucar\dristi\caselifecycle\application\internal\util\BillingUtil.java  uses ['BillSearchPath']
+dristi-monolith\domain-case-lifecycle\src\main\java\org\pucar\dristi\caselifecycle\application\internal\util\CaseUtil.java  uses ['CaseExistsPath', 'CaseHost', 'CaseSearchPath']
+dristi-monolith\domain-case-lifecycle\src\main\java\org\pucar\dristi\caselifecycle\application\internal\util\DemandUtil.java  uses ['EtreasuryCreateDemandPath', 'EtreasuryHost']
+dristi-monolith\domain-case-lifecycle\src\main\java\org\pucar\dristi\caselifecycle\application\internal\util\EvidenceUtil.java  uses ['EvidenceServiceCreatePath', 'EvidenceServiceHost']
+dristi-monolith\domain-case-lifecycle\src\main\java\org\pucar\dristi\caselifecycle\application\internal\util\OrderUtil.java  uses ['OrderExistsPath', 'OrderHost']

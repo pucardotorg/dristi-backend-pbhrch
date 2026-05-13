@@ -6,9 +6,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.pucar.dristi.caselifecycle.application.internal.web.models.ApplicationCriteria;
-import org.pucar.dristi.caselifecycle.application.internal.web.models.Order;
-import org.pucar.dristi.caselifecycle.application.internal.web.models.Pagination;
+import org.pucar.dristi.common.contract.application.ApplicationCriteria;
+import org.pucar.dristi.common.contract.application.Order;
+import org.pucar.dristi.common.contract.application.Pagination;
 
 import java.util.ArrayList;
 import java.util.Collections;

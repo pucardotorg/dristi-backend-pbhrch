@@ -25,6 +25,7 @@ import org.pucar.dristi.common.util.FileStoreUtil;
 import org.pucar.dristi.caselifecycle.application.internal.util.SmsNotificationUtil;
 import org.pucar.dristi.caselifecycle.application.internal.validator.ApplicationValidator;
 import org.pucar.dristi.caselifecycle.application.internal.web.models.*;
+import org.pucar.dristi.common.contract.application.*;
 
 import java.util.ArrayList;
 import java.util.Collections;

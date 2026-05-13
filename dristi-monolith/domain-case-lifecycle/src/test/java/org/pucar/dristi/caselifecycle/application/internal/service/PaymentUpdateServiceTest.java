@@ -16,6 +16,7 @@ import org.pucar.dristi.caselifecycle.application.internal.config.Configuration;
 import org.pucar.dristi.common.kafka.Producer;
 import org.pucar.dristi.caselifecycle.application.internal.repository.ApplicationRepository;
 import org.pucar.dristi.caselifecycle.application.internal.web.models.*;
+import org.pucar.dristi.common.contract.application.*;
 
 import java.util.Collections;
 import java.util.Map;

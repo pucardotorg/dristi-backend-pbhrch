@@ -6,8 +6,8 @@ import org.egov.tracer.model.CustomException;
 import org.pucar.dristi.caselifecycle.application.internal.config.Configuration;
 import org.pucar.dristi.common.util.IndividualUtil;
 import org.pucar.dristi.common.models.individual.Individual;
-import org.pucar.dristi.caselifecycle.application.internal.web.models.IndividualSearch;
-import org.pucar.dristi.caselifecycle.application.internal.web.models.IndividualSearchRequest;
+import org.pucar.dristi.common.contract.application.IndividualSearch;
+import org.pucar.dristi.common.contract.application.IndividualSearchRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

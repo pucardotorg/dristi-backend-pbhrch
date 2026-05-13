@@ -4,8 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.model.CustomException;
 import org.pucar.dristi.caselifecycle.application.internal.config.Configuration;
-import org.pucar.dristi.caselifecycle.application.internal.web.models.BillResponse;
-import org.pucar.dristi.caselifecycle.application.internal.web.models.RequestInfoWrapper;
+import org.pucar.dristi.common.contract.application.BillResponse;
+import org.pucar.dristi.common.contract.application.RequestInfoWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -19,6 +19,7 @@ import java.util.Collections;
 
 import static org.pucar.dristi.caselifecycle.application.internal.config.ServiceConstants.ERROR_WHILE_SEARCHING_FOR_BILL;
 
+import org.pucar.dristi.common.contract.application.Bill;
 @Service("applicationBillingUtil")
 @Slf4j
 public class BillingUtil {

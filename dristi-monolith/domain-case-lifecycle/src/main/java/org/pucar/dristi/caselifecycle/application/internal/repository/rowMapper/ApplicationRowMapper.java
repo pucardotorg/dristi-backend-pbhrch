@@ -7,10 +7,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.models.AuditDetails;
 import org.egov.tracer.model.CustomException;
 import org.postgresql.util.PGobject;
-import org.pucar.dristi.caselifecycle.application.internal.web.models.Application;
-import org.pucar.dristi.caselifecycle.application.internal.web.models.Comment;
-import org.pucar.dristi.caselifecycle.application.internal.web.models.IssuedBy;
-import org.pucar.dristi.caselifecycle.application.internal.web.models.StatuteSection;
+import org.pucar.dristi.common.contract.application.Application;
+import org.pucar.dristi.common.contract.application.Comment;
+import org.pucar.dristi.common.contract.application.IssuedBy;
+import org.pucar.dristi.common.contract.application.StatuteSection;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Component;
 

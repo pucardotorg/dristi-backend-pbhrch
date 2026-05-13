@@ -7,8 +7,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.pucar.dristi.caselifecycle.application.internal.web.models.Application;
-import org.pucar.dristi.caselifecycle.application.internal.web.models.IssuedBy;
+import org.pucar.dristi.common.contract.application.Application;
+import org.pucar.dristi.common.contract.application.IssuedBy;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

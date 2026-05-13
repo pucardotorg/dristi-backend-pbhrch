@@ -5,9 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.model.CustomException;
 import org.pucar.dristi.caselifecycle.application.internal.config.Configuration;
-import org.pucar.dristi.caselifecycle.application.internal.web.models.BreakDown;
-import org.pucar.dristi.caselifecycle.application.internal.web.models.Calculation;
-import org.pucar.dristi.caselifecycle.application.internal.web.models.DemandCreateRequest;
+import org.pucar.dristi.common.contract.application.BreakDown;
+import org.pucar.dristi.common.contract.application.Calculation;
+import org.pucar.dristi.common.contract.application.DemandCreateRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -20,6 +20,8 @@ import java.util.stream.Stream;
 import static org.pucar.dristi.caselifecycle.application.internal.config.ServiceConstants.ERROR_WHILE_CREATING_DEMAND_FOR_CASE;
 import static org.pucar.dristi.caselifecycle.application.internal.config.ServiceConstants.VALIDATION_ERR;
 
+import org.pucar.dristi.common.contract.application.Bill;
+import org.pucar.dristi.common.contract.application.Application;
 @Service
 @Slf4j
 public class DemandUtil {

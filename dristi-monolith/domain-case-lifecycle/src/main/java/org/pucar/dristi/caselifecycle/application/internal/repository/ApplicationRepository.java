@@ -15,6 +15,7 @@ import org.pucar.dristi.caselifecycle.application.internal.service.IndividualSer
 import org.pucar.dristi.caselifecycle.application.internal.util.AdvocateUtil;
 import org.pucar.dristi.caselifecycle.application.internal.util.CaseUtil;
 import org.pucar.dristi.caselifecycle.application.internal.web.models.*;
+import org.pucar.dristi.common.contract.application.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;

@@ -13,6 +13,7 @@ import org.pucar.dristi.caselifecycle.application.internal.repository.queryBuild
 import org.pucar.dristi.caselifecycle.application.internal.repository.rowMapper.ApplicationRowMapper;
 import org.pucar.dristi.caselifecycle.application.internal.repository.rowMapper.DocumentRowMapper;
 import org.pucar.dristi.caselifecycle.application.internal.web.models.*;
+import org.pucar.dristi.common.contract.application.*;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.*;

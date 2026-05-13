@@ -4,9 +4,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
 import org.egov.tracer.model.CustomException;
-import org.pucar.dristi.caselifecycle.application.internal.web.models.ApplicationCriteria;
-import org.pucar.dristi.caselifecycle.application.internal.web.models.ApplicationSearchRequest;
-import org.pucar.dristi.caselifecycle.application.internal.web.models.Pagination;
+import org.pucar.dristi.common.contract.application.ApplicationCriteria;
+import org.pucar.dristi.common.contract.application.ApplicationSearchRequest;
+import org.pucar.dristi.common.contract.application.Pagination;
 import org.springframework.stereotype.Component;
 
 import java.sql.Types;

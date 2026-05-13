@@ -17,6 +17,8 @@ import org.pucar.dristi.caselifecycle.application.internal.repository.Applicatio
 import org.pucar.dristi.caselifecycle.application.internal.util.CaseUtil;
 import org.pucar.dristi.caselifecycle.application.internal.util.SmsNotificationUtil;
 import org.pucar.dristi.caselifecycle.application.internal.web.models.*;
+import org.pucar.dristi.common.contract.application.*;
+import org.pucar.dristi.common.util.RequestInfoUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -108,11 +110,11 @@ public class PaymentUpdateService {
             }
 
             Role role = Role.builder().code("SYSTEM_ADMIN").tenantId(tenantId).build();
-            requestInfo.getUserInfo().getRoles().add(role);
+            RequestInfo enrichedRequestInfo = RequestInfoUtil.withExtraRole(requestInfo, role);
 
             for (Application application : applications) {
                 ApplicationSearchRequest updateRequest = ApplicationSearchRequest.builder()
-                        .requestInfo(requestInfo)
+                        .requestInfo(enrichedRequestInfo)
                         .criteria(criteria)
                         .build();
 
@@ -129,7 +131,7 @@ public class PaymentUpdateService {
 
                 ApplicationRequest applicationRequest = new ApplicationRequest();
                 applicationRequest.setApplication(application);
-                applicationRequest.setRequestInfo(requestInfo);
+                applicationRequest.setRequestInfo(enrichedRequestInfo);
 
                 if (PENDINGAPPROVAL.equalsIgnoreCase(application.getStatus()) || PENDINGREVIEW.equalsIgnoreCase(application.getStatus())) {
                     enrichment.enrichApplicationNumberByCMPNumber(applicationRequest);

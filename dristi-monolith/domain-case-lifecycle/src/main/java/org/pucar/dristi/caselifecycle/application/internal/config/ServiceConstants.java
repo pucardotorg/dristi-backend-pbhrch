@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 
 
+import org.pucar.dristi.common.contract.application.Application;
 @Component("applicationServiceConstants")
 public class ServiceConstants {
 

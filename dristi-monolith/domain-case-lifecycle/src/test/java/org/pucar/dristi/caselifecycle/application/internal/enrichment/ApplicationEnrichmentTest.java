@@ -15,10 +15,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.pucar.dristi.caselifecycle.application.internal.config.Configuration;
 import org.pucar.dristi.caselifecycle.application.internal.util.CaseUtil;
 import org.pucar.dristi.common.util.IdgenUtil;
-import org.pucar.dristi.caselifecycle.application.internal.web.models.Application;
-import org.pucar.dristi.caselifecycle.application.internal.web.models.ApplicationRequest;
+import org.pucar.dristi.common.contract.application.Application;
+import org.pucar.dristi.common.contract.application.ApplicationRequest;
 import org.pucar.dristi.common.models.Document;
-import org.pucar.dristi.caselifecycle.application.internal.web.models.StatuteSection;
+import org.pucar.dristi.common.contract.application.StatuteSection;
 
 import java.util.Arrays;
 import java.util.Collections;

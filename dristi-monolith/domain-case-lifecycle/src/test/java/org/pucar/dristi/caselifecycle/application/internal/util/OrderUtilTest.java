@@ -18,9 +18,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.pucar.dristi.caselifecycle.application.internal.config.Configuration;
-import org.pucar.dristi.caselifecycle.application.internal.web.models.OrderExists;
-import org.pucar.dristi.caselifecycle.application.internal.web.models.OrderExistsRequest;
-import org.pucar.dristi.caselifecycle.application.internal.web.models.OrderExistsResponse;
+import org.pucar.dristi.common.contract.application.OrderExists;
+import org.pucar.dristi.common.contract.application.OrderExistsRequest;
+import org.pucar.dristi.common.contract.application.OrderExistsResponse;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;

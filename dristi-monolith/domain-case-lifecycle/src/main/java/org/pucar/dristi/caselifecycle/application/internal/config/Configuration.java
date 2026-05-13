@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 import org.pucar.dristi.common.models.individual.Individual;
+import org.pucar.dristi.common.contract.application.Order;
+import org.pucar.dristi.common.contract.application.Application;
 @Component("applicationConfiguration")
 @Data
 @Import({TracerConfiguration.class})

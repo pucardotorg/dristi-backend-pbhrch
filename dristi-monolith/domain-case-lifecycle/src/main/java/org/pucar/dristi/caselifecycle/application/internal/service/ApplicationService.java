@@ -21,6 +21,8 @@ import org.pucar.dristi.common.util.MdmsUtil;
 import org.pucar.dristi.caselifecycle.application.internal.util.SmsNotificationUtil;
 import org.pucar.dristi.caselifecycle.application.internal.validator.ApplicationValidator;
 import org.pucar.dristi.caselifecycle.application.internal.web.models.*;
+import org.pucar.dristi.common.contract.application.*;
+import org.pucar.dristi.common.util.RequestInfoUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -263,7 +265,7 @@ public class ApplicationService {
         Object applicationDetails = application.getApplicationDetails();
 
         Role role = Role.builder().code("SYSTEM_ADMIN").tenantId(application.getTenantId()).build();
-        requestInfo.getUserInfo().getRoles().add(role);
+        RequestInfo enrichedRequestInfo = RequestInfoUtil.withExtraRole(requestInfo, role);
 
         JsonNode jsonNode = objectMapper.valueToTree(applicationDetails);
         if (jsonNode != null && jsonNode.has("relatedApplication")) {
@@ -273,7 +275,7 @@ public class ApplicationService {
                 for (JsonNode applicationIdNode : relatedApplication) {
                     String applicationId = applicationIdNode.asText();
                     ApplicationSearchRequest searchRequest = ApplicationSearchRequest.builder()
-                            .requestInfo(requestInfo)
+                            .requestInfo(enrichedRequestInfo)
                             .criteria(ApplicationCriteria.builder().applicationNumber(applicationId).build())
                             .build();
 
@@ -283,7 +285,7 @@ public class ApplicationService {
                         Application parentApplication = relatedApplications.get(0);
                         parentApplication.setWorkflow(application.getWorkflow());
                         updateApplication(ApplicationRequest.builder().application(parentApplication)
-                                .requestInfo(requestInfo).build(), true);
+                                .requestInfo(enrichedRequestInfo).build(), true);
 
                     } else {
                         log.info("Application with id : {} not found in DB", applicationId);
