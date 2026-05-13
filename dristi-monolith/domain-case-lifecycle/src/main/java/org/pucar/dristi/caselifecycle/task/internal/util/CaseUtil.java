@@ -1,80 +1,66 @@
 package org.pucar.dristi.caselifecycle.task.internal.util;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.model.CustomException;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.pucar.dristi.caselifecycle.task.internal.config.Configuration;
-import org.pucar.dristi.common.repository.ServiceRequestRepository;
-import org.pucar.dristi.caselifecycle.task.internal.web.models.*;
+import org.pucar.dristi.caselifecycle.cases.CaseApi;
+import org.pucar.dristi.common.contract.task.CourtCase;
+import org.pucar.dristi.common.contract.task.POAHolder;
+import org.pucar.dristi.common.contract.task.Party;
+import org.pucar.dristi.common.contract.task.TaskRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.*;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 
-import java.util.*;
+import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static org.pucar.dristi.caselifecycle.task.internal.config.ServiceConstants.*;
+import static org.pucar.dristi.caselifecycle.task.internal.config.ServiceConstants.ERROR_FROM_CASE;
+import static org.pucar.dristi.caselifecycle.task.internal.config.ServiceConstants.ERROR_WHILE_FETCHING_FROM_CASE;
 
 @Slf4j
 @Component("taskCaseUtil")
 public class CaseUtil {
 
-    private final Configuration config;
-    private final RestTemplate restTemplate;
-    private final ObjectMapper mapper;
-    private final ServiceRequestRepository repository;
-
+    private final CaseApi caseApi;
     private final ObjectMapper objectMapper;
 
     @Autowired
-    public CaseUtil(Configuration config, RestTemplate restTemplate, ObjectMapper mapper, ServiceRequestRepository repository, ObjectMapper objectMapper) {
-        this.config = config;
-        this.restTemplate = restTemplate;
-        this.mapper = mapper;
-
-        this.repository = repository;
+    public CaseUtil(CaseApi caseApi, ObjectMapper objectMapper) {
+        this.caseApi = caseApi;
         this.objectMapper = objectMapper;
     }
 
     public JsonNode searchCaseDetails(RequestInfo requestInfo, String tenantId, String cnrNumber, String filingNumber, String caseId) {
-        StringBuilder uri = new StringBuilder();
-        uri.append(config.getCaseHost()).append(config.getCaseSearchPath());
-        Gson gson = new Gson();
-        String requestInfoJson = gson.toJson(requestInfo);
-        JSONObject requestIn = new JSONObject(requestInfoJson);
-        JSONObject caseSearchRequest = new JSONObject();
-        caseSearchRequest.put(REQUEST_INFO,requestIn);
-        caseSearchRequest.put("tenantId", tenantId);
-        JSONArray criteriaArray = new JSONArray();
-        JSONObject criteria = new JSONObject();
-
-        if (cnrNumber != null) {
-            criteria.put("cnrNumber", cnrNumber);
-        }
-        if (filingNumber != null) {
-            criteria.put("filingNumber", filingNumber);
-        }
-        if (caseId != null) {
-            criteria.put("caseId", caseId);
-        }
-        criteriaArray.put(criteria);
-        caseSearchRequest.put("criteria", criteriaArray);
-
-//        Object response;
+        org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseCriteria criteria =
+                org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseCriteria.builder()
+                        .cnrNumber(cnrNumber)
+                        .filingNumber(filingNumber)
+                        .caseId(caseId)
+                        .build();
+        org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseSearchRequest request =
+                org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseSearchRequest.builder()
+                        .requestInfo(requestInfo)
+                        .criteria(Collections.singletonList(criteria))
+                        .build();
         try {
-
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
-            HttpEntity<String> requestEntity = new HttpEntity<>(caseSearchRequest.toString(), headers);
-            String response = restTemplate.exchange(uri.toString(), HttpMethod.POST, requestEntity, String.class).getBody();
-            JsonNode jsonNode = mapper.readTree(response);
-            return jsonNode.path("criteria").path(0).path("responseList");
+            caseApi.search(request);
+            var resultCriteria = request.getCriteria();
+            if (resultCriteria == null || resultCriteria.isEmpty()
+                    || resultCriteria.get(0).getResponseList() == null) {
+                throw new CustomException(ERROR_WHILE_FETCHING_FROM_CASE, "Invalid response structure");
+            }
+            return objectMapper.readTree(objectMapper.writeValueAsString(resultCriteria.get(0).getResponseList()));
+        } catch (CustomException e) {
+            throw e;
         } catch (Exception e) {
             log.error(ERROR_WHILE_FETCHING_FROM_CASE, e);
             throw new CustomException(ERROR_WHILE_FETCHING_FROM_CASE, e.getMessage());
@@ -82,49 +68,43 @@ public class CaseUtil {
     }
 
     public List<CourtCase> getCaseDetails(TaskRequest taskRequest) {
-
-        String filingNumber = taskRequest.getTask().getFilingNumber();
-        RequestInfo requestInfo = taskRequest.getRequestInfo();
-
-        StringBuilder uri = new StringBuilder();
-        uri.append(config.getCaseHost()).append(config.getCaseSearchPath());
-
-        CaseCriteria caseCriteria = CaseCriteria.builder().filingNumber(filingNumber)
-                .defaultFields(false)
-                .build();
-
-        CaseSearchRequest caseSearchRequest = CaseSearchRequest.builder()
-                .requestInfo(requestInfo)
-                .criteria(Collections.singletonList(caseCriteria))
-                .build();
-
-        Object response;
-        CaseListResponse caseListResponse;
-
+        org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseCriteria criteria =
+                org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseCriteria.builder()
+                        .filingNumber(taskRequest.getTask().getFilingNumber())
+                        .defaultFields(false)
+                        .build();
+        org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseSearchRequest request =
+                org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseSearchRequest.builder()
+                        .requestInfo(taskRequest.getRequestInfo())
+                        .criteria(Collections.singletonList(criteria))
+                        .build();
         try {
-            response = restTemplate.postForObject(uri.toString(), caseSearchRequest, Map.class);
-            caseListResponse = objectMapper.convertValue(response,CaseListResponse.class);
-            log.info("Case response : {} ", caseListResponse);
+            caseApi.search(request);
+            var resultCriteria = request.getCriteria();
+            if (resultCriteria == null || resultCriteria.isEmpty()
+                    || resultCriteria.get(0).getResponseList() == null) {
+                return null;
+            }
+            return objectMapper.convertValue(
+                    resultCriteria.get(0).getResponseList(),
+                    new TypeReference<List<CourtCase>>() {});
+        } catch (Exception e) {
+            log.error("Error while fetching from case service", e);
+            throw new CustomException(ERROR_FROM_CASE, e.getMessage());
         }
-        catch (Exception e) {
-            log.error("Error while fetching from case service");
-            throw new CustomException(ERROR_FROM_CASE,e.getMessage());
-        }
-
-        if (caseListResponse != null && caseListResponse.getCriteria() != null && !caseListResponse.getCriteria().isEmpty()) {
-            return caseListResponse.getCriteria().get(0).getResponseList();
-        }
-        return null;
     }
 
     public void editCase(RequestInfo requestInfo, CourtCase courtCase) {
-        StringBuilder uri = new StringBuilder();
-        uri.append(config.getCaseHost()).append(config.getCaseEditPath());
-        Map<String, Object> requestMap = new HashMap<>();
-        requestMap.put("RequestInfo", requestInfo);
-        requestMap.put("cases", courtCase);
         try {
-            repository.fetchResult(uri, requestMap);
+            org.pucar.dristi.caselifecycle.cases.internal.web.models.CourtCase casesCourtCase =
+                    objectMapper.convertValue(courtCase,
+                            org.pucar.dristi.caselifecycle.cases.internal.web.models.CourtCase.class);
+            org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseRequest request =
+                    org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseRequest.builder()
+                            .requestInfo(requestInfo)
+                            .cases(casesCourtCase)
+                            .build();
+            caseApi.edit(request);
         } catch (Exception e) {
             log.error("Error while editing case", e);
             throw new CustomException(ERROR_FROM_CASE, e.getMessage());
@@ -144,19 +124,16 @@ public class CaseUtil {
                 .orElse(Collections.emptyList())
                 .stream()
                 .filter(POAHolder::getIsActive)
-                .flatMap(poa -> {
-                    // Create pairs of (litigantId, poa) for each litigant this POA represents
-                    return poa.getRepresentingLitigants().stream()
-                            .filter(party -> party.getIndividualId() != null)
-                            .map(party -> new AbstractMap.SimpleEntry<>(party.getIndividualId(), poa));
-                })
+                .flatMap(poa -> poa.getRepresentingLitigants().stream()
+                        .filter(party -> party.getIndividualId() != null)
+                        .map(party -> new AbstractMap.SimpleEntry<>(party.getIndividualId(), poa)))
                 .collect(Collectors.groupingBy(
-                        Map.Entry::getKey,  // Group by litigant ID
+                        Map.Entry::getKey,
                         Collectors.mapping(Map.Entry::getValue, Collectors.toList())
                 ));
 
         for (String id : litigantIds) {
-            litigantPoaMapping.putIfAbsent(id, new ArrayList<>()); // fill in missing ones with empty list
+            litigantPoaMapping.putIfAbsent(id, new ArrayList<>());
         }
         return litigantPoaMapping;
     }

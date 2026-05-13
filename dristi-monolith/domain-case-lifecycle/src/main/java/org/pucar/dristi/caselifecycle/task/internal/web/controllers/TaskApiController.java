@@ -4,6 +4,7 @@ import org.egov.common.contract.response.ResponseInfo;
 import org.pucar.dristi.caselifecycle.task.internal.service.TaskService;
 import org.pucar.dristi.common.util.ResponseInfoFactory;
 import org.pucar.dristi.caselifecycle.task.internal.web.models.*;
+import org.pucar.dristi.common.contract.task.*;
 
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;

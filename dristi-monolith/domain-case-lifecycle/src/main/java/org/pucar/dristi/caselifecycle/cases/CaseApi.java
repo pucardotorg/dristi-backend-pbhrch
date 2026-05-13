@@ -3,7 +3,9 @@ package org.pucar.dristi.caselifecycle.cases;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseExistsRequest;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseExistsResponse;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseListResponse;
+import org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseRequest;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseSearchRequest;
+import org.pucar.dristi.caselifecycle.cases.internal.web.models.CourtCase;
 
 /**
  * Public, cross-subdomain API of the cases subdomain. Other modules
@@ -35,4 +37,12 @@ public interface CaseApi {
      * {@link CaseListResponse#getCriteria()}.
      */
     CaseListResponse search(CaseSearchRequest request);
+
+    /**
+     * Edit an existing case. Delegates to the same code path the
+     * {@code /case/v1/_edit} REST endpoint exposes — validate,
+     * encrypt, publish to kafka, decrypt-and-return. The returned
+     * {@link CourtCase} is the decrypted post-edit state.
+     */
+    CourtCase edit(CaseRequest request);
 }

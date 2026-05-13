@@ -4,6 +4,7 @@ package org.pucar.dristi.caselifecycle.task.internal.config;
 import org.springframework.stereotype.Component;
 
 
+import org.pucar.dristi.common.contract.task.Task;
 @Component("taskServiceConstants")
 public class ServiceConstants {
     private ServiceConstants() {

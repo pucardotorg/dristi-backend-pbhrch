@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.tracer.model.CustomException;
 import org.postgresql.util.PGobject;
-import org.pucar.dristi.caselifecycle.task.internal.web.models.Amount;
+import org.pucar.dristi.common.contract.task.Amount;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Component;
 
@@ -13,6 +13,7 @@ import java.util.*;
 
 import static org.pucar.dristi.caselifecycle.task.internal.config.ServiceConstants.ROW_MAPPER_EXCEPTION;
 
+import org.pucar.dristi.common.contract.task.Task;
 @Component
 @Slf4j
 public class AmountRowMapper implements ResultSetExtractor<Map<UUID, Amount>> {

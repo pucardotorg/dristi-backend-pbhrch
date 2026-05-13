@@ -11,6 +11,7 @@ import org.pucar.dristi.caselifecycle.task.internal.repository.rowmapper.Documen
 import org.pucar.dristi.caselifecycle.task.internal.repository.rowmapper.TaskCaseRowMapper;
 import org.pucar.dristi.caselifecycle.task.internal.repository.rowmapper.TaskRowMapper;
 import org.pucar.dristi.caselifecycle.task.internal.web.models.*;
+import org.pucar.dristi.common.contract.task.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;

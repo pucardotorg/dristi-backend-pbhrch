@@ -312,15 +312,6 @@ egov:
             decrypt:
               self: CaseDecryptSelfNew
   courtId: KLKM52
-  task:
-    service:
-      host: http://localhost:8080
-      create:
-        endpoint: /task/v1/create
-      search:
-        endpoint: /task/v1/search
-      update:
-        endpoint: /task/v1/update
   payment:
     calculator:
       host: http://localhost:8088/

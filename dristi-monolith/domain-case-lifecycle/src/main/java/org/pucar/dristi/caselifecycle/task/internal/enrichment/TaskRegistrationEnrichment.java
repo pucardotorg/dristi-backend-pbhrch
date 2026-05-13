@@ -13,9 +13,9 @@ import org.pucar.dristi.caselifecycle.task.internal.config.Configuration;
 import org.pucar.dristi.caselifecycle.task.internal.util.CaseUtil;
 import org.pucar.dristi.caselifecycle.task.internal.util.HrmsUtil;
 import org.pucar.dristi.common.util.IdgenUtil;
-import org.pucar.dristi.caselifecycle.task.internal.web.models.CourtCase;
-import org.pucar.dristi.caselifecycle.task.internal.web.models.Task;
-import org.pucar.dristi.caselifecycle.task.internal.web.models.TaskRequest;
+import org.pucar.dristi.common.contract.task.CourtCase;
+import org.pucar.dristi.common.contract.task.Task;
+import org.pucar.dristi.common.contract.task.TaskRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

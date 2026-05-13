@@ -8,7 +8,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.postgresql.util.PGobject;
-import org.pucar.dristi.caselifecycle.task.internal.web.models.Task;
+import org.pucar.dristi.common.contract.task.Task;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

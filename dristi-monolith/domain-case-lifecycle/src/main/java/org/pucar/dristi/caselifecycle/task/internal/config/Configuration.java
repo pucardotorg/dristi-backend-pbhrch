@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 
 import org.pucar.dristi.common.models.individual.Individual;
+import org.pucar.dristi.common.contract.task.Order;
 @Component("taskConfiguration")
 @Import({TracerConfiguration.class})
 @Setter
@@ -183,23 +184,6 @@ public class Configuration {
     @Value("${egov.idgen.taskNumber}")
     private String taskNumber;
 
-    // Case Config
-    @Value("${egov.case.host}")
-    private String caseHost;
-
-    @Value("${egov.case.path}")
-    private String casePath;
-
-    // Order Config
-    @Value("${egov.order.host}")
-    private String orderHost;
-
-    @Value("${egov.order.path}")
-    private String orderPath;
-
-    @Value("${egov.order.search.path}")
-    private String orderSearchPath;
-
     @Value("${summons.court.fees.sufix}")
     private String summonsCourtFeesSufix;
 
@@ -240,12 +224,6 @@ public class Configuration {
 
     @Value("${role.system.admin}")
     private String systemAdmin;
-
-    @Value("${egov.case.search.endpoint}")
-    private String caseSearchPath;
-
-    @Value("${egov.case.edit.path}")
-    private String caseEditPath;
 
     //Localization
     @Value("${egov.localization.host}")
@@ -327,13 +305,6 @@ public class Configuration {
 
     @Value("${dristi.analytics.create.pendingtask}")
     private String createPendingTaskEndPoint;
-
-    // Advocate Config
-    @Value("${dristi.advocate.host}")
-    private String advocateHost;
-
-    @Value("${dristi.advocate.search.endpoint}")
-    private String advocateSearchEndPoint;
 
     // Sla values
     @Value("${sla.envelope.sla.value}")

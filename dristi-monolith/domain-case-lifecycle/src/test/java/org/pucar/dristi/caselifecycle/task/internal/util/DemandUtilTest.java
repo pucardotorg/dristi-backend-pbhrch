@@ -9,10 +9,10 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.pucar.dristi.caselifecycle.task.internal.config.Configuration;
 
-import org.pucar.dristi.caselifecycle.task.internal.web.models.Demand;
-import org.pucar.dristi.caselifecycle.task.internal.web.models.DemandCriteria;
-import org.pucar.dristi.caselifecycle.task.internal.web.models.DemandRequest;
-import org.pucar.dristi.caselifecycle.task.internal.web.models.DemandResponse;
+import org.pucar.dristi.common.contract.task.Demand;
+import org.pucar.dristi.common.contract.task.DemandCriteria;
+import org.pucar.dristi.common.contract.task.DemandRequest;
+import org.pucar.dristi.common.contract.task.DemandResponse;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Collections;

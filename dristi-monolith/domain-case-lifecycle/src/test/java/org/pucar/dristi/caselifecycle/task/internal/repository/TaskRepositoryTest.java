@@ -9,10 +9,10 @@ import org.pucar.dristi.caselifecycle.task.internal.repository.querybuilder.Task
 import org.pucar.dristi.caselifecycle.task.internal.repository.rowmapper.AmountRowMapper;
 import org.pucar.dristi.caselifecycle.task.internal.repository.rowmapper.DocumentRowMapper;
 import org.pucar.dristi.caselifecycle.task.internal.repository.rowmapper.TaskRowMapper;
-import org.pucar.dristi.caselifecycle.task.internal.web.models.Pagination;
-import org.pucar.dristi.caselifecycle.task.internal.web.models.Task;
-import org.pucar.dristi.caselifecycle.task.internal.web.models.TaskCriteria;
-import org.pucar.dristi.caselifecycle.task.internal.web.models.TaskExists;
+import org.pucar.dristi.common.contract.task.Pagination;
+import org.pucar.dristi.common.contract.task.Task;
+import org.pucar.dristi.common.contract.task.TaskCriteria;
+import org.pucar.dristi.common.contract.task.TaskExists;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.ArrayList;

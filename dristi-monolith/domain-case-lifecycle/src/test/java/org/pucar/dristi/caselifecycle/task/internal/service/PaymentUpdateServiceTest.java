@@ -20,6 +20,7 @@ import org.pucar.dristi.common.repository.ServiceRequestRepository;
 import org.pucar.dristi.caselifecycle.task.internal.repository.TaskRepository;
 import org.pucar.dristi.caselifecycle.task.internal.util.*;
 import org.pucar.dristi.caselifecycle.task.internal.web.models.*;
+import org.pucar.dristi.common.contract.task.*;
 
 import java.util.*;
 
@@ -209,9 +210,12 @@ class PaymentUpdateServiceTest {
         verify(objectMapper).convertValue(record, PaymentRequest.class);
         verify(mdmsUtil).fetchMdmsData(eq(requestInfo), eq(tenantId), eq(PAYMENT_MODULE_NAME), anyList());
 
-        // Verify workflow update for the payment task
+        // Verify workflow update for the payment task.
+        // requestInfo is matched with any() rather than eq(): production code
+        // applies RequestInfoUtil.withExtraRole defensively (Rule 40), so the
+        // RequestInfo seen here is a copy, not the original instance.
         verify(workflowUtil).updateWorkflowStatus(
-                eq(requestInfo),
+                any(RequestInfo.class),
                 eq(tenantId),
                 eq(taskNumber),
                 eq(businessService),
@@ -225,7 +229,7 @@ class PaymentUpdateServiceTest {
 
         // Verify workflow update for remaining pending payment tasks
         verify(workflowUtil).updateWorkflowStatus(
-                eq(requestInfo),
+                any(RequestInfo.class),
                 eq(tenantId),
                 eq("TSK-002"),
                 eq(businessService),

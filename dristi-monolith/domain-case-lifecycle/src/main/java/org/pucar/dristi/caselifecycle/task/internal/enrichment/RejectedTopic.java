@@ -3,7 +3,7 @@ package org.pucar.dristi.caselifecycle.task.internal.enrichment;
 import lombok.extern.slf4j.Slf4j;
 import org.pucar.dristi.caselifecycle.task.internal.config.Configuration;
 import org.pucar.dristi.common.kafka.Producer;
-import org.pucar.dristi.caselifecycle.task.internal.web.models.TaskRequest;
+import org.pucar.dristi.common.contract.task.TaskRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

@@ -20,6 +20,7 @@ import org.pucar.dristi.common.repository.ServiceRequestRepository;
 import org.pucar.dristi.caselifecycle.task.internal.repository.TaskRepository;
 import org.pucar.dristi.caselifecycle.task.internal.util.*;
 import org.pucar.dristi.caselifecycle.task.internal.web.models.*;
+import org.pucar.dristi.common.contract.task.*;
 import org.pucar.dristi.caselifecycle.task.internal.web.models.pendingtask.PendingTask;
 import org.pucar.dristi.caselifecycle.task.internal.web.models.pendingtask.PendingTaskRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,11 +36,12 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
-import org.pucar.dristi.caselifecycle.task.internal.web.models.order.Order;
+import org.pucar.dristi.common.contract.order.Order;
 
 import static org.pucar.dristi.caselifecycle.task.internal.config.ServiceConstants.*;
 
 import org.pucar.dristi.common.models.Document;
+import org.pucar.dristi.common.util.RequestInfoUtil;
 import org.pucar.dristi.common.util.WorkflowUtil;
 import org.pucar.dristi.common.util.MdmsUtil;
 import org.pucar.dristi.common.models.workflow.WorkflowObject;
@@ -177,7 +179,9 @@ public class PaymentUpdateService {
         }
 
         Role role = Role.builder().code(config.getSystemAdmin()).tenantId(tenantId).build();
-        requestInfo.getUserInfo().getRoles().add(role);
+        // Rule 40: defensive copy — direct calls share object identity with caller,
+        // so add the elevated SYSTEM_ADMIN role on a copy rather than mutating the caller's RequestInfo.
+        requestInfo = RequestInfoUtil.withExtraRole(requestInfo, role);
 
         for (Task task : tasks) {
             log.info("Updating pending payment status for task: {}", task);

@@ -5,9 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.egov.tracer.model.CustomException;
 import org.pucar.dristi.caselifecycle.task.internal.config.Configuration;
 import org.pucar.dristi.common.repository.ServiceRequestRepository;
-import org.pucar.dristi.caselifecycle.task.internal.web.models.Coordinate;
-import org.pucar.dristi.caselifecycle.task.internal.web.models.CoordinateRequest;
-import org.pucar.dristi.caselifecycle.task.internal.web.models.CoordinateResponse;
+import org.pucar.dristi.common.contract.task.Coordinate;
+import org.pucar.dristi.common.contract.task.CoordinateRequest;
+import org.pucar.dristi.common.contract.task.CoordinateResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

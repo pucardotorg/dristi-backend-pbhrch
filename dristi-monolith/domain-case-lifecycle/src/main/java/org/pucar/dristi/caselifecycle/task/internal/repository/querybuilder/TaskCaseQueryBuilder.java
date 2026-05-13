@@ -3,8 +3,8 @@ package org.pucar.dristi.caselifecycle.task.internal.repository.querybuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.ObjectUtils;
 import org.egov.tracer.model.CustomException;
-import org.pucar.dristi.caselifecycle.task.internal.web.models.Pagination;
-import org.pucar.dristi.caselifecycle.task.internal.web.models.TaskCaseSearchCriteria;
+import org.pucar.dristi.common.contract.task.Pagination;
+import org.pucar.dristi.common.contract.task.TaskCaseSearchCriteria;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 

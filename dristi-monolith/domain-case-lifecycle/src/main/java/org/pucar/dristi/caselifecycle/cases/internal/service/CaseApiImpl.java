@@ -9,7 +9,9 @@ import org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseExists;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseExistsRequest;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseExistsResponse;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseListResponse;
+import org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseRequest;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseSearchRequest;
+import org.pucar.dristi.caselifecycle.cases.internal.web.models.CourtCase;
 import org.pucar.dristi.common.util.ResponseInfoFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -46,5 +48,10 @@ public class CaseApiImpl implements CaseApi {
                 .criteria(request.getCriteria())
                 .responseInfo(responseInfo)
                 .build();
+    }
+
+    @Override
+    public CourtCase edit(CaseRequest request) {
+        return caseService.editCase(request);
     }
 }

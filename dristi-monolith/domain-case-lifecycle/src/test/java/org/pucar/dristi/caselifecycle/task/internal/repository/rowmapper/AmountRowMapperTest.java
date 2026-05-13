@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.postgresql.util.PGobject;
-import org.pucar.dristi.caselifecycle.task.internal.web.models.Amount;
+import org.pucar.dristi.common.contract.task.Amount;
 
 import java.sql.ResultSet;
 import java.util.Map;
@@ -18,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 import static org.pucar.dristi.caselifecycle.task.internal.config.ServiceConstants.ROW_MAPPER_EXCEPTION;
 
+import org.pucar.dristi.common.contract.task.Task;
 class AmountRowMapperTest {
 
     private AmountRowMapper amountRowMapper;

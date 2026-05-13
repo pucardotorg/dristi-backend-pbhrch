@@ -11,6 +11,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.pucar.dristi.caselifecycle.task.internal.service.TaskService;
 import org.pucar.dristi.common.util.ResponseInfoFactory;
 import org.pucar.dristi.caselifecycle.task.internal.web.models.*;
+import org.pucar.dristi.common.contract.task.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 

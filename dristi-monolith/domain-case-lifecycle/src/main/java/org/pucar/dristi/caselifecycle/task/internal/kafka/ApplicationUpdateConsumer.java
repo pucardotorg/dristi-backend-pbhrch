@@ -10,6 +10,7 @@ import org.pucar.dristi.caselifecycle.task.internal.config.Configuration;
 import org.pucar.dristi.caselifecycle.task.internal.service.TaskService;
 import org.pucar.dristi.caselifecycle.task.internal.service.UserService;
 import org.pucar.dristi.caselifecycle.task.internal.web.models.*;
+import org.pucar.dristi.common.contract.task.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.KafkaHeaders;

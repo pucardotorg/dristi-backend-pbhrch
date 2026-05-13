@@ -7,9 +7,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.model.CustomException;
 import org.pucar.dristi.caselifecycle.task.internal.config.Configuration;
-import org.pucar.dristi.caselifecycle.task.internal.web.models.Calculation;
-import org.pucar.dristi.caselifecycle.task.internal.web.models.DemandCreateRequest;
-import org.pucar.dristi.caselifecycle.task.internal.web.models.TaskRequest;
+import org.pucar.dristi.common.contract.task.Calculation;
+import org.pucar.dristi.common.contract.task.DemandCreateRequest;
+import org.pucar.dristi.common.contract.task.TaskRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -20,6 +20,8 @@ import java.util.Map;
 import static org.pucar.dristi.caselifecycle.task.internal.config.ServiceConstants.ERROR_WHILE_CREATING_DEMAND_FOR_GENERIC_TASK;
 
 
+import org.pucar.dristi.common.contract.task.Demand;
+import org.pucar.dristi.common.contract.task.Payment;
 @Slf4j
 @Component("taskEtreasuryUtil")
 public class EtreasuryUtil {

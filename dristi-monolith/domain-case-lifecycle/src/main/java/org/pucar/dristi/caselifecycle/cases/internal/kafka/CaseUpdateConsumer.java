@@ -11,8 +11,8 @@ import org.pucar.dristi.caselifecycle.cases.internal.web.models.analytics.CaseOu
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.analytics.CaseOverallStatus;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.analytics.CaseStageSubStage;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.analytics.Outcome;
-import org.pucar.dristi.caselifecycle.cases.internal.web.models.task.Task;
-import org.pucar.dristi.caselifecycle.cases.internal.web.models.task.TaskRequest;
+import org.pucar.dristi.common.contract.task.Task;
+import org.pucar.dristi.common.contract.task.TaskRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

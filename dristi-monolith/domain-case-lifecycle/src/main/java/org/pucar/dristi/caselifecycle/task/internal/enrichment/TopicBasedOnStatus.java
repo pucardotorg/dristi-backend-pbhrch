@@ -1,6 +1,6 @@
 package org.pucar.dristi.caselifecycle.task.internal.enrichment;
 
-import org.pucar.dristi.caselifecycle.task.internal.web.models.TaskRequest;
+import org.pucar.dristi.common.contract.task.TaskRequest;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

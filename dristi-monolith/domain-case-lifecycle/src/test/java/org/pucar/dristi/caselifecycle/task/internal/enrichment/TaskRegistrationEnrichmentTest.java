@@ -13,6 +13,7 @@ import org.pucar.dristi.caselifecycle.task.internal.config.Configuration;
 import org.pucar.dristi.caselifecycle.task.internal.util.CaseUtil;
 import org.pucar.dristi.common.util.IdgenUtil;
 import org.pucar.dristi.caselifecycle.task.internal.web.models.*;
+import org.pucar.dristi.common.contract.task.*;
 
 import java.util.Collections;
 import java.util.UUID;

@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.pucar.dristi.caselifecycle.task.internal.config.Configuration;
 import org.pucar.dristi.caselifecycle.task.internal.web.models.*;
+import org.pucar.dristi.common.contract.task.*;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;

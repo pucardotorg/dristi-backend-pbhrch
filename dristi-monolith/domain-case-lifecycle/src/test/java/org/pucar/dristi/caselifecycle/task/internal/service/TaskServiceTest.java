@@ -23,6 +23,7 @@ import org.pucar.dristi.caselifecycle.task.internal.util.CaseUtil;
 import org.pucar.dristi.common.util.WorkflowUtil;
 import org.pucar.dristi.caselifecycle.task.internal.validators.TaskRegistrationValidator;
 import org.pucar.dristi.caselifecycle.task.internal.web.models.*;
+import org.pucar.dristi.common.contract.task.*;
 
 import java.util.Collections;
 import java.util.HashMap;

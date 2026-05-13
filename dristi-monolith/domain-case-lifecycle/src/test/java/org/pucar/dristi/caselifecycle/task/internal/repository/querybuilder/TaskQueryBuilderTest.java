@@ -4,8 +4,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
-import org.pucar.dristi.caselifecycle.task.internal.web.models.Pagination;
-import org.pucar.dristi.caselifecycle.task.internal.web.models.TaskCriteria;
+import org.pucar.dristi.common.contract.task.Pagination;
+import org.pucar.dristi.common.contract.task.TaskCriteria;
 
 import java.sql.Types;
 import java.util.ArrayList;

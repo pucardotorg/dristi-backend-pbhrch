@@ -10,9 +10,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.pucar.dristi.caselifecycle.task.internal.repository.TaskRepository;
-import org.pucar.dristi.caselifecycle.task.internal.web.models.Task;
-import org.pucar.dristi.caselifecycle.task.internal.web.models.TaskExists;
-import org.pucar.dristi.caselifecycle.task.internal.web.models.TaskRequest;
+import org.pucar.dristi.common.contract.task.Task;
+import org.pucar.dristi.common.contract.task.TaskExists;
+import org.pucar.dristi.common.contract.task.TaskRequest;
 
 import java.util.UUID;
 

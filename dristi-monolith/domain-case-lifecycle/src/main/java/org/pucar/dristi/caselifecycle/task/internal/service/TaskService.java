@@ -20,6 +20,7 @@ import org.pucar.dristi.caselifecycle.task.internal.repository.TaskRepository;
 import org.pucar.dristi.caselifecycle.task.internal.util.*;
 import org.pucar.dristi.caselifecycle.task.internal.validators.TaskRegistrationValidator;
 import org.pucar.dristi.caselifecycle.task.internal.web.models.*;
+import org.pucar.dristi.common.contract.task.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.core.io.Resource;

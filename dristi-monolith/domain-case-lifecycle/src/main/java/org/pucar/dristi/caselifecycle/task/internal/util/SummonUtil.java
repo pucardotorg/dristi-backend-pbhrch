@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.egov.tracer.model.CustomException;
 import org.pucar.dristi.caselifecycle.task.internal.config.Configuration;
 import org.pucar.dristi.caselifecycle.task.internal.web.models.SummonsDelivery;
-import org.pucar.dristi.caselifecycle.task.internal.web.models.TaskRequest;
+import org.pucar.dristi.common.contract.task.TaskRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
