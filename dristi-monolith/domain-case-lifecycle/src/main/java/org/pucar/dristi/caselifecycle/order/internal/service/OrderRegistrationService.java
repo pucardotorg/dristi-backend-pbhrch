@@ -24,6 +24,7 @@ import org.pucar.dristi.caselifecycle.order.internal.validators.OrderRegistratio
 import org.pucar.dristi.caselifecycle.order.internal.web.models.*;
 import org.pucar.dristi.common.contract.order.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -64,7 +65,7 @@ public class OrderRegistrationService {
     private final FileStoreUtil fileStoreUtil;
 
     @Autowired
-    public OrderRegistrationService(OrderRegistrationValidator validator, Producer producer, Configuration config, WorkflowUtil workflowUtil, OrderRepository orderRepository, OrderRegistrationEnrichment enrichmentUtil, ObjectMapper objectMapper, CaseApi caseApi, SmsNotificationService notificationService, IndividualService individualService, FileStoreUtil fileStoreUtil, HearingUtil hearingUtil, DateUtil dateUtil) {
+    public OrderRegistrationService(OrderRegistrationValidator validator, Producer producer, Configuration config, WorkflowUtil workflowUtil, OrderRepository orderRepository, OrderRegistrationEnrichment enrichmentUtil, ObjectMapper objectMapper, @Lazy CaseApi caseApi, SmsNotificationService notificationService, IndividualService individualService, FileStoreUtil fileStoreUtil, HearingUtil hearingUtil, DateUtil dateUtil) {
         this.validator = validator;
         this.producer = producer;
         this.config = config;

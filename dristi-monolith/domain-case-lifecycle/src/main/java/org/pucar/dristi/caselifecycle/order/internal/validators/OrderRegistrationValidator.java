@@ -22,6 +22,7 @@ import org.pucar.dristi.common.util.MdmsUtil;
 import org.pucar.dristi.caselifecycle.order.internal.web.models.*;
 import org.pucar.dristi.common.contract.order.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 
@@ -47,7 +48,7 @@ public class OrderRegistrationValidator {
     private final MdmsDataConfig mdmsDataConfig;
 
     @Autowired
-    public OrderRegistrationValidator(OrderRepository repository, CaseApi caseApi, FileStoreUtil fileStoreUtil, Configuration configuration, MdmsUtil mdmsUtil, ObjectMapper objectMapper, MdmsDataConfig mdmsDataConfig) {
+    public OrderRegistrationValidator(OrderRepository repository, @Lazy CaseApi caseApi, FileStoreUtil fileStoreUtil, Configuration configuration, MdmsUtil mdmsUtil, ObjectMapper objectMapper, MdmsDataConfig mdmsDataConfig) {
         this.repository = repository;
         this.caseApi = caseApi;
         this.fileStoreUtil = fileStoreUtil;

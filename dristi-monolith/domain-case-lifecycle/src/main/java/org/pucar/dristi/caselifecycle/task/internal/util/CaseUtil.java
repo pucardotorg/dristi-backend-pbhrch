@@ -12,6 +12,7 @@ import org.pucar.dristi.common.contract.task.POAHolder;
 import org.pucar.dristi.common.contract.task.Party;
 import org.pucar.dristi.common.contract.task.TaskRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.util.AbstractMap;
@@ -34,7 +35,7 @@ public class CaseUtil {
     private final ObjectMapper objectMapper;
 
     @Autowired
-    public CaseUtil(CaseApi caseApi, ObjectMapper objectMapper) {
+    public CaseUtil(@Lazy CaseApi caseApi, ObjectMapper objectMapper) {
         this.caseApi = caseApi;
         this.objectMapper = objectMapper;
     }

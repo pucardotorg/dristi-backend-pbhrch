@@ -21,6 +21,7 @@ import org.pucar.dristi.common.util.IdgenUtil;
 import org.pucar.dristi.caselifecycle.order.internal.util.LocalizationUtil;
 import org.pucar.dristi.caselifecycle.order.internal.web.models.*;
 import org.pucar.dristi.common.contract.order.*;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
@@ -47,7 +48,7 @@ public class OrderRegistrationEnrichment {
     private final MdmsDataConfig mdmsDataConfig;
     private final LocalizationUtil localizationUtil;
 
-    public OrderRegistrationEnrichment(IdgenUtil idgenUtil, Configuration configuration, ObjectMapper objectMapper, CaseApi caseApi, MdmsDataConfig mdmsDataConfig, LocalizationUtil localizationUtil) {
+    public OrderRegistrationEnrichment(IdgenUtil idgenUtil, Configuration configuration, ObjectMapper objectMapper, @Lazy CaseApi caseApi, MdmsDataConfig mdmsDataConfig, LocalizationUtil localizationUtil) {
         this.idgenUtil = idgenUtil;
         this.configuration = configuration;
         this.objectMapper = objectMapper;
