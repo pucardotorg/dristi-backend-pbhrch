@@ -69,4 +69,8 @@ public class DateUtil {
                 .toLocalDate()
                 .format(DateTimeFormatter.ofPattern(pattern));
     }
+
+    public String getCurrentYear() {
+        return String.valueOf(LocalDate.now(ZoneId.of(configuration.getZoneId())).getYear());
+    }
 }

@@ -1,0 +1,40 @@
+{
+  "service": "application",
+  "source_dir": "dristi-services\\application",
+  "target_module": "case-lifecycle",
+  "target_subdomain": "application",
+  "current_package": "org.pucar.dristi",
+  "target_package": "org.pucar.dristi.caselifecycle.application",
+  "main_file_count": 92,
+  "test_file_count": 27,
+  "has_spring_boot_main": true,
+  "duplicated_protected_classes": [
+    "MdmsUtil",
+    "IdgenUtil",
+    "WorkflowUtil",
+    "FileStoreUtil",
+    "UserUtil",
+    "UrlShortenerUtil",
+    "IndividualUtil",
+    "ResponseInfoFactory",
+    "DateUtil",
+    "Producer",
+    "KafkaProducerService",
+    "ServiceRequestRepository",
+    "Document",
+    "Individual",
+    "WorkflowObject",
+    "ProcessInstanceObject"
+  ],
+  "rest_call_files": [
+    "dristi-services\\application\\src\\main\\java\\org\\pucar\\dristi\\repository\\ServiceRequestRepository.java",
+    "dristi-services\\application\\src\\main\\java\\org\\pucar\\dristi\\service\\SmsNotificationService.java",
+    "dristi-services\\application\\src\\main\\java\\org\\pucar\\dristi\\service\\WorkflowService.java",
+    "dristi-services\\application\\src\\main\\java\\org\\pucar\\dristi\\util\\AdvocateUtil.java",
+    "dristi-services\\application\\src\\main\\java\\org\\pucar\\dristi\\util\\IdgenUtil.java",
+    "dristi-services\\application\\src\\main\\java\\org\\pucar\\dristi\\util\\IndividualUtil.java",
+    "dristi-services\\application\\src\\main\\java\\org\\pucar\\dristi\\util\\UserUtil.java",
+    "dristi-services\\application\\src\\main\\java\\org\\pucar\\dristi\\util\\WorkflowUtil.java"
+  ],
+  "source_context_path": "/application"
+}
