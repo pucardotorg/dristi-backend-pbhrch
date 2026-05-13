@@ -6,7 +6,20 @@
 # Activate via spring.profiles.active=...,treasury,...
 
 otel:
+  traces:
+    exporter: otlp
+  logs:
+    exporter: none
+  metrics:
+    exporter: none
+  exporter:
+    otlp:
+      endpoint: http://jaeger-collector.tracing:4318
+      protocol: http/protobuf
   instrumentation:
+    kafka:
+      enabled: true
+      experimental-span-attributes: true
     http:
       server:
         ignore-urls: /etreasury/health,/etreasury/prometheus
@@ -59,7 +72,7 @@ egov:
       save:
         endpoint: /filestore/v1/files
   idgen:
-    host: http://localhost:8085/
+    host: http://localhost:8082/
     path: egov-idgen/id/_generate
     name: treasury.sh
   mock:

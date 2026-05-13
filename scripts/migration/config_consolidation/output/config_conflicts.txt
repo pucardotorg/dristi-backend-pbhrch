@@ -1,4 +1,4 @@
-# 101 keys with different values across services
+# 99 keys with different values across services
 # Per-service profile YAML resolves them via Spring's profile-overlay rules.
 
 add.member.kafka.create.topic
@@ -69,12 +69,6 @@ egov.esign.host
 
 egov.esign.location.endpoint
   bail-bond=/e-sign-svc/v1/_getLocation | ctc=/e-sign-svc/v1/_getLocation | digitalized-documents=/e-sign-svc/v1/_getLocation
-
-egov.etreasury.demand.create.endpoint
-  case=/etreasury/payment/v1/_createDemand | ctc=/etreasury/payment/v1/_createDemand
-
-egov.etreasury.host
-  case=http://localhost:8876 | ctc=http://localhost:8090
 
 egov.file.store.delete.endpoint
   Notification=/filestore/v1/files/delete | ab-diary=/filestore/v1/files/delete | bail-bond=/filestore/v1/files/delete | case=/filestore/v1/files/delete | ctc=/filestore/v1/files/delete | digitalized-documents=/filestore/v1/files/delete | order=/filestore/v1/files/delete

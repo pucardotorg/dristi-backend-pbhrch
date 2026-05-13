@@ -71,10 +71,6 @@ egov.esign.host,digitalized-documents,http://localhost:8052,CONFLICT
 egov.esign.location.endpoint,bail-bond,/e-sign-svc/v1/_getLocation,CONFLICT
 egov.esign.location.endpoint,ctc,/e-sign-svc/v1/_getLocation,CONFLICT
 egov.esign.location.endpoint,digitalized-documents,/e-sign-svc/v1/_getLocation,CONFLICT
-egov.etreasury.demand.create.endpoint,case,/etreasury/payment/v1/_createDemand,CONFLICT
-egov.etreasury.demand.create.endpoint,ctc,/etreasury/payment/v1/_createDemand,CONFLICT
-egov.etreasury.host,case,http://localhost:8876,CONFLICT
-egov.etreasury.host,ctc,http://localhost:8090,CONFLICT
 egov.file.store.delete.endpoint,Notification,/filestore/v1/files/delete,CONFLICT
 egov.file.store.delete.endpoint,ab-diary,/filestore/v1/files/delete,CONFLICT
 egov.file.store.delete.endpoint,bail-bond,/filestore/v1/files/delete,CONFLICT
@@ -818,6 +814,8 @@ egov.enc.mdms.security.policy.case.decrypt.self.new,case,CaseDecryptSelfNew,SERV
 egov.enc.mdms.security.policy.court.case,case,CourtCaseNew,SERVICE-SPECIFIC
 egov.enc.mdms.security.policy.court.case.new,case,CourtCaseNew,SERVICE-SPECIFIC
 egov.enc.mdms.security.policy.court.decrypt.other,case,CaseDecryptOther,SERVICE-SPECIFIC
+egov.etreasury.demand.create.endpoint,ctc,/etreasury/payment/v1/_createDemand,SERVICE-SPECIFIC
+egov.etreasury.host,ctc,http://localhost:8090,SERVICE-SPECIFIC
 egov.etreasury.payment.receipt.endpoint,ctc,/etreasury/payment/v1/_getPaymentReceipt,SERVICE-SPECIFIC
 egov.evidence.create.path,case,/evidence/v1/_create,SERVICE-SPECIFIC
 egov.evidence.host,case,http://localhost:8089,SERVICE-SPECIFIC
@@ -999,8 +997,6 @@ esing.response.sig.type,e-sign-svc,pkcs7,SERVICE-SPECIFIC
 esing.response.url,e-sign-svc,https://dristi-kerala-dev.pucar.org/esign-interceptor/v1/_intercept,SERVICE-SPECIFIC
 esing.sc,e-sign-svc,Y,SERVICE-SPECIFIC
 esing.ver,e-sign-svc,2.1,SERVICE-SPECIFIC
-etreasury.head.breakup.calculation.endpoint,case,/etreasury/payment/v1/_getHeadBreakDown,SERVICE-SPECIFIC
-etreasury.payment.receipt.endpoint,case,/etreasury/payment/v1/_getPaymentReceipt,SERVICE-SPECIFIC
 examination.of.accused.kafka.update.topic,digitalized-documents,update-examination-of-accused-document,SERVICE-SPECIFIC
 examination.of.accused.kakfa.create.topic,digitalized-documents,create-examination-of-accused-document,SERVICE-SPECIFIC
 get.data.based.user.logged.in,epost-tracker,true,SERVICE-SPECIFIC
