@@ -2,7 +2,7 @@ package org.pucar.dristi.caselifecycle.hearing.internal.repository.rowmapper;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.egov.common.contract.models.AuditDetails;
+import org.pucar.dristi.common.models.AuditDetails;
 import org.egov.tracer.model.CustomException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

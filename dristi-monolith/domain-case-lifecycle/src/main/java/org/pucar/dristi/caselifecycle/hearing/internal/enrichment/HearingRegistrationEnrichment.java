@@ -1,7 +1,7 @@
 package org.pucar.dristi.caselifecycle.hearing.internal.enrichment;
 
 import lombok.extern.slf4j.Slf4j;
-import org.egov.common.contract.models.AuditDetails;
+import org.pucar.dristi.common.models.AuditDetails;
 import org.egov.tracer.model.CustomException;
 import org.pucar.dristi.caselifecycle.hearing.internal.config.Configuration;
 import org.pucar.dristi.common.util.IdgenUtil;

@@ -3,7 +3,7 @@ package org.pucar.dristi.caselifecycle.hearing.internal.repository.rowmapper;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.egov.common.contract.models.AuditDetails;
+import org.pucar.dristi.common.models.AuditDetails;
 import org.egov.tracer.model.CustomException;
 import org.postgresql.util.PGobject;
 import org.pucar.dristi.common.contract.hearing.Attendee;

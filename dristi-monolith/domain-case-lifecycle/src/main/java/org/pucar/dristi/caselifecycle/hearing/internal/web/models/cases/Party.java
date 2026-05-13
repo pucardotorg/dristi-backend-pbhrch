@@ -6,8 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import org.egov.common.contract.models.AuditDetails;
-import org.egov.common.contract.models.Document;
+import org.pucar.dristi.common.models.AuditDetails;
+import org.pucar.dristi.common.models.Document;
 
 import java.util.List;
 import java.util.UUID;
