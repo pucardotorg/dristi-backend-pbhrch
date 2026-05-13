@@ -18,7 +18,7 @@ import org.pucar.dristi.common.kafka.Producer;
 import org.pucar.dristi.caselifecycle.order.internal.repository.OrderRepository;
 import org.pucar.dristi.common.util.DateUtil;
 import org.pucar.dristi.common.util.FileStoreUtil;
-import org.pucar.dristi.caselifecycle.order.internal.util.HearingUtil;
+import org.pucar.dristi.caselifecycle.hearing.HearingApi;
 import org.pucar.dristi.common.util.WorkflowUtil;
 import org.pucar.dristi.caselifecycle.order.internal.validators.OrderRegistrationValidator;
 import org.pucar.dristi.caselifecycle.order.internal.web.models.*;
@@ -41,7 +41,7 @@ import org.pucar.dristi.common.models.workflow.WorkflowObject;
 @Slf4j
 public class OrderRegistrationService {
 
-    private final HearingUtil hearingUtil;
+    private final HearingApi hearingApi;
     private final DateUtil dateUtil;
     private OrderRegistrationValidator validator;
 
@@ -64,7 +64,7 @@ public class OrderRegistrationService {
     private final FileStoreUtil fileStoreUtil;
 
     @Autowired
-    public OrderRegistrationService(OrderRegistrationValidator validator, Producer producer, Configuration config, WorkflowUtil workflowUtil, OrderRepository orderRepository, OrderRegistrationEnrichment enrichmentUtil, ObjectMapper objectMapper, CaseApi caseApi, SmsNotificationService notificationService, IndividualService individualService, FileStoreUtil fileStoreUtil, HearingUtil hearingUtil, DateUtil dateUtil) {
+    public OrderRegistrationService(OrderRegistrationValidator validator, Producer producer, Configuration config, WorkflowUtil workflowUtil, OrderRepository orderRepository, OrderRegistrationEnrichment enrichmentUtil, ObjectMapper objectMapper, CaseApi caseApi, SmsNotificationService notificationService, IndividualService individualService, FileStoreUtil fileStoreUtil, HearingApi hearingApi, DateUtil dateUtil) {
         this.validator = validator;
         this.producer = producer;
         this.config = config;
@@ -76,7 +76,7 @@ public class OrderRegistrationService {
         this.notificationService = notificationService;
         this.individualService = individualService;
         this.fileStoreUtil = fileStoreUtil;
-        this.hearingUtil = hearingUtil;
+        this.hearingApi = hearingApi;
         this.dateUtil = dateUtil;
     }
 
@@ -358,21 +358,24 @@ public class OrderRegistrationService {
                     : "";
 
             String hearingNumber = orderRequest.getOrder().getHearingNumber();
-            HearingCriteria criteria = HearingCriteria.builder()
-                    .hearingId(hearingNumber)
-                    .status(OPT_OUT)
-                    .build();
-            Pagination pagination = Pagination.builder()
-                    .sortBy("startTime")
-                    .order(OrderPagination.DESC)
-                    .build();
-            HearingSearchRequest hearingSearchRequest = HearingSearchRequest.builder()
-                    .criteria(criteria)
-                    .pagination(pagination)
-                    .build();
-            Hearing hearing = hearingUtil.getHearings(hearingSearchRequest)
-                    .getHearingList()
-                    .get(0);
+            org.pucar.dristi.common.contract.hearing.HearingCriteria criteria =
+                    org.pucar.dristi.common.contract.hearing.HearingCriteria.builder()
+                            .hearingId(hearingNumber)
+                            .status(OPT_OUT)
+                            .build();
+            org.pucar.dristi.common.contract.hearing.Pagination pagination =
+                    org.pucar.dristi.common.contract.hearing.Pagination.builder()
+                            .sortBy("startTime")
+                            .order(org.pucar.dristi.common.contract.hearing.Order.DESC)
+                            .build();
+            org.pucar.dristi.common.contract.hearing.HearingSearchRequest hearingSearchRequest =
+                    org.pucar.dristi.common.contract.hearing.HearingSearchRequest.builder()
+                            .requestInfo(orderRequest.getRequestInfo())
+                            .criteria(criteria)
+                            .pagination(pagination)
+                            .build();
+            org.pucar.dristi.common.contract.hearing.Hearing hearing =
+                    hearingApi.search(hearingSearchRequest).get(0);
             long oldHearingStartTime = hearing.getStartTime();
             String oldHearingDate = dateUtil.getFormattedDateFromEpoch(oldHearingStartTime, YYYY_MM_DD);
 
