@@ -20,7 +20,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import static org.pucar.dristi.caselifecycle.bailbond.internal.config.ServiceConstants.*;
 
-@Service
+@Service("bailbondIndexerUtils")
 @Slf4j
 public class IndexerUtils {
 

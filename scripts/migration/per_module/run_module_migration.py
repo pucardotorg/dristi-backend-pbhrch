@@ -48,6 +48,7 @@ import argparse
 import json
 import os
 import re
+import shutil
 import subprocess
 from collections import Counter, defaultdict
 from pathlib import Path
@@ -1364,12 +1365,17 @@ def phase_7_validate(manifest: dict, target_dir: Path) -> tuple[int, list[str]]:
 
     # Gate 5: dristi-common compile still passes
     print("Running mvn compile ...")
+    # shutil.which resolves the real launcher (mvn.cmd on Windows,
+    # mvn on Unix), so subprocess can execute it without invoking a
+    # shell. Pairing a list argv with shell=True silently degrades
+    # to `/bin/sh -c "mvn"` on Unix and runs only the first element,
+    # which is what broke Gate 5 historically.
+    mvn = shutil.which("mvn") or "mvn"
     result = subprocess.run(
-        ["mvn", "-B", "-q", "-pl", "dristi-common", "-am", "compile"],
+        [mvn, "-B", "-q", "-pl", "dristi-common", "-am", "compile"],
         cwd=MONOLITH_ROOT,
         capture_output=True,
         text=True,
-        shell=(os.name == "nt"),
     )
     if result.returncode != 0:
         fails.append("Gate 5 (mvn compile): dristi-common no longer compiles")

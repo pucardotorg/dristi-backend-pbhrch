@@ -32,7 +32,7 @@ import static org.pucar.dristi.caselifecycle.cases.internal.config.ServiceConsta
 
 import org.pucar.dristi.common.models.Document;
 @Slf4j
-@Service
+@Service("casesPaymentUpdateService")
 public class PaymentUpdateService {
 
     private WorkflowService workflowService;
