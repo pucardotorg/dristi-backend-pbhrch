@@ -375,6 +375,18 @@ public class Configuration {
 	@Value("${egov.case.filing.payment.calculator.endpoint}")
 	private String caseFilingPaymentCalculatorEndpoint;
 
+	@Value("${egov.task.service.host}")
+	private String taskServiceHost;
+
+	@Value("${egov.task.service.create.endpoint}")
+	private String taskServiceCreateEndpoint;
+
+	@Value("${egov.task.service.search.endpoint}")
+	private String taskServiceSearchEndpoint;
+
+	@Value("${egov.task.service.update.endpoint}")
+	private String taskServiceUpdateEndpoint;
+
 	@Value("${hearing.case.reference.number.update}")
 	private String caseReferenceUpdateTopic;
 

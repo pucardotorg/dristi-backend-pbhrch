@@ -37,10 +37,9 @@ import org.pucar.dristi.caselifecycle.cases.internal.web.models.analytics.CaseOv
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.analytics.CaseStageSubStage;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.analytics.Outcome;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.inbox.InboxRequest;
-import org.pucar.dristi.caselifecycle.task.TaskApi;
-import org.pucar.dristi.common.contract.task.Task;
-import org.pucar.dristi.common.contract.task.TaskRequest;
-import org.pucar.dristi.common.contract.task.TaskResponse;
+import org.pucar.dristi.caselifecycle.cases.internal.web.models.task.Task;
+import org.pucar.dristi.caselifecycle.cases.internal.web.models.task.TaskRequest;
+import org.pucar.dristi.caselifecycle.cases.internal.web.models.task.TaskResponse;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.v2.*;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.advocateDetails.AdvocateDetailBlock;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.advocateDetails.PipStatus;
@@ -90,7 +89,7 @@ public class CaseService {
     private final IndividualService individualService;
 
     private final AdvocateApi advocateApi;
-    private final TaskApi taskApi;
+    private final TaskUtil taskUtil;
     private final HearingUtil hearingUtil;
     private final UserService userService;
     private final EvidenceUtil evidenceUtil;
@@ -113,7 +112,7 @@ public class CaseService {
                        WorkflowService workflowService,
                        Configuration config,
                        Producer producer,
-                       TaskApi taskApi,
+                       TaskUtil taskUtil,
                        EtreasuryUtil etreasuryUtil,
                        EncryptionDecryptionUtil encryptionDecryptionUtil,
                        HearingUtil analyticsUtil,
@@ -126,7 +125,7 @@ public class CaseService {
         this.workflowService = workflowService;
         this.config = config;
         this.producer = producer;
-        this.taskApi = taskApi;
+        this.taskUtil = taskUtil;
         this.etreasuryUtil = etreasuryUtil;
         this.encryptionDecryptionUtil = encryptionDecryptionUtil;
         this.hearingUtil = analyticsUtil;
@@ -2896,7 +2895,7 @@ public class CaseService {
         RequestInfo requestInfo = joinCaseRequest.getRequestInfo();
         Role role = Role.builder().code("TASK_CREATOR").name("TASK_CREATOR").tenantId(joinCaseAdvocate.getTenantId()).build();
         taskRequest.setRequestInfo(RequestInfoUtil.withExtraRole(requestInfo, role));
-        return taskApi.createTask(taskRequest);
+        return taskUtil.callCreateTask(taskRequest);
     }
 
     private TaskResponse createTaskPip(JoinCaseV2Request joinCaseRequest, RepresentingJoinCase representingJoinCase, String advocateId, CourtCase courtCase) throws JsonProcessingException {
@@ -2978,7 +2977,7 @@ public class CaseService {
         RequestInfo requestInfo = joinCaseRequest.getRequestInfo();
         Role role = Role.builder().code("TASK_CREATOR").name("TASK_CREATOR").tenantId(joinCaseAdvocate.getTenantId()).build();
         taskRequest.setRequestInfo(RequestInfoUtil.withExtraRole(requestInfo, role));
-        return taskApi.createTask(taskRequest);
+        return taskUtil.callCreateTask(taskRequest);
     }
 
     private Object getAdditionalDetailsForExcludingRoles() throws JsonProcessingException {
@@ -3088,7 +3087,7 @@ public class CaseService {
         RequestInfo requestInfo = joinCaseRequest.getRequestInfo();
         Role role = Role.builder().code("TASK_CREATOR").name("TASK_CREATOR").tenantId(joinCaseAdvocate.getTenantId()).build();
         taskRequest.setRequestInfo(RequestInfoUtil.withExtraRole(requestInfo, role));
-        return taskApi.createTask(taskRequest);
+        return taskUtil.callCreateTask(taskRequest);
     }
 
     private void enrichAndPushLitigantJoinCase(JoinCaseV2Request joinCaseRequest, CourtCase caseObj, CourtCase courtCase, AuditDetails auditDetails) {
@@ -3163,7 +3162,7 @@ public class CaseService {
         RequestInfo requestInfo = joinCaseRequest.getRequestInfo();
         Role role = Role.builder().code("TASK_CREATOR").name("TASK_CREATOR").tenantId(joinCaseData.getTenantId()).build();
         taskRequest.setRequestInfo(RequestInfoUtil.withExtraRole(requestInfo, role));
-        return taskApi.createTask(taskRequest);
+        return taskUtil.callCreateTask(taskRequest);
     }
 
     private static Document getPoaIdProofDocument(Individual poaIndividual, ObjectMapper objectMapper) throws JsonProcessingException {
@@ -3664,7 +3663,7 @@ public class CaseService {
             RequestInfo requestInfo = joinCaseRequest.getRequestInfo();
             Role role = Role.builder().code("TASK_CREATOR").name("TASK_CREATOR").tenantId(joinCaseAdvocate.getTenantId()).build();
             taskRequest.setRequestInfo(RequestInfoUtil.withExtraRole(requestInfo, role));
-            return taskApi.createTask(taskRequest);
+            return taskUtil.callCreateTask(taskRequest);
 
         } catch (Exception e) {
             log.error("Error occurred while creating task for join case request :: {}", e.toString());
@@ -3708,8 +3707,7 @@ public class CaseService {
         task.setFilingNumber(joinCaseRequest.getJoinCaseData().getFilingNumber());
         String advocateUUID = joinCaseRequest.getRequestInfo().getUserInfo().getUuid();
 
-        org.pucar.dristi.common.contract.task.AssignedTo assignedTo =
-                new org.pucar.dristi.common.contract.task.AssignedTo();
+        AssignedTo assignedTo = new AssignedTo();
         assignedTo.setUuid(UUID.fromString(advocateUUID));
         task.setAssignedTo(List.of(assignedTo));
 
@@ -3737,7 +3735,7 @@ public class CaseService {
         taskRequest.setTask(task);
         taskRequest.setRequestInfo(requestInfo);
 
-        TaskResponse taskResponse = taskApi.createTask(taskRequest);
+        TaskResponse taskResponse = taskUtil.callCreateTask(taskRequest);
 
         ObjectNode taskDetailsNodeFromResponse = objectMapper.convertValue(taskResponse.getTask().getTaskDetails(), ObjectNode.class);
         String consumerCode = taskDetailsNodeFromResponse.get("consumerCode").asText();

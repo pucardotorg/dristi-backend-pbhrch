@@ -42,10 +42,9 @@ import org.pucar.dristi.caselifecycle.cases.internal.validators.CaseRegistration
 import org.pucar.dristi.caselifecycle.cases.internal.validators.EvidenceValidator;
 import org.pucar.dristi.caselifecycle.cases.internal.web.OpenApiCaseSummary;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.*;
-import org.pucar.dristi.caselifecycle.task.TaskApi;
-import org.pucar.dristi.common.contract.task.Task;
-import org.pucar.dristi.common.contract.task.TaskRequest;
-import org.pucar.dristi.common.contract.task.TaskResponse;
+import org.pucar.dristi.caselifecycle.cases.internal.web.models.task.Task;
+import org.pucar.dristi.caselifecycle.cases.internal.web.models.task.TaskRequest;
+import org.pucar.dristi.caselifecycle.cases.internal.web.models.task.TaskResponse;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.v2.WitnessDetails;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.v2.WitnessDetailsRequest;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.v2.WitnessDetailsResponse;
@@ -87,7 +86,7 @@ public class CaseServiceTest {
     private AdvocateApi advocateApi;
 
     @Mock
-    private TaskApi taskApi;
+    private TaskUtil taskUtil;
 
     @Mock
     private UserService userService;
@@ -196,7 +195,7 @@ public class CaseServiceTest {
         courtCase = new CourtCase();
         objectMapper = new ObjectMapper();
         enrichmentService = new EnrichmentService(new ArrayList<>());
-    caseService = new CaseService(validator,enrichmentUtil,caseRepository,workflowService,config,producer,taskApi,etreasuryUtil,encryptionDecryptionUtil, hearingUtil,userService,paymentCalculaterUtil,objectMapper,cacheService,enrichmentService, notificationService, individualService, advocateApi, evidenceUtil, evidenceValidator,caseUtil,fileStoreUtil, dateUtil,inboxUtil, advocateOfficeCaseMemberRepository, advocateDetailBlockBuilder);
+    caseService = new CaseService(validator,enrichmentUtil,caseRepository,workflowService,config,producer,taskUtil,etreasuryUtil,encryptionDecryptionUtil, hearingUtil,userService,paymentCalculaterUtil,objectMapper,cacheService,enrichmentService, notificationService, individualService, advocateApi, evidenceUtil, evidenceValidator,caseUtil,fileStoreUtil, dateUtil,inboxUtil, advocateOfficeCaseMemberRepository, advocateDetailBlockBuilder);
 
         requestInfo = RequestInfo.builder()
                 .userInfo(User.builder().uuid("ba8767a6-7cb1-416b-803e-19cf9dca06bc").tenantId(TENANT_ID).build())
@@ -339,7 +338,7 @@ public class CaseServiceTest {
         verify(caseRepository, times(1)).getCases(anyList(), eq(requestInfo));
         verify(validator, times(1)).validateRepresentativeJoinCase(joinCaseV2Request);
         verify(paymentCalculaterUtil, times(1)).callPaymentCalculator(any(JoinCasePaymentRequest.class));
-        verify(taskApi, never()).createTask(any()); // No task creation
+        verify(taskUtil, never()).callCreateTask(any()); // No task creation
         verify(etreasuryUtil, never()).createDemand(any(), anyString(), anyList()); // No demand creation
     }
 
@@ -367,7 +366,7 @@ public class CaseServiceTest {
         // Mock task and demand creation
         String expectedTaskNumber = "TASK-123";
         Task createdTask = Task.builder().taskNumber(expectedTaskNumber).taskDetails(Map.of("consumerCode", FILING_NUMBER + "_JOIN")).build();
-        when(taskApi.createTask(any(TaskRequest.class)))
+        when(taskUtil.callCreateTask(any(TaskRequest.class)))
                 .thenReturn(TaskResponse.builder().task(createdTask).build());
         doNothing().when(etreasuryUtil).createDemand(any(), anyString(), anyList());
 
@@ -383,7 +382,7 @@ public class CaseServiceTest {
         verify(caseRepository, times(1)).getCases(anyList(), eq(requestInfo));
         verify(validator, times(1)).validateRepresentativeJoinCase(joinCaseV2Request);
         verify(paymentCalculaterUtil, times(1)).callPaymentCalculator(any(JoinCasePaymentRequest.class));
-        verify(taskApi, times(1)).createTask(any(TaskRequest.class));
+        verify(taskUtil, times(1)).callCreateTask(any(TaskRequest.class));
         verify(etreasuryUtil, times(1)).createDemand(any(), eq(FILING_NUMBER + "_JOIN"), anyList());
         verify(producer, never()).push(eq(config.getRepresentativeJoinCaseTopic()), any()); // Shouldn't push advocate data yet
         verify(notificationService, never()).sendNotification(any(), any(), anyString(), anyString()); // No notifications yet
