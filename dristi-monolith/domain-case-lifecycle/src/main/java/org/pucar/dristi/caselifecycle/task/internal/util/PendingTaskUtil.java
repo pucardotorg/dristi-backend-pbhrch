@@ -29,7 +29,7 @@ import static org.pucar.dristi.caselifecycle.task.internal.config.ServiceConstan
 import static org.pucar.dristi.caselifecycle.task.internal.config.ServiceConstants.NOTICE;
 import static org.pucar.dristi.caselifecycle.task.internal.config.ServiceConstants.WARRANT;
 
-@Component
+@Component("taskPendingTaskUtil")
 @Slf4j
 public class PendingTaskUtil {
 

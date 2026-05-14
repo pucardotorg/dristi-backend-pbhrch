@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 import java.util.UUID;
 
 @Slf4j
-@Component
+@Component("taskOrderUtil")
 public class OrderUtil {
 
     private final OrderApi orderApi;
