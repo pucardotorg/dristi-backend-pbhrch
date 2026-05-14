@@ -132,16 +132,6 @@ public class Configuration {
     @Value("${egov.application.path}")
     private String applicationExistsPath;
 
-    // Case Config
-    @Value("${egov.case.host}")
-    private String caseHost;
-
-    @Value("${egov.case.path}")
-    private String caseExistsPath;
-
-    @Value("${egov.case.search.path}")
-    private String caseSearchPath;
-
     @Value("${verify.attendee.individual.id}")
     private Boolean verifyAttendeeIndividualId;
 

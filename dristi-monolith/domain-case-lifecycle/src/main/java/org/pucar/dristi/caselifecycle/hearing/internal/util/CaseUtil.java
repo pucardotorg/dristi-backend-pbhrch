@@ -4,8 +4,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.tracer.model.CustomException;
+import org.pucar.dristi.caselifecycle.cases.CaseApi;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseListResponse;
-import org.pucar.dristi.caselifecycle.hearing.internal.config.Configuration;
 import org.pucar.dristi.common.contract.hearing.CaseExistsRequest;
 import org.pucar.dristi.common.contract.hearing.CaseExistsResponse;
 import org.pucar.dristi.common.contract.hearing.CaseExists;
@@ -13,11 +13,9 @@ import org.pucar.dristi.common.contract.hearing.CaseCriteria;
 import org.pucar.dristi.common.contract.hearing.CaseSearchRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static org.pucar.dristi.caselifecycle.hearing.internal.config.ServiceConstants.ERROR_WHILE_FETCHING_FROM_CASE;
 
@@ -25,15 +23,13 @@ import static org.pucar.dristi.caselifecycle.hearing.internal.config.ServiceCons
 @Component("hearingCaseUtil")
 public class CaseUtil {
 
-    private final RestTemplate restTemplate;
+    private final CaseApi caseApi;
     private final ObjectMapper mapper;
-    private final Configuration configs;
 
     @Autowired
-    public CaseUtil(RestTemplate restTemplate, ObjectMapper mapper, Configuration configs) {
-        this.restTemplate = restTemplate;
+    public CaseUtil(CaseApi caseApi, ObjectMapper mapper) {
+        this.caseApi = caseApi;
         this.mapper = mapper;
-        this.configs = configs;
     }
 
     public CaseExistsResponse fetchCaseDetails(CaseExistsRequest caseExistsRequest) {
@@ -43,10 +39,8 @@ public class CaseUtil {
             casesRequest.setRequestInfo(caseExistsRequest.getRequestInfo());
             casesRequest.setCriteria(mapExistsCriteria(caseExistsRequest.getCriteria()));
 
-            String url = configs.getCaseHost() + configs.getCaseExistsPath();
-            Object response = restTemplate.postForObject(url, casesRequest, Map.class);
             org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseExistsResponse casesResponse =
-                    mapper.convertValue(response, org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseExistsResponse.class);
+                    caseApi.exists(casesRequest);
 
             CaseExistsResponse result = new CaseExistsResponse();
             result.setResponseInfo(casesResponse.getResponseInfo());
@@ -68,9 +62,7 @@ public class CaseUtil {
                             .criteria(mapSearchCriteria(caseSearchRequest.getCriteria()))
                             .build();
 
-            String url = configs.getCaseHost() + configs.getCaseSearchPath();
-            Object response = restTemplate.postForObject(url, casesRequest, Map.class);
-            CaseListResponse caseListResponse = mapper.convertValue(response, CaseListResponse.class);
+            CaseListResponse caseListResponse = caseApi.search(casesRequest);
 
             List<org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseCriteria> resultCriteria =
                     caseListResponse.getCriteria();
