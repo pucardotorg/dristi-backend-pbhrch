@@ -1,7 +1,8 @@
+// HAND-CURATED — Rule 24a shadow-import fix (PR #86 follow-up)
 package org.pucar.dristi.caselifecycle.ctc.internal.enrichment;
 
 import lombok.extern.slf4j.Slf4j;
-import org.egov.common.contract.models.AuditDetails;
+import org.pucar.dristi.common.models.AuditDetails;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.model.CustomException;
 import org.pucar.dristi.caselifecycle.ctc.internal.config.Configuration;
