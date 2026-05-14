@@ -148,10 +148,6 @@ egov:
   case:
     outcome:
       topic: case-outcome-topic
-    host: http://localhost:8099/
-    path: case/v1/_exists
-    search:
-      path: case/v1/_search
   filestore:
     host: http://localhost:8085/
     path: filestore/v1/files/id?

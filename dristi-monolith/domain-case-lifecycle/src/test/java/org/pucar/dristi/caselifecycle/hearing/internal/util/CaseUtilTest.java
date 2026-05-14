@@ -84,7 +84,9 @@ class CaseUtilTest {
                     new org.pucar.dristi.caselifecycle.cases.internal.web.models.CourtCase();
             List<org.pucar.dristi.caselifecycle.cases.internal.web.models.CourtCase> responseList = Collections.singletonList(courtCase);
             casesReq.getCriteria().get(0).setResponseList(responseList);
-            return new CaseListResponse();
+            // Mirror CaseApi.search's contract: the request criteria
+            // (now carrying responseList) is returned on the response.
+            return CaseListResponse.builder().criteria(casesReq.getCriteria()).build();
         }).when(caseApi).search(any());
 
         ObjectMapper realMapper = new ObjectMapper();

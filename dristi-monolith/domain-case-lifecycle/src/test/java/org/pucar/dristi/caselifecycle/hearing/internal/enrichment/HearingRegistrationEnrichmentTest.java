@@ -1,6 +1,6 @@
 package org.pucar.dristi.caselifecycle.hearing.internal.enrichment;
 
-import org.egov.common.contract.models.AuditDetails;
+import org.pucar.dristi.common.models.AuditDetails;
 import org.egov.common.contract.models.Workflow;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
