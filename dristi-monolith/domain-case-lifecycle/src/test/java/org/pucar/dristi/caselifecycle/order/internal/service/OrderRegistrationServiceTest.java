@@ -59,6 +59,9 @@ import org.pucar.dristi.common.models.workflow.WorkflowObject;
    @Mock
    private FileStoreUtil fileStoreUtil;
 
+   @Mock
+   private org.pucar.dristi.caselifecycle.hearing.HearingApi hearingApi;
+
     @BeforeEach
      void setup() {
         MockitoAnnotations.openMocks(this);

@@ -64,10 +64,6 @@ egov:
     list:
       search:
         path: /case/v2/search/list
-  hearing:
-    host: http://localhost:9091/
-    search:
-      path: hearing/v1/search
   workflow:
     ctc:
       business:

@@ -90,10 +90,6 @@ egov:
     path: case/v1/_exists
     search:
       path: /case/v1/_search
-  hearing:
-    host: http://localhost:9091/
-    search:
-      path: hearing/v1/search
   workflow:
     host: http://localhost:8083
     transition:
