@@ -86,7 +86,6 @@ public class CommonConfiguration {
     @Value("${egov.workflow.businessservice.search.path:#{null}}")
     private String wfBusinessServiceSearchPath;
 
-
     @Value("${egov.individual.host:#{null}}")
     private String individualHost;
 
