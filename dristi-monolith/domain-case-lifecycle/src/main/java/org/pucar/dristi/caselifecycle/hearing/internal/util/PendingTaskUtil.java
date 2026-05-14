@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 
 import static org.pucar.dristi.caselifecycle.hearing.internal.config.ServiceConstants.*;
 
-@Component
+@Component("hearingPendingTaskUtil")
 @Slf4j
 public class PendingTaskUtil {
 
