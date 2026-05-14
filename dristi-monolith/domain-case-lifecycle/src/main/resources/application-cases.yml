@@ -325,11 +325,6 @@ egov:
     calculator:
       host: http://localhost:8088/
       endpoint: payment-calculator/v1/join-case/fees/_calculate
-  hearing:
-    host: http://localhost:8080/
-    path: hearing/v1/update_transcript_additional_attendees
-    search:
-      path: hearing/v1/search
   evidence:
     host: http://localhost:8089
     create:

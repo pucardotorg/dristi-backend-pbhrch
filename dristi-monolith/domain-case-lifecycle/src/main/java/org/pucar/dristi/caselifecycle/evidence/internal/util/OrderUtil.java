@@ -16,7 +16,7 @@ import java.util.Map;
 import static org.pucar.dristi.caselifecycle.evidence.internal.config.ServiceConstants.*;
 
 @Slf4j
-@Component
+@Component("evidenceOrderUtil")
 public class OrderUtil {
     private final RestTemplate restTemplate;
     private final ObjectMapper mapper;

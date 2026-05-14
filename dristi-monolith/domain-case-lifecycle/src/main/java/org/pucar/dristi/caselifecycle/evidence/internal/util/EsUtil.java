@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 
 import static org.pucar.dristi.caselifecycle.evidence.internal.config.ServiceConstants.*;
 
-@Component
+@Component("evidenceEsUtil")
 @Slf4j
 public class EsUtil {
 
