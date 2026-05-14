@@ -8,6 +8,9 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import static org.mockito.Mockito.*;
 
+import org.pucar.dristi.common.contract.evidence.Artifact;
+import org.pucar.dristi.common.contract.evidence.Pagination;
+import org.pucar.dristi.common.contract.evidence.EvidenceResponse;
 public class EvidenceResponseTest {
 
     private EvidenceResponse evidenceResponse;

@@ -10,6 +10,7 @@ import static org.mockito.Mockito.*;
 
 import java.util.UUID;
 
+import org.pucar.dristi.common.contract.evidence.Comment;
 public class CommentTest {
 
     private Comment comment;

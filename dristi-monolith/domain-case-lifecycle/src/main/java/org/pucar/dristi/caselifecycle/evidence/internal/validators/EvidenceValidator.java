@@ -7,6 +7,7 @@ import org.egov.tracer.model.CustomException;
 import org.pucar.dristi.caselifecycle.evidence.internal.repository.EvidenceRepository;
 import org.pucar.dristi.caselifecycle.evidence.internal.util.*;
 import org.pucar.dristi.caselifecycle.evidence.internal.web.models.*;
+import org.pucar.dristi.common.contract.evidence.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

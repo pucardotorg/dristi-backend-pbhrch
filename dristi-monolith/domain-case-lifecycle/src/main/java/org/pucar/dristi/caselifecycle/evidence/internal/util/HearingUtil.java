@@ -11,6 +11,8 @@ import org.egov.tracer.model.ServiceCallException;
 import org.pucar.dristi.caselifecycle.evidence.internal.config.Configuration;
 import org.pucar.dristi.common.repository.ServiceRequestRepository;
 import org.pucar.dristi.caselifecycle.evidence.internal.web.models.*;
+import org.pucar.dristi.common.contract.evidence.*;
+import org.pucar.dristi.identityaccess.advocate.AdvocateApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
@@ -28,16 +30,16 @@ public class HearingUtil {
     private final ObjectMapper mapper;
     private final Configuration configs;
     private final ServiceRequestRepository serviceRequestRepository;
-    private final AdvocateUtil advocateUtil;
+    private final AdvocateApi advocateApi;
     private final JsonUtil jsonUtil;
 
     @Autowired
-    public HearingUtil(RestTemplate restTemplate, ObjectMapper mapper, Configuration configs, ServiceRequestRepository serviceRequestRepository, AdvocateUtil advocateUtil, JsonUtil jsonUtil) {
+    public HearingUtil(RestTemplate restTemplate, ObjectMapper mapper, Configuration configs, ServiceRequestRepository serviceRequestRepository, AdvocateApi advocateApi, JsonUtil jsonUtil) {
         this.restTemplate = restTemplate;
         this.mapper = mapper;
         this.configs = configs;
         this.serviceRequestRepository = serviceRequestRepository;
-        this.advocateUtil = advocateUtil;
+        this.advocateApi = advocateApi;
         this.jsonUtil = jsonUtil;
     }
 
@@ -115,7 +117,7 @@ public class HearingUtil {
                     .collect(Collectors.toSet());
 
             if (!advocateIds.isEmpty()) {
-                advocateIndividualIds = advocateUtil.getAdvocate(requestInfo, advocateIds.stream().toList());
+                advocateIndividualIds = advocateApi.getAdvocateIndividualIds(requestInfo, advocateIds.stream().toList());
             }
 
         }

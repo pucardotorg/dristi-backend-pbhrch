@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.egov.tracer.model.CustomException;
 import org.pucar.dristi.caselifecycle.evidence.internal.config.Configuration;
 import org.pucar.dristi.caselifecycle.evidence.internal.web.models.*;
+import org.pucar.dristi.common.contract.evidence.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;

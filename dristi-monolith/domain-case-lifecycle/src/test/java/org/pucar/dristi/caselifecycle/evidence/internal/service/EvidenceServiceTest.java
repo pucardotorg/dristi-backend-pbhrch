@@ -27,6 +27,7 @@ import org.pucar.dristi.common.util.MdmsUtil;
 import org.pucar.dristi.caselifecycle.evidence.internal.util.UrlShortenerUtil;
 import org.pucar.dristi.caselifecycle.evidence.internal.validators.EvidenceValidator;
 import org.pucar.dristi.caselifecycle.evidence.internal.web.models.*;
+import org.pucar.dristi.common.contract.evidence.*;
 
 import java.io.IOException;
 import java.util.*;

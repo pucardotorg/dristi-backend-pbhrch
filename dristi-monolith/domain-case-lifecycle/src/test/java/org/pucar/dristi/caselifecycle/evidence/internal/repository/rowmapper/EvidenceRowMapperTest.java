@@ -8,8 +8,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.postgresql.util.PGobject;
-import org.pucar.dristi.caselifecycle.evidence.internal.web.models.Artifact;
-import org.pucar.dristi.caselifecycle.evidence.internal.web.models.Comment;
+import org.pucar.dristi.common.contract.evidence.Artifact;
+import org.pucar.dristi.common.contract.evidence.Comment;
 import org.egov.tracer.model.CustomException;
 
 import java.sql.ResultSet;

@@ -6,7 +6,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.pucar.dristi.caselifecycle.evidence.internal.web.models.EvidenceSearchCriteria;
+import org.pucar.dristi.common.contract.evidence.EvidenceSearchCriteria;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;

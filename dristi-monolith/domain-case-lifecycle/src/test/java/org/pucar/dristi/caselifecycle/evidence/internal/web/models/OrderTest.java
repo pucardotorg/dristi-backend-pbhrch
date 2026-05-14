@@ -3,6 +3,7 @@ package org.pucar.dristi.caselifecycle.evidence.internal.web.models;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import org.pucar.dristi.common.contract.evidence.Order;
 public class OrderTest {
 
     @Test

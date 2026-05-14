@@ -14,9 +14,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.pucar.dristi.caselifecycle.evidence.internal.config.Configuration;
 import org.pucar.dristi.caselifecycle.evidence.internal.util.CaseUtil;
 import org.pucar.dristi.common.util.IdgenUtil;
-import org.pucar.dristi.caselifecycle.evidence.internal.web.models.Artifact;
-import org.pucar.dristi.caselifecycle.evidence.internal.web.models.Comment;
-import org.pucar.dristi.caselifecycle.evidence.internal.web.models.EvidenceRequest;
+import org.pucar.dristi.common.contract.evidence.Artifact;
+import org.pucar.dristi.common.contract.evidence.Comment;
+import org.pucar.dristi.common.contract.evidence.EvidenceRequest;
 
 import java.io.File;
 import java.util.ArrayList;

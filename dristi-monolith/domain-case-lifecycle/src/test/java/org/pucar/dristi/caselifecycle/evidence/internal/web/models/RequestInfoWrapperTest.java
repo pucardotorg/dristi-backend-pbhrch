@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import org.pucar.dristi.common.contract.evidence.RequestInfoWrapper;
 public class RequestInfoWrapperTest {
 
     private RequestInfoWrapper requestInfoWrapper;

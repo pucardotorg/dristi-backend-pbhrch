@@ -12,6 +12,7 @@ import org.pucar.dristi.caselifecycle.evidence.internal.config.ServiceConstants;
 import org.pucar.dristi.caselifecycle.evidence.internal.repository.EvidenceRepository;
 import org.pucar.dristi.caselifecycle.evidence.internal.util.*;
 import org.pucar.dristi.caselifecycle.evidence.internal.web.models.*;
+import org.pucar.dristi.common.contract.evidence.*;
 
 import java.util.ArrayList;
 import java.util.List;

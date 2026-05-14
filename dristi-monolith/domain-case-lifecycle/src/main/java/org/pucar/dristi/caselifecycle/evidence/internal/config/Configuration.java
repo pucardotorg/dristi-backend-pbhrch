@@ -9,6 +9,9 @@ import org.springframework.stereotype.Component;
 
 
 import org.pucar.dristi.common.models.individual.Individual;
+import org.pucar.dristi.common.contract.evidence.Order;
+import org.pucar.dristi.common.contract.evidence.Advocate;
+import org.pucar.dristi.common.contract.evidence.Email;
 @Component("evidenceConfiguration")
 @Import({ TracerConfiguration.class })
 @Setter

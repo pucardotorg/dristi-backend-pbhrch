@@ -8,9 +8,9 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.pucar.dristi.caselifecycle.evidence.internal.repository.querybuilder.EvidenceQueryBuilder;
 import org.pucar.dristi.caselifecycle.evidence.internal.repository.rowmapper.EvidenceRowMapper;
-import org.pucar.dristi.caselifecycle.evidence.internal.web.models.Artifact;
-import org.pucar.dristi.caselifecycle.evidence.internal.web.models.EvidenceSearchCriteria;
-import org.pucar.dristi.caselifecycle.evidence.internal.web.models.Pagination;
+import org.pucar.dristi.common.contract.evidence.Artifact;
+import org.pucar.dristi.common.contract.evidence.EvidenceSearchCriteria;
+import org.pucar.dristi.common.contract.evidence.Pagination;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.*;

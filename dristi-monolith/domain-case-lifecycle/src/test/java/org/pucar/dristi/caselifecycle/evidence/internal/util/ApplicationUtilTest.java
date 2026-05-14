@@ -6,12 +6,12 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.pucar.dristi.caselifecycle.evidence.internal.web.models.ApplicationExists;
+import org.pucar.dristi.common.contract.evidence.ApplicationExists;
 import org.springframework.web.client.RestTemplate;
 
 import org.pucar.dristi.caselifecycle.evidence.internal.config.Configuration;
-import org.pucar.dristi.caselifecycle.evidence.internal.web.models.ApplicationExistsRequest;
-import org.pucar.dristi.caselifecycle.evidence.internal.web.models.ApplicationExistsResponse;
+import org.pucar.dristi.common.contract.evidence.ApplicationExistsRequest;
+import org.pucar.dristi.common.contract.evidence.ApplicationExistsResponse;
 import org.egov.tracer.model.CustomException;
 
 import java.util.Collections;

@@ -12,9 +12,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.pucar.dristi.caselifecycle.evidence.internal.config.Configuration;
 import org.pucar.dristi.caselifecycle.evidence.internal.enrichment.EvidenceEnrichment;
 import org.pucar.dristi.common.kafka.Producer;
-import org.pucar.dristi.caselifecycle.evidence.internal.web.models.Artifact;
-import org.pucar.dristi.caselifecycle.evidence.internal.web.models.EvidenceRequest;
-import org.pucar.dristi.caselifecycle.evidence.internal.web.models.EvidenceSearchCriteria;
+import org.pucar.dristi.common.contract.evidence.Artifact;
+import org.pucar.dristi.common.contract.evidence.EvidenceRequest;
+import org.pucar.dristi.common.contract.evidence.EvidenceSearchCriteria;
 
 import java.util.*;
 

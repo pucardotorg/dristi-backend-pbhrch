@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.UUID;
 
 import org.pucar.dristi.common.models.workflow.WorkflowObject;
+import org.pucar.dristi.common.contract.evidence.Artifact;
+import org.pucar.dristi.common.contract.evidence.Comment;
 public class ArtifactTest {
 
     private Artifact artifact;

@@ -6,6 +6,7 @@ import org.egov.common.contract.response.ResponseInfo;
 import org.pucar.dristi.caselifecycle.evidence.internal.service.EvidenceService;
 import org.pucar.dristi.common.util.ResponseInfoFactory;
 import org.pucar.dristi.caselifecycle.evidence.internal.web.models.*;
+import org.pucar.dristi.common.contract.evidence.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

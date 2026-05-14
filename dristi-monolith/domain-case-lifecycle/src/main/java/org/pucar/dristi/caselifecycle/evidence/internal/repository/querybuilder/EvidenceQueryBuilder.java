@@ -1,8 +1,8 @@
 package org.pucar.dristi.caselifecycle.evidence.internal.repository.querybuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.tracer.model.CustomException;
-import org.pucar.dristi.caselifecycle.evidence.internal.web.models.EvidenceSearchCriteria;
-import org.pucar.dristi.caselifecycle.evidence.internal.web.models.Pagination;
+import org.pucar.dristi.common.contract.evidence.EvidenceSearchCriteria;
+import org.pucar.dristi.common.contract.evidence.Pagination;
 import org.springframework.stereotype.Component;
 
 import java.sql.Types;

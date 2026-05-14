@@ -1,0 +1,5 @@
+dristi-monolith/domain-case-lifecycle/src/main/java/org/pucar/dristi/caselifecycle/evidence/internal/util/AdvocateUtil.java  uses ['AdvocateHost', 'AdvocatePath']
+dristi-monolith/domain-case-lifecycle/src/main/java/org/pucar/dristi/caselifecycle/evidence/internal/util/ApplicationUtil.java  uses ['ApplicationExistsPath', 'ApplicationHost']
+dristi-monolith/domain-case-lifecycle/src/main/java/org/pucar/dristi/caselifecycle/evidence/internal/util/OrderUtil.java  uses ['OrderExistsPath', 'OrderHost']
+dristi-monolith/domain-case-lifecycle/src/main/java/org/pucar/dristi/caselifecycle/evidence/internal/util/CaseUtil.java  uses ['CaseExistsPath', 'CaseHost', 'CaseSearchPath']
+dristi-monolith/domain-case-lifecycle/src/main/java/org/pucar/dristi/caselifecycle/evidence/internal/util/HearingUtil.java  uses ['HearingExistsPath', 'HearingHost']

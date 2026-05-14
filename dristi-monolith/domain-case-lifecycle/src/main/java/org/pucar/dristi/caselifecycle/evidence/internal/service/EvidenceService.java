@@ -23,6 +23,7 @@ import org.pucar.dristi.caselifecycle.evidence.internal.repository.EvidenceRepos
 import org.pucar.dristi.caselifecycle.evidence.internal.util.*;
 import org.pucar.dristi.caselifecycle.evidence.internal.validators.EvidenceValidator;
 import org.pucar.dristi.caselifecycle.evidence.internal.web.models.*;
+import org.pucar.dristi.common.contract.evidence.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;

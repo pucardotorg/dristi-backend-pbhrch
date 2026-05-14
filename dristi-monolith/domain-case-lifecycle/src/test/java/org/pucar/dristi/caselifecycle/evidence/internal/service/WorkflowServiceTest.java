@@ -20,9 +20,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.pucar.dristi.caselifecycle.evidence.internal.config.Configuration;
 import org.pucar.dristi.common.repository.ServiceRequestRepository;
 import org.pucar.dristi.caselifecycle.evidence.internal.service.WorkflowService;
-import org.pucar.dristi.caselifecycle.evidence.internal.web.models.Artifact;
-import org.pucar.dristi.caselifecycle.evidence.internal.web.models.EvidenceRequest;
-import org.pucar.dristi.caselifecycle.evidence.internal.web.models.RequestInfoWrapper;
+import org.pucar.dristi.common.contract.evidence.Artifact;
+import org.pucar.dristi.common.contract.evidence.EvidenceRequest;
+import org.pucar.dristi.common.contract.evidence.RequestInfoWrapper;
 import org.pucar.dristi.common.models.workflow.WorkflowObject;
 import org.springframework.web.client.RestClientException;
 
@@ -36,6 +36,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 import static org.pucar.dristi.caselifecycle.evidence.internal.config.ServiceConstants.WORKFLOW_SERVICE_EXCEPTION;
 
+import org.pucar.dristi.common.contract.evidence.Comment;
 @ExtendWith(MockitoExtension.class)
 public class WorkflowServiceTest {
 

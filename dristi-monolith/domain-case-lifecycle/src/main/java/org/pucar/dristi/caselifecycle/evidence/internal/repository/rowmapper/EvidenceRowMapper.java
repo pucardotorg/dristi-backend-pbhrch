@@ -8,10 +8,10 @@ import org.egov.common.contract.models.AuditDetails;
 import org.egov.common.contract.models.Document;
 import org.egov.tracer.model.CustomException;
 import org.postgresql.util.PGobject;
-import org.pucar.dristi.caselifecycle.evidence.internal.web.models.Comment;
+import org.pucar.dristi.common.contract.evidence.Comment;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Component;
-import org.pucar.dristi.caselifecycle.evidence.internal.web.models.Artifact;
+import org.pucar.dristi.common.contract.evidence.Artifact;
 
 import java.io.IOException;
 import java.sql.ResultSet;
