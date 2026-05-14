@@ -31,7 +31,7 @@ Core case-lifecycle domain — the bulk of DRISTI.
 |---|---:|---|---|---|---|
 | `lock-svc` | 19 | **done** | `case-lifecycle` | `locksvc` | First test-drive |
 | `case` | 330 | **done** | `case-lifecycle` | `cases` | Largest service; pipeline hardened against it |
-| `hearing` | 196 | pending | `case-lifecycle` | `hearing` | |
+| `hearing` | 196 | **done** | `case-lifecycle` | `hearing` | PR #57 merged to `monolith/main` as `690b8a925` on 2026-05-14. Lifted into `domain-case-lifecycle/hearing`; 47 contract DTOs Phase-35-lifted; exposed `HearingApi` (Rule 31 + 31a); cases-side swapped to `HearingApi.search()` per Rule 32 (927ebb6c5). Post-merge PR #92 (`7222096fa`, 2026-05-14) shipped Rule 24a shadow-import sweep (24 sites), Rule 32 cutovers for `ctc` + `order` callers + symmetric hearing→cases (`CaseUtil → CaseApi` missed by PR #57), `SERVICE_DEAD_KEYS` extension, whitespace cleanup. Rule 40 reviewed → no `RequestInfo` mutations. Follow-up: bailbond `@Qualifier("hearingCaseUtil")` leak deferred. |
 | `order` | 105 | **done** | `case-lifecycle` | `order` | First service to drive Phase 35 contract-lift; Rule 29 workflow harmonization |
 | `task` | 184 | pending | `case-lifecycle` | `task` | |
 | `evidence` | 161 | pending | `case-lifecycle` | `evidence` | |
