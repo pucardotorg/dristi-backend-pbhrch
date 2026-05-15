@@ -4,13 +4,20 @@
 
 spring:
   datasource:
-    driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/pucar
-    username: postgres
-    password: admin
+    writer:
+      url: jdbc:postgresql://localhost:5432/pucar
+      username: postgres
+      password: postgres
+      driver-class-name: org.postgresql.Driver
+    reader:
+      url: jdbc:postgresql://localhost:5432/pucar
+      username: postgres
+      password: postgres
+      driver-class-name: org.postgresql.Driver
 
   flyway:
-    url: jdbc:postgresql://localhost:5432/pucar
+    enabled: false
+    url: jdbc:postgresql://localhost:5432/phc_db
     user: postgres
     password: admin
 
