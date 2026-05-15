@@ -28,17 +28,6 @@ otel:
       server:
         ignore-urls: /hearing/health,/hearing/prometheus
 spring:
-  datasource:
-    writer:
-      url: jdbc:postgresql://localhost:5432/hearing
-      username: postgres
-      password: root
-      driver-class-name: org.postgresql.Driver
-    reader:
-      url: jdbc:postgresql://localhost:5432/hearing
-      username: postgres
-      password: root
-      driver-class-name: org.postgresql.Driver
   redis:
     host: localhost
     port: 6379
@@ -159,6 +148,10 @@ egov:
     update:
       path: individual/v1/_update
   case:
+    host: http://localhost:8090
+    path: /case/v1/_exists
+    search:
+      path: /case/v1/_search
     outcome:
       topic: case-outcome-topic
   filestore:
