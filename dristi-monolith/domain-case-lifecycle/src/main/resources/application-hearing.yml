@@ -244,6 +244,12 @@ dristi:
   pending:
     task:
       name: Schedule Hearing
+  task-management:
+    host: http://localhost:8080
+    search:
+      endpoint: /task-management/v1/_search
+    update:
+      endpoint: /task-management/v1/_update
 notification:
   sms:
     enabled: true
