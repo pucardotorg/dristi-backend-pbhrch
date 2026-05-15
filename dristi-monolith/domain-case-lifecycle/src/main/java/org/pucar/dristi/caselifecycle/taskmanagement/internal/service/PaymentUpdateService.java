@@ -8,6 +8,7 @@ import org.pucar.dristi.caselifecycle.taskmanagement.internal.repository.TaskMan
 import org.pucar.dristi.caselifecycle.taskmanagement.internal.util.*;
 import org.pucar.dristi.caselifecycle.taskmanagement.internal.web.models.*;
 import org.pucar.dristi.caselifecycle.taskmanagement.internal.web.models.cases.*;
+import org.pucar.dristi.common.util.RequestInfoUtil;
 import org.pucar.dristi.caselifecycle.taskmanagement.internal.web.models.demand.OfflinePaymentTask;
 import org.pucar.dristi.caselifecycle.taskmanagement.internal.web.models.demand.OfflinePaymentTaskRequest;
 import org.pucar.dristi.caselifecycle.taskmanagement.internal.web.models.enums.StatusEnum;
@@ -155,14 +156,14 @@ public class PaymentUpdateService {
 
     private void updateWorkflowAndAddReceipt(RequestInfo requestInfo, TaskManagement taskManagement, PaymentDetail paymentDetail, String paymentMode) {
         Role role = Role.builder().code(SYSTEM_ADMIN).name(SYSTEM_ADMIN).tenantId(taskManagement.getTenantId()).build();
-        requestInfo.getUserInfo().getRoles().add(role);
+        RequestInfo enrichedRequestInfo = RequestInfoUtil.withExtraRole(requestInfo, role);
         WorkflowObject workflowObject = new WorkflowObject();
         workflowObject.setAction(MAKE_PAYMENT);
         taskManagement.setWorkflow(workflowObject);
 
         TaskManagementRequest request = TaskManagementRequest.builder()
                 .taskManagement(taskManagement)
-                .requestInfo(requestInfo)
+                .requestInfo(enrichedRequestInfo)
                 .build();
         workflowService.updateWorkflowStatus(request);
         TaskManagement taskManagement1 = request.getTaskManagement();

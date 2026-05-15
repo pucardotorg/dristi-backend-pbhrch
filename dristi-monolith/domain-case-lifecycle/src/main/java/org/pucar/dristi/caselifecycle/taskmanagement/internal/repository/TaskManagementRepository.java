@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.pucar.dristi.caselifecycle.taskmanagement.internal.web.models.Task;
 @Slf4j
 @Repository
 public class TaskManagementRepository {

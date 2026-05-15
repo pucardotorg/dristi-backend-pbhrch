@@ -8,6 +8,7 @@ import org.pucar.dristi.caselifecycle.taskmanagement.internal.service.WorkflowSe
 import org.pucar.dristi.caselifecycle.taskmanagement.internal.util.CaseUtil;
 import org.pucar.dristi.caselifecycle.taskmanagement.internal.util.PendingTaskUtil;
 import org.pucar.dristi.common.util.DateUtil;
+import org.pucar.dristi.common.util.RequestInfoUtil;
 import org.pucar.dristi.caselifecycle.taskmanagement.internal.web.models.*;
 import org.pucar.dristi.caselifecycle.taskmanagement.internal.web.models.cases.CourtCase;
 import org.pucar.dristi.caselifecycle.taskmanagement.internal.web.models.pendingtask.PendingTask;
@@ -55,9 +56,8 @@ public class Consumer {
             log.info("Received record: {} on topic: {}", data, topic);
             TaskManagementRequest taskManagementRequest = objectMapper.convertValue(data, TaskManagementRequest.class);
             TaskManagement taskManagement = taskManagementRequest.getTaskManagement();
-            RequestInfo requestInfo = taskManagementRequest.getRequestInfo();
             Role role = Role.builder().code(SYSTEM_ADMIN).name(SYSTEM_ADMIN).tenantId(taskManagement.getTenantId()).build();
-            requestInfo.getUserInfo().getRoles().add(role);
+            RequestInfo requestInfo = RequestInfoUtil.withExtraRole(taskManagementRequest.getRequestInfo(), role);
             processUpfrontApplication(taskManagementRequest.getTaskManagement(), requestInfo);
             log.info("Upfront application processed successfully: {}", taskManagementRequest.getTaskManagement().getTaskManagementNumber());
         } catch (final Exception e) {

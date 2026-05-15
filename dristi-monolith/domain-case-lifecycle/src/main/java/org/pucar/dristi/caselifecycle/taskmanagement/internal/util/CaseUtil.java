@@ -2,11 +2,10 @@ package org.pucar.dristi.caselifecycle.taskmanagement.internal.util;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.pucar.dristi.caselifecycle.taskmanagement.internal.config.Configuration;
+import org.pucar.dristi.caselifecycle.cases.CaseApi;
 import org.pucar.dristi.caselifecycle.taskmanagement.internal.web.models.CaseCriteria;
 import org.pucar.dristi.caselifecycle.taskmanagement.internal.web.models.CaseSearchRequest;
 import org.pucar.dristi.caselifecycle.taskmanagement.internal.web.models.TaskRequest;
-import org.pucar.dristi.caselifecycle.taskmanagement.internal.web.models.cases.CaseListResponse;
 import org.pucar.dristi.caselifecycle.taskmanagement.internal.web.models.cases.CourtCase;
 import org.pucar.dristi.caselifecycle.taskmanagement.internal.web.models.cases.POAHolder;
 import org.pucar.dristi.caselifecycle.taskmanagement.internal.web.models.cases.Party;
@@ -15,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.model.CustomException;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -29,20 +27,24 @@ import static org.pucar.dristi.caselifecycle.taskmanagement.internal.config.Serv
 @RequiredArgsConstructor
 public class CaseUtil {
 
-    private final Configuration configs;
-    private final RestTemplate restTemplate;
+    private final CaseApi caseApi;
     private final ObjectMapper mapper;
 
     public JsonNode searchCaseDetails(CaseSearchRequest caseSearchRequest) {
-        StringBuilder uri = new StringBuilder();
-        uri.append(configs.getCaseHost()).append(configs.getCaseSearchEndPoint());
-
-        Object response = new HashMap<>();
         try {
-            response = restTemplate.postForObject(uri.toString(), caseSearchRequest, Map.class);
-            JsonNode jsonNode = mapper.readTree(mapper.writeValueAsString(response));
-            JsonNode caseList = jsonNode.get("criteria").get(0).get("responseList");
-            return caseList.get(0);
+            org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseListResponse caseListResponse =
+                    caseApi.search(buildCasesRequest(caseSearchRequest));
+
+            List<org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseCriteria> resultCriteria =
+                    caseListResponse.getCriteria();
+            if (resultCriteria == null || resultCriteria.isEmpty()
+                    || resultCriteria.get(0).getResponseList() == null
+                    || resultCriteria.get(0).getResponseList().isEmpty()) {
+                throw new CustomException(ERROR_WHILE_FETCHING_FROM_CASE, "Invalid response structure from case service");
+            }
+            return mapper.readTree(mapper.writeValueAsString(resultCriteria.get(0).getResponseList().get(0)));
+        } catch (CustomException e) {
+            throw e;
         } catch (Exception e) {
             log.error(ERROR_WHILE_FETCHING_FROM_CASE, e);
             throw new CustomException(ERROR_WHILE_FETCHING_FROM_CASE, e.getMessage());
@@ -50,12 +52,8 @@ public class CaseUtil {
     }
 
     public List<CourtCase> getCaseDetails(TaskRequest taskRequest) {
-
         String filingNumber = taskRequest.getTask().getFilingNumber();
         RequestInfo requestInfo = taskRequest.getRequestInfo();
-
-        StringBuilder uri = new StringBuilder();
-        uri.append(configs.getCaseHost()).append(configs.getCaseSearchEndPoint());
 
         CaseCriteria caseCriteria = CaseCriteria.builder().filingNumber(filingNumber)
                 .defaultFields(false)
@@ -66,22 +64,38 @@ public class CaseUtil {
                 .criteria(Collections.singletonList(caseCriteria))
                 .build();
 
-        Object response;
-        CaseListResponse caseListResponse;
-
         try {
-            response = restTemplate.postForObject(uri.toString(), caseSearchRequest, Map.class);
-            caseListResponse = mapper.convertValue(response, CaseListResponse.class);
+            org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseListResponse caseListResponse =
+                    caseApi.search(buildCasesRequest(caseSearchRequest));
             log.info("Case response : {} ", caseListResponse);
+            if (caseListResponse.getCriteria() == null || caseListResponse.getCriteria().isEmpty()) {
+                return null;
+            }
+            List<?> responseList = caseListResponse.getCriteria().get(0).getResponseList();
+            if (responseList == null) {
+                return null;
+            }
+            return mapper.convertValue(
+                    responseList,
+                    mapper.getTypeFactory().constructCollectionType(List.class, CourtCase.class));
         } catch (Exception e) {
             log.error("Error while fetching from case service");
             throw new CustomException(ERROR_FROM_CASE, e.getMessage());
         }
+    }
 
-        if (caseListResponse != null && caseListResponse.getCriteria() != null && !caseListResponse.getCriteria().isEmpty()) {
-            return caseListResponse.getCriteria().get(0).getResponseList();
+    private org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseSearchRequest buildCasesRequest(CaseSearchRequest source) {
+        List<org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseCriteria> mapped = new ArrayList<>();
+        if (source.getCriteria() != null) {
+            for (CaseCriteria c : source.getCriteria()) {
+                mapped.add(mapper.convertValue(c,
+                        org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseCriteria.class));
+            }
         }
-        return null;
+        return org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseSearchRequest.builder()
+                .requestInfo(source.getRequestInfo())
+                .criteria(mapped)
+                .build();
     }
 
     public Map<String, List<POAHolder>> getLitigantPoaMapping(CourtCase cases) {

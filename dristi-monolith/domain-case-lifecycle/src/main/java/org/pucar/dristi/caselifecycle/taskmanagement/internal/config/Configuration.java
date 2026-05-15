@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Import;
 import org.springframework.stereotype.Component;
 
+import org.pucar.dristi.caselifecycle.taskmanagement.internal.web.models.Task;
+import org.pucar.dristi.caselifecycle.taskmanagement.internal.web.models.Order;
 @Component("taskmanagementConfiguration")
 @Data
 @Import({TracerConfiguration.class})
@@ -58,13 +60,6 @@ public class Configuration {
 
     @Value("${dristi.task.update.endpoint}")
     private String taskUpdateEndPoint;
-
-    // Case Config
-    @Value("${dristi.case.host}")
-    private String caseHost;
-
-    @Value("${dristi.case.search.endpoint}")
-    private String caseSearchEndPoint;
 
     @Value("${egov.user.update.path}")
     private String userUpdateEndpoint;

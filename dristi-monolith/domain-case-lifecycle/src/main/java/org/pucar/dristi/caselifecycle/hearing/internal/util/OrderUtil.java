@@ -20,9 +20,14 @@ import org.pucar.dristi.common.contract.hearing.*;
 import org.pucar.dristi.caselifecycle.hearing.internal.web.models.demand.*;
 import org.pucar.dristi.caselifecycle.hearing.internal.web.models.orders.*;
 import org.pucar.dristi.caselifecycle.hearing.internal.web.models.orders.Order;
-import org.pucar.dristi.caselifecycle.hearing.internal.web.models.taskManagement.*;
+import org.pucar.dristi.caselifecycle.hearing.internal.web.models.taskManagement.PartyType;
 import org.pucar.dristi.caselifecycle.hearing.internal.web.models.tasks.*;
 import org.pucar.dristi.caselifecycle.hearing.internal.web.models.tasks.TaskSearchRequest;
+import org.pucar.dristi.caselifecycle.taskmanagement.TaskmanagementApi;
+import org.pucar.dristi.caselifecycle.taskmanagement.internal.web.models.TaskManagement;
+import org.pucar.dristi.caselifecycle.taskmanagement.internal.web.models.TaskManagementRequest;
+import org.pucar.dristi.caselifecycle.taskmanagement.internal.web.models.TaskManagementResponse;
+import org.pucar.dristi.caselifecycle.taskmanagement.internal.web.models.TaskSearchCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -48,12 +53,12 @@ public class OrderUtil {
     private final DemandUtil demandUtil;
     private final MdmsUtil mdmsUtil;
     private final PendingTaskUtil pendingTaskUtil;
-    private final TaskManagementUtil taskManagementUtil;
+    private final TaskmanagementApi taskmanagementApi;
     private final CaseUtil caseUtil;
 
     @Autowired
     public OrderUtil(ServiceRequestRepository serviceRequestRepository, ObjectMapper mapper, Configuration configuration,
-                     TaskUtil taskUtil, WorkflowUtil workflowUtil, Producer producer, DemandUtil demandUtil, MdmsUtil mdmsUtil, PendingTaskUtil pendingTaskUtil, TaskManagementUtil taskManagementUtil, CaseUtil caseUtil) {
+                     TaskUtil taskUtil, WorkflowUtil workflowUtil, Producer producer, DemandUtil demandUtil, MdmsUtil mdmsUtil, PendingTaskUtil pendingTaskUtil, TaskmanagementApi taskmanagementApi, CaseUtil caseUtil) {
         this.serviceRequestRepository = serviceRequestRepository;
         this.mapper = mapper;
         this.configuration = configuration;
@@ -63,7 +68,7 @@ public class OrderUtil {
         this.demandUtil = demandUtil;
         this.mdmsUtil = mdmsUtil;
         this.pendingTaskUtil = pendingTaskUtil;
-        this.taskManagementUtil = taskManagementUtil;
+        this.taskmanagementApi = taskmanagementApi;
         this.caseUtil = caseUtil;
     }
 
@@ -259,14 +264,14 @@ public class OrderUtil {
                 .tenantId(tenantId)
                 .build();
 
-        org.pucar.dristi.caselifecycle.hearing.internal.web.models.taskManagement.TaskSearchRequest searchRequest = org.pucar.dristi.caselifecycle.hearing.internal.web.models.taskManagement.TaskSearchRequest.builder()
+        org.pucar.dristi.caselifecycle.taskmanagement.internal.web.models.TaskSearchRequest searchRequest = org.pucar.dristi.caselifecycle.taskmanagement.internal.web.models.TaskSearchRequest.builder()
                 .requestInfo(requestInfo)
                 .criteria(searchCriteria)
                 .build();
 
-        // close all the pending task's with or with 
+        // close all the pending task's with or with
         closeProcessesPendingTasks(requestInfo, order);
-        List<TaskManagement> taskManagementList = taskManagementUtil.searchTaskManagement(searchRequest);
+        List<TaskManagement> taskManagementList = taskmanagementApi.search(searchRequest);
         if (CollectionUtils.isEmpty(taskManagementList)) {
             log.info("No PENDING_PAYMENT task management found for Order ID: {}", order.getId());
             // expiring the pending tasks which not even single action taken
@@ -436,7 +441,7 @@ public class OrderUtil {
                         Role.builder().code(SYSTEM_ADMIN).name(SYSTEM_ADMIN).tenantId(taskManagement.getTenantId()).build()))
                 .taskManagement(taskManagement)
                 .build();
-        TaskManagementResponse response = taskManagementUtil.updateTaskManagement(taskManagementRequest);
+        TaskManagementResponse response = taskmanagementApi.update(taskManagementRequest);
         log.info("Updated task management: {} with response: {}", taskManagement.getTaskManagementNumber(), response);
     }
 

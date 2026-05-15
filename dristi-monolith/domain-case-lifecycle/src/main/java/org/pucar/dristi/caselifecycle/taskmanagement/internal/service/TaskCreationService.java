@@ -9,6 +9,7 @@ import org.pucar.dristi.caselifecycle.taskmanagement.internal.config.Configurati
 import org.pucar.dristi.caselifecycle.taskmanagement.internal.util.*;
 import org.pucar.dristi.common.util.DateUtil;
 import org.pucar.dristi.caselifecycle.taskmanagement.internal.web.models.*;
+import org.pucar.dristi.caselifecycle.taskmanagement.internal.web.models.*;
 import org.pucar.dristi.caselifecycle.taskmanagement.internal.web.models.cases.AddressDetails;
 import org.pucar.dristi.caselifecycle.taskmanagement.internal.web.models.cases.CourtCase;
 import org.pucar.dristi.caselifecycle.taskmanagement.internal.web.models.cases.POAHolder;
@@ -48,6 +49,7 @@ import static org.pucar.dristi.caselifecycle.taskmanagement.internal.config.Serv
 
 import org.pucar.dristi.common.util.UserUtil;
 import org.pucar.dristi.common.util.MdmsUtil;
+import org.pucar.dristi.common.util.RequestInfoUtil;
 import org.pucar.dristi.common.models.workflow.WorkflowObject;
 @Service
 @Slf4j
@@ -134,18 +136,18 @@ public class TaskCreationService {
 
             log.info("Creating {} tasks for {} party", taskDetailsList.size(), partyType);
             int createdTasks = 0;
+            Role taskCreatorRole = Role.builder().code(TASK_CREATOR).name(TASK_CREATOR).tenantId(taskManagement.getTenantId()).build();
+            RequestInfo taskCreatorRequestInfo = RequestInfoUtil.withExtraRole(requestInfo, taskCreatorRole);
             for (TaskDetails detail : taskDetailsList) {
                 try {
                     taskTemplate.setTaskDetails(detail);
-                    Role role = Role.builder().code(TASK_CREATOR).name(TASK_CREATOR).tenantId(taskManagement.getTenantId()).build();
-                    requestInfo.getUserInfo().getRoles().add(role);
                     TaskResponse taskResponse = taskUtil.callCreateTask(TaskRequest.builder()
-                            .requestInfo(requestInfo)
+                            .requestInfo(taskCreatorRequestInfo)
                             .task(taskTemplate)
                             .build());
                     createdTasks++;
                     log.info("Successfully created task {} of {} for {} party", createdTasks, taskDetailsList.size(), partyType);
-                    createPendingTaskForRPAD(taskResponse.getTask(), requestInfo, order);
+                    createPendingTaskForRPAD(taskResponse.getTask(), taskCreatorRequestInfo, order);
                 } catch (Exception e) {
                     log.error("Error creating task {} for {} party: {}", createdTasks + 1, partyType, e.getMessage(), e);
                     // Continue with next task
