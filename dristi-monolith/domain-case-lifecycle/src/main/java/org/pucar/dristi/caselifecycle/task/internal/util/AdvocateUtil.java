@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Component
+@Component("taskAdvocateUtil")
 @Slf4j
 public class AdvocateUtil {
 

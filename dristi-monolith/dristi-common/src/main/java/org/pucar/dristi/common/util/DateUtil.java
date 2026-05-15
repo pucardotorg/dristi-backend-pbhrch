@@ -69,4 +69,18 @@ public class DateUtil {
                 .toLocalDate()
                 .format(DateTimeFormatter.ofPattern(pattern));
     }
+
+    public Long getCurrentTimeInMilis() {
+        return ZonedDateTime.now(ZoneId.of(configuration.getZoneId()))
+                .toInstant()
+                .toEpochMilli();
+    }
+
+    public Long getEpochFromDateString(String date, String pattern) {
+        DateTimeFormatter format = DateTimeFormatter.ofPattern(pattern);
+        LocalDate localDate = LocalDate.parse(date, format);
+        return localDate.atStartOfDay(ZoneId.of(configuration.getZoneId()))
+                .toInstant()
+                .toEpochMilli();
+    }
 }
