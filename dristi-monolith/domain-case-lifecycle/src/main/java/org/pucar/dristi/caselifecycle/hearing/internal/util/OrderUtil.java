@@ -36,7 +36,7 @@ import org.pucar.dristi.common.models.workflow.WorkflowObject;
 import org.pucar.dristi.common.util.MdmsUtil;
 import org.pucar.dristi.common.util.WorkflowUtil;
 @Slf4j
-@Component
+@Component("hearingOrderUtil")
 public class OrderUtil {
 
     private final ServiceRequestRepository serviceRequestRepository;

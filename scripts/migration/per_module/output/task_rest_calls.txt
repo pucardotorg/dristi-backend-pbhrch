@@ -1,0 +1,5 @@
+dristi-monolith/domain-case-lifecycle/src/main/java/org/pucar/dristi/caselifecycle/task/internal/util/AdvocateUtil.java  uses ['AdvocateHost']
+dristi-monolith/domain-case-lifecycle/src/main/java/org/pucar/dristi/caselifecycle/task/internal/util/OrderUtil.java  uses ['OrderHost', 'OrderPath', 'OrderSearchPath']
+dristi-monolith/domain-case-lifecycle/src/main/java/org/pucar/dristi/caselifecycle/task/internal/util/SummonUtil.java  uses ['SummonHost', 'SummonSendSummonPath']
+dristi-monolith/domain-case-lifecycle/src/main/java/org/pucar/dristi/caselifecycle/task/internal/util/EtreasuryUtil.java  uses ['EtreasuryHost']
+dristi-monolith/domain-case-lifecycle/src/main/java/org/pucar/dristi/caselifecycle/task/internal/util/CaseUtil.java  uses ['CaseEditPath', 'CaseHost', 'CaseSearchPath']

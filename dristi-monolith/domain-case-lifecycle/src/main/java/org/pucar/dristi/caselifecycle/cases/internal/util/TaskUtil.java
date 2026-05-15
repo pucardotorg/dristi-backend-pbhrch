@@ -26,7 +26,7 @@ public class TaskUtil {
     }
 
     public TaskResponse callCreateTask(TaskRequest taskRequest) {
-         try {
+        try {
             StringBuilder uri = new StringBuilder();
             uri.append(config.getTaskServiceHost()).append(config.getTaskServiceCreateEndpoint());
 
@@ -36,7 +36,7 @@ public class TaskUtil {
 
             ResponseEntity<TaskResponse> responseEntity = restTemplate.postForEntity(uri.toString(),
                     requestEntity, TaskResponse.class);
-            log.info("Response of create task :: {}",requestEntity.getBody());
+            log.info("Response of create task :: {}", requestEntity.getBody());
 
             return responseEntity.getBody();
         } catch (Exception e) {

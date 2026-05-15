@@ -15,7 +15,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
 
-@Component
+@Component("hearingDemandUtil")
 @Slf4j
 public class DemandUtil {
 
