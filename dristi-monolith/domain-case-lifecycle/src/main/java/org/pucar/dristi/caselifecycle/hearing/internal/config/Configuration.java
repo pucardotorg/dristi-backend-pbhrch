@@ -125,6 +125,16 @@ public class Configuration {
     private String mdmsHearingTypeMasterName;
 
 
+    // Case Config
+    @Value("${egov.case.host}")
+    private String caseHost;
+
+    @Value("${egov.case.path}")
+    private String caseExistsPath;
+
+    @Value("${egov.case.search.path}")
+    private String caseSearchPath;
+
     // Application Config
     @Value("${egov.application.host}")
     private String applicationHost;
