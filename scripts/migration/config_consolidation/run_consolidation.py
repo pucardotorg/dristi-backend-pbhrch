@@ -162,10 +162,47 @@ SERVICE_DEAD_KEYS: dict[str, set[str]] = {
         "egov.etreasury.demand.create.endpoint",
         "etreasury.payment.receipt.endpoint",
         "etreasury.head.breakup.calculation.endpoint",
+        # 927ebb6c5 fix(hearing): Rule 31/32/36/37/38/40 compliance — PR #57
+        # deleted cases/HearingUtil; cases now reads HearingApi directly.
+        # No @Value("${egov.hearing.{host,path,search.path}}") consumer
+        # remains in caselifecycle/cases/internal/. (`egov.hearing.path`
+        # was the `update_transcript_additional_attendees` endpoint;
+        # `egov.hearing.search.path` was the search endpoint — both
+        # subsumed by HearingApi.search.)
+        "egov.hearing.host",
+        "egov.hearing.path",
+        "egov.hearing.search.path",
     },
     "order": {
         "egov.advocate.host",
         "egov.advocate.path",
+        # bcf520653 refactor(ctc,order): REST→HearingApi direct calls — this
+        # PR (fix/hearing-pipeline-compliance) deleted order/HearingUtil and
+        # rewired OrderRegistrationService + SmsNotificationService to
+        # HearingApi (Rule 32). No @Value("${egov.hearing...") consumer
+        # remains in caselifecycle/order/internal/.
+        "egov.hearing.host",
+        "egov.hearing.search.path",
+    },
+    # bcf520653 refactor(ctc,order): REST→HearingApi direct calls — this PR
+    # dropped @Value("${egov.hearing.host}") + @Value("${egov.hearing.search.path}")
+    # from caselifecycle/ctc/internal/config/Configuration.java. They were
+    # already dead pre-cutover (no code in caselifecycle/ctc/ ever read them);
+    # adding to SERVICE_DEAD_KEYS so Pipeline 5 doesn't re-add them on regen.
+    "ctc": {
+        "egov.hearing.host",
+        "egov.hearing.search.path",
+    },
+    # bbc2f3bf2 refactor(hearing): CaseUtil REST→CaseApi direct calls — this
+    # PR rewired hearing's CaseUtil to consume CaseApi directly (the symmetric
+    # cutover that PR #57 left dangling: cases→hearing was converted by
+    # 927ebb6c5, but hearing→cases stayed on REST). The three @Value
+    # bindings for `egov.case.{host,path,search.path}` were dropped from
+    # hearing/Configuration.java; SERVICE_DEAD_KEYS guards them on regen.
+    "hearing": {
+        "egov.case.host",
+        "egov.case.path",
+        "egov.case.search.path",
     },
     # 8e1e2c2c3 refactor(advocate-office-management): uplift AdvocateUtil
     # REST→AdvocateApi direct calls. advocateoffice now reads AdvocateApi

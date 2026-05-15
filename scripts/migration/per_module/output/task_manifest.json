@@ -1,0 +1,43 @@
+{
+  "service": "task",
+  "source_dir": "dristi-services/task",
+  "target_module": "case-lifecycle",
+  "target_subdomain": "task",
+  "current_package": "org.pucar.dristi",
+  "target_package": "org.pucar.dristi.caselifecycle.task",
+  "main_file_count": 163,
+  "test_file_count": 21,
+  "has_spring_boot_main": true,
+  "duplicated_protected_classes": [
+    "MdmsUtil",
+    "IdgenUtil",
+    "WorkflowUtil",
+    "FileStoreUtil",
+    "UserUtil",
+    "IndividualUtil",
+    "ResponseInfoFactory",
+    "Producer",
+    "KafkaProducerService",
+    "ServiceRequestRepository",
+    "Document",
+    "Individual",
+    "WorkflowObject",
+    "ProcessInstanceObject"
+  ],
+  "rest_call_files": [
+    "dristi-services/task/src/main/java/org/pucar/dristi/repository/ServiceRequestRepository.java",
+    "dristi-services/task/src/main/java/org/pucar/dristi/service/SmsNotificationService.java",
+    "dristi-services/task/src/main/java/org/pucar/dristi/service/PaymentUpdateService.java",
+    "dristi-services/task/src/main/java/org/pucar/dristi/service/UserService.java",
+    "dristi-services/task/src/main/java/org/pucar/dristi/util/ESignUtil.java",
+    "dristi-services/task/src/main/java/org/pucar/dristi/util/UserUtil.java",
+    "dristi-services/task/src/main/java/org/pucar/dristi/util/OrderUtil.java",
+    "dristi-services/task/src/main/java/org/pucar/dristi/util/PendingTaskUtil.java",
+    "dristi-services/task/src/main/java/org/pucar/dristi/util/IndividualUtil.java",
+    "dristi-services/task/src/main/java/org/pucar/dristi/util/IdgenUtil.java",
+    "dristi-services/task/src/main/java/org/pucar/dristi/util/WorkflowUtil.java",
+    "dristi-services/task/src/main/java/org/pucar/dristi/util/CaseUtil.java",
+    "dristi-services/task/src/main/java/org/pucar/dristi/util/FileStoreUtil.java"
+  ],
+  "source_context_path": "/task"
+}

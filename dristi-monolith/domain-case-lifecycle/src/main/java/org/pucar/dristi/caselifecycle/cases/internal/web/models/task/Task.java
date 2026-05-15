@@ -10,7 +10,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.egov.common.contract.models.AuditDetails;
 import org.egov.common.contract.models.Document;
-import org.egov.common.contract.models.Workflow;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.AssignedTo;
 import org.pucar.dristi.common.models.workflow.WorkflowObject;
 import org.springframework.validation.annotation.Validated;
@@ -19,9 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-/**
- * A task is created as part of an Order. It will always be linked to an order
- */
 @Schema(description = "A task is created as part of an Order. It will always be linked to an order")
 @Validated
 @jakarta.annotation.Generated(value = "org.egov.codegen.SpringBootCodegen", date = "2024-06-18T11:14:50.003326400+05:30[Asia/Calcutta]")
@@ -56,7 +52,7 @@ public class Task {
     @JsonProperty("createdDate")
     @NotNull
     @Valid
-     private Long createdDate = null;
+    private Long createdDate = null;
 
     @JsonProperty("dateCloseBy")
     @Valid
@@ -112,11 +108,10 @@ public class Task {
 
 
     public Task addDocumentsItem(Document documentsItem) {
-        if(this.documents == null || this.documents.isEmpty()){
+        if (this.documents == null || this.documents.isEmpty()) {
             this.documents = new ArrayList<>();
         }
         this.documents.add(documentsItem);
         return this;
     }
-
 }

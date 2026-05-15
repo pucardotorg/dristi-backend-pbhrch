@@ -28,6 +28,12 @@ import org.pucar.dristi.caselifecycle.cases.internal.util.*;
 import org.pucar.dristi.common.contract.treasury.BreakDown;
 import org.pucar.dristi.common.contract.treasury.Calculation;
 import org.pucar.dristi.common.contract.treasury.DemandCreateRequest;
+import org.pucar.dristi.caselifecycle.hearing.HearingApi;
+import org.pucar.dristi.common.contract.hearing.Hearing;
+import org.pucar.dristi.common.contract.hearing.HearingCriteria;
+import org.pucar.dristi.common.contract.hearing.HearingRequest;
+import org.pucar.dristi.common.contract.hearing.HearingSearchRequest;
+import org.pucar.dristi.common.contract.hearing.Attendee;
 import org.pucar.dristi.identityaccess.advocate.AdvocateApi;
 import org.pucar.dristi.integration.treasury.TreasuryApi;
 import org.pucar.dristi.common.util.DateUtil;
@@ -94,7 +100,7 @@ public class CaseService {
 
     private final AdvocateApi advocateApi;
     private final TaskUtil taskUtil;
-    private final HearingUtil hearingUtil;
+    private final HearingApi hearingApi;
     private final UserService userService;
     private final EvidenceUtil evidenceUtil;
     private final EvidenceValidator evidenceValidator;
@@ -119,7 +125,7 @@ public class CaseService {
                        TaskUtil taskUtil,
                        TreasuryApi treasuryApi,
                        EncryptionDecryptionUtil encryptionDecryptionUtil,
-                       HearingUtil analyticsUtil,
+                       HearingApi hearingApi,
                        UserService userService,
                        PaymentCalculaterUtil paymentCalculaterUtil,
                        ObjectMapper objectMapper, CacheService cacheService, EnrichmentService enrichmentService, SmsNotificationService notificationService, IndividualService individualService, AdvocateApi advocateApi, EvidenceUtil evidenceUtil, EvidenceValidator evidenceValidator, CaseUtil caseUtil, FileStoreUtil fileStoreUtil, DateUtil dateUtil, InboxUtil inboxUtil, AdvocateOfficeCaseMemberRepository advocateOfficeCaseMemberRepository, org.pucar.dristi.caselifecycle.cases.internal.enrichment.AdvocateDetailBlockBuilder advocateDetailBlockBuilder) {
@@ -132,7 +138,7 @@ public class CaseService {
         this.taskUtil = taskUtil;
         this.treasuryApi = treasuryApi;
         this.encryptionDecryptionUtil = encryptionDecryptionUtil;
-        this.hearingUtil = analyticsUtil;
+        this.hearingApi = hearingApi;
         this.userService = userService;
         this.paymentCalculaterUtil = paymentCalculaterUtil;
         this.objectMapper = objectMapper;
@@ -1926,7 +1932,7 @@ public class CaseService {
                 .pagination(null)
                 .build();
 
-        List<Hearing> hearings = hearingUtil.fetchHearingDetails(hearingSearchRequest);
+        List<Hearing> hearings = hearingApi.search(hearingSearchRequest);
         if(!hearings.isEmpty()){
             Long startTime = hearings.get(0).getStartTime();
             return dateUtil.getLocalDateFromEpoch(startTime);
@@ -2386,7 +2392,7 @@ public class CaseService {
                 Role hearingSchedulerRole = Role.builder().code("HEARING_SCHEDULER").name("HEARING_SCHEDULER").tenantId(joinCaseData.getTenantId()).build();
                 hearingRequest.setRequestInfo(RequestInfoUtil.withExtraRole(joinCaseRequest.getRequestInfo(), hearingSchedulerRole));
                 hearingRequest.setHearing(hearing);
-                hearingUtil.updateTranscriptAdditionalAttendees(hearingRequest);
+                hearingApi.update(hearingRequest);
 
                 //update open hearing index
                 updateHearingIndex(getName(individual),individual.getIndividualId(),isAccusedAdvocate,hearing,courtCase.getCourtId());
@@ -3406,7 +3412,7 @@ public class CaseService {
             hearingRequest.setRequestInfo(RequestInfoUtil.withExtraRole(requestInfo, hearingSchedulerRole));
             hearingRequest.setHearing(hearing);
             log.info("updating hearing :: {}", hearing);
-            hearingUtil.updateTranscriptAdditionalAttendees(hearingRequest);
+            hearingApi.update(hearingRequest);
         });
 
         caseObj.setLitigants(litigants);
@@ -3420,7 +3426,7 @@ public class CaseService {
                     .requestInfo(requestInfo)
                     .criteria(hearingCriteria)
                     .build();
-            hearings = hearingUtil.fetchHearingDetails(hearingSearchRequest);
+            hearings = hearingApi.search(hearingSearchRequest);
         } catch (Exception e) {
             log.error("Error occurred while fetching hearings for court: {}", e.getMessage());
         }
@@ -5928,7 +5934,7 @@ public class CaseService {
             }
 
 
-            hearingUtil.updateTranscriptAdditionalAttendees(hearingRequest);
+            hearingApi.update(hearingRequest);
 
         }
     }

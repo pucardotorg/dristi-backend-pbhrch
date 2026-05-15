@@ -7,13 +7,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.models.RequestInfoWrapper;
 import org.egov.common.contract.request.RequestInfo;
+import org.pucar.dristi.caselifecycle.hearing.HearingApi;
 import org.pucar.dristi.caselifecycle.order.internal.config.Configuration;
 import org.pucar.dristi.common.kafka.Producer;
 import org.pucar.dristi.common.repository.ServiceRequestRepository;
 import org.pucar.dristi.common.util.DateUtil;
-import org.pucar.dristi.common.contract.order.HearingCriteria;
-import org.pucar.dristi.common.contract.order.HearingListResponse;
-import org.pucar.dristi.common.contract.order.HearingSearchRequest;
+import org.pucar.dristi.common.contract.hearing.HearingCriteria;
+import org.pucar.dristi.common.contract.hearing.HearingSearchRequest;
 import org.pucar.dristi.common.contract.order.Order;
 import org.pucar.dristi.common.contract.order.SMSRequest;
 import org.pucar.dristi.caselifecycle.order.internal.web.models.SmsTemplateData;
@@ -47,9 +47,10 @@ public class SmsNotificationService {
 
     private final ServiceRequestRepository serviceRequestRepository;
     private final ObjectMapper objectMapper;
+    private final HearingApi hearingApi;
 
     @Autowired
-    public SmsNotificationService(Configuration config, Producer producer, ServiceRequestRepository repository, TaskScheduler taskScheduler, DateUtil dateUtil, ServiceRequestRepository serviceRequestRepository, ObjectMapper objectMapper) {
+    public SmsNotificationService(Configuration config, Producer producer, ServiceRequestRepository repository, TaskScheduler taskScheduler, DateUtil dateUtil, ServiceRequestRepository serviceRequestRepository, ObjectMapper objectMapper, HearingApi hearingApi) {
         this.config = config;
         this.producer = producer;
         this.repository = repository;
@@ -57,6 +58,7 @@ public class SmsNotificationService {
         this.dateUtil = dateUtil;
         this.serviceRequestRepository = serviceRequestRepository;
         this.objectMapper = objectMapper;
+        this.hearingApi = hearingApi;
     }
 
     public void sendNotification(RequestInfo requestInfo, SmsTemplateData smsTemplateData, String notificationStatus, String mobileNumber, Order order) {
@@ -76,8 +78,6 @@ public class SmsNotificationService {
     }
 
     private boolean wereHearingsScheduledTodayForCase(String filingNumber){
-        StringBuilder uri = new StringBuilder();
-        uri.append(config.getHearingHost()).append(config.getHearingSearchPath());
         ZoneId zoneId = ZoneId.of(config.getZoneId());
         LocalDate currentDate = LocalDate.now(zoneId);
         Long fromDate = dateUtil.getEPochFromLocalDate(currentDate);
@@ -90,10 +90,7 @@ public class SmsNotificationService {
                 .criteria(criteria)
                 .build();
 
-        Object response = serviceRequestRepository.fetchResult(uri, request);
-        HearingListResponse hearingListResponse = objectMapper.convertValue(response, new TypeReference<>(){});
-
-        return !hearingListResponse.getHearingList().isEmpty();
+        return !hearingApi.search(request).isEmpty();
     }
 
     private boolean isProcessOrder(String orderType){
