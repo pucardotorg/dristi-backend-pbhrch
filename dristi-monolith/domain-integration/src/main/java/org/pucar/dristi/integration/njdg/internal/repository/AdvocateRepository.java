@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.Types;
 import java.util.List;
 
-@Repository
+@Repository("njdgAdvocateRepository")
 @Slf4j
 public class AdvocateRepository {
     

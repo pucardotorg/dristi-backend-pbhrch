@@ -2,7 +2,7 @@ package org.pucar.dristi.integration.njdg.internal.repository.querybuilder;
 
 import org.springframework.stereotype.Component;
 
-@Component
+@Component("njdgHearingQueryBuilder")
 public class HearingQueryBuilder {
 
     public static final String HEARING_QUERY = "SELECT " +

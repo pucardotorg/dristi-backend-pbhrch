@@ -13,7 +13,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.HashMap;
 import java.util.Map;
 
-@Component
+@Component("njdgCaseUtil")
 @Slf4j
 @RequiredArgsConstructor
 public class CaseUtil {

@@ -12,7 +12,7 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
-@Repository
+@Repository("njdgOrderRepository")
 @Slf4j
 @RequiredArgsConstructor
 public class OrderRepository {

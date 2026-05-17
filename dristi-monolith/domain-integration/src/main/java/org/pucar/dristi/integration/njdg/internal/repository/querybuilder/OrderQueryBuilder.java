@@ -4,7 +4,7 @@ package org.pucar.dristi.integration.njdg.internal.repository.querybuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-@Component
+@Component("njdgOrderQueryBuilder")
 @Slf4j
 public class OrderQueryBuilder {
 

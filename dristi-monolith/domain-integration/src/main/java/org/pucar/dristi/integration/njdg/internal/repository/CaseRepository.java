@@ -19,7 +19,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-@Repository
+@Repository("njdgCaseRepository")
 @Slf4j
 @RequiredArgsConstructor
 public class CaseRepository {

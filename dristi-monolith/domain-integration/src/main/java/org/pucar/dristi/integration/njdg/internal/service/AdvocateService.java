@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.pucar.dristi.common.models.individual.Individual;
-@Service
+@Service("njdgAdvocateService")
 @Slf4j
 @RequiredArgsConstructor
 public class AdvocateService {

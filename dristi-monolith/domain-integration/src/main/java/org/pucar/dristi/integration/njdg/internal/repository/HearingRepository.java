@@ -14,7 +14,7 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
-@Repository
+@Repository("njdgHearingRepository")
 @RequiredArgsConstructor
 @Slf4j
 public class HearingRepository {

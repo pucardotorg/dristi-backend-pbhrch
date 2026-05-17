@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import java.sql.Types;
 import java.util.List;
 
-@Component
+@Component("njdgCaseQueryBuilder")
 @Slf4j
 public class CaseQueryBuilder {
 

@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 
 import static org.pucar.dristi.integration.njdg.internal.config.ServiceConstants.*;
 
-@Service
+@Service("njdgHearingService")
 @Slf4j
 @RequiredArgsConstructor
 public class HearingService {

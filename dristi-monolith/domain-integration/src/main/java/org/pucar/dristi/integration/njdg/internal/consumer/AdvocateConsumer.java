@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 
 import static org.pucar.dristi.integration.njdg.internal.config.ServiceConstants.ACTIVE;
 
-@Component
+@Component("njdgAdvocateConsumer")
 @Slf4j
 public class AdvocateConsumer {
 

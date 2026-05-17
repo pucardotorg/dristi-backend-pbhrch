@@ -30,7 +30,7 @@ import static org.pucar.dristi.integration.njdg.internal.config.ServiceConstants
  * Refactored service class for handling case-related operations
  * Follows SOLID principles with dependency injection of specialized services
  */
-@Service
+@Service("njdgCaseService")
 @Slf4j
 public class CaseService {
 
