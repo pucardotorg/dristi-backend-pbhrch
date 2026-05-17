@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-@Component
+@Component("njdgJsonUtil")
 public class JsonUtil {
 
     public <T> T getNestedValue(Object data, List<String> path, Class<T> type) {

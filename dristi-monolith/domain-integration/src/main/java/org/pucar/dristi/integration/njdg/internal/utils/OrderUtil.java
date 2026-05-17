@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 import static org.pucar.dristi.integration.njdg.internal.config.ServiceConstants.ERROR_WHILE_FETCHING_FROM_ORDER;
 
-@Component
+@Component("njdgOrderUtil")
 @Slf4j
 public class OrderUtil {
 

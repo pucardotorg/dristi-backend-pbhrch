@@ -16,7 +16,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import static org.pucar.dristi.integration.njdg.internal.config.ServiceConstants.EXTERNAL_SERVICE_EXCEPTION;
 import static org.pucar.dristi.integration.njdg.internal.config.ServiceConstants.SEARCHER_SERVICE_EXCEPTION;
 
-@Component
+@Component("njdgInboxUtil")
 @Slf4j
 @RequiredArgsConstructor
 public class InboxUtil {

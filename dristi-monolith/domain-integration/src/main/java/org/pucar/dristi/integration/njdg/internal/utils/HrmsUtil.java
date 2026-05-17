@@ -12,7 +12,7 @@ import org.egov.tracer.model.CustomException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-@Component
+@Component("njdgHrmsUtil")
 @Slf4j
 public class HrmsUtil {
 
