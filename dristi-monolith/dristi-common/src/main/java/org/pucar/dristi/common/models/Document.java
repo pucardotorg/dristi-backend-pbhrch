@@ -43,6 +43,9 @@ public class Document {
     @JsonProperty("documentUid")
     private String documentUid;
 
+    @JsonProperty("documentOrder")
+    private Long documentOrder;
+
     @JsonProperty("isActive")
     private Boolean isActive = true;
 
