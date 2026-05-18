@@ -15,7 +15,7 @@ import java.util.List;
 import static org.pucar.dristi.caselifecycle.cases.internal.config.ServiceConstants.EVIDENCE_CREATE_ERROR;
 
 @Slf4j
-@Component
+@Component("casesEvidenceUtil")
 public class EvidenceUtil {
 
     private final RestTemplate restTemplate;

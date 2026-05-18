@@ -70,6 +70,10 @@ public class DateUtil {
                 .format(DateTimeFormatter.ofPattern(pattern));
     }
 
+    public String getCurrentYear() {
+        return String.valueOf(LocalDate.now(ZoneId.of(configuration.getZoneId())).getYear());
+    }
+
     public Long getCurrentTimeInMilis() {
         return ZonedDateTime.now(ZoneId.of(configuration.getZoneId()))
                 .toInstant()
