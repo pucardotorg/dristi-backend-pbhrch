@@ -43,13 +43,6 @@ public class Configuration {
     @Value("${egov.idgen.path}")
     private String idGenPath;
 
-    // Hearing Config
-    @Value("${egov.hearing.host}")
-    private String hearingHost;
-
-    @Value("${egov.hearing.search.path}")
-    private String hearingSearchPath;
-
     //Workflow Config
     @Value("${egov.workflow.host}")
     private String wfHost;

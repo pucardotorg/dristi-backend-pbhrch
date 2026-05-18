@@ -1,0 +1,23 @@
+# Classes lifted from internal/web/models/ to dristi-common/contract/<subdomain>/
+org.pucar.dristi.common.contract.taskmanagement.Amount
+org.pucar.dristi.common.contract.taskmanagement.AssignedTo
+org.pucar.dristi.common.contract.taskmanagement.CaseCriteria
+org.pucar.dristi.common.contract.taskmanagement.CaseSearchRequest
+org.pucar.dristi.common.contract.taskmanagement.DeliveryChannel
+org.pucar.dristi.common.contract.taskmanagement.DemandCreateRequest
+org.pucar.dristi.common.contract.taskmanagement.IdGenerationRequest
+org.pucar.dristi.common.contract.taskmanagement.IdRequest
+org.pucar.dristi.common.contract.taskmanagement.Order
+org.pucar.dristi.common.contract.taskmanagement.Pagination
+org.pucar.dristi.common.contract.taskmanagement.PartyDetails
+org.pucar.dristi.common.contract.taskmanagement.ProcessDeliveryDetails
+org.pucar.dristi.common.contract.taskmanagement.Task
+org.pucar.dristi.common.contract.taskmanagement.TaskManagement
+org.pucar.dristi.common.contract.taskmanagement.TaskManagementRequest
+org.pucar.dristi.common.contract.taskmanagement.TaskManagementResponse
+org.pucar.dristi.common.contract.taskmanagement.TaskManagementSearchResponse
+org.pucar.dristi.common.contract.taskmanagement.TaskRequest
+org.pucar.dristi.common.contract.taskmanagement.TaskResponse
+org.pucar.dristi.common.contract.taskmanagement.TaskSearchCriteria
+org.pucar.dristi.common.contract.taskmanagement.TaskSearchRequest
+org.pucar.dristi.common.contract.taskmanagement.package-info

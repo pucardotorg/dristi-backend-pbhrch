@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
-@Component
+@Component("casesCaseUpdateConsumer")
 public class CaseUpdateConsumer {
 
     public static final Logger logger = LoggerFactory.getLogger(CaseUpdateConsumer.class);

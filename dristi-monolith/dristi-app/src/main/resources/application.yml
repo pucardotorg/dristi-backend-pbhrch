@@ -22,7 +22,7 @@ spring:
     # per-subdomain profiles (cases / locksvc / ...) overlay subdomain
     # config; `local` overrides DB/host/etc. for local dev.
 
-    active: shared,cases,locksvc,order,bank,notification,templateconfiguration,advocate,abdiary,epost,calculator,inportalsurvey,bailbond,digitalizeddocuments,advocateoffice,esign,ctc,application,local
+    active: shared,cases,locksvc,order,bank,notification,templateconfiguration,advocate,abdiary,epost,calculator,inportalsurvey,bailbond,digitalizeddocuments,advocateoffice,esign,ctc,application,hearing,task,taskmanagement,local
 
   jpa:
     show-sql: true
@@ -62,6 +62,9 @@ spring:
       - classpath:/esign/db/migration/main
       - classpath:/ctc/db/migration/main
       - classpath:/application/db/migration/main
+      - classpath:/hearing/db/migration/main
+      - classpath:/task/db/migration/main
+      - classpath:/taskmanagement/db/migration/main
     table: public-monolith
 
   kafka:
