@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.egov.common.producer.Producer;
+import org.pucar.dristi.common.kafka.Producer;
 import org.pucar.dristi.caselifecycle.transformer.internal.config.TransformerProperties;
 import org.pucar.dristi.caselifecycle.transformer.internal.models.digitalized_document.DigitalizedDocument;
 import org.pucar.dristi.caselifecycle.transformer.internal.models.digitalized_document.DigitalizedDocumentRequest;

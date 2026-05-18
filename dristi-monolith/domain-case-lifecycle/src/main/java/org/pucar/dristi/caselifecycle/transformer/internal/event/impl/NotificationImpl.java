@@ -2,7 +2,7 @@ package org.pucar.dristi.caselifecycle.transformer.internal.event.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.common.producer.Producer;
+import org.pucar.dristi.common.kafka.Producer;
 import org.pucar.dristi.caselifecycle.transformer.internal.config.TransformerProperties;
 import org.pucar.dristi.caselifecycle.transformer.internal.event.EventListener;
 import org.pucar.dristi.caselifecycle.transformer.internal.models.CourtCase;

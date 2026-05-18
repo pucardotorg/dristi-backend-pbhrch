@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.common.producer.Producer;
+import org.pucar.dristi.common.kafka.Producer;
 import org.egov.tracer.model.CustomException;
 import org.pucar.dristi.caselifecycle.transformer.internal.config.TransformerProperties;
 import org.pucar.dristi.caselifecycle.transformer.internal.event.EventListener;
