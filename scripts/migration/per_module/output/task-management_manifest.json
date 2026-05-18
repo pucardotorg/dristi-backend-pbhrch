@@ -1,0 +1,37 @@
+{
+  "service": "task-management",
+  "source_dir": "dristi-services/task-management",
+  "target_module": "case-lifecycle",
+  "target_subdomain": "taskmanagement",
+  "current_package": "digit",
+  "target_package": "org.pucar.dristi.caselifecycle.taskmanagement",
+  "main_file_count": 135,
+  "test_file_count": 18,
+  "has_spring_boot_main": true,
+  "duplicated_protected_classes": [
+    "MdmsUtil",
+    "IdgenUtil",
+    "UserUtil",
+    "UrlShortenerUtil",
+    "ResponseInfoFactory",
+    "DateUtil",
+    "Producer",
+    "KafkaProducerService",
+    "ServiceRequestRepository",
+    "Document",
+    "WorkflowObject"
+  ],
+  "rest_call_files": [
+    "dristi-services/task-management/src/main/java/digit/repository/ServiceRequestRepository.java",
+    "dristi-services/task-management/src/main/java/digit/service/DemandService.java",
+    "dristi-services/task-management/src/main/java/digit/service/WorkflowService.java",
+    "dristi-services/task-management/src/main/java/digit/service/SmsNotificationService.java",
+    "dristi-services/task-management/src/main/java/digit/util/UserUtil.java",
+    "dristi-services/task-management/src/main/java/digit/util/OrderUtil.java",
+    "dristi-services/task-management/src/main/java/digit/util/PendingTaskUtil.java",
+    "dristi-services/task-management/src/main/java/digit/util/IdgenUtil.java",
+    "dristi-services/task-management/src/main/java/digit/util/OfflinePaymentUtil.java",
+    "dristi-services/task-management/src/main/java/digit/util/TaskUtil.java"
+  ],
+  "source_context_path": "/task-management"
+}

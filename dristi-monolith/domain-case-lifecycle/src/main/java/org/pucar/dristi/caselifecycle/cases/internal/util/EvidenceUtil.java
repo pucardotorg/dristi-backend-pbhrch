@@ -19,7 +19,7 @@ import static org.pucar.dristi.caselifecycle.cases.internal.config.ServiceConsta
  * that hasn't been made yet.
  */
 @Slf4j
-@Component
+@Component("casesEvidenceUtil")
 public class EvidenceUtil {
 
     private final RestTemplate restTemplate;
