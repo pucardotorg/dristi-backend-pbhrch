@@ -1,0 +1,3 @@
+dristi-monolith/domain-case-lifecycle/src/main/java/org/pucar/dristi/caselifecycle/transformer/internal/util/AdvocateUtil.java  uses ['AdvocateHost', 'AdvocatePath']
+dristi-monolith/domain-case-lifecycle/src/main/java/org/pucar/dristi/caselifecycle/transformer/internal/util/EsUtil.java  uses ['BulkPath']
+dristi-monolith/domain-case-lifecycle/src/main/java/org/pucar/dristi/caselifecycle/transformer/internal/util/HearingUtil.java  uses ['HearingHost']

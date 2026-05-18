@@ -1,16 +1,15 @@
 package org.pucar.dristi.caselifecycle.transformer.internal.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jayway.jsonpath.JsonPath;
 import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONArray;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.model.CustomException;
+import org.pucar.dristi.caselifecycle.cases.CaseApi;
 import org.pucar.dristi.caselifecycle.transformer.internal.config.ServiceConstants;
 import org.pucar.dristi.caselifecycle.transformer.internal.config.TransformerProperties;
 import org.pucar.dristi.caselifecycle.transformer.internal.models.*;
 import org.pucar.dristi.caselifecycle.transformer.internal.producer.TransformerProducer;
-import org.pucar.dristi.common.repository.ServiceRequestRepository;
 import org.pucar.dristi.caselifecycle.transformer.internal.util.DateUtil;
 import org.pucar.dristi.caselifecycle.transformer.internal.util.HearingUtil;
 import org.pucar.dristi.caselifecycle.transformer.internal.util.JsonUtil;
@@ -19,7 +18,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -30,7 +28,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static org.pucar.dristi.caselifecycle.transformer.internal.config.ServiceConstants.COURT_CASE_JSON_PATH;
 import static org.pucar.dristi.caselifecycle.transformer.internal.config.ServiceConstants.HEARING_COMPLETED_STATUS;
 import static org.pucar.dristi.caselifecycle.transformer.internal.config.ServiceConstants.HEARING_SCHEDULED_STATUS;
 
@@ -46,26 +43,34 @@ public class CaseService {
     private final TransformerProducer producer;
     private final ObjectMapper objectMapper;
     private final HearingUtil hearingUtil;
-    private final ServiceRequestRepository repository;
-    private final RestTemplate restTemplate;
+    private final CaseApi caseApi;
     private final DateUtil dateUtil;
     private final MdmsUtil mdmsUtil;
     private final ServiceConstants serviceConstants;
     private final JsonUtil jsonUtil;
 
     @Autowired
-    public CaseService(ElasticSearchService elasticSearchService, TransformerProperties properties, TransformerProducer producer, ObjectMapper objectMapper, HearingUtil hearingUtil, ServiceRequestRepository repository, RestTemplate restTemplate, DateUtil dateUtil, MdmsUtil mdmsUtil, ServiceConstants serviceConstants, JsonUtil jsonUtil) {
+    public CaseService(ElasticSearchService elasticSearchService, TransformerProperties properties, TransformerProducer producer, ObjectMapper objectMapper, HearingUtil hearingUtil, CaseApi caseApi, DateUtil dateUtil, MdmsUtil mdmsUtil, ServiceConstants serviceConstants, JsonUtil jsonUtil) {
         this.elasticSearchService = elasticSearchService;
         this.properties = properties;
         this.producer = producer;
         this.objectMapper = objectMapper;
         this.hearingUtil = hearingUtil;
-        this.repository = repository;
-        this.restTemplate = restTemplate;
+        this.caseApi = caseApi;
         this.dateUtil = dateUtil;
         this.mdmsUtil = mdmsUtil;
         this.serviceConstants = serviceConstants;
         this.jsonUtil = jsonUtil;
+    }
+
+    private CourtCase fetchCourtCase(CaseSearchRequest request) {
+        org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseSearchRequest casesReq =
+                objectMapper.convertValue(request,
+                        org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseSearchRequest.class);
+        org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseListResponse response = caseApi.search(casesReq);
+        return objectMapper.convertValue(
+                response.getCriteria().get(0).getResponseList().get(0),
+                CourtCase.class);
     }
 
     public CourtCase fetchCase(String fieldValue) throws IOException {
@@ -103,8 +108,6 @@ public class CaseService {
     }
 
     public CourtCase getCase(String filingNumber, String tenantId, RequestInfo requestInfo) {
-        StringBuilder uri = new StringBuilder();
-        uri.append(properties.getCaseSearchUrlHost()).append(properties.getCaseSearchUrlEndPoint());
         CaseSearchRequest request = CaseSearchRequest.builder()
                 .requestInfo(requestInfo)
                 .criteria(Collections.singletonList(CaseCriteria.builder()
@@ -114,8 +117,7 @@ public class CaseService {
                 .tenantId(tenantId)
                 .build();
         try {
-            Object response = repository.fetchResult(uri, request);
-            return objectMapper.convertValue(JsonPath.read(response, COURT_CASE_JSON_PATH), CourtCase.class);
+            return fetchCourtCase(request);
         } catch (Exception e) {
             log.error("Error executing case search query", e);
             throw new CustomException("Error fetching case: ", ServiceConstants.ERROR_CASE_SEARCH);
@@ -123,8 +125,6 @@ public class CaseService {
     }
 
     public CourtCase getCaseByCaseSearchText(String caseSearchText, String tenantId, RequestInfo requestInfo) {
-        StringBuilder uri = new StringBuilder();
-        uri.append(properties.getCaseSearchUrlHost()).append(properties.getCaseSearchUrlEndPoint());
         CaseSearchRequest request = CaseSearchRequest.builder()
                 .requestInfo(requestInfo)
                 .criteria(Collections.singletonList(CaseCriteria.builder()
@@ -134,8 +134,7 @@ public class CaseService {
                 .tenantId(tenantId)
                 .build();
         try {
-            Object response = repository.fetchResult(uri, request);
-            return objectMapper.convertValue(JsonPath.read(response, COURT_CASE_JSON_PATH), CourtCase.class);
+            return fetchCourtCase(request);
         } catch (Exception e) {
             log.error("Error executing case search query", e);
             throw new CustomException("Error fetching case: ", ServiceConstants.ERROR_CASE_SEARCH);
@@ -301,11 +300,8 @@ public class CaseService {
 
     public CourtCase getCases(CaseSearchRequest searchCaseRequest) {
         log.info("operation = getCases, result = IN_PROGRESS");
-
-        StringBuilder url = new StringBuilder(properties.getCaseSearchUrlHost() + properties.getCaseSearchUrlEndPoint());
-
-        Object response = repository.fetchResult(url, searchCaseRequest);
+        CourtCase courtCase = fetchCourtCase(searchCaseRequest);
         log.info("operation = getCases, result = SUCCESS");
-        return objectMapper.convertValue(JsonPath.read(response, COURT_CASE_JSON_PATH), CourtCase.class);
+        return courtCase;
     }
 }

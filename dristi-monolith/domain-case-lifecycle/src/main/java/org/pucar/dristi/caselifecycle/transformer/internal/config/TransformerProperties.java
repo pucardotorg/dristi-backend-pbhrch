@@ -14,12 +14,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class TransformerProperties {
 
-    @Value("${egov.case.host}")
-    private String caseSearchUrlHost;
-
-    @Value("${egov.case.path}")
-    private String caseSearchUrlEndPoint;
-
     @Value("${transformer.producer.save.case.topic}")
     private String saveCaseTopic;
 
@@ -85,23 +79,9 @@ public class TransformerProperties {
     @Value("${transformer.producer.case.search.topic}")
     private String caseSearchTopic;
 
-    //Hearing config
-    @Value("${dristi.hearing.host}")
-    private String hearingHost;
-
-    @Value("${dristi.hearing.search.endpoint}")
-    private String hearingSearchEndPoint;
-
     // Application timezone ID
     @Value("${app.zone.id}")
     private String applicationZoneId;
-
-    // Advocate Config
-    @Value("${egov.advocate.host}")
-    private String advocateHost;
-
-    @Value("${egov.advocate.path}")
-    private String advocatePath;
 
     // inbox config
     @Value("${egov.inbox.host}")

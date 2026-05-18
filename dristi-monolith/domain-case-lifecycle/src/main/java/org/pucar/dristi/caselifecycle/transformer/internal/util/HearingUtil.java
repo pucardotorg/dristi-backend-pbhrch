@@ -1,36 +1,30 @@
 package org.pucar.dristi.caselifecycle.transformer.internal.util;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.tracer.model.CustomException;
-import org.pucar.dristi.caselifecycle.transformer.internal.config.TransformerProperties;
+import org.pucar.dristi.caselifecycle.hearing.HearingApi;
 import org.pucar.dristi.caselifecycle.transformer.internal.models.Hearing;
-import org.pucar.dristi.caselifecycle.transformer.internal.models.HearingListResponse;
 import org.pucar.dristi.caselifecycle.transformer.internal.models.HearingSearchRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 @Component
 @Slf4j
 public class HearingUtil {
 
-    private final RestTemplate restTemplate;
+    private final HearingApi hearingApi;
     private final ObjectMapper mapper;
-    private final TransformerProperties configs;
 
     @Autowired
-    public HearingUtil(RestTemplate restTemplate, ObjectMapper mapper, TransformerProperties configs) {
-        this.restTemplate = restTemplate;
+    public HearingUtil(HearingApi hearingApi, ObjectMapper mapper) {
+        this.hearingApi = hearingApi;
         this.mapper = mapper;
-        this.configs = configs;
     }
 
     public List<Hearing> fetchHearingDetails(HearingSearchRequest hearingSearchRequest) {
@@ -38,23 +32,19 @@ public class HearingUtil {
             throw new IllegalArgumentException("HearingSearchRequest cannot be null");
         }
 
-        StringBuilder uri = new StringBuilder();
-        uri.append(configs.getHearingHost()).append(configs.getHearingSearchEndPoint());
-
-        HearingListResponse hearingListResponse = new HearingListResponse();
         try {
-            hearingListResponse = restTemplate.postForObject(uri.toString(), hearingSearchRequest, HearingListResponse.class);
-        } catch (RestClientException e) {
-            log.error("ERROR_WHILE_FETCHING_FROM_HEARING", e);
-            throw new CustomException("ERROR_WHILE_FETCHING_FROM_HEARING", e.getMessage());
+            org.pucar.dristi.common.contract.hearing.HearingSearchRequest commonReq =
+                    mapper.convertValue(hearingSearchRequest,
+                            org.pucar.dristi.common.contract.hearing.HearingSearchRequest.class);
+            List<org.pucar.dristi.common.contract.hearing.Hearing> commonHearings = hearingApi.search(commonReq);
+            if (commonHearings == null) {
+                return new ArrayList<>();
+            }
+            return mapper.convertValue(commonHearings, new TypeReference<List<Hearing>>() {});
         } catch (Exception e) {
             log.error("Unexpected error while fetching hearing details", e);
             throw new CustomException("UNEXPECTED_ERROR_FETCHING_HEARINGS", e.getMessage());
         }
-        if (hearingListResponse == null || hearingListResponse.getHearingList() == null) {
-            return new ArrayList<>();
-        }
-        return hearingListResponse.getHearingList();
     }
 
 }
