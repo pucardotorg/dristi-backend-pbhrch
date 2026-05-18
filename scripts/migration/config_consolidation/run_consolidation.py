@@ -155,6 +155,13 @@ SERVICE_DEAD_KEYS: dict[str, set[str]] = {
         # caselifecycle/cases/internal/ for `dristi.advocate.office.*`.
         "dristi.advocate.office.host",
         "dristi.advocate.office.search.member.endpoint",
+        # treasury-backend C2: cases EtreasuryUtil deleted; cases now uses
+        # TreasuryApi direct calls. No @Value("${egov.etreasury...") /
+        # ${etreasury.*}") consumer remains in caselifecycle/cases/internal/.
+        "egov.etreasury.host",
+        "egov.etreasury.demand.create.endpoint",
+        "etreasury.payment.receipt.endpoint",
+        "etreasury.head.breakup.calculation.endpoint",
         # 927ebb6c5 fix(hearing): Rule 31/32/36/37/38/40 compliance — PR #57
         # deleted cases/HearingUtil; cases now reads HearingApi directly.
         # No @Value("${egov.hearing.{host,path,search.path}}") consumer
