@@ -22,7 +22,7 @@ spring:
     # per-subdomain profiles (cases / locksvc / ...) overlay subdomain
     # config; `local` overrides DB/host/etc. for local dev.
 
-    active: shared,cases,locksvc,order,bank,notification,templateconfiguration,advocate,abdiary,epost,calculator,inportalsurvey,bailbond,digitalizeddocuments,advocateoffice,esign,ctc,application,hearing,task,taskmanagement,local
+    active: shared,transformer,cases,locksvc,order,bank,notification,templateconfiguration,advocate,abdiary,epost,calculator,inportalsurvey,bailbond,digitalizeddocuments,advocateoffice,esign,ctc,application,hearing,task,taskmanagement,local
 
   jpa:
     show-sql: true

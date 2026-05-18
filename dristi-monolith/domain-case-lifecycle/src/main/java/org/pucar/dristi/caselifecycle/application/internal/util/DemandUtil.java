@@ -22,7 +22,7 @@ import static org.pucar.dristi.caselifecycle.application.internal.config.Service
 
 import org.pucar.dristi.common.contract.application.Bill;
 import org.pucar.dristi.common.contract.application.Application;
-@Service
+@Service("applicationDemandUtil")
 @Slf4j
 public class DemandUtil {
 

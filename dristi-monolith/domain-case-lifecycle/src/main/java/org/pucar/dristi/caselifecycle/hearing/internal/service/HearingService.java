@@ -42,7 +42,7 @@ import org.pucar.dristi.common.models.workflow.WorkflowObject;
 import org.pucar.dristi.common.util.MdmsUtil;
 import org.pucar.dristi.common.util.FileStoreUtil;
 import org.pucar.dristi.common.models.Document;
-@Service
+@Service("hearingHearingService")
 @Slf4j
 public class HearingService {
 
