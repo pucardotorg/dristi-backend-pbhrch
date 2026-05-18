@@ -19,20 +19,7 @@ spring:
 app:
   timezone: Asia/Kolkata
 otel:
-  traces:
-    exporter: otlp
-  logs:
-    exporter: none
-  metrics:
-    exporter: none
-  exporter:
-    otlp:
-      endpoint: http://jaeger-collector.tracing:4318
-      protocol: http/protobuf
   instrumentation:
-    kafka:
-      enabled: true
-      experimental-span-attributes: true
     http:
       server:
         ignore-urls: /e-sign-svc/health,/e-sign-svc/prometheus
@@ -97,6 +84,14 @@ esign:
   y:
     coordinate:
       offset: 20
+drishti:
+  esign:
+    redirect:
+      url: https://dristi-kerala-dev.pucar.org
+    landing:
+      page:
+        redirect:
+          url: /landing
 logging:
   loki:
     enabled: false

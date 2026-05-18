@@ -144,10 +144,6 @@ dristi:
       endpoint: /task/v1/search
     update:
       endpoint: /task/v1/update
-  case:
-    host: http://localhost:8056
-    search:
-      endpoint: /case/v1/_search
   inbox:
     host: http://localhost:8059
     index:
