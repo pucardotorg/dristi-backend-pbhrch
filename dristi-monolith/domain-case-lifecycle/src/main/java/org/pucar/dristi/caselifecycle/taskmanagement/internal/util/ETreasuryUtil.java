@@ -16,7 +16,7 @@ import java.util.Map;
 
 import static org.pucar.dristi.caselifecycle.taskmanagement.internal.config.ServiceConstants.ERROR_WHILE_CREATING_DEMAND_FOR_TASK_MANAGEMENT;
 
-@Component
+@Component("taskmanagementETreasuryUtil")
 @Slf4j
 public class ETreasuryUtil {
 
