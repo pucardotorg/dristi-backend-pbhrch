@@ -21,7 +21,7 @@ import java.util.*;
 import static org.pucar.dristi.caselifecycle.hearing.internal.config.ServiceConstants.EXTERNAL_SERVICE_EXCEPTION;
 import static org.pucar.dristi.caselifecycle.hearing.internal.config.ServiceConstants.SEARCHER_SERVICE_EXCEPTION;
 
-@Component
+@Component("hearingTaskManagementUtil")
 @Slf4j
 public class TaskManagementUtil {
 
