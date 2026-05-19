@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
-@Component
+@Component("abdiaryADiaryUtil")
 public class ADiaryUtil {
 
     public Long getCurrentTimeInMilliSec() {

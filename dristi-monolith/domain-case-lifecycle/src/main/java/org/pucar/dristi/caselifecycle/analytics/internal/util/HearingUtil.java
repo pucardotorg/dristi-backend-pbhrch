@@ -1,0 +1,64 @@
+package org.pucar.dristi.caselifecycle.analytics.internal.util;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.pucar.dristi.caselifecycle.analytics.internal.config.Configuration;
+import org.pucar.dristi.common.repository.ServiceRequestRepository;
+import org.pucar.dristi.caselifecycle.analytics.internal.util.Util;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import static org.pucar.dristi.caselifecycle.analytics.internal.config.ServiceConstants.HEARING_PATH;
+
+@Slf4j
+@Component("analyticsHearingUtil")
+public class HearingUtil {
+
+	private final Configuration config;
+	private final ServiceRequestRepository repository;
+	private final Util util;
+	private final ObjectMapper mapper;
+
+	@Autowired
+	public HearingUtil(Configuration config, ServiceRequestRepository repository, Util util, ObjectMapper mapper) {
+		this.config = config;
+		this.repository = repository;
+		this.util = util;
+		this.mapper = mapper;
+	}
+
+	public Object getHearing(JSONObject request, String applicationNumber, String cnrNumber, String hearingId, String tenantId) {
+		StringBuilder url = getSearchURLWithParams();
+		log.info("Inside HearingUtil getHearing :: URL: {}", url);
+
+		request.put("tenantId", tenantId);
+		JSONObject criteria = new JSONObject();
+		if (!(applicationNumber == null)) criteria.put("applicationNumber", applicationNumber);
+		if (!(cnrNumber == null)) criteria.put("cnrNumber", cnrNumber);
+		criteria.put("hearingId",hearingId);
+		criteria.put("tenantId", tenantId);
+		request.put("criteria", criteria);
+
+		log.info("Inside HearingUtil getHearing :: Request: {}", request);
+
+		try {
+			Object responseObj = repository.fetchResult(url, request);
+			String response = responseObj == null ? null : mapper.writeValueAsString(responseObj);
+			log.info("Inside HearingUtil getHearing :: Response: {}", response);
+
+			JSONArray hearings = util.constructArray(response, HEARING_PATH);
+			return hearings.length() > 0 ? hearings.get(0) : null;
+		} catch (Exception e) {
+			log.error("Error while fetching or processing the hearing response", e);
+			throw new RuntimeException("Error while fetching or processing the hearing response", e);
+		}
+	}
+
+	private StringBuilder getSearchURLWithParams() {
+		StringBuilder url = new StringBuilder(config.getHearingHost());
+		url.append(config.getHearingSearchPath());
+		return url;
+	}
+}

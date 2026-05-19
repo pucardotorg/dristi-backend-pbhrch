@@ -1,0 +1,37 @@
+{
+  "service": "analytics",
+  "source_dir": "dristi-services/analytics",
+  "target_module": "case-lifecycle",
+  "target_subdomain": "analytics",
+  "current_package": "org.pucar.dristi",
+  "target_package": "org.pucar.dristi.caselifecycle.analytics",
+  "main_file_count": 115,
+  "test_file_count": 31,
+  "has_spring_boot_main": true,
+  "duplicated_protected_classes": [
+    "MdmsUtil",
+    "WorkflowUtil",
+    "IndividualUtil",
+    "ResponseInfoFactory",
+    "Producer",
+    "KafkaProducerService",
+    "ServiceRequestRepository"
+  ],
+  "rest_call_files": [
+    "dristi-services/analytics/src/main/java/org/pucar/dristi/util/WorkflowUtil.java",
+    "dristi-services/analytics/src/main/java/org/pucar/dristi/util/CtcApplicationUtil.java",
+    "dristi-services/analytics/src/main/java/org/pucar/dristi/util/BillingUtil.java",
+    "dristi-services/analytics/src/main/java/org/pucar/dristi/util/ApplicationUtil.java",
+    "dristi-services/analytics/src/main/java/org/pucar/dristi/util/IndividualUtil.java",
+    "dristi-services/analytics/src/main/java/org/pucar/dristi/util/TaskManagementUtil.java",
+    "dristi-services/analytics/src/main/java/org/pucar/dristi/util/EvidenceUtil.java",
+    "dristi-services/analytics/src/main/java/org/pucar/dristi/util/OrderUtil.java",
+    "dristi-services/analytics/src/main/java/org/pucar/dristi/util/CaseUtil.java",
+    "dristi-services/analytics/src/main/java/org/pucar/dristi/util/HearingUtil.java",
+    "dristi-services/analytics/src/main/java/org/pucar/dristi/util/TaskUtil.java",
+    "dristi-services/analytics/src/main/java/org/pucar/dristi/service/SmsNotificationService.java",
+    "dristi-services/analytics/src/main/java/org/pucar/dristi/service/UserService.java",
+    "dristi-services/analytics/src/main/java/org/pucar/dristi/repository/ServiceRequestRepository.java"
+  ],
+  "source_context_path": "/analytics"
+}
