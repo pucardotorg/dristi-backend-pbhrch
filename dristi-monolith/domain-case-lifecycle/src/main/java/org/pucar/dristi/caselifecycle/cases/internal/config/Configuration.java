@@ -156,19 +156,6 @@ public class Configuration {
 	@Value("${egov.demand.create.endpoint}")
 	private String demandCreateEndPoint;
 
-	//Billing
-	@Value("${egov.etreasury.host}")
-	private String etreasuryHost;
-
-	@Value("${egov.etreasury.demand.create.endpoint}")
-	private String etreasuryDemandCreateEndPoint;
-
-	@Value("${etreasury.payment.receipt.endpoint}")
-	private String treasuryPaymentReceiptEndPoint;
-
-	@Value("${etreasury.head.breakup.calculation.endpoint}")
-	private String etreasuryCalculationEndPoint;
-
 	//Join a Case
 	@Value("${egov.litigant.join.case.kafka.topic}")
 	private String litigantJoinCaseTopic;
@@ -401,9 +388,6 @@ public class Configuration {
 
 	@Value("${egov.evidence.create.path}")
 	private String evidenceServiceCreatePath;
-
-	@Value("${egov.evidence.search.path}")
-	private String evidenceServiceSearchPath;
 
 	// LPR config
 	@Value("${egov.idgen.lprConfig}")
