@@ -19,7 +19,7 @@ import java.util.*;
 
 import static org.pucar.dristi.caselifecycle.hearing.internal.config.ServiceConstants.ROW_MAPPER_EXCEPTION;
 
-@Component
+@Component("hearingHearingRowMapper")
 @Slf4j
 public class HearingRowMapper implements ResultSetExtractor<List<Hearing>> {
 
