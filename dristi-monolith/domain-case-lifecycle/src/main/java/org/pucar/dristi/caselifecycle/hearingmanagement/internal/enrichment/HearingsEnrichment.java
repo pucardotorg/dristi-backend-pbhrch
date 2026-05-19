@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 import static org.pucar.dristi.caselifecycle.hearingmanagement.internal.config.ServiceConstants.*;
 
-@Component
+@Component("hearingmanagementHearingsEnrichment")
 @Slf4j
 public class HearingsEnrichment {
 
