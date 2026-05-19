@@ -45,6 +45,7 @@ public class CaseBundleService {
     private final CaseBundleRepository caseBundleRepository;
     private final Producer producer;
     private final FileStoreUtil fileStoreUtil;
+    private final org.pucar.dristi.caselifecycle.cases.CaseApi caseApi;
 
     public String readCaseBundleDefaultIndex() throws IOException {
         try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream("CaseBundleDefault.json")) {
@@ -67,7 +68,8 @@ public class CaseBundleService {
 
     @Autowired
     public CaseBundleService(ElasticSearchRepository esRepository, Configuration configuration, ObjectMapper objectMapper, ServiceRequestRepository serviceRequestRepository,
-                             CaseBundleRepository caseBundleRepository, Producer producer, FileStoreUtil fileStoreUtil) {
+                             CaseBundleRepository caseBundleRepository, Producer producer, FileStoreUtil fileStoreUtil,
+                             org.pucar.dristi.caselifecycle.cases.CaseApi caseApi) {
         this.esRepository = esRepository;
         this.configuration = configuration;
         this.objectMapper = objectMapper;
@@ -75,6 +77,15 @@ public class CaseBundleService {
         this.caseBundleRepository = caseBundleRepository;
         this.producer = producer;
         this.fileStoreUtil = fileStoreUtil;
+        this.caseApi = caseApi;
+    }
+
+    private Object fetchCaseAsMap(CaseSearchRequest casemanagementReq) {
+        org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseSearchRequest casesReq =
+                objectMapper.convertValue(casemanagementReq,
+                        org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseSearchRequest.class);
+        org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseListResponse response = caseApi.search(casesReq);
+        return objectMapper.convertValue(response, Map.class);
     }
 
     public CaseNumberResponse getCaseNumber(RequestInfo requestInfo, String caseId, String tenantId) {
@@ -90,14 +101,11 @@ public class CaseBundleService {
         caseSearchRequest.setCriteria(caseList);
         caseSearchRequest.setRequestInfo(requestInfo);
 
-        StringBuilder uri = new StringBuilder();
-        uri.append(configuration.getCaseHost()).append(configuration.getCaseSearchUrl());
-
         Object response;
         try {
-            response = serviceRequestRepository.fetchResult(uri, caseSearchRequest);
+            response = fetchCaseAsMap(caseSearchRequest);
         } catch (Exception e) {
-            log.error("Error while fetching case data from service request repository", e);
+            log.error("Error while fetching case data via CaseApi", e);
             throw new CustomException("FETCH_RESULT_ERROR", "Error while fetching case data from service request repository");
         }
         updateCaseDocuments(response);
@@ -184,14 +192,11 @@ public class CaseBundleService {
         caseSearchRequest.setCriteria(caseList);
         caseSearchRequest.setRequestInfo(requestInfo);
 
-        StringBuilder uri = new StringBuilder();
-        uri.append(configuration.getCaseHost()).append(configuration.getCaseSearchUrl());
-
         Object response;
         try {
-            response = serviceRequestRepository.fetchResult(uri, caseSearchRequest);
+            response = fetchCaseAsMap(caseSearchRequest);
         } catch (Exception e) {
-            log.error("Error while fetching case data from service request repository", e);
+            log.error("Error while fetching case data via CaseApi", e);
             throw new CustomException("FETCH_RESULT_ERROR", "Error while fetching case data from service request repository");
         }
 

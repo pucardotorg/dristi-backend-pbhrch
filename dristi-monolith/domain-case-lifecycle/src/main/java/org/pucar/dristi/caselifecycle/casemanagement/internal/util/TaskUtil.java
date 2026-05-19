@@ -1,60 +1,50 @@
 package org.pucar.dristi.caselifecycle.casemanagement.internal.util;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.model.CustomException;
-import org.egov.tracer.model.ServiceCallException;
-import org.pucar.dristi.caselifecycle.casemanagement.internal.config.Configuration;
-import org.pucar.dristi.common.repository.ServiceRequestRepository;
+import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.task.TaskCase;
+import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.task.TaskCaseSearchCriteria;
+import org.pucar.dristi.caselifecycle.task.TaskApi;
 import org.pucar.dristi.common.contract.casemanagement.Task;
 import org.pucar.dristi.common.contract.casemanagement.TaskCriteria;
-import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.task.TaskCase;
-import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.task.TaskCaseResponse;
-import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.task.TaskCaseSearchCriteria;
-import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.task.TaskListResponse;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
 
-import static org.pucar.dristi.caselifecycle.casemanagement.internal.config.ServiceConstants.EXTERNAL_SERVICE_EXCEPTION;
 import static org.pucar.dristi.caselifecycle.casemanagement.internal.config.ServiceConstants.SEARCHER_SERVICE_EXCEPTION;
 
 @Component("casemanagementTaskUtil")
 @Slf4j
 public class TaskUtil {
 
-    private final RestTemplate restTemplate;
-    private final ServiceRequestRepository serviceRequestRepository;
+    private final TaskApi taskApi;
     private final ObjectMapper objectMapper;
-    private final Configuration config;
 
-    public TaskUtil(RestTemplate restTemplate, ServiceRequestRepository serviceRequestRepository, ObjectMapper objectMapper, Configuration config) {
-        this.restTemplate = restTemplate;
-        this.serviceRequestRepository = serviceRequestRepository;
+    public TaskUtil(TaskApi taskApi, ObjectMapper objectMapper) {
+        this.taskApi = taskApi;
         this.objectMapper = objectMapper;
-        this.config = config;
     }
 
     public List<Task> searchTask(TaskCriteria criteria, RequestInfo requestInfo) {
         objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-        StringBuilder uri = new StringBuilder(config.getTaskSearchHost()).append("/task/v1/search");
-        
-        Map<String, Object> request = new HashMap<>();
-        request.put("RequestInfo", requestInfo);
-        request.put("criteria", criteria);
-
         try {
-            Object response = serviceRequestRepository.fetchResult(uri, request);
-            JsonNode jsonNode = objectMapper.valueToTree(response);
-            return objectMapper.readValue(jsonNode.toString(), TaskListResponse.class).getList();
-        } catch (HttpClientErrorException e) {
-            log.error(EXTERNAL_SERVICE_EXCEPTION, e);
-            throw new ServiceCallException(e.getResponseBodyAsString());
+            org.pucar.dristi.common.contract.task.TaskCriteria taskCriteria =
+                    objectMapper.convertValue(criteria, org.pucar.dristi.common.contract.task.TaskCriteria.class);
+            org.pucar.dristi.common.contract.task.TaskSearchRequest request =
+                    new org.pucar.dristi.common.contract.task.TaskSearchRequest();
+            request.setRequestInfo(requestInfo);
+            request.setCriteria(taskCriteria);
+            List<org.pucar.dristi.common.contract.task.Task> results = taskApi.search(request);
+            if (results == null || results.isEmpty()) {
+                return Collections.emptyList();
+            }
+            return objectMapper.convertValue(
+                    results,
+                    objectMapper.getTypeFactory().constructCollectionType(List.class, Task.class));
         } catch (Exception e) {
             log.error(SEARCHER_SERVICE_EXCEPTION, e);
             throw new CustomException();
@@ -63,29 +53,29 @@ public class TaskUtil {
 
     public List<TaskCase> searchTaskTable(TaskCaseSearchCriteria criteria, RequestInfo requestInfo) {
         objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-        StringBuilder uri = new StringBuilder(config.getTaskSearchHost()).append("/task/v1/table/search");
-        
-        Map<String, Object> request = new HashMap<>();
-        request.put("RequestInfo", requestInfo);
-        request.put("criteria", criteria);
-        
-        Map<String, Object> pagination = new HashMap<>();
-        pagination.put("sortBy", "createdDate");
-        pagination.put("order", "asc");
-        pagination.put("limit", 100);
-        request.put("pagination", pagination);
-
         try {
-            Object response = serviceRequestRepository.fetchResult(uri, request);
-            JsonNode jsonNode = objectMapper.valueToTree(response);
-            return objectMapper.readValue(jsonNode.toString(), TaskCaseResponse.class).getList();
-        } catch (HttpClientErrorException e) {
-            log.error(EXTERNAL_SERVICE_EXCEPTION, e);
-            throw new ServiceCallException(e.getResponseBodyAsString());
+            org.pucar.dristi.common.contract.task.TaskCaseSearchCriteria taskCriteria =
+                    objectMapper.convertValue(criteria, org.pucar.dristi.common.contract.task.TaskCaseSearchCriteria.class);
+            org.pucar.dristi.common.contract.task.TaskCaseSearchRequest request =
+                    new org.pucar.dristi.common.contract.task.TaskCaseSearchRequest();
+            request.setRequestInfo(requestInfo);
+            request.setCriteria(taskCriteria);
+            org.pucar.dristi.common.contract.task.Pagination pagination =
+                    new org.pucar.dristi.common.contract.task.Pagination();
+            pagination.setSortBy("createdDate");
+            pagination.setOrder(org.pucar.dristi.common.contract.task.Order.ASC);
+            pagination.setLimit(100.0);
+            request.setPagination(pagination);
+            List<org.pucar.dristi.common.contract.task.TaskCase> results = taskApi.searchTable(request);
+            if (results == null || results.isEmpty()) {
+                return Collections.emptyList();
+            }
+            return objectMapper.convertValue(
+                    results,
+                    objectMapper.getTypeFactory().constructCollectionType(List.class, TaskCase.class));
         } catch (Exception e) {
             log.error(SEARCHER_SERVICE_EXCEPTION, e);
             throw new CustomException(SEARCHER_SERVICE_EXCEPTION, e.getMessage());
         }
     }
 }
-

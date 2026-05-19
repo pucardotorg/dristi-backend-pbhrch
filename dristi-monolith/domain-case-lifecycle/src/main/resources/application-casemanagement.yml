@@ -147,32 +147,16 @@ is:
     enabled: true
 dristi:
   case:
-    host: http://localhost:8081
-    search:
-      url: /case/v1/_search
     index: case-index
   application:
     index: application-index
-  digitalized:
-    documents:
-      host: http://localhost:8087
-      search:
-        endpoint: /digitalized-documents/v1/_search
   ctc:
     host: http://localhost:8083
-    search:
-      endpoint: /ctc/applications/_search
     update:
       endpoint: /ctc/applications/_update
   task:
-    host: http://localhost:8086
-    search:
-      url: /task/v1/search
     index: task-index
   order:
-    host: http://localhost:8084
-    search:
-      url: /order/v1/search
     index: order-index
   file:
     search:

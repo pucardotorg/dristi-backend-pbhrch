@@ -1,60 +1,53 @@
 package org.pucar.dristi.caselifecycle.casemanagement.internal.util;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.model.CustomException;
-import org.pucar.dristi.caselifecycle.casemanagement.internal.config.Configuration;
 import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.digitalizeddocument.DigitalizedDocument;
-import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.digitalizeddocument.DigitalizedDocumentSearchCriteria;
-import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.digitalizeddocument.DigitalizedDocumentSearchRequest;
-import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.digitalizeddocument.DigitalizedDocumentSearchResponse;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.pucar.dristi.caselifecycle.digitalizeddocuments.DigitalizeddocumentsApi;
+import org.pucar.dristi.common.contract.digitalizeddocuments.DigitalizedDocumentSearchCriteria;
+import org.pucar.dristi.common.contract.digitalizeddocuments.DigitalizedDocumentSearchRequest;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 @Component("casemanagementDigitalizedDocumentUtil")
 @Slf4j
 public class DigitalizedDocumentUtil {
 
-    private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
-    private final Configuration configuration;
+    private final DigitalizeddocumentsApi digitalizeddocumentsApi;
 
-    @Autowired
-    public DigitalizedDocumentUtil(RestTemplate restTemplate, ObjectMapper objectMapper, Configuration configuration) {
-        this.restTemplate = restTemplate;
+    public DigitalizedDocumentUtil(ObjectMapper objectMapper, DigitalizeddocumentsApi digitalizeddocumentsApi) {
         this.objectMapper = objectMapper;
-        this.configuration = configuration;
+        this.digitalizeddocumentsApi = digitalizeddocumentsApi;
     }
 
     /**
      * Searches for digitalized documents based on criteria
      */
     public List<DigitalizedDocument> searchDigitalizedDocuments(String caseId, String courtId, RequestInfo requestInfo, String tenantId) {
-        StringBuilder uri = new StringBuilder();
-        uri.append(configuration.getDigitalizedDocumentsHost())
-           .append(configuration.getDigitalizedDocumentsSearchEndPoint());
-
         DigitalizedDocumentSearchRequest searchRequest = DigitalizedDocumentSearchRequest.builder()
                 .requestInfo(requestInfo)
-                .criteria(DigitalizedDocumentSearchCriteria.builder().caseId(caseId).courtId(courtId).status("COMPLETED").tenantId(tenantId).build())
+                .criteria(DigitalizedDocumentSearchCriteria.builder()
+                        .caseId(caseId)
+                        .courtId(courtId)
+                        .status("COMPLETED")
+                        .tenantId(tenantId)
+                        .build())
                 .build();
         try {
-            Object response = restTemplate.postForObject(uri.toString(), searchRequest, Map.class);
-            JsonNode jsonNode = objectMapper.readTree(objectMapper.writeValueAsString(response));
-            DigitalizedDocumentSearchResponse searchResponse = objectMapper.convertValue(jsonNode, DigitalizedDocumentSearchResponse.class);
-            
-            if (searchResponse != null && searchResponse.getDocuments() != null) {
-                log.info("Found {} digitalized documents", searchResponse.getDocuments().size());
-                return searchResponse.getDocuments();
+            List<org.pucar.dristi.common.contract.digitalizeddocuments.DigitalizedDocument> results =
+                    digitalizeddocumentsApi.search(searchRequest);
+            if (results == null || results.isEmpty()) {
+                return Collections.emptyList();
             }
-            return new ArrayList<>();
+            log.info("Found {} digitalized documents", results.size());
+            return objectMapper.convertValue(
+                    results,
+                    objectMapper.getTypeFactory().constructCollectionType(List.class, DigitalizedDocument.class));
         } catch (Exception e) {
             log.error("Error while searching digitalized documents", e);
             throw new CustomException("DIGITALIZED_DOCUMENT_SEARCH_ERROR", e.getMessage());

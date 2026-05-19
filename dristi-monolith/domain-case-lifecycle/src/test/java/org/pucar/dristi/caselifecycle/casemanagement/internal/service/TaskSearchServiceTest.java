@@ -1,97 +1,79 @@
 package org.pucar.dristi.caselifecycle.casemanagement.internal.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.model.CustomException;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.pucar.dristi.caselifecycle.casemanagement.internal.config.Configuration;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
+import org.pucar.dristi.caselifecycle.task.TaskApi;
+import org.pucar.dristi.common.contract.task.Task;
+import org.pucar.dristi.common.contract.task.TaskSearchRequest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class TaskSearchServiceTest {
 
     @Mock
-    private RestTemplate restTemplate;
+    private TaskApi taskApi;
 
-    @Mock
-    private Configuration configuration;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
-    @InjectMocks
     private TaskSearchService taskSearchService;
 
-    @Mock
-    private ResponseEntity<Object> responseEntity;
-
-    @BeforeEach
+    @org.junit.jupiter.api.BeforeEach
     void setUp() {
-        lenient().when(configuration.getTaskSearchHost()).thenReturn("http://localhost:8080");
-        lenient().when(configuration.getTaskSearchPath()).thenReturn("/task/v1/search");
+        taskSearchService = new TaskSearchService(taskApi, objectMapper);
     }
 
     @Test
     void testGetTaskSearchResponseSuccess() {
-        String referenceId = "123";
-        String tenantId = "tenant1";
         RequestInfo requestInfo = new RequestInfo();
         requestInfo.setAuthToken("auth-token");
 
-        when(restTemplate.exchange(anyString(), eq(HttpMethod.POST), any(HttpEntity.class), eq(Object.class)))
-                .thenReturn(responseEntity);
+        Task task = new Task();
+        when(taskApi.search(any(TaskSearchRequest.class))).thenReturn(List.of(task));
 
-        ResponseEntity<Object> response = taskSearchService.getTaskSearchResponse(referenceId, tenantId, requestInfo);
+        ResponseEntity<Object> response = taskSearchService.getTaskSearchResponse("123", "tenant1", requestInfo);
 
         assertNotNull(response);
-        assertEquals(responseEntity, response);
-
-        verify(restTemplate, times(1)).exchange(anyString(), eq(HttpMethod.POST), any(HttpEntity.class), eq(Object.class));
+        assertTrue(response.getStatusCode().is2xxSuccessful());
+        verify(taskApi, times(1)).search(any(TaskSearchRequest.class));
     }
 
     @Test
     void testGetTaskSearchResponseThrowsCustomException() {
-        String referenceId = "123";
-        String tenantId = "tenant1";
         RequestInfo requestInfo = new RequestInfo();
         requestInfo.setAuthToken("auth-token");
 
-        when(restTemplate.exchange(anyString(), eq(HttpMethod.POST), any(HttpEntity.class), eq(Object.class)))
-                .thenThrow(new RuntimeException("RestTemplate Exception"));
+        when(taskApi.search(any(TaskSearchRequest.class)))
+                .thenThrow(new RuntimeException("TaskApi Exception"));
 
         CustomException exception = assertThrows(CustomException.class, () ->
-                taskSearchService.getTaskSearchResponse(referenceId, tenantId, requestInfo)
-        );
+                taskSearchService.getTaskSearchResponse("123", "tenant1", requestInfo));
 
         assertEquals("TASK_SEARCH_ERR", exception.getCode());
         assertTrue(exception.getMessage().contains("error while fetching the task details"));
-
-        verify(restTemplate, times(1)).exchange(anyString(), eq(HttpMethod.POST), any(HttpEntity.class), eq(Object.class));
     }
 
     @Test
-    void testGetTaskSearchResponseNullResponse() {
-        String referenceId = "123";
-        String tenantId = "tenant1";
+    void testGetTaskSearchResponseEmptyList() {
         RequestInfo requestInfo = new RequestInfo();
         requestInfo.setAuthToken("auth-token");
 
-        when(restTemplate.exchange(anyString(), eq(HttpMethod.POST), any(HttpEntity.class), eq(Object.class)))
-                .thenReturn(null); // Return null response
+        when(taskApi.search(any(TaskSearchRequest.class))).thenReturn(java.util.Collections.emptyList());
 
-        ResponseEntity<Object> response = taskSearchService.getTaskSearchResponse(referenceId, tenantId, requestInfo);
+        ResponseEntity<Object> response = taskSearchService.getTaskSearchResponse("123", "tenant1", requestInfo);
 
-        assertNull(response);
-
-        verify(restTemplate, times(1)).exchange(anyString(), eq(HttpMethod.POST), any(HttpEntity.class), eq(Object.class));
+        assertNotNull(response);
+        assertTrue(response.getStatusCode().is2xxSuccessful());
     }
 }

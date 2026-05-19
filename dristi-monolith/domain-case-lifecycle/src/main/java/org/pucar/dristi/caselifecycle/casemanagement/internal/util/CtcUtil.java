@@ -1,15 +1,19 @@
 package org.pucar.dristi.caselifecycle.casemanagement.internal.util;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
 import org.pucar.dristi.caselifecycle.casemanagement.internal.config.Configuration;
+import org.pucar.dristi.caselifecycle.ctc.CtcApi;
+import org.pucar.dristi.common.contract.ctc.CtcApplication;
+import org.pucar.dristi.common.contract.ctc.CtcApplicationSearchCriteria;
+import org.pucar.dristi.common.contract.ctc.CtcApplicationSearchRequest;
 import org.pucar.dristi.common.repository.ServiceRequestRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -20,11 +24,13 @@ public class CtcUtil {
     private final ObjectMapper mapper;
     private final Configuration configs;
     private final ServiceRequestRepository repository;
+    private final CtcApi ctcApi;
 
-    public CtcUtil(ObjectMapper mapper, Configuration configs, ServiceRequestRepository repository) {
+    public CtcUtil(ObjectMapper mapper, Configuration configs, ServiceRequestRepository repository, CtcApi ctcApi) {
         this.mapper = mapper;
         this.configs = configs;
         this.repository = repository;
+        this.ctcApi = ctcApi;
     }
 
     public Boolean isPartyToCase(String ctcApplicationNumber, String courtId, RequestInfo requestInfo) {
@@ -37,37 +43,19 @@ public class CtcUtil {
             return null;
         }
 
-        StringBuilder uri = new StringBuilder();
-        uri.append(configs.getCtcHost()).append(configs.getCtcSearchEndpoint());
-
-        Map<String, Object> request = new HashMap<>();
-        request.put("RequestInfo", requestInfo != null ? requestInfo : RequestInfo.builder().build());
-
-        Map<String, Object> criteria = new HashMap<>();
-        criteria.put("tenantId", tenantId);
-        criteria.put("ctcApplicationNumber", ctcApplicationNumber);
-        request.put("criteria", criteria);
-
-        Map<String, Object> pagination = new HashMap<>();
-        pagination.put("limit", 1);
-        pagination.put("offSet", 0);
-        request.put("pagination", pagination);
-
         try {
-            Object response = repository.fetchResult(uri, request);
-            JsonNode root = mapper.convertValue(response, JsonNode.class);
-            JsonNode applications = root.get("ctcApplications");
-            if (applications == null || !applications.isArray() || applications.isEmpty()) {
+            CtcApplicationSearchRequest request = CtcApplicationSearchRequest.builder()
+                    .requestInfo(requestInfo != null ? requestInfo : RequestInfo.builder().build())
+                    .criteria(CtcApplicationSearchCriteria.builder()
+                            .tenantId(tenantId)
+                            .ctcApplicationNumber(ctcApplicationNumber)
+                            .build())
+                    .build();
+            List<CtcApplication> applications = ctcApi.search(request);
+            if (applications == null || applications.isEmpty()) {
                 return null;
             }
-
-            JsonNode app = applications.get(0);
-            JsonNode isParty = app.get("isPartyToCase");
-            if (isParty == null || isParty.isNull()) {
-                return null;
-            }
-
-            return isParty.asBoolean();
+            return applications.get(0).getIsPartyToCase();
         } catch (Exception e) {
             log.error("Error searching CTC application for ctcApplicationNumber: {}", ctcApplicationNumber, e);
             return null;
@@ -75,6 +63,9 @@ public class CtcUtil {
     }
 
     public void updateCtcApplication(Map<String, Object> ctcApplication, RequestInfo requestInfo) {
+        // Cross-subdomain write — kept on REST per Rule 35 (write-side
+        // *Api exposure deferred until a deliberate design pass on
+        // cross-subdomain mutators). See ctc/package-info.java.
         StringBuilder uri = new StringBuilder();
         uri.append(configs.getCtcHost()).append(configs.getCtcUpdateEndpoint());
 

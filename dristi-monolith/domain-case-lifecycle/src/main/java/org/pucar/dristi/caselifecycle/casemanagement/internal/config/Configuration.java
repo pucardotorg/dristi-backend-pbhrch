@@ -113,12 +113,6 @@ public class Configuration {
 	@Value("${dristi.file.delete.path}")
 	private String fileStoreDeleteEndPoint;
 
-	@Value("${dristi.order.host}")
-	private String orderSearchHost;
-
-	@Value("${dristi.order.search.url}")
-	private String orderSearchPath;
-
 	@Value("${egov.pdf.create}")
 	private String generatePdfUrl;
 
@@ -131,13 +125,6 @@ public class Configuration {
 	@Value("${egov.credential.url}")
 	private String credentialUrl;
 
-	@Value("${dristi.task.host}")
-	private String taskSearchHost;
-
-	@Value("${dristi.task.search.url}")
-	private String taskSearchPath;
-
-
 	@Value("${egov.dristi.pdf.host}")
 	private String caseBundlePdfHost;
 
@@ -146,12 +133,6 @@ public class Configuration {
 
 	@Value("${egov.dristi.pdf.process.bundle}")
 	private String processCaseBundlePdfPath;
-
-	@Value("${dristi.case.host}")
-	private String caseHost;
-
-	@Value("${dristi.case.search.url}")
-	private String caseSearchUrl;
 
 	//ElasticSearch Config
 	@Value("${egov.infra.indexer.host}")
@@ -220,19 +201,10 @@ public class Configuration {
 	private String caseAllowedStatuses;
 	private List<String> caseAllowedStatusesList = new ArrayList<>();
 
-	// Digitalized Documents Config
-	@Value("${dristi.digitalized.documents.host}")
-	private String digitalizedDocumentsHost;
-
-	@Value("${dristi.digitalized.documents.search.endpoint}")
-	private String digitalizedDocumentsSearchEndPoint;
-
-	// CTC Service Config
+	// CTC Service Config — write-side only; reads via CtcApi (Rule 35
+	// keeps cross-subdomain writes on REST).
 	@Value("${dristi.ctc.host}")
 	private String ctcHost;
-
-	@Value("${dristi.ctc.search.endpoint}")
-	private String ctcSearchEndpoint;
 
 	@Value("${dristi.ctc.update.endpoint}")
 	private String ctcUpdateEndpoint;

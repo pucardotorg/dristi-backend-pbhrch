@@ -1,62 +1,53 @@
 package org.pucar.dristi.caselifecycle.casemanagement.internal.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.model.CustomException;
-import org.pucar.dristi.caselifecycle.casemanagement.internal.config.Configuration;
-import org.pucar.dristi.common.contract.casemanagement.TaskSearchRequest;
-import org.pucar.dristi.common.contract.casemanagement.VcEntityCriteria;
+import org.pucar.dristi.caselifecycle.task.TaskApi;
+import org.pucar.dristi.common.contract.task.Task;
+import org.pucar.dristi.common.contract.task.TaskCriteria;
+import org.pucar.dristi.common.contract.task.TaskSearchRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
+@Slf4j
 public class TaskSearchService {
 
-    private final RestTemplate restTemplate;
-
-    private final Configuration configuration;
+    private final TaskApi taskApi;
+    private final ObjectMapper objectMapper;
 
     @Autowired
-    public TaskSearchService(RestTemplate restTemplate,Configuration configuration) {
-        this.restTemplate = restTemplate;
-        this.configuration=configuration;
+    public TaskSearchService(TaskApi taskApi, ObjectMapper objectMapper) {
+        this.taskApi = taskApi;
+        this.objectMapper = objectMapper;
     }
 
-    public ResponseEntity<Object> getTaskSearchResponse(String referenceId, String tenantId,RequestInfo requestInfo) {
-        StringBuilder searchTaskUrl= new StringBuilder();
-        searchTaskUrl.append(configuration.getTaskSearchHost()).append(configuration.getTaskSearchPath());
-        HttpHeaders headers = new HttpHeaders();
+    public ResponseEntity<Object> getTaskSearchResponse(String referenceId, String tenantId, RequestInfo requestInfo) {
+        TaskSearchRequest request = new TaskSearchRequest();
+        request.setRequestInfo(requestInfo);
+        TaskCriteria criteria = new TaskCriteria();
+        criteria.setId(referenceId);
+        criteria.setTenantId(tenantId);
+        request.setCriteria(criteria);
 
-        headers.set("Accept", "application/json, text/plain, */*");
-        headers.set("Content-Type", "application/json;charset=UTF-8");
-        headers.set("Accept-Language", "en-GB,en-US;q=0.9,en;q=0.8");
-        headers.set("Connection", "keep-alive");
-
-        requestInfo.setAuthToken(requestInfo.getAuthToken());
-        VcEntityCriteria criteria= VcEntityCriteria.builder()
-                .id(referenceId)
-                .build();
-
-        TaskSearchRequest taskSearchRequest= TaskSearchRequest.builder()
-                .requestInfo(requestInfo)
-                .tenantId(tenantId)
-                .criteria(criteria)
-                .build();
-
-        HttpEntity<TaskSearchRequest> entity = new HttpEntity<>(taskSearchRequest, headers);
-        ResponseEntity<Object> response=null;
-
-        try{
-            response = restTemplate.exchange(searchTaskUrl.toString(), HttpMethod.POST, entity, Object.class);
+        try {
+            List<Task> tasks = taskApi.search(request);
+            // Preserve the original REST envelope so downstream callers
+            // (controllers, etc.) see the same shape they used to over the
+            // wire. `list` is the field the /task/v1/search controller
+            // returns under in its response body.
+            Map<String, Object> body = new HashMap<>();
+            body.put("list", tasks != null ? tasks : java.util.Collections.emptyList());
+            return ResponseEntity.ok(objectMapper.convertValue(body, Object.class));
+        } catch (Exception e) {
+            throw new CustomException("TASK_SEARCH_ERR", "error while fetching the task details:" + e.getMessage());
         }
-        catch (Exception e){
-            throw new CustomException("TASK_SEARCH_ERR","error while fetching the task details:"+ e.getMessage());
-        }
-        return response;
     }
 }

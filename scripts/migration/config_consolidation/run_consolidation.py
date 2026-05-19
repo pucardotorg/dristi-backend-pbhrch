@@ -220,22 +220,22 @@ SERVICE_DEAD_KEYS: dict[str, set[str]] = {
         "dristi.advocate.search.endpoint",
         "dristi.advocate.clerk.search.endpoint",
     },
-    # casemanagement C2: TaskManagementUtil REST→TaskmanagementApi, EvidenceUtil
-    # REST→EvidenceApi, OrderUtil REST→OrderApi, ApplicationUtil REST→
-    # ApplicationApi (exposed in this PR — first cross-subdomain caller)
-    # direct calls (Rule 32). casemanagement now reads those Apis directly;
-    # no @Value("${dristi.taskmanagement.{host,search.endpoint}}" /
-    # ${dristi.evidence.{host,search.endpoint}} /
-    # ${dristi.application.{host,search.endpoint}}") consumer remains in
-    # caselifecycle/casemanagement/internal/. Pipeline 5 would otherwise
-    # re-add these dead keys on every regen.
-    # `dristi.case.{host,search.url}` are still read by CaseBundleService /
-    # CaseBundleIndexBuilderService (Rule 39 follow-up: these are weakly-
-    # typed `Map<String, Object>` REST calls that need Tier 3 redesign
-    # before they can switch to CaseApi.search).
-    # `dristi.order.{host,search.url}` are still read by OrderSearchService
-    # (Rule 39 follow-up: searches via VcEntityOrderSearchRequest, a VC-
-    # specific shape OrderApi doesn't currently expose).
+    # casemanagement C2: full Rule 32 sweep — every outgoing REST helper
+    # whose target subdomain is in the monolith was converted to *Api
+    # direct calls. casemanagement now reads CaseApi (CaseBundleService +
+    # CaseBundleIndexBuilderService convert the typed CaseListResponse
+    # back to Map<String,Object> for legacy downstream code),
+    # TaskmanagementApi, EvidenceApi, OrderApi (OrderSearchService maps
+    # the VC-entity referenceId onto OrderCriteria.id), ApplicationApi
+    # (exposed in this PR — first cross-subdomain caller), TaskApi
+    # (re-introduced; safe because casemanagement has no incoming edges
+    # so the cases↔task↔order cycle from a89087936 cannot re-form),
+    # CtcApi (read-side only; updates stay on REST per Rule 35), and
+    # DigitalizeddocumentsApi (exposed in this PR). The only outgoing
+    # REST left is CtcUtil.updateCtcApplication (Rule 35) plus
+    # MdmsV2Util and SummonsOrderPdfUtil (egov platform services per
+    # Rule 17). Pipeline 5 would otherwise re-add the dead keys on
+    # every regen.
     "casemanagement": {
         "dristi.taskmanagement.host",
         "dristi.taskmanagement.search.endpoint",
@@ -243,6 +243,15 @@ SERVICE_DEAD_KEYS: dict[str, set[str]] = {
         "dristi.evidence.search.endpoint",
         "dristi.application.host",
         "dristi.application.search.endpoint",
+        "dristi.case.host",
+        "dristi.case.search.url",
+        "dristi.order.host",
+        "dristi.order.search.url",
+        "dristi.task.host",
+        "dristi.task.search.url",
+        "dristi.digitalized.documents.host",
+        "dristi.digitalized.documents.search.endpoint",
+        "dristi.ctc.search.endpoint",
     },
 }
 

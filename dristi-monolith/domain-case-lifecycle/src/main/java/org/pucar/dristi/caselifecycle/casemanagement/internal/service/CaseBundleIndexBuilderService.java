@@ -37,13 +37,15 @@ public class CaseBundleIndexBuilderService {
     private final ServiceRequestRepository serviceRequestRepository;
     private final ElasticSearchRepository esRepository;
     private final FileStoreUtil fileStoreUtil;
+    private final org.pucar.dristi.caselifecycle.cases.CaseApi caseApi;
 
     @Value("classpath:CaseBundleDefault.json")
     private Resource caseDataResource;
 
     @Autowired
     public CaseBundleIndexBuilderService(Configuration configuration, ObjectMapper objectMapper, CaseBundleService caseBundleService, MdmsV2Util mdmsV2Util,
-                                         ServiceRequestRepository serviceRequestRepository, ElasticSearchRepository esRepository, FileStoreUtil fileStoreUtil) {
+                                         ServiceRequestRepository serviceRequestRepository, ElasticSearchRepository esRepository, FileStoreUtil fileStoreUtil,
+                                         org.pucar.dristi.caselifecycle.cases.CaseApi caseApi) {
 
         this.configuration = configuration;
         this.objectMapper = objectMapper;
@@ -52,6 +54,15 @@ public class CaseBundleIndexBuilderService {
         this.serviceRequestRepository=serviceRequestRepository;
         this.esRepository=esRepository;
         this.fileStoreUtil = fileStoreUtil;
+        this.caseApi = caseApi;
+    }
+
+    private Object fetchCaseAsMap(CaseSearchRequest casemanagementReq) {
+        org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseSearchRequest casesReq =
+                objectMapper.convertValue(casemanagementReq,
+                        org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseSearchRequest.class);
+        org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseListResponse response = caseApi.search(casesReq);
+        return objectMapper.convertValue(response, Map.class);
     }
 
     public Boolean isValidState(String moduleName, String businessService, String state,String tenantID,RequestInfo requestInfo){
@@ -94,14 +105,11 @@ public class CaseBundleIndexBuilderService {
         caseSearchRequest.setRequestInfo(requestInfo);
         caseSearchRequest.setFlow(FLOW_JAC);
 
-        StringBuilder uri = new StringBuilder();
-        uri.append(configuration.getCaseHost()).append(configuration.getCaseSearchUrl());
-
         Object response = null;
         try {
-            response = serviceRequestRepository.fetchResult(uri, caseSearchRequest);
+            response = fetchCaseAsMap(caseSearchRequest);
         } catch (Exception e) {
-            log.error("Error while fetching case data from service request repository", e);
+            log.error("Error while fetching case data via CaseApi", e);
         }
 
 
@@ -145,14 +153,11 @@ public class CaseBundleIndexBuilderService {
         caseSearchRequest.setCriteria(caseList);
         caseSearchRequest.setRequestInfo(requestInfo);
 
-        StringBuilder uri = new StringBuilder();
-        uri.append(configuration.getCaseHost()).append(configuration.getCaseSearchUrl());
-
         Object response = null;
         try {
-            response = serviceRequestRepository.fetchResult(uri, caseSearchRequest);
+            response = fetchCaseAsMap(caseSearchRequest);
         } catch (Exception e) {
-            log.error("Error while fetching case data from service request repository", e);
+            log.error("Error while fetching case data via CaseApi", e);
         }
 
 
