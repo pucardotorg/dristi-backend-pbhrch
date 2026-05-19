@@ -1,4 +1,5 @@
-package org.pucar.dristi.caselifecycle.cases.internal.web.models;
+// HAND-CURATED — lifted by Phase 35 (contract-lift)
+package org.pucar.dristi.common.contract.evidence;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -7,6 +8,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.validation.annotation.Validated;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Validated
@@ -20,17 +24,27 @@ public class EvidenceSearchCriteria {
     private String caseId;
     private String applicationNumber;
     private String artifactType;
+    private Boolean isVoid;
     private Boolean evidenceStatus;
     private String hearing;
     private String order;
     private String sourceId;
     private String sourceName;
-    private String status;
+    private List<String> status;
     private String artifactNumber;
     private String filingNumber;
     private UUID owner;
     private String tenantId;
+    private String filingType;
     private String fileStoreId;
+    private String courtId;
+    private String sourceType;
+    private Boolean fuzzySearch = true;
+    private List<String> workflowStatus = new ArrayList<>();
+    private String evidenceNumber;
+    private Boolean isActive = true;
+    private Boolean isHideBailCaseBundle = false;
+    private String asUser;
 
     @JsonIgnore
     private String userUuid;
@@ -40,6 +54,9 @@ public class EvidenceSearchCriteria {
 
     @JsonIgnore
     private boolean isCourtEmployee = false;
+
+    @JsonIgnore
+    private boolean isCourtEmployeeCanSign = false;
     // Getters and setters
 
     public String getId() {
@@ -103,11 +120,11 @@ public class EvidenceSearchCriteria {
         this.sourceName = sourceName;
     }
 
-    public String getStatus() {
+    public List<String> getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(List<String> status) {
         this.status = status;
     }
     public UUID getOwner() {
@@ -135,5 +152,23 @@ public class EvidenceSearchCriteria {
     }
     public boolean getIsCourtEmployee() {
         return isCourtEmployee;
+    }
+    public Boolean getFuzzySearch() {
+        if (fuzzySearch == null) {
+            fuzzySearch = true;
+        }
+        return fuzzySearch;
+    }
+
+    public Boolean getIsActive() {
+        if(isActive == null) {
+            isActive = true;
+        }
+
+        return isActive;
+    }
+
+    public String getAsUser(){
+        return asUser;
     }
 }
