@@ -18,6 +18,7 @@ app.timezone,digitalized-documents,Asia/Kolkata,CONFLICT
 app.timezone,e-sign-svc,Asia/Kolkata,CONFLICT
 app.timezone,evidence,Asia/Kolkata,CONFLICT
 app.timezone,hearing,Asia/Kolkata,CONFLICT
+app.timezone,hearing-management,Asia/Kolkata,CONFLICT
 app.timezone,inportal-survey,Asia/Kolkata,CONFLICT
 app.timezone,lock-svc,Asia/Kolkata,CONFLICT
 app.timezone,order,Asia/Kolkata,CONFLICT
@@ -34,6 +35,7 @@ app.zone.id,digitalized-documents,Asia/Kolkata,CONFLICT
 app.zone.id,epost-tracker,Asia/Kolkata,CONFLICT
 app.zone.id,evidence,Asia/Kolkata,CONFLICT
 app.zone.id,hearing,Asia/Kolkata,CONFLICT
+app.zone.id,hearing-management,Asia/Kolkata,CONFLICT
 app.zone.id,order,Asia/Kolkata,CONFLICT
 app.zone.id,task,Asia/Kolkata,CONFLICT
 app.zone.id,task-management,Asia/Kolkata,CONFLICT
@@ -232,6 +234,7 @@ egov.hrms.host,case,https://dev.digit.org,CONFLICT
 egov.hrms.host,digitalized-documents,https://dev.digit.org,CONFLICT
 egov.hrms.host,evidence,https://dev.digit.org,CONFLICT
 egov.hrms.host,hearing,https://dev.digit.org,CONFLICT
+egov.hrms.host,hearing-management,https://dev.digit.org,CONFLICT
 egov.hrms.host,order,https://dev.digit.org,CONFLICT
 egov.hrms.host,task,https://dev.digit.org,CONFLICT
 egov.hrms.host,task-management,https://dev.digit.org,CONFLICT
@@ -245,6 +248,7 @@ egov.hrms.search.endpoint,case,/egov-hrms/employees/_search,CONFLICT
 egov.hrms.search.endpoint,digitalized-documents,/egov-hrms/employees/_search,CONFLICT
 egov.hrms.search.endpoint,evidence,/egov-hrms/employees/_search,CONFLICT
 egov.hrms.search.endpoint,hearing,/egov-hrms/employees/_search,CONFLICT
+egov.hrms.search.endpoint,hearing-management,/egov-hrms/employees/_search,CONFLICT
 egov.hrms.search.endpoint,order,/egov-hrms/employees/_search,CONFLICT
 egov.hrms.search.endpoint,task,/egov-hrms/employees/_search,CONFLICT
 egov.hrms.search.endpoint,task-management,/egov-hrms/employees/_search,CONFLICT
@@ -264,6 +268,7 @@ egov.idgen.host,digitalized-documents,http://localhost:8081,CONFLICT
 egov.idgen.host,epost-tracker,http://egov-idgen:8080,CONFLICT
 egov.idgen.host,evidence,http://localhost:8088/,CONFLICT
 egov.idgen.host,hearing,http://localhost:8082/,CONFLICT
+egov.idgen.host,hearing-management,https://dev.digit.org/,CONFLICT
 egov.idgen.host,order,http://localhost:8082/,CONFLICT
 egov.idgen.host,task,http://localhost:8082/,CONFLICT
 egov.idgen.host,task-management,http://localhost:8088,CONFLICT
@@ -286,6 +291,7 @@ egov.idgen.path,digitalized-documents,/egov-idgen/id/_generate,CONFLICT
 egov.idgen.path,epost-tracker,/egov-idgen/id/_generate,CONFLICT
 egov.idgen.path,evidence,egov-idgen/id/_generate,CONFLICT
 egov.idgen.path,hearing,egov-idgen/id/_generate,CONFLICT
+egov.idgen.path,hearing-management,egov-idgen/id/_generate,CONFLICT
 egov.idgen.path,order,egov-idgen/id/_generate,CONFLICT
 egov.idgen.path,task,egov-idgen/id/_generate,CONFLICT
 egov.idgen.path,task-management,/egov-idgen/id/_generate,CONFLICT
@@ -365,6 +371,7 @@ egov.localization.context.path,case,/localization/messages/v1,CONFLICT
 egov.localization.context.path,digitalized-documents,/localization/messages/v1,CONFLICT
 egov.localization.context.path,evidence,/localization/messages/v1,CONFLICT
 egov.localization.context.path,hearing,/localization/messages/v1,CONFLICT
+egov.localization.context.path,hearing-management,/localization/messages/v1,CONFLICT
 egov.localization.context.path,order,/localization/messages/v1,CONFLICT
 egov.localization.context.path,task,/localization/messages/v1,CONFLICT
 egov.localization.context.path,treasury-backend,/localization/messages/v1,CONFLICT
@@ -379,6 +386,7 @@ egov.localization.host,ctc,http://localhost:8080,CONFLICT
 egov.localization.host,digitalized-documents,https://dev.digit.org,CONFLICT
 egov.localization.host,evidence,https://dev.digit.org,CONFLICT
 egov.localization.host,hearing,https://dev.digit.org,CONFLICT
+egov.localization.host,hearing-management,https://dev.digit.org,CONFLICT
 egov.localization.host,order,http://localhost:8080,CONFLICT
 egov.localization.host,task,https://dev.digit.org,CONFLICT
 egov.localization.host,task-management,https://dev.digit.org,CONFLICT
@@ -394,6 +402,7 @@ egov.localization.search.endpoint,ctc,/localization/messages/v1/_search,CONFLICT
 egov.localization.search.endpoint,digitalized-documents,/_search,CONFLICT
 egov.localization.search.endpoint,evidence,/_search,CONFLICT
 egov.localization.search.endpoint,hearing,/_search,CONFLICT
+egov.localization.search.endpoint,hearing-management,/_search,CONFLICT
 egov.localization.search.endpoint,order,/_search,CONFLICT
 egov.localization.search.endpoint,task,/_search,CONFLICT
 egov.localization.search.endpoint,task-management,/localization/messages/v1/_search,CONFLICT
@@ -409,6 +418,7 @@ egov.localization.statelevel,ctc,true,CONFLICT
 egov.localization.statelevel,digitalized-documents,true,CONFLICT
 egov.localization.statelevel,evidence,true,CONFLICT
 egov.localization.statelevel,hearing,true,CONFLICT
+egov.localization.statelevel,hearing-management,true,CONFLICT
 egov.localization.statelevel,order,true,CONFLICT
 egov.localization.statelevel,task,true,CONFLICT
 egov.localization.statelevel,task-management,true,CONFLICT
@@ -422,6 +432,7 @@ egov.localization.workDir.path,case,/localization/messages/v1,CONFLICT
 egov.localization.workDir.path,digitalized-documents,/localization/messages/v1,CONFLICT
 egov.localization.workDir.path,evidence,/localization/messages/v1,CONFLICT
 egov.localization.workDir.path,hearing,/localization/messages/v1,CONFLICT
+egov.localization.workDir.path,hearing-management,/localization/messages/v1,CONFLICT
 egov.localization.workDir.path,order,/localization/messages/v1,CONFLICT
 egov.localization.workDir.path,task,/localization/messages/v1,CONFLICT
 egov.long.url,bail-bond,%s?tenant=%s&bailbondId=%s,CONFLICT
@@ -442,6 +453,7 @@ egov.mdms.host,e-sign-svc,https://dev.digit.org,CONFLICT
 egov.mdms.host,epost-tracker,http://localhost:8090,CONFLICT
 egov.mdms.host,evidence,https://dev.digit.org,CONFLICT
 egov.mdms.host,hearing,http://localhost:8085,CONFLICT
+egov.mdms.host,hearing-management,http://localhost:8084,CONFLICT
 egov.mdms.host,inportal-survey,http://localhost:8081,CONFLICT
 egov.mdms.host,lock-svc,https://dev.digit.org,CONFLICT
 egov.mdms.host,order,http://localhost:8084,CONFLICT
@@ -462,6 +474,7 @@ egov.mdms.search.endpoint,e-sign-svc,/egov-mdms-service/v1/_search,CONFLICT
 egov.mdms.search.endpoint,epost-tracker,/egov-mdms-service/v1/_search,CONFLICT
 egov.mdms.search.endpoint,evidence,/egov-mdms-service/v1/_search,CONFLICT
 egov.mdms.search.endpoint,hearing,/egov-mdms-service/v1/_search,CONFLICT
+egov.mdms.search.endpoint,hearing-management,/egov-mdms-service/v1/_search,CONFLICT
 egov.mdms.search.endpoint,inportal-survey,/egov-mdms-service/v1/_search,CONFLICT
 egov.mdms.search.endpoint,lock-svc,/egov-mdms-service/v1/_search,CONFLICT
 egov.mdms.search.endpoint,order,/egov-mdms-service/v1/_search,CONFLICT
@@ -499,6 +512,7 @@ egov.sms.notification.topic,digitalized-documents,egov.core.notification.sms,CON
 egov.sms.notification.topic,e-sign-svc,egov.core.notification.sms,CONFLICT
 egov.sms.notification.topic,evidence,egov.core.notification.sms,CONFLICT
 egov.sms.notification.topic,hearing,egov.core.notification.sms,CONFLICT
+egov.sms.notification.topic,hearing-management,egov.core.notification.sms,CONFLICT
 egov.sms.notification.topic,inportal-survey,egov.core.notification.sms,CONFLICT
 egov.sms.notification.topic,order,egov.core.notification.sms,CONFLICT
 egov.sms.notification.topic,payment-calculator-svc,egov.core.notification.sms,CONFLICT
@@ -509,6 +523,7 @@ egov.sms.notification.warrant.issued.template.id,order,1107173208546405882,CONFL
 egov.sms.notification.warrant.issued.template.id,task,1107173141211634147,CONFLICT
 egov.tenantId,ab-diary,pb,CONFLICT
 egov.tenantId,ctc,pb,CONFLICT
+egov.tenantId,hearing-management,pb,CONFLICT
 egov.tenantId,order,pb,CONFLICT
 egov.url.shortener.expire.endpoint,bail-bond,/eus/expireTheURL,CONFLICT
 egov.url.shortener.expire.endpoint,digitalized-documents,/eus/expireTheURL,CONFLICT
@@ -523,6 +538,7 @@ egov.url.shortner.endpoint,case,/egov-url-shortening/shortener,CONFLICT
 egov.url.shortner.endpoint,digitalized-documents,/eus/shortener,CONFLICT
 egov.url.shortner.endpoint,evidence,/eus/shortener,CONFLICT
 egov.url.shortner.endpoint,hearing,/egov-url-shortening/shortener,CONFLICT
+egov.url.shortner.endpoint,hearing-management,/egov-url-shortening/shortener,CONFLICT
 egov.url.shortner.endpoint,order,/egov-url-shortening/shortener,CONFLICT
 egov.url.shortner.endpoint,task,/egov-url-shortening/shortener,CONFLICT
 egov.url.shortner.host,Notification,https://dev.digit.org,CONFLICT
@@ -535,6 +551,7 @@ egov.url.shortner.host,case,https://dev.digit.org,CONFLICT
 egov.url.shortner.host,digitalized-documents,http://localhost:8090,CONFLICT
 egov.url.shortner.host,evidence,http://localhost:8093,CONFLICT
 egov.url.shortner.host,hearing,https://dev.digit.org,CONFLICT
+egov.url.shortner.host,hearing-management,https://dev.digit.org,CONFLICT
 egov.url.shortner.host,order,https://dev.digit.org,CONFLICT
 egov.url.shortner.host,task,https://dev.digit.org,CONFLICT
 egov.url.shortner.host,task-management,,CONFLICT
@@ -548,6 +565,7 @@ egov.user.context.path,case,/user/users,CONFLICT
 egov.user.context.path,digitalized-documents,/user/users,CONFLICT
 egov.user.context.path,evidence,/user/users,CONFLICT
 egov.user.context.path,hearing,/user/users,CONFLICT
+egov.user.context.path,hearing-management,/user/users,CONFLICT
 egov.user.context.path,lock-svc,/user/users,CONFLICT
 egov.user.context.path,order,/user/users,CONFLICT
 egov.user.context.path,task,/user/users,CONFLICT
@@ -563,6 +581,7 @@ egov.user.create.path,digitalized-documents,/_createnovalidate,CONFLICT
 egov.user.create.path,epost-tracker,/user/users/_createnovalidate,CONFLICT
 egov.user.create.path,evidence,/_createnovalidate,CONFLICT
 egov.user.create.path,hearing,/_createnovalidate,CONFLICT
+egov.user.create.path,hearing-management,/_createnovalidate,CONFLICT
 egov.user.create.path,lock-svc,/_createnovalidate,CONFLICT
 egov.user.create.path,order,/_createnovalidate,CONFLICT
 egov.user.create.path,task,/_createnovalidate,CONFLICT
@@ -578,6 +597,7 @@ egov.user.host,digitalized-documents,https://dev.digit.org,CONFLICT
 egov.user.host,epost-tracker,http://localhost:7090,CONFLICT
 egov.user.host,evidence,https://dev.digit.org,CONFLICT
 egov.user.host,hearing,https://dev.digit.org,CONFLICT
+egov.user.host,hearing-management,https://dev.digit.org,CONFLICT
 egov.user.host,lock-svc,https://dev.digit.org,CONFLICT
 egov.user.host,order,http://localhost:8086,CONFLICT
 egov.user.host,task,https://dev.digit.org,CONFLICT
@@ -593,6 +613,7 @@ egov.user.search.path,digitalized-documents,/user/_search,CONFLICT
 egov.user.search.path,epost-tracker,/user/v1/_search,CONFLICT
 egov.user.search.path,evidence,/user/_search,CONFLICT
 egov.user.search.path,hearing,/user/_search,CONFLICT
+egov.user.search.path,hearing-management,/user/_search,CONFLICT
 egov.user.search.path,lock-svc,/user/_search,CONFLICT
 egov.user.search.path,order,/user/_search,CONFLICT
 egov.user.search.path,task,/user/v1/_search,CONFLICT
@@ -607,6 +628,7 @@ egov.user.update.path,case,/_updatenovalidate,CONFLICT
 egov.user.update.path,digitalized-documents,/_updatenovalidate,CONFLICT
 egov.user.update.path,evidence,/_updatenovalidate,CONFLICT
 egov.user.update.path,hearing,/_updatenovalidate,CONFLICT
+egov.user.update.path,hearing-management,/_updatenovalidate,CONFLICT
 egov.user.update.path,lock-svc,/_updatenovalidate,CONFLICT
 egov.user.update.path,order,/_updatenovalidate,CONFLICT
 egov.user.update.path,task,/_updatenovalidate,CONFLICT
@@ -622,6 +644,7 @@ egov.workflow.businessservice.search.path,ctc,/egov-workflow-v2/egov-wf/business
 egov.workflow.businessservice.search.path,digitalized-documents,/egov-workflow-v2/egov-wf/businessservice/_search,CONFLICT
 egov.workflow.businessservice.search.path,evidence,/egov-workflow-v2/egov-wf/businessservice/_search,CONFLICT
 egov.workflow.businessservice.search.path,hearing,/egov-workflow-v2/egov-wf/businessservice/_search,CONFLICT
+egov.workflow.businessservice.search.path,hearing-management,/egov-workflow-v2/egov-wf/businessservice/_search,CONFLICT
 egov.workflow.businessservice.search.path,order,/egov-workflow-v2/egov-wf/businessservice/_search,CONFLICT
 egov.workflow.businessservice.search.path,task,/egov-workflow-v2/egov-wf/businessservice/_search,CONFLICT
 egov.workflow.businessservice.search.path,task-management,/egov-workflow-v2/egov-wf/businessservice/_search,CONFLICT
@@ -636,6 +659,7 @@ egov.workflow.host,ctc,http://localhost:8083,CONFLICT
 egov.workflow.host,digitalized-documents,http://localhost:8050,CONFLICT
 egov.workflow.host,evidence,http://localhost:8083/,CONFLICT
 egov.workflow.host,hearing,http://localhost:8083,CONFLICT
+egov.workflow.host,hearing-management,https://dev.digit.org,CONFLICT
 egov.workflow.host,order,http://localhost:8083,CONFLICT
 egov.workflow.host,task,http://localhost:8083,CONFLICT
 egov.workflow.host,task-management,http://localhost:8050,CONFLICT
@@ -650,6 +674,7 @@ egov.workflow.processinstance.search.path,ctc,/egov-workflow-v2/egov-wf/process/
 egov.workflow.processinstance.search.path,digitalized-documents,/egov-workflow-v2/egov-wf/process/_search,CONFLICT
 egov.workflow.processinstance.search.path,evidence,/egov-workflow-v2/egov-wf/process/_search,CONFLICT
 egov.workflow.processinstance.search.path,hearing,/egov-workflow-v2/egov-wf/process/_search,CONFLICT
+egov.workflow.processinstance.search.path,hearing-management,/egov-workflow-v2/egov-wf/process/_search,CONFLICT
 egov.workflow.processinstance.search.path,order,/egov-workflow-v2/egov-wf/process/_search,CONFLICT
 egov.workflow.processinstance.search.path,task,/egov-workflow-v2/egov-wf/process/_search,CONFLICT
 egov.workflow.processinstance.search.path,task-management,/egov-workflow-v2/egov-wf/process/_search,CONFLICT
@@ -668,6 +693,7 @@ egov.workflow.transition.path,ctc,/egov-workflow-v2/egov-wf/process/_transition,
 egov.workflow.transition.path,digitalized-documents,/egov-workflow-v2/egov-wf/process/_transition,CONFLICT
 egov.workflow.transition.path,evidence,/egov-workflow-v2/egov-wf/process/_transition,CONFLICT
 egov.workflow.transition.path,hearing,/egov-workflow-v2/egov-wf/process/_transition,CONFLICT
+egov.workflow.transition.path,hearing-management,/egov-workflow-v2/egov-wf/process/_transition,CONFLICT
 egov.workflow.transition.path,order,/egov-workflow-v2/egov-wf/process/_transition,CONFLICT
 egov.workflow.transition.path,task,/egov-workflow-v2/egov-wf/process/_transition,CONFLICT
 egov.workflow.transition.path,task-management,/egov-workflow-v2/egov-wf/process/_transition,CONFLICT
@@ -691,6 +717,7 @@ is.workflow.enabled,ctc,true,CONFLICT
 is.workflow.enabled,digitalized-documents,true,CONFLICT
 is.workflow.enabled,evidence,true,CONFLICT
 is.workflow.enabled,hearing,true,CONFLICT
+is.workflow.enabled,hearing-management,true,CONFLICT
 is.workflow.enabled,order,true,CONFLICT
 is.workflow.enabled,task,true,CONFLICT
 is.workflow.enabled,task-management,true,CONFLICT
@@ -709,6 +736,7 @@ kafka.consumer.config.auto_commit,e-sign-svc,true,CONFLICT
 kafka.consumer.config.auto_commit,epost-tracker,true,CONFLICT
 kafka.consumer.config.auto_commit,evidence,true,CONFLICT
 kafka.consumer.config.auto_commit,hearing,true,CONFLICT
+kafka.consumer.config.auto_commit,hearing-management,true,CONFLICT
 kafka.consumer.config.auto_commit,inportal-survey,true,CONFLICT
 kafka.consumer.config.auto_commit,lock-svc,true,CONFLICT
 kafka.consumer.config.auto_commit,order,true,CONFLICT
@@ -730,6 +758,7 @@ kafka.consumer.config.auto_commit_interval,e-sign-svc,100,CONFLICT
 kafka.consumer.config.auto_commit_interval,epost-tracker,100,CONFLICT
 kafka.consumer.config.auto_commit_interval,evidence,100,CONFLICT
 kafka.consumer.config.auto_commit_interval,hearing,100,CONFLICT
+kafka.consumer.config.auto_commit_interval,hearing-management,100,CONFLICT
 kafka.consumer.config.auto_commit_interval,inportal-survey,100,CONFLICT
 kafka.consumer.config.auto_commit_interval,lock-svc,100,CONFLICT
 kafka.consumer.config.auto_commit_interval,order,100,CONFLICT
@@ -751,6 +780,7 @@ kafka.consumer.config.auto_offset_reset,e-sign-svc,earliest,CONFLICT
 kafka.consumer.config.auto_offset_reset,epost-tracker,earliest,CONFLICT
 kafka.consumer.config.auto_offset_reset,evidence,earliest,CONFLICT
 kafka.consumer.config.auto_offset_reset,hearing,earliest,CONFLICT
+kafka.consumer.config.auto_offset_reset,hearing-management,earliest,CONFLICT
 kafka.consumer.config.auto_offset_reset,inportal-survey,earliest,CONFLICT
 kafka.consumer.config.auto_offset_reset,lock-svc,earliest,CONFLICT
 kafka.consumer.config.auto_offset_reset,order,earliest,CONFLICT
@@ -772,6 +802,7 @@ kafka.consumer.config.session_timeout,e-sign-svc,15000,CONFLICT
 kafka.consumer.config.session_timeout,epost-tracker,15000,CONFLICT
 kafka.consumer.config.session_timeout,evidence,15000,CONFLICT
 kafka.consumer.config.session_timeout,hearing,15000,CONFLICT
+kafka.consumer.config.session_timeout,hearing-management,15000,CONFLICT
 kafka.consumer.config.session_timeout,inportal-survey,15000,CONFLICT
 kafka.consumer.config.session_timeout,lock-svc,15000,CONFLICT
 kafka.consumer.config.session_timeout,order,15000,CONFLICT
@@ -793,6 +824,7 @@ kafka.producer.config.batch_size_config,e-sign-svc,16384,CONFLICT
 kafka.producer.config.batch_size_config,epost-tracker,16384,CONFLICT
 kafka.producer.config.batch_size_config,evidence,16384,CONFLICT
 kafka.producer.config.batch_size_config,hearing,16384,CONFLICT
+kafka.producer.config.batch_size_config,hearing-management,16384,CONFLICT
 kafka.producer.config.batch_size_config,inportal-survey,16384,CONFLICT
 kafka.producer.config.batch_size_config,lock-svc,16384,CONFLICT
 kafka.producer.config.batch_size_config,order,16384,CONFLICT
@@ -814,6 +846,7 @@ kafka.producer.config.buffer_memory_config,e-sign-svc,33554432,CONFLICT
 kafka.producer.config.buffer_memory_config,epost-tracker,33554432,CONFLICT
 kafka.producer.config.buffer_memory_config,evidence,33554432,CONFLICT
 kafka.producer.config.buffer_memory_config,hearing,33554432,CONFLICT
+kafka.producer.config.buffer_memory_config,hearing-management,33554432,CONFLICT
 kafka.producer.config.buffer_memory_config,inportal-survey,33554432,CONFLICT
 kafka.producer.config.buffer_memory_config,lock-svc,33554432,CONFLICT
 kafka.producer.config.buffer_memory_config,order,33554432,CONFLICT
@@ -835,6 +868,7 @@ kafka.producer.config.linger_ms_config,e-sign-svc,1,CONFLICT
 kafka.producer.config.linger_ms_config,epost-tracker,1,CONFLICT
 kafka.producer.config.linger_ms_config,evidence,1,CONFLICT
 kafka.producer.config.linger_ms_config,hearing,1,CONFLICT
+kafka.producer.config.linger_ms_config,hearing-management,1,CONFLICT
 kafka.producer.config.linger_ms_config,inportal-survey,1,CONFLICT
 kafka.producer.config.linger_ms_config,lock-svc,1,CONFLICT
 kafka.producer.config.linger_ms_config,order,1,CONFLICT
@@ -856,6 +890,7 @@ kafka.producer.config.retries_config,e-sign-svc,0,CONFLICT
 kafka.producer.config.retries_config,epost-tracker,0,CONFLICT
 kafka.producer.config.retries_config,evidence,0,CONFLICT
 kafka.producer.config.retries_config,hearing,0,CONFLICT
+kafka.producer.config.retries_config,hearing-management,0,CONFLICT
 kafka.producer.config.retries_config,inportal-survey,0,CONFLICT
 kafka.producer.config.retries_config,lock-svc,0,CONFLICT
 kafka.producer.config.retries_config,order,0,CONFLICT
@@ -872,6 +907,7 @@ kafka.topics.consumer,application,service-consumer-topic,CONFLICT
 kafka.topics.consumer,bail-bond,service-consumer-topic,CONFLICT
 kafka.topics.consumer,digitalized-documents,service-consumer-topic,CONFLICT
 kafka.topics.consumer,evidence,service-consumer-topic,CONFLICT
+kafka.topics.consumer,hearing-management,service-consumer-topic,CONFLICT
 kafka.topics.consumer,inportal-survey,service-consumer-topic,CONFLICT
 kafka.topics.consumer,task,service-consumer-topic,CONFLICT
 kafka.topics.consumer,task-management,service-consumer-topic,CONFLICT
@@ -887,6 +923,7 @@ kafka.topics.receipt.create,digitalized-documents,dss-collection,CONFLICT
 kafka.topics.receipt.create,e-sign-svc,dss-collection,CONFLICT
 kafka.topics.receipt.create,evidence,dss-collection,CONFLICT
 kafka.topics.receipt.create,hearing,dss-collection,CONFLICT
+kafka.topics.receipt.create,hearing-management,dss-collection,CONFLICT
 kafka.topics.receipt.create,inportal-survey,dss-collection,CONFLICT
 kafka.topics.receipt.create,lock-svc,dss-collection,CONFLICT
 kafka.topics.receipt.create,order,dss-collection,CONFLICT
@@ -906,6 +943,7 @@ logging.level.root,e-sign-svc,INFO,CONFLICT
 logging.level.root,epost-tracker,INFO,CONFLICT
 logging.level.root,evidence,INFO,CONFLICT
 logging.level.root,hearing,INFO,CONFLICT
+logging.level.root,hearing-management,INFO,CONFLICT
 logging.level.root,inportal-survey,INFO,CONFLICT
 logging.level.root,lock-svc,INFO,CONFLICT
 logging.level.root,order,INFO,CONFLICT
@@ -925,6 +963,7 @@ logging.loki.enabled,e-sign-svc,false,CONFLICT
 logging.loki.enabled,epost-tracker,false,CONFLICT
 logging.loki.enabled,evidence,false,CONFLICT
 logging.loki.enabled,hearing,false,CONFLICT
+logging.loki.enabled,hearing-management,false,CONFLICT
 logging.loki.enabled,inportal-survey,false,CONFLICT
 logging.loki.enabled,lock-svc,false,CONFLICT
 logging.loki.enabled,order,false,CONFLICT
@@ -944,6 +983,7 @@ logging.loki.url,e-sign-svc,http://localhost:3100/loki/api/v1/push,CONFLICT
 logging.loki.url,epost-tracker,http://localhost:3100/loki/api/v1/push,CONFLICT
 logging.loki.url,evidence,http://localhost:3100/loki/api/v1/push,CONFLICT
 logging.loki.url,hearing,http://localhost:3100/loki/api/v1/push,CONFLICT
+logging.loki.url,hearing-management,http://localhost:3100/loki/api/v1/push,CONFLICT
 logging.loki.url,inportal-survey,http://localhost:3100/loki/api/v1/push,CONFLICT
 logging.loki.url,lock-svc,http://localhost:3100/loki/api/v1/push,CONFLICT
 logging.loki.url,order,http://localhost:3100/loki/api/v1/push,CONFLICT
@@ -969,6 +1009,7 @@ otel.exporter.otlp.endpoint,e-sign-svc,http://jaeger-collector.tracing:4318,CONF
 otel.exporter.otlp.endpoint,epost-tracker,http://jaeger-collector.tracing:4318,CONFLICT
 otel.exporter.otlp.endpoint,evidence,http://jaeger-collector.tracing:4318,CONFLICT
 otel.exporter.otlp.endpoint,hearing,http://jaeger-collector.tracing:4318,CONFLICT
+otel.exporter.otlp.endpoint,hearing-management,http://jaeger-collector.tracing:4318,CONFLICT
 otel.exporter.otlp.endpoint,inportal-survey,http://jaeger-collector.tracing:4318,CONFLICT
 otel.exporter.otlp.endpoint,lock-svc,http://jaeger-collector.tracing:4318,CONFLICT
 otel.exporter.otlp.endpoint,order,http://jaeger-collector.tracing:4318,CONFLICT
@@ -990,6 +1031,7 @@ otel.exporter.otlp.protocol,e-sign-svc,http/protobuf,CONFLICT
 otel.exporter.otlp.protocol,epost-tracker,http/protobuf,CONFLICT
 otel.exporter.otlp.protocol,evidence,http/protobuf,CONFLICT
 otel.exporter.otlp.protocol,hearing,http/protobuf,CONFLICT
+otel.exporter.otlp.protocol,hearing-management,http/protobuf,CONFLICT
 otel.exporter.otlp.protocol,inportal-survey,http/protobuf,CONFLICT
 otel.exporter.otlp.protocol,lock-svc,http/protobuf,CONFLICT
 otel.exporter.otlp.protocol,order,http/protobuf,CONFLICT
@@ -1011,6 +1053,7 @@ otel.instrumentation.http.server.ignore-urls,e-sign-svc,"/e-sign-svc/health,/e-s
 otel.instrumentation.http.server.ignore-urls,epost-tracker,"/epost-tracker/health,/epost-tracker/prometheus",CONFLICT
 otel.instrumentation.http.server.ignore-urls,evidence,"/evidence/health,/evidence/prometheus",CONFLICT
 otel.instrumentation.http.server.ignore-urls,hearing,"/hearing/health,/hearing/prometheus",CONFLICT
+otel.instrumentation.http.server.ignore-urls,hearing-management,"/hearing-management/health,/hearing-management/prometheus",CONFLICT
 otel.instrumentation.http.server.ignore-urls,inportal-survey,"/inportal-survey/health,/inportal-survey/prometheus",CONFLICT
 otel.instrumentation.http.server.ignore-urls,lock-svc,"/lock-svc/health,/lock-svc/prometheus",CONFLICT
 otel.instrumentation.http.server.ignore-urls,order,"/order/health,/order/prometheus",CONFLICT
@@ -1032,6 +1075,7 @@ otel.instrumentation.kafka.enabled,e-sign-svc,true,CONFLICT
 otel.instrumentation.kafka.enabled,epost-tracker,true,CONFLICT
 otel.instrumentation.kafka.enabled,evidence,true,CONFLICT
 otel.instrumentation.kafka.enabled,hearing,true,CONFLICT
+otel.instrumentation.kafka.enabled,hearing-management,true,CONFLICT
 otel.instrumentation.kafka.enabled,inportal-survey,true,CONFLICT
 otel.instrumentation.kafka.enabled,lock-svc,true,CONFLICT
 otel.instrumentation.kafka.enabled,order,true,CONFLICT
@@ -1053,6 +1097,7 @@ otel.instrumentation.kafka.experimental-span-attributes,e-sign-svc,true,CONFLICT
 otel.instrumentation.kafka.experimental-span-attributes,epost-tracker,true,CONFLICT
 otel.instrumentation.kafka.experimental-span-attributes,evidence,true,CONFLICT
 otel.instrumentation.kafka.experimental-span-attributes,hearing,true,CONFLICT
+otel.instrumentation.kafka.experimental-span-attributes,hearing-management,true,CONFLICT
 otel.instrumentation.kafka.experimental-span-attributes,inportal-survey,true,CONFLICT
 otel.instrumentation.kafka.experimental-span-attributes,lock-svc,true,CONFLICT
 otel.instrumentation.kafka.experimental-span-attributes,order,true,CONFLICT
@@ -1074,6 +1119,7 @@ otel.logs.exporter,e-sign-svc,none,CONFLICT
 otel.logs.exporter,epost-tracker,none,CONFLICT
 otel.logs.exporter,evidence,none,CONFLICT
 otel.logs.exporter,hearing,none,CONFLICT
+otel.logs.exporter,hearing-management,none,CONFLICT
 otel.logs.exporter,inportal-survey,none,CONFLICT
 otel.logs.exporter,lock-svc,none,CONFLICT
 otel.logs.exporter,order,none,CONFLICT
@@ -1095,6 +1141,7 @@ otel.metrics.exporter,e-sign-svc,none,CONFLICT
 otel.metrics.exporter,epost-tracker,none,CONFLICT
 otel.metrics.exporter,evidence,none,CONFLICT
 otel.metrics.exporter,hearing,none,CONFLICT
+otel.metrics.exporter,hearing-management,none,CONFLICT
 otel.metrics.exporter,inportal-survey,none,CONFLICT
 otel.metrics.exporter,lock-svc,none,CONFLICT
 otel.metrics.exporter,order,none,CONFLICT
@@ -1116,6 +1163,7 @@ otel.traces.exporter,e-sign-svc,otlp,CONFLICT
 otel.traces.exporter,epost-tracker,otlp,CONFLICT
 otel.traces.exporter,evidence,otlp,CONFLICT
 otel.traces.exporter,hearing,otlp,CONFLICT
+otel.traces.exporter,hearing-management,otlp,CONFLICT
 otel.traces.exporter,inportal-survey,otlp,CONFLICT
 otel.traces.exporter,lock-svc,otlp,CONFLICT
 otel.traces.exporter,order,otlp,CONFLICT
@@ -1211,6 +1259,8 @@ dristi.bar.registration.number.format,advocate,"^K/(?!0+/)(\\d{1,6})/\\d{4}$",SE
 dristi.case.member.search.endpoint,advocate-office-management,/case/v1/_searchCaseMember,SERVICE-SPECIFIC
 dristi.esign.host,task,http://localhost:8052,SERVICE-SPECIFIC
 dristi.esign.location.endpoint,task,/e-sign-svc/v1/_getLocation,SERVICE-SPECIFIC
+dristi.hearing.host,hearing-management,http://localhost:8081,SERVICE-SPECIFIC
+dristi.hearing.search.endpoint,hearing-management,/hearing/v1/search,SERVICE-SPECIFIC
 dristi.inbox.host,task-management,http://localhost:8059,SERVICE-SPECIFIC
 dristi.inbox.index.search.endpoint,task-management,/inbox/v2/index/_search,SERVICE-SPECIFIC
 dristi.individual.host,advocate-office-management,http://localhost:8081,SERVICE-SPECIFIC
@@ -1252,6 +1302,8 @@ egov.case.update.path,evidence,case/v2/_update,SERVICE-SPECIFIC
 egov.case.witness.add.path,evidence,case/v2/add/witness,SERVICE-SPECIFIC
 egov.collectionservice.host,treasury-backend,http://egov-collection:8080,SERVICE-SPECIFIC
 egov.collectionservice.payment.create,treasury-backend,/collection-services/payments/_create,SERVICE-SPECIFIC
+egov.court.holiday.master,hearing-management,COURT000334,SERVICE-SPECIFIC
+egov.court.holidays.mdms.path,hearing-management,$.MdmsRes.schedule-hearing.COURT000334[*].date,SERVICE-SPECIFIC
 egov.demand.host,treasury-backend,http://localhost:8088,SERVICE-SPECIFIC
 egov.documenttype.path,order,$.MdmsRes.Order.DocumentType[?(@.value == '{}' && @.isActive == true)],SERVICE-SPECIFIC
 egov.dristi.case.pdf.host,case,http://localhost:8090,SERVICE-SPECIFIC
@@ -1373,6 +1425,9 @@ egov.plea.digitalized.document.create.topic,digitalized-documents,create-plea-di
 egov.plea.digitalized.document.update.topic,digitalized-documents,update-plea-digitalized-document,SERVICE-SPECIFIC
 egov.poa.join.case.kafka.topic,case,poa-join-case,SERVICE-SPECIFIC
 egov.representative.join.case.kafka.topic,case,representative-join-case,SERVICE-SPECIFIC
+egov.schedule.hearing.module,hearing-management,schedule-hearing,SERVICE-SPECIFIC
+egov.scheduler.host,hearing-management,http://localhost:8087,SERVICE-SPECIFIC
+egov.scheduler.path,hearing-management,/scheduler/calendar/v1/_search,SERVICE-SPECIFIC
 egov.sms.case.filed.time,case,18:00:00,SERVICE-SPECIFIC
 egov.sms.errors.pending.duration,case,20,SERVICE-SPECIFIC
 egov.sms.hearing.scheduled.time,order,18:00:00,SERVICE-SPECIFIC
