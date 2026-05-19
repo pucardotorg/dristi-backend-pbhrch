@@ -389,9 +389,6 @@ public class Configuration {
 	@Value("${egov.evidence.create.path}")
 	private String evidenceServiceCreatePath;
 
-	@Value("${egov.evidence.search.path}")
-	private String evidenceServiceSearchPath;
-
 	// LPR config
 	@Value("${egov.idgen.lprConfig}")
 	private String lprConfig;

@@ -1267,7 +1267,6 @@ egov.enc.mdms.security.policy.court.case.new,case,CourtCaseNew,SERVICE-SPECIFIC
 egov.enc.mdms.security.policy.court.decrypt.other,case,CaseDecryptOther,SERVICE-SPECIFIC
 egov.etreasury.create.demand.path,application,/etreasury/payment/v1/_createDemand,SERVICE-SPECIFIC
 egov.etreasury.payment.receipt.endpoint,ctc,/etreasury/payment/v1/_getPaymentReceipt,SERVICE-SPECIFIC
-egov.evidence.search.path,case,/evidence/v1/_search,SERVICE-SPECIFIC
 egov.file.store.host,treasury-backend,http://egov-filestore:8080,SERVICE-SPECIFIC
 egov.file.store.treasury.module,treasury-backend,treasury,SERVICE-SPECIFIC
 egov.filestore.case.module,case,case,SERVICE-SPECIFIC

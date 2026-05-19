@@ -172,6 +172,12 @@ SERVICE_DEAD_KEYS: dict[str, set[str]] = {
         "egov.hearing.host",
         "egov.hearing.path",
         "egov.hearing.search.path",
+        # ea4cbf89e refactor(evidence): cases/EvidenceValidator REST→EvidenceApi
+        # direct calls (Rule 32). No @Value("${egov.evidence.search.path}")
+        # consumer remains in caselifecycle/cases/internal/. `egov.evidence.{host,
+        # create.path}` stay live — cases/EvidenceUtil.createEvidence is the
+        # cross-subdomain write shim deferred per Rule 35.
+        "egov.evidence.search.path",
     },
     "order": {
         "egov.advocate.host",
