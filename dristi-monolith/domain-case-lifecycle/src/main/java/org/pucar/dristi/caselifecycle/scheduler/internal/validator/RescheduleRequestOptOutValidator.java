@@ -7,6 +7,7 @@ import org.pucar.dristi.caselifecycle.scheduler.internal.repository.RescheduleRe
 import org.pucar.dristi.caselifecycle.scheduler.internal.service.ReScheduleHearingService;
 import org.pucar.dristi.caselifecycle.scheduler.internal.util.MasterDataUtil;
 import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.*;
+import org.pucar.dristi.common.contract.scheduler.*;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

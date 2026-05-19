@@ -1,10 +1,11 @@
 package org.pucar.dristi.caselifecycle.scheduler.internal.web.controllers;
 
 import org.pucar.dristi.caselifecycle.scheduler.internal.service.RescheduleRequestOptOutService;
-import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.OptOut;
-import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.OptOutRequest;
-import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.OptOutResponse;
-import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.OptOutSearchRequest;
+import org.pucar.dristi.common.contract.scheduler.OptOut;
+import org.pucar.dristi.common.contract.scheduler.OptOutRequest;
+import org.pucar.dristi.common.contract.scheduler.OptOutResponse;
+import org.pucar.dristi.common.contract.scheduler.OptOutSearchRequest;
+import org.pucar.dristi.common.util.ResponseInfoFactory;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -24,6 +25,9 @@ public class RescheduleRequestOptOutControllerTest {
 
     @Mock
     private RescheduleRequestOptOutService optOutService;
+
+    @Mock
+    private ResponseInfoFactory responseInfoFactory;
 
     @InjectMocks
     private RescheduleRequestOptOutApiController optOutApiController;

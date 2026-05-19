@@ -9,7 +9,7 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.model.ServiceCallException;
 import org.pucar.dristi.caselifecycle.hearing.internal.config.Configuration;
 import org.pucar.dristi.common.repository.ServiceRequestRepository;
-import org.pucar.dristi.common.contract.hearing.BulkReschedule;
+import org.pucar.dristi.common.contract.scheduler.BulkReschedule;
 import org.pucar.dristi.caselifecycle.hearing.internal.web.models.OpenHearing;
 import org.pucar.dristi.caselifecycle.hearing.internal.web.models.inbox.*;
 import org.springframework.stereotype.Component;

@@ -2,7 +2,7 @@ package org.pucar.dristi.caselifecycle.scheduler.internal.repository.querybuilde
 
 
 import org.pucar.dristi.caselifecycle.scheduler.internal.helper.QueryBuilderHelper;
-import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.OptOutSearchCriteria;
+import org.pucar.dristi.common.contract.scheduler.OptOutSearchCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -27,32 +27,32 @@ public class RescheduleRequestOptOutQueryBuilder {
         query.append(FROM_TABLES);
 
 
-        if (optOutSearchCriteria.getJudgeId( != null)) {
+        if (optOutSearchCriteria.getJudgeId() != null) {
             queryBuilderHelper.addClauseIfRequired(query, preparedStmtList);
             query.append(" oo.judge_id = ? ");
             preparedStmtList.add(optOutSearchCriteria.getJudgeId());
 
         }
-        if (optOutSearchCriteria.getCaseId( != null)) {
+        if (optOutSearchCriteria.getCaseId() != null) {
             queryBuilderHelper.addClauseIfRequired(query, preparedStmtList);
             query.append(" oo.case_id = ? ");
             preparedStmtList.add(optOutSearchCriteria.getCaseId());
 
         }
 
-        if (optOutSearchCriteria.getIndividualId( != null)) {
+        if (optOutSearchCriteria.getIndividualId() != null) {
             queryBuilderHelper.addClauseIfRequired(query, preparedStmtList);
             query.append(" oo.individual_id = ? ");
             preparedStmtList.add(optOutSearchCriteria.getIndividualId());
 
         }
-        if (optOutSearchCriteria.getRescheduleRequestId( != null)) {
+        if (optOutSearchCriteria.getRescheduleRequestId() != null) {
             queryBuilderHelper.addClauseIfRequired(query, preparedStmtList);
             query.append(" oo.reschedule_request_id = ? ");
             preparedStmtList.add(optOutSearchCriteria.getRescheduleRequestId());
 
         }
-        if (optOutSearchCriteria.getTenantId( != null)) {
+        if (optOutSearchCriteria.getTenantId() != null) {
             queryBuilderHelper.addClauseIfRequired(query, preparedStmtList);
             query.append(" oo.tenant_id = ? ");
             preparedStmtList.add(optOutSearchCriteria.getTenantId());

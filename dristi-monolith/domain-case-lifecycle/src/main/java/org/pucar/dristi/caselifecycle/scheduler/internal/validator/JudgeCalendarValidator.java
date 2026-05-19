@@ -1,7 +1,7 @@
 package org.pucar.dristi.caselifecycle.scheduler.internal.validator;
 
-import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.JudgeCalendarRule;
-import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.SearchCriteria;
+import org.pucar.dristi.common.contract.scheduler.JudgeCalendarRule;
+import org.pucar.dristi.common.contract.scheduler.SearchCriteria;
 import org.egov.tracer.model.CustomException;
 import org.springframework.stereotype.Component;
 
@@ -15,13 +15,13 @@ public class JudgeCalendarValidator {
     }
 
     public <T extends SearchCriteria> void validateSearchRequest(T criteria) {
-        if (criteria.getTenantId( == null))
+        if (criteria.getTenantId() == null)
             throw new CustomException("DK_SH_SEARCH_ERR", "tenantId is mandatory for search");
 
-        if (criteria.getJudgeId( == null))
+        if (criteria.getJudgeId() == null)
             throw new CustomException("DK_SH_SEARCH_ERR", "judgeId is mandatory for search");
 
-        if (criteria.getCourtId( == null))
+        if (criteria.getCourtId() == null)
             throw new CustomException("DK_SH_SEARCH_ERR", "courtId is mandatory for search");
     }
 }

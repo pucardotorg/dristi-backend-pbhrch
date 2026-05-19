@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.pucar.dristi.caselifecycle.scheduler.internal.config.Configuration;
 import org.pucar.dristi.caselifecycle.scheduler.internal.repository.SchedulerServiceRequestHelper;
-import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.ApplicationRequest;
+import org.pucar.dristi.common.contract.scheduler.ApplicationRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

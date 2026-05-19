@@ -6,8 +6,8 @@ import org.pucar.dristi.caselifecycle.scheduler.internal.repository.HearingRepos
 import org.pucar.dristi.caselifecycle.scheduler.internal.util.DateUtil;
 import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.MdmsHearing;
 import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.MdmsSlot;
-import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.ScheduleHearing;
-import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.ScheduleHearingRequest;
+import org.pucar.dristi.common.contract.scheduler.ScheduleHearing;
+import org.pucar.dristi.common.contract.scheduler.ScheduleHearingRequest;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
 import org.junit.jupiter.api.Test;

@@ -2,7 +2,7 @@ package org.pucar.dristi.caselifecycle.scheduler.internal.repository.querybuilde
 
 
 import org.pucar.dristi.caselifecycle.scheduler.internal.helper.QueryBuilderHelper;
-import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.ReScheduleHearingReqSearchCriteria;
+import org.pucar.dristi.common.contract.scheduler.ReScheduleHearingReqSearchCriteria;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -38,7 +38,7 @@ public class ReScheduleHearingQueryBuilder {
             helper.addToPreparedStatement(preparedStmtList, preparedStmtArgList, searchCriteria.getRescheduledRequestId());
         }
 
-        if (searchCriteria.getTenantId( != null)) {
+        if (searchCriteria.getTenantId() != null) {
             helper.addClauseIfRequired(query, preparedStmtList);
             query.append(" hbr.tenant_id = ? ");
             preparedStmtList.add(searchCriteria.getTenantId());
@@ -46,7 +46,7 @@ public class ReScheduleHearingQueryBuilder {
 
         }
 
-        if (searchCriteria.getJudgeId( != null)) {
+        if (searchCriteria.getJudgeId() != null) {
             helper.addClauseIfRequired(query, preparedStmtList);
             query.append(" hbr.judge_id = ? ");
             preparedStmtList.add(searchCriteria.getJudgeId());
@@ -55,7 +55,7 @@ public class ReScheduleHearingQueryBuilder {
         }
 
         //bug
-        if (searchCriteria.getCaseId( != null)) {
+        if (searchCriteria.getCaseId() != null) {
             helper.addClauseIfRequired(query, preparedStmtList);
             query.append(" hbr.case_id = ? ");
             preparedStmtList.add(searchCriteria.getJudgeId());
@@ -63,28 +63,28 @@ public class ReScheduleHearingQueryBuilder {
 
         }
 
-        if (searchCriteria.getHearingBookingId( != null)) {
+        if (searchCriteria.getHearingBookingId() != null) {
             helper.addClauseIfRequired(query, preparedStmtList);
             query.append(" hbr.hearing_booking_id = ? ");
             preparedStmtList.add(searchCriteria.getHearingBookingId());
             preparedStmtArgList.add(Types.VARCHAR);
 
         }
-        if (searchCriteria.getRequesterId( != null)) {
+        if (searchCriteria.getRequesterId() != null) {
             helper.addClauseIfRequired(query, preparedStmtList);
             query.append(" hbr.requester_id = ? ");
             preparedStmtList.add(searchCriteria.getRequesterId());
             preparedStmtArgList.add(Types.VARCHAR);
 
         }
-        if (searchCriteria.getStatus( != null)) {
+        if (searchCriteria.getStatus() != null) {
             helper.addClauseIfRequired(query, preparedStmtList);
             query.append(" hbr.status = ? ");
             preparedStmtList.add(searchCriteria.getStatus());
             preparedStmtArgList.add(Types.VARCHAR);
 
         }
-        if (searchCriteria.getDueDate( != null)) {
+        if (searchCriteria.getDueDate() != null) {
             helper.addClauseIfRequired(query, preparedStmtList);
             query.append(" hbr.last_modified_time < ?  ");
             preparedStmtList.add(searchCriteria.getDueDate());

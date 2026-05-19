@@ -2,9 +2,9 @@ package org.pucar.dristi.caselifecycle.scheduler.internal.enrichment;
 
 import org.pucar.dristi.caselifecycle.scheduler.internal.config.Configuration;
 import org.pucar.dristi.common.models.AuditDetails;
-import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.ReScheduleHearing;
-import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.ReScheduleHearingRequest;
-import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.Workflow;
+import org.pucar.dristi.common.contract.scheduler.ReScheduleHearing;
+import org.pucar.dristi.common.contract.scheduler.ReScheduleHearingRequest;
+import org.pucar.dristi.common.contract.scheduler.Workflow;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
 import org.junit.jupiter.api.BeforeEach;

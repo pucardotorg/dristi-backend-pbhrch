@@ -10,13 +10,14 @@ import org.pucar.dristi.caselifecycle.scheduler.internal.repository.CauseListRep
 import org.pucar.dristi.caselifecycle.scheduler.internal.repository.HearingRepository;
 import org.pucar.dristi.caselifecycle.scheduler.internal.util.*;
 import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.*;
+import org.pucar.dristi.common.contract.scheduler.*;
 import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.cases.CaseCriteria;
 import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.cases.SearchCaseRequest;
 import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.hearing.*;
 import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.inbox.InboxRequest;
 import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONArray;
-import org.egov.common.contract.models.Document;
+import org.pucar.dristi.common.models.Document;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
 import org.egov.common.models.individual.Individual;

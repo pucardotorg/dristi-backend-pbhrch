@@ -12,7 +12,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-@Component
+import org.pucar.dristi.common.contract.scheduler.CauseList;
+@Component("schedulerScheduledTask")
 @Slf4j
 @EnableScheduling
 public class ScheduledTask {

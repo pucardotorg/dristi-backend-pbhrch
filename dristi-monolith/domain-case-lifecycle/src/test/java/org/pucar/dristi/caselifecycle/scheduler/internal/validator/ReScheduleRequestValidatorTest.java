@@ -2,6 +2,7 @@ package org.pucar.dristi.caselifecycle.scheduler.internal.validator;
 
 import org.pucar.dristi.caselifecycle.scheduler.internal.util.DateUtil;
 import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.*;
+import org.pucar.dristi.common.contract.scheduler.*;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.model.CustomException;
 import org.junit.jupiter.api.BeforeEach;

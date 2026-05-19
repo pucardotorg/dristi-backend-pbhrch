@@ -3,10 +3,10 @@ package org.pucar.dristi.caselifecycle.scheduler.internal.web.controllers;
 
 import org.pucar.dristi.caselifecycle.scheduler.internal.service.RescheduleRequestOptOutService;
 import org.pucar.dristi.common.util.ResponseInfoFactory;
-import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.OptOut;
-import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.OptOutRequest;
-import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.OptOutResponse;
-import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.OptOutSearchRequest;
+import org.pucar.dristi.common.contract.scheduler.OptOut;
+import org.pucar.dristi.common.contract.scheduler.OptOutRequest;
+import org.pucar.dristi.common.contract.scheduler.OptOutResponse;
+import org.pucar.dristi.common.contract.scheduler.OptOutSearchRequest;
 import io.swagger.annotations.ApiParam;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;

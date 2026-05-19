@@ -4,7 +4,7 @@ import com.jayway.jsonpath.JsonPath;
 import org.pucar.dristi.caselifecycle.scheduler.internal.config.Configuration;
 import org.pucar.dristi.common.kafka.Producer;
 import org.pucar.dristi.caselifecycle.scheduler.internal.repository.SchedulerServiceRequestHelper;
-import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.SMSRequest;
+import org.pucar.dristi.common.contract.scheduler.SMSRequest;
 import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.SmsTemplateData;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;

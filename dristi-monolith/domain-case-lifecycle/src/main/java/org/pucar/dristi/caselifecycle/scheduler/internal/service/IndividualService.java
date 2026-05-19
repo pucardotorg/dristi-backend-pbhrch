@@ -2,8 +2,8 @@ package org.pucar.dristi.caselifecycle.scheduler.internal.service;
 
 import org.pucar.dristi.caselifecycle.scheduler.internal.config.Configuration;
 import org.pucar.dristi.caselifecycle.scheduler.internal.util.SchedulerIndividualUtil;
-import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.IndividualSearch;
-import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.IndividualSearchRequest;
+import org.pucar.dristi.common.contract.scheduler.IndividualSearch;
+import org.pucar.dristi.common.contract.scheduler.IndividualSearchRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.models.individual.Individual;

@@ -3,8 +3,8 @@ package org.pucar.dristi.caselifecycle.scheduler.internal.repository;
 
 import org.pucar.dristi.caselifecycle.scheduler.internal.repository.querybuilder.RescheduleRequestOptOutQueryBuilder;
 import org.pucar.dristi.caselifecycle.scheduler.internal.repository.rowmapper.RescheduleRequestOptOutRowMapper;
-import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.OptOut;
-import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.OptOutSearchCriteria;
+import org.pucar.dristi.common.contract.scheduler.OptOut;
+import org.pucar.dristi.common.contract.scheduler.OptOutSearchCriteria;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;

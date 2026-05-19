@@ -1,6 +1,6 @@
 package org.pucar.dristi.caselifecycle.scheduler.internal.repository.rowmapper;
 
-import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.AvailabilityDTO;
+import org.pucar.dristi.common.contract.scheduler.AvailabilityDTO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

@@ -2,8 +2,8 @@ package org.pucar.dristi.caselifecycle.scheduler.internal.repository;
 
 import org.pucar.dristi.caselifecycle.scheduler.internal.repository.querybuilder.RescheduleRequestOptOutQueryBuilder;
 import org.pucar.dristi.caselifecycle.scheduler.internal.repository.rowmapper.RescheduleRequestOptOutRowMapper;
-import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.OptOut;
-import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.OptOutSearchCriteria;
+import org.pucar.dristi.common.contract.scheduler.OptOut;
+import org.pucar.dristi.common.contract.scheduler.OptOutSearchCriteria;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -2,8 +2,8 @@ package org.pucar.dristi.caselifecycle.scheduler.internal.repository;
 
 import org.pucar.dristi.caselifecycle.scheduler.internal.repository.querybuilder.CauseListQueryBuilder;
 import org.pucar.dristi.caselifecycle.scheduler.internal.repository.rowmapper.CauseListRowMapper;
-import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.CauseList;
-import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.CauseListSearchCriteria;
+import org.pucar.dristi.common.contract.scheduler.CauseList;
+import org.pucar.dristi.common.contract.scheduler.CauseListSearchCriteria;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

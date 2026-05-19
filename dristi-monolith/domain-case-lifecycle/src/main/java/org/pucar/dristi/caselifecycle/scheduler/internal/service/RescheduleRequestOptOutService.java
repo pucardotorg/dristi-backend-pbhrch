@@ -7,6 +7,7 @@ import org.pucar.dristi.common.kafka.Producer;
 import org.pucar.dristi.caselifecycle.scheduler.internal.repository.RescheduleRequestOptOutRepository;
 import org.pucar.dristi.caselifecycle.scheduler.internal.validator.RescheduleRequestOptOutValidator;
 import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.*;
+import org.pucar.dristi.common.contract.scheduler.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

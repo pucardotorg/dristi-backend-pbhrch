@@ -9,6 +9,7 @@ import org.pucar.dristi.caselifecycle.scheduler.internal.service.RescheduleReque
 import org.pucar.dristi.caselifecycle.scheduler.internal.service.UserService;
 import org.pucar.dristi.caselifecycle.scheduler.internal.util.PendingTaskUtil;
 import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.*;
+import org.pucar.dristi.common.contract.scheduler.*;
 import org.egov.common.contract.request.RequestInfo;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

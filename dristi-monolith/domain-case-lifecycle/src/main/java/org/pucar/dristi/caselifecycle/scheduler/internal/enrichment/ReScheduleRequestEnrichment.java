@@ -2,8 +2,8 @@ package org.pucar.dristi.caselifecycle.scheduler.internal.enrichment;
 
 
 import org.pucar.dristi.common.models.AuditDetails;
-import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.ReScheduleHearing;
-import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.ReScheduleHearingRequest;
+import org.pucar.dristi.common.contract.scheduler.ReScheduleHearing;
+import org.pucar.dristi.common.contract.scheduler.ReScheduleHearingRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
 import org.springframework.stereotype.Component;

@@ -3,9 +3,9 @@ package org.pucar.dristi.caselifecycle.scheduler.internal.repository;
 
 import org.pucar.dristi.caselifecycle.scheduler.internal.repository.querybuilder.CalendarQueryBuilder;
 import org.pucar.dristi.caselifecycle.scheduler.internal.repository.rowmapper.CalendarRowMapper;
-import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.JudgeCalendarRule;
-import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.JudgeCalenderSearchRequest;
-import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.SearchCriteria;
+import org.pucar.dristi.common.contract.scheduler.JudgeCalendarRule;
+import org.pucar.dristi.common.contract.scheduler.JudgeCalenderSearchRequest;
+import org.pucar.dristi.common.contract.scheduler.SearchCriteria;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

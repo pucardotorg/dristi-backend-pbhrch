@@ -1,7 +1,7 @@
 package org.pucar.dristi.caselifecycle.scheduler.internal.repository.rowmapper;
 
 import org.pucar.dristi.common.models.AuditDetails;
-import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.ScheduleHearing;
+import org.pucar.dristi.common.contract.scheduler.ScheduleHearing;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;

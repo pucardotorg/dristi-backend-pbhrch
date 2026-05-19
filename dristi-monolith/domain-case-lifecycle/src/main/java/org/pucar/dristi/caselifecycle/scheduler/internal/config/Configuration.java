@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 
+import org.pucar.dristi.common.contract.scheduler.User;
+import org.pucar.dristi.common.contract.scheduler.Workflow;
 @Component("schedulerConfiguration")
 @Data
 @Import({TracerConfiguration.class})

@@ -9,7 +9,9 @@ import org.pucar.dristi.common.kafka.Producer;
 import org.pucar.dristi.caselifecycle.scheduler.internal.repository.ReScheduleRequestRepository;
 import org.pucar.dristi.caselifecycle.scheduler.internal.util.*;
 import org.pucar.dristi.caselifecycle.scheduler.internal.validator.ReScheduleRequestValidator;
+import org.pucar.dristi.identityaccess.advocate.AdvocateApi;
 import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.*;
+import org.pucar.dristi.common.contract.scheduler.*;
 import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.cases.CaseCriteria;
 import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.cases.SearchCaseRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -47,10 +49,10 @@ public class ReScheduleHearingService {
     private final ServiceConstants constants;
     private final DateUtil dateUtil;
     private final ReScheduleRequestValidator validator;
-    private final AdvocateUtil advocateUtil;
+    private final AdvocateApi advocateApi;
 
     @Autowired
-    public ReScheduleHearingService(Configuration config, ReScheduleRequestRepository repository, ReScheduleRequestValidator validator, ReScheduleRequestEnrichment enrichment, Producer producer, HearingService hearingService, CalendarService calendarService, ServiceConstants serviceConstants, MasterDataUtil helper, CaseUtil caseUtil, HearingUtil hearingUtil, ServiceConstants constants, DateUtil dateUtil, AdvocateUtil advocateUtil) {
+    public ReScheduleHearingService(Configuration config, ReScheduleRequestRepository repository, ReScheduleRequestValidator validator, ReScheduleRequestEnrichment enrichment, Producer producer, HearingService hearingService, CalendarService calendarService, ServiceConstants serviceConstants, MasterDataUtil helper, CaseUtil caseUtil, HearingUtil hearingUtil, ServiceConstants constants, DateUtil dateUtil, AdvocateApi advocateApi) {
 
         this.config = config;
         this.repository = repository;
@@ -65,7 +67,7 @@ public class ReScheduleHearingService {
         this.hearingUtil = hearingUtil;
         this.dateUtil = dateUtil;
         this.validator = validator;
-        this.advocateUtil = advocateUtil;
+        this.advocateApi = advocateApi;
     }
 
     /**
@@ -95,7 +97,7 @@ public class ReScheduleHearingService {
                 Set<String> representativeIds = caseUtil.getAdvocateIds(representatives);
 
                 if (!representativeIds.isEmpty()) {
-                    representativeIds = advocateUtil.getAdvocate(requestInfo, representativeIds.stream().toList());
+                    representativeIds = advocateApi.getAdvocateIndividualIds(requestInfo, representativeIds.stream().toList());
                 }
                 litigantIds = caseUtil.getLitigantsFromRepresentatives(litigantIds, representatives);
 

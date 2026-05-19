@@ -2,7 +2,10 @@ package org.pucar.dristi.caselifecycle.scheduler.internal.web.controllers;
 
 
 import org.pucar.dristi.caselifecycle.scheduler.internal.service.HearingService;
+import org.pucar.dristi.caselifecycle.scheduler.internal.service.hearing.HearingProcessor;
 import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.*;
+import org.pucar.dristi.common.contract.scheduler.*;
+import org.pucar.dristi.common.util.ResponseInfoFactory;
 import org.egov.common.contract.request.RequestInfo;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,6 +27,12 @@ public class HearingControllerTest {
 
     @Mock
     private HearingService hearingService;
+
+    @Mock
+    private HearingProcessor processor;
+
+    @Mock
+    private ResponseInfoFactory responseInfoFactory;
 
     @InjectMocks
     private HearingApiController hearingApiController;

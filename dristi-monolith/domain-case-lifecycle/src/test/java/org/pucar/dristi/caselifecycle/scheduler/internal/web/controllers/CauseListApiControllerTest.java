@@ -2,6 +2,8 @@ package org.pucar.dristi.caselifecycle.scheduler.internal.web.controllers;
 
 import org.pucar.dristi.caselifecycle.scheduler.internal.service.CauseListService;
 import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.*;
+import org.pucar.dristi.common.contract.scheduler.*;
+import org.pucar.dristi.common.util.ResponseInfoFactory;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,8 +21,11 @@ import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 
+import org.egov.common.contract.response.ResponseInfo;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.Mockito.when;
 
 public class CauseListApiControllerTest {
@@ -28,6 +33,8 @@ public class CauseListApiControllerTest {
     @Mock
     private CauseListService causeListService;
 
+    @Mock
+    private ResponseInfoFactory responseInfoFactory;
 
     @InjectMocks
     private CauseListApiController causeListApiController;
@@ -87,6 +94,7 @@ public class CauseListApiControllerTest {
         List<RecentCauseList> resultList = List.of(recent1, recent2);
 
         when(causeListService.getRecentCauseList(any())).thenReturn(resultList);
+        when(responseInfoFactory.createResponseInfo(any(), anyBoolean())).thenReturn(new ResponseInfo());
 
         // When
         ResponseEntity<Object> response = causeListApiController.recentCauseList(request);

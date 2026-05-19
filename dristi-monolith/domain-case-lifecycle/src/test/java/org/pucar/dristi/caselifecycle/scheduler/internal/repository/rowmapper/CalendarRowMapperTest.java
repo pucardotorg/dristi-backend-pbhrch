@@ -2,7 +2,7 @@ package org.pucar.dristi.caselifecycle.scheduler.internal.repository.rowmapper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.pucar.dristi.common.models.AuditDetails;
-import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.JudgeCalendarRule;
+import org.pucar.dristi.common.contract.scheduler.JudgeCalendarRule;
 import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.enums.JudgeRuleType;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -1,7 +1,7 @@
 package org.pucar.dristi.caselifecycle.scheduler.internal.repository.querybuilder;
 
 import org.pucar.dristi.caselifecycle.scheduler.internal.helper.QueryBuilderHelper;
-import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.ReScheduleHearingReqSearchCriteria;
+import org.pucar.dristi.common.contract.scheduler.ReScheduleHearingReqSearchCriteria;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

@@ -2,8 +2,8 @@ package org.pucar.dristi.caselifecycle.scheduler.internal.repository;
 
 import org.pucar.dristi.caselifecycle.scheduler.internal.repository.querybuilder.ReScheduleHearingQueryBuilder;
 import org.pucar.dristi.caselifecycle.scheduler.internal.repository.rowmapper.ReScheduleHearingRowMapper;
-import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.ReScheduleHearing;
-import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.ReScheduleHearingReqSearchCriteria;
+import org.pucar.dristi.common.contract.scheduler.ReScheduleHearing;
+import org.pucar.dristi.common.contract.scheduler.ReScheduleHearingReqSearchCriteria;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

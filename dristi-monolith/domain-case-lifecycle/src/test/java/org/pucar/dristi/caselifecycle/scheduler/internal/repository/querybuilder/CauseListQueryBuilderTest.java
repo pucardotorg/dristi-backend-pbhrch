@@ -1,6 +1,6 @@
 package org.pucar.dristi.caselifecycle.scheduler.internal.repository.querybuilder;
 
-import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.CauseListSearchCriteria;
+import org.pucar.dristi.common.contract.scheduler.CauseListSearchCriteria;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

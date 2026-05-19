@@ -2,13 +2,14 @@ package org.pucar.dristi.caselifecycle.scheduler.internal.enrichment;
 
 
 import org.pucar.dristi.common.models.AuditDetails;
-import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.OptOutRequest;
+import org.pucar.dristi.common.contract.scheduler.OptOutRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
+import org.pucar.dristi.common.contract.scheduler.OptOut;
 @Component
 @Slf4j
 public class RescheduleRequestOptOutEnrichment {

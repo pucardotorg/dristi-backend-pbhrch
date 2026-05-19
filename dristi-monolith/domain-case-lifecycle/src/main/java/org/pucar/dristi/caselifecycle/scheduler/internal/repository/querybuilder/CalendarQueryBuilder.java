@@ -1,12 +1,13 @@
 package org.pucar.dristi.caselifecycle.scheduler.internal.repository.querybuilder;
 
 import org.pucar.dristi.caselifecycle.scheduler.internal.helper.QueryBuilderHelper;
-import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.JudgeCalenderSearchCriteria;
-import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.JudgeCalenderSearchRequest;
-import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.SearchCriteria;
+import org.pucar.dristi.common.contract.scheduler.JudgeCalenderSearchCriteria;
+import org.pucar.dristi.common.contract.scheduler.JudgeCalenderSearchRequest;
+import org.pucar.dristi.common.contract.scheduler.SearchCriteria;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ObjectUtils;
 
 import java.sql.Types;
 import java.util.List;
@@ -31,25 +32,25 @@ public class CalendarQueryBuilder {
         StringBuilder query = new StringBuilder(BASE_APPLICATION_QUERY);
         query.append(FROM_TABLES);
 
-        if (searchCriteria.getTenantId( != null)) {
+        if (!ObjectUtils.isEmpty(searchCriteria.getTenantId())) {
             queryBuilderHelper.addClauseIfRequired(query, preparedStmtList);
             query.append(" jc.tenant_id = ? ");
             preparedStmtList.add(searchCriteria.getTenantId());
         }
 
-        if (searchCriteria.getJudgeId( != null)) {
+        if (!ObjectUtils.isEmpty(searchCriteria.getJudgeId())) {
             queryBuilderHelper.addClauseIfRequired(query, preparedStmtList);
             query.append(" jc.judge_id = ? ");
             preparedStmtList.add(searchCriteria.getJudgeId());
         }
 
-        if (searchCriteria.getFromDate( != null)) {
+        if (searchCriteria.getFromDate() != null) {
             queryBuilderHelper.addClauseIfRequired(query, preparedStmtList);
             query.append(" jc.date >= ? ");
             preparedStmtList.add(searchCriteria.getFromDate());
         }
 
-        if (searchCriteria.getToDate( != null)) {
+        if (searchCriteria.getToDate() != null) {
             queryBuilderHelper.addClauseIfRequired(query, preparedStmtList);
             query.append(" jc.date <= ?");
             preparedStmtList.add(searchCriteria.getToDate());
@@ -64,41 +65,41 @@ public class CalendarQueryBuilder {
         StringBuilder query = new StringBuilder(BASE_APPLICATION_QUERY);
         query.append(FROM_TABLES);
 
-        if (criteria.getTenantId( != null)) {
+        if (criteria.getTenantId() != null) {
             queryBuilderHelper.addClauseIfRequired(query, preparedStmtList);
             query.append(" jc.tenant_id = ? ");
             preparedStmtList.add(criteria.getTenantId());
             preparedStmtArgList.add(Types.VARCHAR);
         }
 
-        if (criteria.getJudgeId( != null)) {
+        if (criteria.getJudgeId() != null) {
             queryBuilderHelper.addClauseIfRequired(query, preparedStmtList);
             query.append(" jc.judge_id = ? ");
             preparedStmtList.add(criteria.getJudgeId());
             preparedStmtArgList.add(Types.VARCHAR);
         }
 
-        if (criteria.getFromDate( != null)) {
+        if (criteria.getFromDate() != null) {
             queryBuilderHelper.addClauseIfRequired(query, preparedStmtList);
             query.append(" jc.date >= ? ");
             preparedStmtList.add(criteria.getFromDate());
             preparedStmtArgList.add(Types.INTEGER);
         }
 
-        if (criteria.getToDate( != null)) {
+        if (criteria.getToDate() != null) {
             queryBuilderHelper.addClauseIfRequired(query, preparedStmtList);
             query.append(" jc.date <= ?");
             preparedStmtList.add(criteria.getToDate());
             preparedStmtArgList.add(Types.INTEGER);
         }
 
-        if (criteria.getRuleType( != null)) {
+        if (criteria.getRuleType() != null) {
             queryBuilderHelper.addClauseIfRequired(query, preparedStmtList);
             query.append(" jc.rule_type IN ( ").append(queryBuilderHelper.createQuery(criteria.getRuleType())).append(" ) ");
             queryBuilderHelper.addToPreparedStatement(preparedStmtList, preparedStmtArgList, criteria.getRuleType());
         }
 
-        if (criteria.getCourtId( != null)) {
+        if (criteria.getCourtId() != null) {
             queryBuilderHelper.addClauseIfRequired(query, preparedStmtList);
             query.append(" jc.court_ids @> ?::jsonb ");
             preparedStmtList.add("[\"" + criteria.getCourtId() + "\"]");

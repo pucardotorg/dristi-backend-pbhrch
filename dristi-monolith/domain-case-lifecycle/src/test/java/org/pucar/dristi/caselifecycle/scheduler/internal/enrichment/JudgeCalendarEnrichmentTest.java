@@ -1,7 +1,7 @@
 package org.pucar.dristi.caselifecycle.scheduler.internal.enrichment;
 
 import org.pucar.dristi.common.models.AuditDetails;
-import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.JudgeCalendarRule;
+import org.pucar.dristi.common.contract.scheduler.JudgeCalendarRule;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
 import org.junit.jupiter.api.BeforeEach;

@@ -1,6 +1,6 @@
 package org.pucar.dristi.caselifecycle.scheduler.internal.repository.rowmapper;
 
-import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.AvailabilityDTO;
+import org.pucar.dristi.common.contract.scheduler.AvailabilityDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;

@@ -1,7 +1,7 @@
 package org.pucar.dristi.caselifecycle.scheduler.internal.validator;
 
-import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.JudgeCalendarRule;
-import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.SearchCriteria;
+import org.pucar.dristi.common.contract.scheduler.JudgeCalendarRule;
+import org.pucar.dristi.common.contract.scheduler.SearchCriteria;
 import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.enums.JudgeRuleType;
 import org.egov.tracer.model.CustomException;
 import org.junit.jupiter.api.BeforeEach;

@@ -7,7 +7,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.pucar.dristi.caselifecycle.scheduler.internal.repository.SchedulerServiceRequestHelper;
-import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.IndividualSearchRequest;
+import org.pucar.dristi.common.contract.scheduler.IndividualSearchRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.models.individual.Individual;
 import org.egov.tracer.model.CustomException;

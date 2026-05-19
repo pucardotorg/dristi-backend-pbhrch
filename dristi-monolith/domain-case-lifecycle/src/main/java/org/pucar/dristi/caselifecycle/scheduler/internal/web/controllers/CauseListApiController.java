@@ -4,6 +4,7 @@ package org.pucar.dristi.caselifecycle.scheduler.internal.web.controllers;
 import org.pucar.dristi.caselifecycle.scheduler.internal.service.CauseListService;
 import org.pucar.dristi.common.util.ResponseInfoFactory;
 import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.*;
+import org.pucar.dristi.common.contract.scheduler.*;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Schema;

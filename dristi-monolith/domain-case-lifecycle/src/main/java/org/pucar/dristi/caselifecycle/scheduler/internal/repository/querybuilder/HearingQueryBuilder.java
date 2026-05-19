@@ -1,7 +1,7 @@
 package org.pucar.dristi.caselifecycle.scheduler.internal.repository.querybuilder;
 
 import org.pucar.dristi.caselifecycle.scheduler.internal.helper.QueryBuilderHelper;
-import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.ScheduleHearingSearchCriteria;
+import org.pucar.dristi.common.contract.scheduler.ScheduleHearingSearchCriteria;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -64,7 +64,7 @@ public class HearingQueryBuilder {
             queryBuilderHelper.addToPreparedStatement(preparedStmtList, preparedStmtArgList, scheduleHearingSearchCriteria.getHearingIds());
         }
 
-        if (scheduleHearingSearchCriteria.getTenantId( != null)) {
+        if (scheduleHearingSearchCriteria.getTenantId() != null) {
             queryBuilderHelper.addClauseIfRequired(query, preparedStmtList);
             query.append(" hb.tenant_id = ? ");
             preparedStmtList.add(scheduleHearingSearchCriteria.getTenantId());
@@ -72,7 +72,7 @@ public class HearingQueryBuilder {
 
         }
 
-        if (scheduleHearingSearchCriteria.getJudgeId( != null)) {
+        if (scheduleHearingSearchCriteria.getJudgeId() != null) {
             queryBuilderHelper.addClauseIfRequired(query, preparedStmtList);
             query.append(" hb.judge_id = ? ");
             preparedStmtList.add(scheduleHearingSearchCriteria.getJudgeId());
@@ -80,21 +80,21 @@ public class HearingQueryBuilder {
 
 
         }
-        if (scheduleHearingSearchCriteria.getCourtId( != null)) {
+        if (scheduleHearingSearchCriteria.getCourtId() != null) {
             queryBuilderHelper.addClauseIfRequired(query, preparedStmtList);
             query.append(" hb.court_id = ? ");
             preparedStmtList.add(scheduleHearingSearchCriteria.getCourtId());
             preparedStmtArgList.add(Types.VARCHAR);
 
         }
-        if (scheduleHearingSearchCriteria.getCaseId( != null)) {
+        if (scheduleHearingSearchCriteria.getCaseId() != null) {
             queryBuilderHelper.addClauseIfRequired(query, preparedStmtList);
             query.append(" hb.case_id = ? ");
             preparedStmtList.add(scheduleHearingSearchCriteria.getCaseId());
             preparedStmtArgList.add(Types.VARCHAR);
 
         }
-        if (scheduleHearingSearchCriteria.getHearingType( != null)) {
+        if (scheduleHearingSearchCriteria.getHearingType() != null) {
             queryBuilderHelper.addClauseIfRequired(query, preparedStmtList);
             query.append(" hb.hearing_type = ? ");
             preparedStmtList.add(scheduleHearingSearchCriteria.getHearingType());
@@ -102,14 +102,14 @@ public class HearingQueryBuilder {
 
         }
 
-        if (scheduleHearingSearchCriteria.getStartDateTime( != null)) {
+        if (scheduleHearingSearchCriteria.getStartDateTime() != null) {
             queryBuilderHelper.addClauseIfRequired(query, preparedStmtList);
             query.append(" hb.start_time >= ? ");
             preparedStmtList.add(scheduleHearingSearchCriteria.getStartDateTime());
             preparedStmtArgList.add(Types.BIGINT);
 
         }
-        if (scheduleHearingSearchCriteria.getEndDateTime( != null)) {
+        if (scheduleHearingSearchCriteria.getEndDateTime() != null) {
             queryBuilderHelper.addClauseIfRequired(query, preparedStmtList);
             query.append(" hb.end_time <= ? ");
             preparedStmtList.add(scheduleHearingSearchCriteria.getEndDateTime());
@@ -117,7 +117,7 @@ public class HearingQueryBuilder {
 
         }
 
-        if (scheduleHearingSearchCriteria.getRescheduleId( != null)) {
+        if (scheduleHearingSearchCriteria.getRescheduleId() != null) {
             queryBuilderHelper.addClauseIfRequired(query, preparedStmtList);
             query.append("hb.reschedule_request_id = ? ");
             preparedStmtList.add(scheduleHearingSearchCriteria.getRescheduleId());

@@ -5,6 +5,7 @@ import org.pucar.dristi.caselifecycle.scheduler.internal.service.HearingService;
 import org.pucar.dristi.caselifecycle.scheduler.internal.service.hearing.HearingProcessor;
 import org.pucar.dristi.common.util.ResponseInfoFactory;
 import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.*;
+import org.pucar.dristi.common.contract.scheduler.*;
 import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.hearing.HearingRequest;
 import io.swagger.annotations.ApiParam;
 import io.swagger.v3.oas.annotations.Parameter;

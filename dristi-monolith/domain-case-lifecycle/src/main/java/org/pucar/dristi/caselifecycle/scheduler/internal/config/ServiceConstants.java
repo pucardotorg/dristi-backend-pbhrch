@@ -4,6 +4,7 @@ package org.pucar.dristi.caselifecycle.scheduler.internal.config;
 import org.springframework.stereotype.Component;
 
 
+import org.pucar.dristi.common.contract.scheduler.User;
 @Component("schedulerServiceConstants")
 public class ServiceConstants {
 

@@ -1,6 +1,6 @@
 package org.pucar.dristi.caselifecycle.scheduler.internal.repository.querybuilder;
 
-import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.CauseListSearchCriteria;
+import org.pucar.dristi.common.contract.scheduler.CauseListSearchCriteria;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;

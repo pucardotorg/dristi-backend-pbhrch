@@ -1,7 +1,7 @@
 package org.pucar.dristi.caselifecycle.scheduler.internal.repository.querybuilder;
 
 import org.pucar.dristi.caselifecycle.scheduler.internal.helper.QueryBuilderHelper;
-import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.SearchCriteria;
+import org.pucar.dristi.common.contract.scheduler.SearchCriteria;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

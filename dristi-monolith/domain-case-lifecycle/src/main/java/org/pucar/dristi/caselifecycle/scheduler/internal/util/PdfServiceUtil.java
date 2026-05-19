@@ -1,8 +1,8 @@
 package org.pucar.dristi.caselifecycle.scheduler.internal.util;
 
 import org.pucar.dristi.caselifecycle.scheduler.internal.config.Configuration;
-import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.CauseListRequest;
-import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.SlotRequest;
+import org.pucar.dristi.common.contract.scheduler.CauseListRequest;
+import org.pucar.dristi.common.contract.scheduler.SlotRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -6,6 +6,7 @@ import org.pucar.dristi.common.models.AuditDetails;
 import org.pucar.dristi.caselifecycle.scheduler.internal.repository.HearingRepository;
 import org.pucar.dristi.caselifecycle.scheduler.internal.util.DateUtil;
 import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.*;
+import org.pucar.dristi.common.contract.scheduler.*;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
 import org.springframework.beans.factory.annotation.Autowired;

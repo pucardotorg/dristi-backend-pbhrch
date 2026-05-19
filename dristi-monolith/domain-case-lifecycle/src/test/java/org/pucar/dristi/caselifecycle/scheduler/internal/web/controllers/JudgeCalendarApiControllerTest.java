@@ -2,6 +2,7 @@ package org.pucar.dristi.caselifecycle.scheduler.internal.web.controllers;
 
 import org.pucar.dristi.caselifecycle.scheduler.internal.service.CalendarService;
 import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.*;
+import org.pucar.dristi.common.contract.scheduler.*;
 import org.junit.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;

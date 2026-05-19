@@ -4,8 +4,8 @@ import org.pucar.dristi.caselifecycle.scheduler.internal.repository.querybuilder
 import org.pucar.dristi.caselifecycle.scheduler.internal.repository.rowmapper.CaseTypeRowMapper;
 import org.pucar.dristi.caselifecycle.scheduler.internal.repository.rowmapper.CauseListRowMapper;
 import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.CaseType;
-import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.CauseList;
-import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.CauseListSearchCriteria;
+import org.pucar.dristi.common.contract.scheduler.CauseList;
+import org.pucar.dristi.common.contract.scheduler.CauseListSearchCriteria;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;

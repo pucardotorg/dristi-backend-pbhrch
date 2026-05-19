@@ -10,6 +10,7 @@ import org.pucar.dristi.caselifecycle.scheduler.internal.util.DateUtil;
 import org.pucar.dristi.caselifecycle.scheduler.internal.util.HearingUtil;
 import org.pucar.dristi.caselifecycle.scheduler.internal.util.MasterDataUtil;
 import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.*;
+import org.pucar.dristi.common.contract.scheduler.*;
 import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.hearing.*;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;

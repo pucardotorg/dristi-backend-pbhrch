@@ -6,9 +6,9 @@ import org.pucar.dristi.caselifecycle.scheduler.internal.enrichment.RescheduleRe
 import org.pucar.dristi.common.kafka.Producer;
 import org.pucar.dristi.caselifecycle.scheduler.internal.repository.RescheduleRequestOptOutRepository;
 import org.pucar.dristi.caselifecycle.scheduler.internal.validator.RescheduleRequestOptOutValidator;
-import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.OptOut;
-import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.OptOutRequest;
-import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.OptOutSearchRequest;
+import org.pucar.dristi.common.contract.scheduler.OptOut;
+import org.pucar.dristi.common.contract.scheduler.OptOutRequest;
+import org.pucar.dristi.common.contract.scheduler.OptOutSearchRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

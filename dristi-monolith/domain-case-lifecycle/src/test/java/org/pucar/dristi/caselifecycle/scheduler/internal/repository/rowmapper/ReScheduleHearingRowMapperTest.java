@@ -3,7 +3,7 @@ package org.pucar.dristi.caselifecycle.scheduler.internal.repository.rowmapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.ReScheduleHearing;
+import org.pucar.dristi.common.contract.scheduler.ReScheduleHearing;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
