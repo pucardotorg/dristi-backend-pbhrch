@@ -1,4 +1,5 @@
-package org.pucar.dristi.caselifecycle.hearingmanagement.internal.web.models;
+// HAND-CURATED — lifted by Phase 35 (contract-lift)
+package org.pucar.dristi.common.contract.hearingmanagement;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;

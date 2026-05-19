@@ -92,9 +92,6 @@ egov:
   sms:
     notification:
       topic: egov.core.notification.sms
-  scheduler:
-    host: http://localhost:8087
-    path: /scheduler/calendar/v1/_search
   court:
     holidays:
       mdms:
@@ -105,14 +102,6 @@ egov:
     hearing:
       module: schedule-hearing
   tenantId: pb
-is:
-  workflow:
-    enabled: true
-dristi:
-  hearing:
-    host: http://localhost:8081
-    search:
-      endpoint: /hearing/v1/search
 logging:
   loki:
     enabled: false

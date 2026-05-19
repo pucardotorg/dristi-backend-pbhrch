@@ -1,20 +1,17 @@
 package org.pucar.dristi.caselifecycle.hearingmanagement.internal.service;
 
-import org.pucar.dristi.caselifecycle.hearingmanagement.internal.config.Configuration;
+import org.pucar.dristi.caselifecycle.hearing.HearingApi;
 import org.pucar.dristi.caselifecycle.hearingmanagement.internal.enrichment.HearingsEnrichment;
-import org.pucar.dristi.caselifecycle.hearingmanagement.internal.util.HearingUtil;
-import org.pucar.dristi.caselifecycle.hearingmanagement.internal.util.SchedulerUtil;
-import org.pucar.dristi.caselifecycle.hearingmanagement.internal.web.models.*;
-import org.pucar.dristi.caselifecycle.hearingmanagement.internal.web.models.scheduler.JudgeRuleResponse;
-import org.pucar.dristi.caselifecycle.hearingmanagement.internal.web.models.scheduler.JudgeCalenderSearchCriteria;
-import org.pucar.dristi.caselifecycle.hearingmanagement.internal.web.models.scheduler.JudgeCalenderSearchRequest;
+import org.pucar.dristi.common.contract.hearing.Hearing;
+import org.pucar.dristi.common.contract.hearingmanagement.HearingCriteria;
+import org.pucar.dristi.common.contract.hearingmanagement.HearingSearchListResponse;
+import org.pucar.dristi.common.contract.hearingmanagement.HearingSearchRequest;
+import org.pucar.dristi.common.contract.hearingmanagement.HearingSearchResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,20 +21,14 @@ import static org.pucar.dristi.caselifecycle.hearingmanagement.internal.config.S
 @Slf4j
 public class HearingService {
 
-    private final HearingUtil hearingUtil;
+    private final HearingApi hearingApi;
 
     private final HearingsEnrichment hearingsEnrichment;
 
-    private final SchedulerUtil schedulerUtil;
-
-    private final Configuration config;
-
     @Autowired
-    public HearingService(HearingUtil hearingUtil, HearingsEnrichment hearingsEnrichment, SchedulerUtil schedulerUtil, Configuration config) {
-        this.hearingUtil = hearingUtil;
+    public HearingService(HearingApi hearingApi, HearingsEnrichment hearingsEnrichment) {
+        this.hearingApi = hearingApi;
         this.hearingsEnrichment = hearingsEnrichment;
-        this.schedulerUtil = schedulerUtil;
-        this.config = config;
     }
 
     public HearingSearchListResponse searchHearings(HearingSearchRequest hearingSearchRequest) {
@@ -45,20 +36,19 @@ public class HearingService {
         log.info("search hearings, result= IN_PROGRESS,  request = {} ", hearingSearchRequest);
 
         try {
-
-            HearingListResponse hearingListResponse = hearingUtil.getHearings(hearingSearchRequest);
+            List<Hearing> hearings = hearingApi.search(toApiRequest(hearingSearchRequest));
 
             List<HearingSearchResponse> hearingSearchResponseList = new ArrayList<>();
 
-            if (hearingListResponse != null && hearingListResponse.getHearingList() != null) {
-                hearingSearchResponseList = hearingsEnrichment.enrichHearings(hearingListResponse.getHearingList());
+            if (hearings != null && !hearings.isEmpty()) {
+                hearingSearchResponseList = hearingsEnrichment.enrichHearings(hearings);
                 return HearingSearchListResponse.builder()
-                        .totalCount(hearingListResponse.getTotalCount())
+                        .totalCount(hearings.size())
                         .hearingList(hearingSearchResponseList)
                         .build();
             }
 
-            log.info("search hearings, result= SUCCESS, response = {} ", hearingListResponse);
+            log.info("search hearings, result= SUCCESS, response = {} ", hearingSearchResponseList);
 
             return HearingSearchListResponse.builder()
                     .totalCount(0)
@@ -71,45 +61,29 @@ public class HearingService {
         }
     }
 
-    private String getJudgeIdFromHearing(List<Hearing> hearingList) {
-        if(!hearingList.isEmpty()){
-            return hearingList.get(0).getPresidedBy().getJudgeID().get(0);
-        }
-        return "";
-    }
-
-    private List<String> getOptOutDates(HearingSearchRequest hearingSearchRequest, String judgeId) {
-        List<String> optOutDates = new ArrayList<>();
-        JudgeCalenderSearchRequest judgeCalenderSearchRequest = JudgeCalenderSearchRequest.builder().build();
-        JudgeCalenderSearchCriteria criteria = JudgeCalenderSearchCriteria.builder()
-                .judgeId(judgeId)
-                .fromDate(hearingSearchRequest.getCriteria().getFromDate())
-                .toDate(hearingSearchRequest.getCriteria().getToDate())
-                .ruleType(List.of("RESCHEDULE"))
-                .courtId(hearingSearchRequest.getCriteria().getCourtId())
-                .tenantId(hearingSearchRequest.getCriteria().getTenantId())
+    private org.pucar.dristi.common.contract.hearing.HearingSearchRequest toApiRequest(HearingSearchRequest req) {
+        if (req == null) return null;
+        HearingCriteria c = req.getCriteria();
+        return org.pucar.dristi.common.contract.hearing.HearingSearchRequest.builder()
+                .requestInfo(req.getRequestInfo())
+                .criteria(c == null ? null :
+                        org.pucar.dristi.common.contract.hearing.HearingCriteria.builder()
+                                .hearingId(c.getHearingId())
+                                .hearingType(c.getHearingType())
+                                .cnrNumber(c.getCnrNumber())
+                                .filingNumber(c.getFilingNumber())
+                                .tenantId(c.getTenantId())
+                                .applicationNumber(c.getApplicationNumber())
+                                .fromDate(c.getFromDate())
+                                .toDate(c.getToDate())
+                                .attendeeIndividualId(c.getAttendeeIndividualId())
+                                .courtId(c.getCourtId())
+                                .build())
+                .pagination(req.getPagination() == null ? null :
+                        org.pucar.dristi.common.contract.hearing.Pagination.builder()
+                                .limit(req.getPagination().getLimit())
+                                .offSet(req.getPagination().getOffSet())
+                                .build())
                 .build();
-        judgeCalenderSearchRequest.setRequestInfo(hearingSearchRequest.getRequestInfo());
-        judgeCalenderSearchRequest.setCriteria(criteria);
-
-        log.info("Judge Calendar Search Request :: {} ", judgeCalenderSearchRequest);
-        JudgeRuleResponse judgeCalendarResponse = schedulerUtil.searchJudgeCalender(judgeCalenderSearchRequest);
-        log.info("Judge Calendar Response :: {} ", judgeCalendarResponse);
-        if(judgeCalendarResponse!=null && judgeCalendarResponse.getJudgeCalendarRules()!=null){
-            judgeCalendarResponse.getJudgeCalendarRules().forEach(judgeCalendarRule -> {
-                optOutDates.add(convertLongDateToDateString(judgeCalendarRule.getDate()));
-            });
-        }
-
-        return optOutDates;
-
     }
-
-    private String convertLongDateToDateString(Long date) {
-        return Instant.ofEpochMilli(date)
-                .atZone(ZoneId.of(config.getZoneId()))
-                .toLocalDate()
-                .toString();
-    }
-
 }

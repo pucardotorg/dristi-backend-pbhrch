@@ -3,9 +3,9 @@ package org.pucar.dristi.caselifecycle.hearingmanagement.internal.web.controller
 
 import org.pucar.dristi.caselifecycle.hearingmanagement.internal.service.HearingService;
 import org.pucar.dristi.common.util.ResponseInfoFactory;
-import org.pucar.dristi.caselifecycle.hearingmanagement.internal.web.models.HearingSearchListResponse;
-import org.pucar.dristi.caselifecycle.hearingmanagement.internal.web.models.HearingSearchRequest;
-import org.pucar.dristi.caselifecycle.hearingmanagement.internal.web.models.HearingSearchResponse;
+import org.pucar.dristi.common.contract.hearingmanagement.HearingSearchListResponse;
+import org.pucar.dristi.common.contract.hearingmanagement.HearingSearchRequest;
+import org.pucar.dristi.common.contract.hearingmanagement.HearingSearchResponse;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -22,6 +22,7 @@ import jakarta.validation.Valid;
 
 import java.util.List;
 
+import org.pucar.dristi.common.contract.hearingmanagement.Hearing;
 @Slf4j
 @jakarta.annotation.Generated(value = "org.egov.codegen.SpringBootCodegen", date = "2025-05-07T18:50:26.938815960+05:30[Asia/Kolkata]")
 @Controller("hearingmanagementHearingApiController")
