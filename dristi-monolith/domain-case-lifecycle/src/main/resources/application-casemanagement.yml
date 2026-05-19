@@ -137,8 +137,8 @@ egov:
         name: 127.0.0.1
       port:
         'no': 9200
-      username: ${ES_USERNAME}
-      password: ${ES_PASSWORD}
+      username:
+      password:
   infra:
     indexer:
       host: http://localhost:9200/
@@ -152,19 +152,12 @@ dristi:
       url: /case/v1/_search
     index: case-index
   application:
-    host: http://localhost:8079
-    search:
-      endpoint: /application/v1/search
     index: application-index
   digitalized:
     documents:
       host: http://localhost:8087
       search:
         endpoint: /digitalized-documents/v1/_search
-  evidence:
-    host: http://localhost:8082
-    search:
-      endpoint: /evidence/v1/_search
   ctc:
     host: http://localhost:8083
     search:

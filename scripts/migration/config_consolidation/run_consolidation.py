@@ -220,18 +220,29 @@ SERVICE_DEAD_KEYS: dict[str, set[str]] = {
         "dristi.advocate.search.endpoint",
         "dristi.advocate.clerk.search.endpoint",
     },
-    # casemanagement C2: TaskManagementUtil REST→TaskmanagementApi direct
-    # calls (Rule 32). casemanagement now reads TaskmanagementApi directly;
-    # no @Value("${dristi.taskmanagement.{host,search.endpoint}}") consumer
-    # remains in caselifecycle/casemanagement/internal/. Pipeline 5 would
-    # otherwise re-add these dead keys on every subsequent regen.
+    # casemanagement C2: TaskManagementUtil REST→TaskmanagementApi, EvidenceUtil
+    # REST→EvidenceApi, OrderUtil REST→OrderApi, ApplicationUtil REST→
+    # ApplicationApi (exposed in this PR — first cross-subdomain caller)
+    # direct calls (Rule 32). casemanagement now reads those Apis directly;
+    # no @Value("${dristi.taskmanagement.{host,search.endpoint}}" /
+    # ${dristi.evidence.{host,search.endpoint}} /
+    # ${dristi.application.{host,search.endpoint}}") consumer remains in
+    # caselifecycle/casemanagement/internal/. Pipeline 5 would otherwise
+    # re-add these dead keys on every regen.
     # `dristi.case.{host,search.url}` are still read by CaseBundleService /
     # CaseBundleIndexBuilderService (Rule 39 follow-up: these are weakly-
     # typed `Map<String, Object>` REST calls that need Tier 3 redesign
     # before they can switch to CaseApi.search).
+    # `dristi.order.{host,search.url}` are still read by OrderSearchService
+    # (Rule 39 follow-up: searches via VcEntityOrderSearchRequest, a VC-
+    # specific shape OrderApi doesn't currently expose).
     "casemanagement": {
         "dristi.taskmanagement.host",
         "dristi.taskmanagement.search.endpoint",
+        "dristi.evidence.host",
+        "dristi.evidence.search.endpoint",
+        "dristi.application.host",
+        "dristi.application.search.endpoint",
     },
 }
 

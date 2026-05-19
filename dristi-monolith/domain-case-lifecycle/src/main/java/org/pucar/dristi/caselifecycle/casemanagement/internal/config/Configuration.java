@@ -153,13 +153,6 @@ public class Configuration {
 	@Value("${dristi.case.search.url}")
 	private String caseSearchUrl;
 
-	// Application Config
-	@Value("${dristi.application.host}")
-	private String applicationHost;
-
-	@Value("${dristi.application.search.endpoint}")
-	private String applicationSearchEndPoint;
-
 	//ElasticSearch Config
 	@Value("${egov.infra.indexer.host}")
 	private String esHostUrl;
@@ -233,13 +226,6 @@ public class Configuration {
 
 	@Value("${dristi.digitalized.documents.search.endpoint}")
 	private String digitalizedDocumentsSearchEndPoint;
-
-	// Evidence Service Config
-	@Value("${dristi.evidence.host}")
-	private String evidenceServiceHost;
-
-	@Value("${dristi.evidence.search.endpoint}")
-	private String evidenceServiceSearchEndpoint;
 
 	// CTC Service Config
 	@Value("${dristi.ctc.host}")
