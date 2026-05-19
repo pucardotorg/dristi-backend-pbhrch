@@ -1,8 +1,8 @@
 package org.pucar.dristi.caselifecycle.casemanagement.internal.service.bundle;
 
 import org.egov.common.contract.models.Document;
-import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.Application;
-import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.Artifact;
+import org.pucar.dristi.common.contract.casemanagement.Application;
+import org.pucar.dristi.common.contract.casemanagement.Artifact;
 import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.digitalizeddocument.DigitalizedDocument;
 import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.order.Order;
 
@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import org.pucar.dristi.common.contract.casemanagement.Witness;
 public class BundleSectionUtils {
 
     private BundleSectionUtils() {

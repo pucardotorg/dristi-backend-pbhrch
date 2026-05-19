@@ -5,9 +5,9 @@ import org.egov.tracer.model.CustomException;
 import org.pucar.dristi.caselifecycle.casemanagement.internal.config.Configuration;
 import org.pucar.dristi.common.kafka.Producer;
 import org.pucar.dristi.caselifecycle.casemanagement.internal.util.MdmsV2Util;
-import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.CredentialRequest;
+import org.pucar.dristi.common.contract.casemanagement.CredentialRequest;
 import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.Mdms;
-import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.VcCredentialRequest;
+import org.pucar.dristi.common.contract.casemanagement.VcCredentialRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

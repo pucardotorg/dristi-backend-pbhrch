@@ -4,7 +4,7 @@ package org.pucar.dristi.caselifecycle.casemanagement.internal.util.jsonmapper;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.models.AuditDetails;
 import org.json.JSONObject;
-import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.CourtCase;
+import org.pucar.dristi.common.contract.casemanagement.CourtCase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

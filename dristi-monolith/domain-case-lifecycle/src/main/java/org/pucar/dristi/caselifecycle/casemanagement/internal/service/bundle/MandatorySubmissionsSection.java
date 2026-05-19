@@ -2,7 +2,7 @@ package org.pucar.dristi.caselifecycle.casemanagement.internal.service.bundle;
 
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.models.Document;
-import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.Application;
+import org.pucar.dristi.common.contract.casemanagement.Application;
 import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.order.Order;
 import org.pucar.dristi.caselifecycle.casemanagement.internal.service.CaseBundleSection;
 import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.BundleData;

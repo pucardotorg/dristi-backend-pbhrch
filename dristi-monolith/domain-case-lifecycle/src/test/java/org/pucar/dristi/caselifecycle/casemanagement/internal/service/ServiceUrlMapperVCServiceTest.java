@@ -10,7 +10,7 @@ import org.mockito.MockitoAnnotations;
 import org.pucar.dristi.caselifecycle.casemanagement.internal.config.Configuration;
 import org.pucar.dristi.common.kafka.Producer;
 import org.pucar.dristi.caselifecycle.casemanagement.internal.util.MdmsV2Util;
-import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.VcCredentialRequest;
+import org.pucar.dristi.common.contract.casemanagement.VcCredentialRequest;
 
 import java.util.ArrayList;
 

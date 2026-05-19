@@ -3,6 +3,7 @@ package org.pucar.dristi.caselifecycle.casemanagement.internal.service.bundle;
 import org.egov.common.contract.models.Document;
 import org.pucar.dristi.caselifecycle.casemanagement.internal.service.CaseBundleSection;
 import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.*;
+import org.pucar.dristi.common.contract.casemanagement.*;
 import org.springframework.stereotype.Component;
 
 import java.util.*;

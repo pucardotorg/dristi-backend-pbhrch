@@ -10,8 +10,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.CredentialRequest;
-import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.VcCredentialRequest;
+import org.pucar.dristi.common.contract.casemanagement.CredentialRequest;
+import org.pucar.dristi.common.contract.casemanagement.VcCredentialRequest;
 import org.springframework.http.ResponseEntity;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -19,6 +19,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
+import org.pucar.dristi.common.contract.casemanagement.Order;
 @ExtendWith(MockitoExtension.class)
 class ServiceUrlEntityRequestServiceTest {
 

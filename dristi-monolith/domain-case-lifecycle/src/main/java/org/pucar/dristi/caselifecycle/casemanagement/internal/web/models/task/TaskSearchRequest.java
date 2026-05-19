@@ -6,8 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.egov.common.contract.request.RequestInfo;
-import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.Pagination;
-import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.TaskCriteria;
+import org.pucar.dristi.common.contract.casemanagement.Pagination;
+import org.pucar.dristi.common.contract.casemanagement.TaskCriteria;
 
 @Getter
 @Setter

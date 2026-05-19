@@ -9,6 +9,7 @@ import org.pucar.dristi.common.kafka.Producer;
 import org.pucar.dristi.caselifecycle.casemanagement.internal.repository.ElasticSearchRepository;
 import org.pucar.dristi.caselifecycle.casemanagement.internal.util.*;
 import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.*;
+import org.pucar.dristi.common.contract.casemanagement.*;
 import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.docpreview.DocPreviewRequest;
 import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.task.TaskCaseSearchCriteria;
 import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.taskManagement.TaskSearchCriteria;

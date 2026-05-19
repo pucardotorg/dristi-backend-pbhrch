@@ -19,7 +19,7 @@ import org.egov.tracer.model.CustomException;
 import org.pucar.dristi.caselifecycle.casemanagement.internal.config.Configuration;
 import static org.pucar.dristi.caselifecycle.casemanagement.internal.config.ServiceConstants.TEMP_DIR;
 
-import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.VcCredentialRequest;
+import org.pucar.dristi.common.contract.casemanagement.VcCredentialRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StreamUtils;

@@ -6,8 +6,8 @@ import org.egov.tracer.model.CustomException;
 import org.jsoup.Jsoup;
 
 import org.pucar.dristi.caselifecycle.casemanagement.internal.config.Configuration;
-import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.PdfRequest;
-import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.QrCodeRequest;
+import org.pucar.dristi.common.contract.casemanagement.PdfRequest;
+import org.pucar.dristi.common.contract.casemanagement.QrCodeRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;

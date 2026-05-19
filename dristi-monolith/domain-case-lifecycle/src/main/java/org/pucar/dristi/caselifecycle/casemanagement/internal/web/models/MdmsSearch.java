@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.egov.common.contract.request.RequestInfo;
 
+import org.pucar.dristi.common.contract.casemanagement.SchemaDefCriteria;
 @Data
 @Getter
 @Setter

@@ -3,7 +3,7 @@ package org.pucar.dristi.caselifecycle.casemanagement.internal.service.bundle;
 import org.pucar.dristi.caselifecycle.casemanagement.internal.service.CaseBundleSection;
 import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.BundleData;
 import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.CaseBundleNode;
-import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.CourtCase;
+import org.pucar.dristi.common.contract.casemanagement.CourtCase;
 import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.digitalizeddocument.DigitalizedDocument;
 import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.docpreview.DocPreviewRequest;
  

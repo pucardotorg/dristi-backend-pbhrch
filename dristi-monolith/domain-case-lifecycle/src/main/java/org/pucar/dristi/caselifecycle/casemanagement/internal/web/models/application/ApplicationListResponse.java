@@ -8,7 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.egov.common.contract.response.ResponseInfo;
-import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.Application;
+import org.pucar.dristi.common.contract.casemanagement.Application;
 
 import java.util.ArrayList;
 import java.util.List;

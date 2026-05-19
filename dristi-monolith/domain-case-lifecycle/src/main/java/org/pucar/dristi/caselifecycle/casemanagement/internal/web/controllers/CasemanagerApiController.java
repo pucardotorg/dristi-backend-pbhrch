@@ -10,6 +10,7 @@ import org.pucar.dristi.caselifecycle.casemanagement.internal.service.*;
 import org.pucar.dristi.common.util.FileStoreUtil;
 import org.pucar.dristi.common.util.ResponseInfoFactory;
 import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.*;
+import org.pucar.dristi.common.contract.casemanagement.*;
 import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.docpreview.DocPreviewRequest;
 import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.docpreview.DocPreviewResponse;
 import org.springframework.beans.factory.annotation.Autowired;

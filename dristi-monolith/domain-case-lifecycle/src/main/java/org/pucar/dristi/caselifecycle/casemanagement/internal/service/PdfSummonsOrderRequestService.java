@@ -10,8 +10,8 @@ import static org.pucar.dristi.caselifecycle.casemanagement.internal.config.Serv
 import static org.pucar.dristi.caselifecycle.casemanagement.internal.config.ServiceConstants.JSON_PARSING_ERR;
 import org.pucar.dristi.caselifecycle.casemanagement.internal.repository.PdfResponseRepository;
 import org.pucar.dristi.common.repository.ServiceRequestRepository;
-import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.PdfRequest;
-import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.PdfSummonsRequest;
+import org.pucar.dristi.common.contract.casemanagement.PdfRequest;
+import org.pucar.dristi.common.contract.casemanagement.PdfSummonsRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;

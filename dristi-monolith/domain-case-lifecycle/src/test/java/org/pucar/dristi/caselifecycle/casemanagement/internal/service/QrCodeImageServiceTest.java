@@ -9,7 +9,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.pucar.dristi.caselifecycle.casemanagement.internal.config.Configuration;
-import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.PdfRequest;
+import org.pucar.dristi.common.contract.casemanagement.PdfRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;

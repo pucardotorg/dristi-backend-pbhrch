@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.pucar.dristi.common.contract.casemanagement.Task;
+import org.pucar.dristi.common.contract.casemanagement.Application;
 @Component("casemanagementConfiguration")
 @Data
 @Import({TracerConfiguration.class})
@@ -231,13 +233,6 @@ public class Configuration {
 
 	@Value("${dristi.digitalized.documents.search.endpoint}")
 	private String digitalizedDocumentsSearchEndPoint;
-
-	// Task Management Config
-	@Value("${dristi.taskmanagement.host}")
-	private String taskManagementServiceHost;
-
-	@Value("${dristi.taskmanagement.search.endpoint}")
-	private String taskManagementSearchEndpoint;
 
 	// Evidence Service Config
 	@Value("${dristi.evidence.host}")

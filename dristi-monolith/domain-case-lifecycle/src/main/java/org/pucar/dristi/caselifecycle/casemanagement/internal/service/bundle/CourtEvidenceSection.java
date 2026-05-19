@@ -1,7 +1,7 @@
 package org.pucar.dristi.caselifecycle.casemanagement.internal.service.bundle;
 
 import org.pucar.dristi.caselifecycle.casemanagement.internal.service.CaseBundleSection;
-import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.Artifact;
+import org.pucar.dristi.common.contract.casemanagement.Artifact;
 import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.BundleData;
 import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.CaseBundleNode;
 import org.springframework.stereotype.Component;

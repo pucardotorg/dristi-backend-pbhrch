@@ -220,6 +220,19 @@ SERVICE_DEAD_KEYS: dict[str, set[str]] = {
         "dristi.advocate.search.endpoint",
         "dristi.advocate.clerk.search.endpoint",
     },
+    # casemanagement C2: TaskManagementUtil REST→TaskmanagementApi direct
+    # calls (Rule 32). casemanagement now reads TaskmanagementApi directly;
+    # no @Value("${dristi.taskmanagement.{host,search.endpoint}}") consumer
+    # remains in caselifecycle/casemanagement/internal/. Pipeline 5 would
+    # otherwise re-add these dead keys on every subsequent regen.
+    # `dristi.case.{host,search.url}` are still read by CaseBundleService /
+    # CaseBundleIndexBuilderService (Rule 39 follow-up: these are weakly-
+    # typed `Map<String, Object>` REST calls that need Tier 3 redesign
+    # before they can switch to CaseApi.search).
+    "casemanagement": {
+        "dristi.taskmanagement.host",
+        "dristi.taskmanagement.search.endpoint",
+    },
 }
 
 # Two-source-into-one-subdomain (e-sign-svc + esign-interceptor): the

@@ -2,10 +2,10 @@ package org.pucar.dristi.caselifecycle.casemanagement.internal.service.bundle;
 
 import org.egov.common.contract.models.Document;
 import org.pucar.dristi.caselifecycle.casemanagement.internal.service.CaseBundleSection;
-import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.Application;
+import org.pucar.dristi.common.contract.casemanagement.Application;
 import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.BundleData;
 import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.CaseBundleNode;
-import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.Comment;
+import org.pucar.dristi.common.contract.casemanagement.Comment;
 import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.order.Order;
 import org.springframework.stereotype.Component;
 

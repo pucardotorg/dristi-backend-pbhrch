@@ -15,6 +15,7 @@ import org.pucar.dristi.caselifecycle.casemanagement.internal.repository.Elastic
 import org.pucar.dristi.common.repository.ServiceRequestRepository;
 import org.pucar.dristi.common.util.FileStoreUtil;
 import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.*;
+import org.pucar.dristi.common.contract.casemanagement.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.egov.tracer.model.CustomException;

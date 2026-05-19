@@ -1,7 +1,7 @@
 package org.pucar.dristi.caselifecycle.casemanagement.internal.util.jsonmapper;
 
 import org.json.JSONObject;
-import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.Hearing;
+import org.pucar.dristi.common.contract.casemanagement.Hearing;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

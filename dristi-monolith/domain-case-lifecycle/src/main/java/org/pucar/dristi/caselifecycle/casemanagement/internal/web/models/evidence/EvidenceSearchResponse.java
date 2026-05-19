@@ -7,8 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.egov.common.contract.response.ResponseInfo;
-import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.Artifact;
-import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.Pagination;
+import org.pucar.dristi.common.contract.casemanagement.Artifact;
+import org.pucar.dristi.common.contract.casemanagement.Pagination;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.List;

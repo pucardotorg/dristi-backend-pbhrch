@@ -5,7 +5,7 @@ import org.egov.common.contract.models.Document;
 import org.pucar.dristi.caselifecycle.casemanagement.internal.service.CaseBundleSection;
 import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.BundleData;
 import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.CaseBundleNode;
-import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.CourtCase;
+import org.pucar.dristi.common.contract.casemanagement.CourtCase;
 import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.taskManagement.TaskManagement;
 import org.springframework.stereotype.Component;
 
@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import org.pucar.dristi.common.contract.casemanagement.Task;
 @Component
 @RequiredArgsConstructor
 public class PaymentReceiptSection implements CaseBundleSection {
@@ -57,7 +58,7 @@ public class PaymentReceiptSection implements CaseBundleSection {
         // 2. Generic task documents (from data.tasks with taskType GENERIC, status COMPLETED)
         if (data.getTasks() != null) {
             int taskIdx = 0;
-            for (org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.Task task : data.getTasks()) {
+            for (org.pucar.dristi.common.contract.casemanagement.Task task : data.getTasks()) {
                 if (task == null || task.getDocuments() == null) continue;
                 for (Document taskDoc : task.getDocuments()) {
                     if (taskDoc == null || taskDoc.getFileStore() == null) continue;

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.concurrent.TimeUnit;
 
-@Component
+@Component("casemanagementCacheUtil")
 @Slf4j
 public class CacheUtil {
 

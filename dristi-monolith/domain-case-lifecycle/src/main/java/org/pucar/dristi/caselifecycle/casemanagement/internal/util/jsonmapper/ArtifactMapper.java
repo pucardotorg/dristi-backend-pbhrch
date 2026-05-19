@@ -2,7 +2,7 @@ package org.pucar.dristi.caselifecycle.casemanagement.internal.util.jsonmapper;
 
 import org.egov.common.contract.models.AuditDetails;
 import org.json.JSONObject;
-import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.Artifact;
+import org.pucar.dristi.common.contract.casemanagement.Artifact;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

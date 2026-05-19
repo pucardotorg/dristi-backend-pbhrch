@@ -8,8 +8,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.pucar.dristi.caselifecycle.casemanagement.internal.util.SummonsOrderPdfUtil;
-import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.PdfRequest;
-import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.PdfSummonsRequest;
+import org.pucar.dristi.common.contract.casemanagement.PdfRequest;
+import org.pucar.dristi.common.contract.casemanagement.PdfSummonsRequest;
 import org.springframework.http.ResponseEntity;
 
 import static org.junit.jupiter.api.Assertions.*;

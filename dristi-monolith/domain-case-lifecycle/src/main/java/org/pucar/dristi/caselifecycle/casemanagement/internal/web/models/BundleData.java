@@ -12,6 +12,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.pucar.dristi.common.contract.casemanagement.CourtCase;
+import org.pucar.dristi.common.contract.casemanagement.Task;
+import org.pucar.dristi.common.contract.casemanagement.Artifact;
+import org.pucar.dristi.common.contract.casemanagement.Application;
 @Getter
 @Builder
 public class BundleData {

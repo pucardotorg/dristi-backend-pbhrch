@@ -161,10 +161,6 @@ dristi:
       host: http://localhost:8087
       search:
         endpoint: /digitalized-documents/v1/_search
-  taskmanagement:
-    host: http://localhost:8085
-    search:
-      endpoint: /task-management/v1/_search
   evidence:
     host: http://localhost:8082
     search:

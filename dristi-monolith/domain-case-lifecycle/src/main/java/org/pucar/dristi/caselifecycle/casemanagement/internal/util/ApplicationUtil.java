@@ -9,7 +9,7 @@ import org.egov.tracer.model.CustomException;
 import org.egov.tracer.model.ServiceCallException;
 import org.pucar.dristi.caselifecycle.casemanagement.internal.config.Configuration;
 import org.pucar.dristi.common.repository.ServiceRequestRepository;
-import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.Application;
+import org.pucar.dristi.common.contract.casemanagement.Application;
 import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.application.ApplicationCriteria;
 import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.application.ApplicationListResponse;
 import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.application.ApplicationSearchRequest;
@@ -20,8 +20,8 @@ import org.springframework.web.client.HttpClientErrorException;
 import java.util.Collections;
 import java.util.List;
 
-import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.OrderPagination;
-import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.Pagination;
+import org.pucar.dristi.common.contract.casemanagement.OrderPagination;
+import org.pucar.dristi.common.contract.casemanagement.Pagination;
 
 import static org.pucar.dristi.caselifecycle.casemanagement.internal.config.ServiceConstants.EXTERNAL_SERVICE_EXCEPTION;
 import static org.pucar.dristi.caselifecycle.casemanagement.internal.config.ServiceConstants.SEARCHER_SERVICE_EXCEPTION;

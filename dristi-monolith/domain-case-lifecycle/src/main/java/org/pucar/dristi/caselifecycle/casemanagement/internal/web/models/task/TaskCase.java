@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 import org.egov.common.contract.models.AuditDetails;
 import org.egov.common.contract.models.Document;
 import org.egov.common.contract.models.Workflow;
-import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.Amount;
 import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.AssignedTo;
 import org.springframework.validation.annotation.Validated;
 
@@ -20,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.pucar.dristi.common.contract.casemanagement.Order;
 /**
  * A task case is dto
  */

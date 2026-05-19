@@ -7,6 +7,7 @@ import com.jayway.jsonpath.JsonPath;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.pucar.dristi.common.util.FileStoreUtil;
 import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.*;
+import org.pucar.dristi.common.contract.casemanagement.*;
 import org.springframework.beans.factory.annotation.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
