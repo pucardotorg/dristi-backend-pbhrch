@@ -1,0 +1,1 @@
+dristi-monolith/domain-integration/src/main/java/org/pucar/dristi/integration/treasury/internal/util/PdfServiceUtil.java  uses ['PdfServiceHost']

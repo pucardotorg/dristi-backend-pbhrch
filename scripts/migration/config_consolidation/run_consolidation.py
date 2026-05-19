@@ -155,6 +155,13 @@ SERVICE_DEAD_KEYS: dict[str, set[str]] = {
         # caselifecycle/cases/internal/ for `dristi.advocate.office.*`.
         "dristi.advocate.office.host",
         "dristi.advocate.office.search.member.endpoint",
+        # treasury-backend C2: cases EtreasuryUtil deleted; cases now uses
+        # TreasuryApi direct calls. No @Value("${egov.etreasury...") /
+        # ${etreasury.*}") consumer remains in caselifecycle/cases/internal/.
+        "egov.etreasury.host",
+        "egov.etreasury.demand.create.endpoint",
+        "etreasury.payment.receipt.endpoint",
+        "etreasury.head.breakup.calculation.endpoint",
         # 927ebb6c5 fix(hearing): Rule 31/32/36/37/38/40 compliance — PR #57
         # deleted cases/HearingUtil; cases now reads HearingApi directly.
         # No @Value("${egov.hearing.{host,path,search.path}}") consumer
@@ -165,6 +172,12 @@ SERVICE_DEAD_KEYS: dict[str, set[str]] = {
         "egov.hearing.host",
         "egov.hearing.path",
         "egov.hearing.search.path",
+        # ea4cbf89e refactor(evidence): cases/EvidenceValidator REST→EvidenceApi
+        # direct calls (Rule 32). No @Value("${egov.evidence.search.path}")
+        # consumer remains in caselifecycle/cases/internal/. `egov.evidence.{host,
+        # create.path}` stay live — cases/EvidenceUtil.createEvidence is the
+        # cross-subdomain write shim deferred per Rule 35.
+        "egov.evidence.search.path",
     },
     "order": {
         "egov.advocate.host",
@@ -209,17 +222,18 @@ SERVICE_DEAD_KEYS: dict[str, set[str]] = {
     },
 }
 
-# Note (two-source-into-one-subdomain): e-sign-svc + esign-interceptor both
-# map to subdomain `esign`. The current consolidation algorithm processes
-# services sequentially and writes per-subdomain yml per service, so passing
-# `--service esign-interceptor` along with `--service e-sign-svc` lets the
-# second writer overwrite the first. Until the script learns to merge
-# same-subdomain key sets, esign-interceptor's interceptor-only keys
-# (`drishti.esign.redirect.url`, `drishti.esign.landing.page.redirect.url`)
-# are hand-curated into `application-esign.yml` post-regen with a `# HAND-CURATED`
-# block; the dead `drishti.esign.host`/`endpoint` and `drishti.oath.*` /
-# `dristhi.oath.*` keys are simply not carried over (Rule 32 + `oAuthForDristi`
-# removal). Tracked as a Tier 2 pipeline follow-up.
+# Two-source-into-one-subdomain (e-sign-svc + esign-interceptor): the
+# absorbed service is filtered via ABSORBED_SERVICES below; see its
+# docstring for rationale.
+ABSORBED_SERVICES = {
+    "esign-interceptor": (
+        "absorbed into e-sign-svc's `esign` subdomain via hand-port at "
+        "commit 87b8aafba; configuration is hand-curated in "
+        "domain-integration/src/main/resources/application-esign.yml "
+        "(see the `# HAND-CURATED` block there for which interceptor "
+        "keys are kept vs. dropped post-Rule-32)."
+    ),
+}
 
 # Naming: subdomain prefix for the per-service yml file (matches the
 # Spring profile name).
@@ -370,6 +384,11 @@ def main() -> int:
     parser.add_argument("--service-subdomain", action="append", default=[],
                         help="Override of the service→subdomain mapping (foo=bar)")
     args = parser.parse_args()
+
+    for svc in args.service:
+        if svc in ABSORBED_SERVICES:
+            print(f"SKIP: {svc} — {ABSORBED_SERVICES[svc]}")
+    args.service = [s for s in args.service if s not in ABSORBED_SERVICES]
 
     if not args.service:
         print("ERROR: at least one --service is required")

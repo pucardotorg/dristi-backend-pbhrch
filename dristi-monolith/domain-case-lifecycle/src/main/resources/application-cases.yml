@@ -10,7 +10,20 @@ app:
   zone:
     id: Asia/Kolkata
 otel:
+  traces:
+    exporter: otlp
+  logs:
+    exporter: none
+  metrics:
+    exporter: none
+  exporter:
+    otlp:
+      endpoint: http://jaeger-collector.tracing:4318
+      protocol: http/protobuf
   instrumentation:
+    kafka:
+      enabled: true
+      experimental-span-attributes: true
     http:
       server:
         ignore-urls: /case/health,/case/prometheus
@@ -316,13 +329,6 @@ egov:
     host: http://localhost:8089
     create:
       path: /evidence/v1/_create
-    search:
-      path: /evidence/v1/_search
-  etreasury:
-    host: http://localhost:8876
-    demand:
-      create:
-        endpoint: /etreasury/payment/v1/_createDemand
   poa:
     join:
       case:
@@ -421,14 +427,6 @@ pucar:
     host: http://localhost:8080/
     search:
       endpoint: /lock-svc/v1/_get
-etreasury:
-  payment:
-    receipt:
-      endpoint: /etreasury/payment/v1/_getPaymentReceipt
-  head:
-    breakup:
-      calculation:
-        endpoint: /etreasury/payment/v1/_getHeadBreakDown
 tracing:
   url: http://jaeger-collector.backbone:14250
 application:

@@ -1,0 +1,28 @@
+{
+  "service": "treasury-backend",
+  "source_dir": "integration-services/treasury-backend",
+  "target_module": "integration",
+  "target_subdomain": "treasury",
+  "current_package": "org.egov.eTreasury",
+  "target_package": "org.pucar.dristi.integration.treasury",
+  "main_file_count": 99,
+  "test_file_count": 16,
+  "has_spring_boot_main": true,
+  "duplicated_protected_classes": [
+    "MdmsUtil",
+    "IdgenUtil",
+    "IndividualUtil",
+    "ResponseInfoFactory",
+    "Producer",
+    "KafkaProducerService",
+    "ServiceRequestRepository",
+    "Individual"
+  ],
+  "rest_call_files": [
+    "integration-services/treasury-backend/src/main/java/org/egov/eTreasury/util/IdgenUtil.java",
+    "integration-services/treasury-backend/src/main/java/org/egov/eTreasury/util/IndividualUtil.java",
+    "integration-services/treasury-backend/src/main/java/org/egov/eTreasury/service/SMSNotificationService.java",
+    "integration-services/treasury-backend/src/main/java/org/egov/eTreasury/repository/ServiceRequestRepository.java"
+  ],
+  "source_context_path": "/etreasury"
+}
