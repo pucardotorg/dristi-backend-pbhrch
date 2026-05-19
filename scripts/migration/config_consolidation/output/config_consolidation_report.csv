@@ -13,6 +13,7 @@ app.timezone,advocate-office-management,Asia/Kolkata,CONFLICT
 app.timezone,application,Asia/Kolkata,CONFLICT
 app.timezone,bail-bond,Asia/Kolkata,CONFLICT
 app.timezone,case,Asia/Kolkata,CONFLICT
+app.timezone,casemanagement,Asia/Kolkata,CONFLICT
 app.timezone,ctc,Asia/Kolkata,CONFLICT
 app.timezone,digitalized-documents,Asia/Kolkata,CONFLICT
 app.timezone,e-sign-svc,Asia/Kolkata,CONFLICT
@@ -65,6 +66,7 @@ dristi.analytics.host,hearing,http://localhost:8060,CONFLICT
 dristi.analytics.host,task,http://localhost:8060,CONFLICT
 dristi.analytics.host,task-management,http://localhost:8060,CONFLICT
 dristi.case.host,advocate-office-management,http://localhost:9091,CONFLICT
+dristi.case.host,casemanagement,http://localhost:8081,CONFLICT
 dristi.case.host,task-management,http://localhost:8056,CONFLICT
 dristi.case.host,treasury-backend,http://localhost:9091,CONFLICT
 dristi.case.search.endpoint,task-management,/case/v1/_search,CONFLICT
@@ -79,10 +81,12 @@ dristi.esign.signature.width,ctc,250,CONFLICT
 dristi.esign.signature.width,digitalized-documents,250,CONFLICT
 dristi.esign.signature.width,evidence,250,CONFLICT
 dristi.esign.signature.width,task,250,CONFLICT
+dristi.order.host,casemanagement,http://localhost:8084,CONFLICT
 dristi.order.host,hearing,http://localhost:8051,CONFLICT
 dristi.order.host,task-management,http://localhost:8051,CONFLICT
 dristi.order.search.endpoint,hearing,/order/v1/search,CONFLICT
 dristi.order.search.endpoint,task-management,/order/v1/search,CONFLICT
+dristi.task.host,casemanagement,http://localhost:8086,CONFLICT
 dristi.task.host,hearing,http://localhost:8054,CONFLICT
 dristi.task.host,task-management,http://localhost:8054,CONFLICT
 dristi.task.search.endpoint,hearing,/task/v1/search,CONFLICT
@@ -152,6 +156,8 @@ egov.default.user.username,case,case-cron-job,CONFLICT
 egov.default.user.username,hearing,hearing-cron-job,CONFLICT
 egov.demand.create.endpoint,case,/billing-service/demand/_create,CONFLICT
 egov.demand.create.endpoint,treasury-backend,/billing-service/demand/_create,CONFLICT
+egov.dristi.pdf.host,casemanagement,http://localhost:8070,CONFLICT
+egov.dristi.pdf.host,ctc,http://localhost:8070,CONFLICT
 egov.enc.decrypt.endpoint,bail-bond,/egov-enc-service/crypto/v1/_decrypt,CONFLICT
 egov.enc.decrypt.endpoint,case,/egov-enc-service/crypto/v1/_decrypt,CONFLICT
 egov.enc.encrypt.endpoint,bail-bond,/egov-enc-service/crypto/v1/_encrypt,CONFLICT
@@ -195,6 +201,7 @@ egov.filestore.host,ab-diary,http://localhost:8081/,CONFLICT
 egov.filestore.host,application,http://localhost:8085/,CONFLICT
 egov.filestore.host,bail-bond,http://localhost:8085/,CONFLICT
 egov.filestore.host,case,http://localhost:8085/,CONFLICT
+egov.filestore.host,casemanagement,https://dristi-dev.pucar.org,CONFLICT
 egov.filestore.host,ctc,http://localhost:8085/,CONFLICT
 egov.filestore.host,digitalized-documents,http://localhost:8090,CONFLICT
 egov.filestore.host,e-sign-svc,http://localhost:8052/,CONFLICT
@@ -229,6 +236,7 @@ egov.hrms.host,advocate-office-management,https://dev.digit.org,CONFLICT
 egov.hrms.host,application,https://dev.digit.org,CONFLICT
 egov.hrms.host,bail-bond,https://dev.digit.org,CONFLICT
 egov.hrms.host,case,https://dev.digit.org,CONFLICT
+egov.hrms.host,casemanagement,https://dev.digit.org,CONFLICT
 egov.hrms.host,digitalized-documents,https://dev.digit.org,CONFLICT
 egov.hrms.host,evidence,https://dev.digit.org,CONFLICT
 egov.hrms.host,hearing,https://dev.digit.org,CONFLICT
@@ -242,6 +250,7 @@ egov.hrms.search.endpoint,advocate-office-management,/egov-hrms/employees/_searc
 egov.hrms.search.endpoint,application,/egov-hrms/employees/_search,CONFLICT
 egov.hrms.search.endpoint,bail-bond,/egov-hrms/employees/_search,CONFLICT
 egov.hrms.search.endpoint,case,/egov-hrms/employees/_search,CONFLICT
+egov.hrms.search.endpoint,casemanagement,/egov-hrms/employees/_search,CONFLICT
 egov.hrms.search.endpoint,digitalized-documents,/egov-hrms/employees/_search,CONFLICT
 egov.hrms.search.endpoint,evidence,/egov-hrms/employees/_search,CONFLICT
 egov.hrms.search.endpoint,hearing,/egov-hrms/employees/_search,CONFLICT
@@ -259,6 +268,7 @@ egov.idgen.host,advocate-office-management,https://dev.digit.org/,CONFLICT
 egov.idgen.host,application,http://localhost:8087/,CONFLICT
 egov.idgen.host,bail-bond,http://localhost:8090,CONFLICT
 egov.idgen.host,case,http://localhost:8082/,CONFLICT
+egov.idgen.host,casemanagement,https://dev.digit.org/,CONFLICT
 egov.idgen.host,ctc,http://localhost:8082/,CONFLICT
 egov.idgen.host,digitalized-documents,http://localhost:8081,CONFLICT
 egov.idgen.host,epost-tracker,http://egov-idgen:8080,CONFLICT
@@ -281,6 +291,7 @@ egov.idgen.path,advocate-office-management,egov-idgen/id/_generate,CONFLICT
 egov.idgen.path,application,egov-idgen/id/_generate,CONFLICT
 egov.idgen.path,bail-bond,/egov-idgen/id/_generate,CONFLICT
 egov.idgen.path,case,egov-idgen/id/_generate,CONFLICT
+egov.idgen.path,casemanagement,egov-idgen/id/_generate,CONFLICT
 egov.idgen.path,ctc,egov-idgen/id/_generate,CONFLICT
 egov.idgen.path,digitalized-documents,/egov-idgen/id/_generate,CONFLICT
 egov.idgen.path,epost-tracker,/egov-idgen/id/_generate,CONFLICT
@@ -297,11 +308,13 @@ egov.inbox.search.endpoint,case,/inbox/v2/index/_search,CONFLICT
 egov.inbox.search.endpoint,evidence,/inbox/v2/index/_search,CONFLICT
 egov.inbox.search.endpoint,hearing,/inbox/v2/index/_search,CONFLICT
 egov.indexer.es.password,bail-bond,8fwbD6HbJh6HU0oddsHm8TEI,CONFLICT
+egov.indexer.es.password,casemanagement,${ES_PASSWORD},CONFLICT
 egov.indexer.es.password,ctc,8fwbD6HbJh6HU0oddsHm8TEI,CONFLICT
 egov.indexer.es.password,evidence,8fwbD6HbJh6HU0oddsHm8TEI,CONFLICT
 egov.indexer.es.password,hearing,8fwbD6HbJh6HU0oddsHm8TEI,CONFLICT
 egov.indexer.es.password,task-management,8fwbD6HbJh6HU0oddsHm8TEI,CONFLICT
 egov.indexer.es.username,bail-bond,elastic,CONFLICT
+egov.indexer.es.username,casemanagement,${ES_USERNAME},CONFLICT
 egov.indexer.es.username,ctc,elastic,CONFLICT
 egov.indexer.es.username,evidence,elastic,CONFLICT
 egov.indexer.es.username,hearing,elastic,CONFLICT
@@ -351,6 +364,7 @@ egov.individual.update.path,hearing,individual/v1/_update,CONFLICT
 egov.individual.update.path,order,individual/v1/_update,CONFLICT
 egov.individual.update.path,task,individual/v1/_update,CONFLICT
 egov.infra.indexer.host,bail-bond,http://localhost:9200/,CONFLICT
+egov.infra.indexer.host,casemanagement,http://localhost:9200/,CONFLICT
 egov.infra.indexer.host,ctc,http://localhost:9200/,CONFLICT
 egov.infra.indexer.host,evidence,http://localhost:9200/,CONFLICT
 egov.infra.indexer.host,hearing,http://localhost:9200/,CONFLICT
@@ -362,6 +376,7 @@ egov.localization.context.path,advocate-office-management,/localization/messages
 egov.localization.context.path,application,/localization/messages/v1,CONFLICT
 egov.localization.context.path,bail-bond,/localization/messages/v1,CONFLICT
 egov.localization.context.path,case,/localization/messages/v1,CONFLICT
+egov.localization.context.path,casemanagement,/localization/messages/v1,CONFLICT
 egov.localization.context.path,digitalized-documents,/localization/messages/v1,CONFLICT
 egov.localization.context.path,evidence,/localization/messages/v1,CONFLICT
 egov.localization.context.path,hearing,/localization/messages/v1,CONFLICT
@@ -375,6 +390,7 @@ egov.localization.host,advocate-office-management,https://dev.digit.org,CONFLICT
 egov.localization.host,application,https://dev.digit.org,CONFLICT
 egov.localization.host,bail-bond,https://dev.digit.org,CONFLICT
 egov.localization.host,case,https://dev.digit.org,CONFLICT
+egov.localization.host,casemanagement,https://dev.digit.org,CONFLICT
 egov.localization.host,ctc,http://localhost:8080,CONFLICT
 egov.localization.host,digitalized-documents,https://dev.digit.org,CONFLICT
 egov.localization.host,evidence,https://dev.digit.org,CONFLICT
@@ -390,6 +406,7 @@ egov.localization.search.endpoint,advocate-office-management,/_search,CONFLICT
 egov.localization.search.endpoint,application,/_search,CONFLICT
 egov.localization.search.endpoint,bail-bond,/_search,CONFLICT
 egov.localization.search.endpoint,case,/localization/messages/v1/_search,CONFLICT
+egov.localization.search.endpoint,casemanagement,/_search,CONFLICT
 egov.localization.search.endpoint,ctc,/localization/messages/v1/_search,CONFLICT
 egov.localization.search.endpoint,digitalized-documents,/_search,CONFLICT
 egov.localization.search.endpoint,evidence,/_search,CONFLICT
@@ -405,6 +422,7 @@ egov.localization.statelevel,advocate-office-management,true,CONFLICT
 egov.localization.statelevel,application,true,CONFLICT
 egov.localization.statelevel,bail-bond,true,CONFLICT
 egov.localization.statelevel,case,true,CONFLICT
+egov.localization.statelevel,casemanagement,true,CONFLICT
 egov.localization.statelevel,ctc,true,CONFLICT
 egov.localization.statelevel,digitalized-documents,true,CONFLICT
 egov.localization.statelevel,evidence,true,CONFLICT
@@ -419,6 +437,7 @@ egov.localization.workDir.path,advocate-office-management,/localization/messages
 egov.localization.workDir.path,application,/localization/messages/v1,CONFLICT
 egov.localization.workDir.path,bail-bond,/localization/messages/v1,CONFLICT
 egov.localization.workDir.path,case,/localization/messages/v1,CONFLICT
+egov.localization.workDir.path,casemanagement,/localization/messages/v1,CONFLICT
 egov.localization.workDir.path,digitalized-documents,/localization/messages/v1,CONFLICT
 egov.localization.workDir.path,evidence,/localization/messages/v1,CONFLICT
 egov.localization.workDir.path,hearing,/localization/messages/v1,CONFLICT
@@ -436,6 +455,7 @@ egov.mdms.host,advocate-office-management,http://localhost:8084,CONFLICT
 egov.mdms.host,application,http://localhost:8085,CONFLICT
 egov.mdms.host,bail-bond,http://localhost:8084,CONFLICT
 egov.mdms.host,case,http://localhost:8084,CONFLICT
+egov.mdms.host,casemanagement,http://localhost:8081,CONFLICT
 egov.mdms.host,ctc,http://localhost:8084,CONFLICT
 egov.mdms.host,digitalized-documents,https://dev.digit.org,CONFLICT
 egov.mdms.host,e-sign-svc,https://dev.digit.org,CONFLICT
@@ -456,6 +476,7 @@ egov.mdms.search.endpoint,advocate-office-management,/egov-mdms-service/v1/_sear
 egov.mdms.search.endpoint,application,/egov-mdms-service/v1/_search,CONFLICT
 egov.mdms.search.endpoint,bail-bond,/egov-mdms-service/v1/_search,CONFLICT
 egov.mdms.search.endpoint,case,/egov-mdms-service/v1/_search,CONFLICT
+egov.mdms.search.endpoint,casemanagement,/egov-mdms-service/v2/_search,CONFLICT
 egov.mdms.search.endpoint,ctc,/egov-mdms-service/v1/_search,CONFLICT
 egov.mdms.search.endpoint,digitalized-documents,/egov-mdms-service/v1/_search,CONFLICT
 egov.mdms.search.endpoint,e-sign-svc,/egov-mdms-service/v1/_search,CONFLICT
@@ -476,6 +497,10 @@ egov.order.host,task,http://localhost:8085/,CONFLICT
 egov.order.path,application,order/v1/exists,CONFLICT
 egov.order.path,evidence,order/v1/exists,CONFLICT
 egov.order.path,task,order/v1/exists,CONFLICT
+egov.pdf.create,casemanagement,/pdf-service/v1/_create,CONFLICT
+egov.pdf.create,hearing,/pdf-service/v1/_createnosave,CONFLICT
+egov.pdf.host,casemanagement,http://localhost:9000,CONFLICT
+egov.pdf.host,hearing,http://egov-pdf-service:8080,CONFLICT
 egov.pdf.service.create.endpoint,ab-diary,/pdf-service/v1/_createnosave,CONFLICT
 egov.pdf.service.create.endpoint,epost-tracker,/pdf-service/v1/_createnosave,CONFLICT
 egov.pdf.service.create.endpoint,treasury-backend,/pdf-service/v1/_createnosave,CONFLICT
@@ -495,6 +520,7 @@ egov.sms.notification.topic,advocate-office-management,egov.core.notification.sm
 egov.sms.notification.topic,application,egov.core.notification.sms,CONFLICT
 egov.sms.notification.topic,bail-bond,egov.core.notification.sms,CONFLICT
 egov.sms.notification.topic,case,egov.core.notification.sms,CONFLICT
+egov.sms.notification.topic,casemanagement,egov.core.notification.sms,CONFLICT
 egov.sms.notification.topic,digitalized-documents,egov.core.notification.sms,CONFLICT
 egov.sms.notification.topic,e-sign-svc,egov.core.notification.sms,CONFLICT
 egov.sms.notification.topic,evidence,egov.core.notification.sms,CONFLICT
@@ -520,6 +546,7 @@ egov.url.shortner.endpoint,advocate-office-management,/egov-url-shortening/short
 egov.url.shortner.endpoint,application,/egov-url-shortening/shortener,CONFLICT
 egov.url.shortner.endpoint,bail-bond,/eus/shortener,CONFLICT
 egov.url.shortner.endpoint,case,/egov-url-shortening/shortener,CONFLICT
+egov.url.shortner.endpoint,casemanagement,/egov-url-shortening/shortener,CONFLICT
 egov.url.shortner.endpoint,digitalized-documents,/eus/shortener,CONFLICT
 egov.url.shortner.endpoint,evidence,/eus/shortener,CONFLICT
 egov.url.shortner.endpoint,hearing,/egov-url-shortening/shortener,CONFLICT
@@ -532,6 +559,7 @@ egov.url.shortner.host,advocate-office-management,https://dev.digit.org,CONFLICT
 egov.url.shortner.host,application,https://dev.digit.org,CONFLICT
 egov.url.shortner.host,bail-bond,http://localhost:8090,CONFLICT
 egov.url.shortner.host,case,https://dev.digit.org,CONFLICT
+egov.url.shortner.host,casemanagement,https://dev.digit.org,CONFLICT
 egov.url.shortner.host,digitalized-documents,http://localhost:8090,CONFLICT
 egov.url.shortner.host,evidence,http://localhost:8093,CONFLICT
 egov.url.shortner.host,hearing,https://dev.digit.org,CONFLICT
@@ -545,6 +573,7 @@ egov.user.context.path,advocate-office-management,/user/users,CONFLICT
 egov.user.context.path,application,/user/users,CONFLICT
 egov.user.context.path,bail-bond,/user/users,CONFLICT
 egov.user.context.path,case,/user/users,CONFLICT
+egov.user.context.path,casemanagement,/user/users,CONFLICT
 egov.user.context.path,digitalized-documents,/user/users,CONFLICT
 egov.user.context.path,evidence,/user/users,CONFLICT
 egov.user.context.path,hearing,/user/users,CONFLICT
@@ -559,6 +588,7 @@ egov.user.create.path,advocate-office-management,/_createnovalidate,CONFLICT
 egov.user.create.path,application,/_createnovalidate,CONFLICT
 egov.user.create.path,bail-bond,/_createnovalidate,CONFLICT
 egov.user.create.path,case,/_createnovalidate,CONFLICT
+egov.user.create.path,casemanagement,/_createnovalidate,CONFLICT
 egov.user.create.path,digitalized-documents,/_createnovalidate,CONFLICT
 egov.user.create.path,epost-tracker,/user/users/_createnovalidate,CONFLICT
 egov.user.create.path,evidence,/_createnovalidate,CONFLICT
@@ -574,6 +604,7 @@ egov.user.host,advocate-office-management,https://dev.digit.org,CONFLICT
 egov.user.host,application,http://localhost:8086,CONFLICT
 egov.user.host,bail-bond,https://dev.digit.org,CONFLICT
 egov.user.host,case,http://localhost:8086,CONFLICT
+egov.user.host,casemanagement,https://dev.digit.org,CONFLICT
 egov.user.host,digitalized-documents,https://dev.digit.org,CONFLICT
 egov.user.host,epost-tracker,http://localhost:7090,CONFLICT
 egov.user.host,evidence,https://dev.digit.org,CONFLICT
@@ -589,6 +620,7 @@ egov.user.search.path,advocate-office-management,/user/_search,CONFLICT
 egov.user.search.path,application,/user/_search,CONFLICT
 egov.user.search.path,bail-bond,/user/_search,CONFLICT
 egov.user.search.path,case,/user/_search,CONFLICT
+egov.user.search.path,casemanagement,/user/_search,CONFLICT
 egov.user.search.path,digitalized-documents,/user/_search,CONFLICT
 egov.user.search.path,epost-tracker,/user/v1/_search,CONFLICT
 egov.user.search.path,evidence,/user/_search,CONFLICT
@@ -604,6 +636,7 @@ egov.user.update.path,advocate-office-management,/_updatenovalidate,CONFLICT
 egov.user.update.path,application,/_updatenovalidate,CONFLICT
 egov.user.update.path,bail-bond,/_updatenovalidate,CONFLICT
 egov.user.update.path,case,/_updatenovalidate,CONFLICT
+egov.user.update.path,casemanagement,/_updatenovalidate,CONFLICT
 egov.user.update.path,digitalized-documents,/_updatenovalidate,CONFLICT
 egov.user.update.path,evidence,/_updatenovalidate,CONFLICT
 egov.user.update.path,hearing,/_updatenovalidate,CONFLICT
@@ -618,6 +651,7 @@ egov.workflow.businessservice.search.path,advocate-office-management,/egov-workf
 egov.workflow.businessservice.search.path,application,/egov-workflow-v2/egov-wf/businessservice/_search,CONFLICT
 egov.workflow.businessservice.search.path,bail-bond,/egov-workflow-v2/egov-wf/businessservice/_search,CONFLICT
 egov.workflow.businessservice.search.path,case,/egov-workflow-v2/egov-wf/businessservice/_search,CONFLICT
+egov.workflow.businessservice.search.path,casemanagement,/egov-workflow-v2/egov-wf/businessservice/_search,CONFLICT
 egov.workflow.businessservice.search.path,ctc,/egov-workflow-v2/egov-wf/businessservice/_search,CONFLICT
 egov.workflow.businessservice.search.path,digitalized-documents,/egov-workflow-v2/egov-wf/businessservice/_search,CONFLICT
 egov.workflow.businessservice.search.path,evidence,/egov-workflow-v2/egov-wf/businessservice/_search,CONFLICT
@@ -632,6 +666,7 @@ egov.workflow.host,advocate-office-management,https://dev.digit.org,CONFLICT
 egov.workflow.host,application,http://localhost:8088,CONFLICT
 egov.workflow.host,bail-bond,https://dev.digit.org,CONFLICT
 egov.workflow.host,case,http://localhost:8083,CONFLICT
+egov.workflow.host,casemanagement,https://dev.digit.org,CONFLICT
 egov.workflow.host,ctc,http://localhost:8083,CONFLICT
 egov.workflow.host,digitalized-documents,http://localhost:8050,CONFLICT
 egov.workflow.host,evidence,http://localhost:8083/,CONFLICT
@@ -646,6 +681,7 @@ egov.workflow.processinstance.search.path,advocate-office-management,/egov-workf
 egov.workflow.processinstance.search.path,application,/egov-workflow-v2/egov-wf/process/_search,CONFLICT
 egov.workflow.processinstance.search.path,bail-bond,/egov-workflow-v2/egov-wf/process/_search,CONFLICT
 egov.workflow.processinstance.search.path,case,/egov-workflow-v2/egov-wf/process/_search,CONFLICT
+egov.workflow.processinstance.search.path,casemanagement,/egov-workflow-v2/egov-wf/process/_search,CONFLICT
 egov.workflow.processinstance.search.path,ctc,/egov-workflow-v2/egov-wf/process/_search,CONFLICT
 egov.workflow.processinstance.search.path,digitalized-documents,/egov-workflow-v2/egov-wf/process/_search,CONFLICT
 egov.workflow.processinstance.search.path,evidence,/egov-workflow-v2/egov-wf/process/_search,CONFLICT
@@ -664,6 +700,7 @@ egov.workflow.transition.path,advocate-office-management,/egov-workflow-v2/egov-
 egov.workflow.transition.path,application,/egov-workflow-v2/egov-wf/process/_transition,CONFLICT
 egov.workflow.transition.path,bail-bond,/egov-workflow-v2/egov-wf/process/_transition,CONFLICT
 egov.workflow.transition.path,case,/egov-workflow-v2/egov-wf/process/_transition,CONFLICT
+egov.workflow.transition.path,casemanagement,/egov-workflow-v2/egov-wf/process/_transition,CONFLICT
 egov.workflow.transition.path,ctc,/egov-workflow-v2/egov-wf/process/_transition,CONFLICT
 egov.workflow.transition.path,digitalized-documents,/egov-workflow-v2/egov-wf/process/_transition,CONFLICT
 egov.workflow.transition.path,evidence,/egov-workflow-v2/egov-wf/process/_transition,CONFLICT
@@ -687,6 +724,7 @@ is.workflow.enabled,advocate-office-management,true,CONFLICT
 is.workflow.enabled,application,true,CONFLICT
 is.workflow.enabled,bail-bond,true,CONFLICT
 is.workflow.enabled,case,true,CONFLICT
+is.workflow.enabled,casemanagement,true,CONFLICT
 is.workflow.enabled,ctc,true,CONFLICT
 is.workflow.enabled,digitalized-documents,true,CONFLICT
 is.workflow.enabled,evidence,true,CONFLICT
@@ -696,6 +734,8 @@ is.workflow.enabled,task,true,CONFLICT
 is.workflow.enabled,task-management,true,CONFLICT
 judge.name,ab-diary,Smt. Soorya S Sukumaran,CONFLICT
 judge.name,task-management,Michael George,CONFLICT
+kafka.case.update.last.modified.time,case,case-update-last-modified-time,CONFLICT
+kafka.case.update.last.modified.time,casemanagement,case-update-last-modified-time,CONFLICT
 kafka.consumer.config.auto_commit,Notification,true,CONFLICT
 kafka.consumer.config.auto_commit,ab-diary,true,CONFLICT
 kafka.consumer.config.auto_commit,advocate,true,CONFLICT
@@ -703,6 +743,7 @@ kafka.consumer.config.auto_commit,advocate-office-management,true,CONFLICT
 kafka.consumer.config.auto_commit,application,true,CONFLICT
 kafka.consumer.config.auto_commit,bail-bond,true,CONFLICT
 kafka.consumer.config.auto_commit,case,true,CONFLICT
+kafka.consumer.config.auto_commit,casemanagement,true,CONFLICT
 kafka.consumer.config.auto_commit,ctc,true,CONFLICT
 kafka.consumer.config.auto_commit,digitalized-documents,true,CONFLICT
 kafka.consumer.config.auto_commit,e-sign-svc,true,CONFLICT
@@ -724,6 +765,7 @@ kafka.consumer.config.auto_commit_interval,advocate-office-management,100,CONFLI
 kafka.consumer.config.auto_commit_interval,application,100,CONFLICT
 kafka.consumer.config.auto_commit_interval,bail-bond,100,CONFLICT
 kafka.consumer.config.auto_commit_interval,case,100,CONFLICT
+kafka.consumer.config.auto_commit_interval,casemanagement,100,CONFLICT
 kafka.consumer.config.auto_commit_interval,ctc,100,CONFLICT
 kafka.consumer.config.auto_commit_interval,digitalized-documents,100,CONFLICT
 kafka.consumer.config.auto_commit_interval,e-sign-svc,100,CONFLICT
@@ -745,6 +787,7 @@ kafka.consumer.config.auto_offset_reset,advocate-office-management,earliest,CONF
 kafka.consumer.config.auto_offset_reset,application,earliest,CONFLICT
 kafka.consumer.config.auto_offset_reset,bail-bond,earliest,CONFLICT
 kafka.consumer.config.auto_offset_reset,case,earliest,CONFLICT
+kafka.consumer.config.auto_offset_reset,casemanagement,earliest,CONFLICT
 kafka.consumer.config.auto_offset_reset,ctc,earliest,CONFLICT
 kafka.consumer.config.auto_offset_reset,digitalized-documents,earliest,CONFLICT
 kafka.consumer.config.auto_offset_reset,e-sign-svc,earliest,CONFLICT
@@ -766,6 +809,7 @@ kafka.consumer.config.session_timeout,advocate-office-management,15000,CONFLICT
 kafka.consumer.config.session_timeout,application,15000,CONFLICT
 kafka.consumer.config.session_timeout,bail-bond,15000,CONFLICT
 kafka.consumer.config.session_timeout,case,15000,CONFLICT
+kafka.consumer.config.session_timeout,casemanagement,15000,CONFLICT
 kafka.consumer.config.session_timeout,ctc,15000,CONFLICT
 kafka.consumer.config.session_timeout,digitalized-documents,15000,CONFLICT
 kafka.consumer.config.session_timeout,e-sign-svc,15000,CONFLICT
@@ -787,6 +831,7 @@ kafka.producer.config.batch_size_config,advocate-office-management,16384,CONFLIC
 kafka.producer.config.batch_size_config,application,16384,CONFLICT
 kafka.producer.config.batch_size_config,bail-bond,16384,CONFLICT
 kafka.producer.config.batch_size_config,case,16384,CONFLICT
+kafka.producer.config.batch_size_config,casemanagement,16384,CONFLICT
 kafka.producer.config.batch_size_config,ctc,16384,CONFLICT
 kafka.producer.config.batch_size_config,digitalized-documents,16384,CONFLICT
 kafka.producer.config.batch_size_config,e-sign-svc,16384,CONFLICT
@@ -808,6 +853,7 @@ kafka.producer.config.buffer_memory_config,advocate-office-management,33554432,C
 kafka.producer.config.buffer_memory_config,application,33554432,CONFLICT
 kafka.producer.config.buffer_memory_config,bail-bond,33554432,CONFLICT
 kafka.producer.config.buffer_memory_config,case,33554432,CONFLICT
+kafka.producer.config.buffer_memory_config,casemanagement,33554432,CONFLICT
 kafka.producer.config.buffer_memory_config,ctc,33554432,CONFLICT
 kafka.producer.config.buffer_memory_config,digitalized-documents,33554432,CONFLICT
 kafka.producer.config.buffer_memory_config,e-sign-svc,33554432,CONFLICT
@@ -829,6 +875,7 @@ kafka.producer.config.linger_ms_config,advocate-office-management,1,CONFLICT
 kafka.producer.config.linger_ms_config,application,1,CONFLICT
 kafka.producer.config.linger_ms_config,bail-bond,1,CONFLICT
 kafka.producer.config.linger_ms_config,case,1,CONFLICT
+kafka.producer.config.linger_ms_config,casemanagement,1,CONFLICT
 kafka.producer.config.linger_ms_config,ctc,1,CONFLICT
 kafka.producer.config.linger_ms_config,digitalized-documents,1,CONFLICT
 kafka.producer.config.linger_ms_config,e-sign-svc,1,CONFLICT
@@ -850,6 +897,7 @@ kafka.producer.config.retries_config,advocate-office-management,0,CONFLICT
 kafka.producer.config.retries_config,application,0,CONFLICT
 kafka.producer.config.retries_config,bail-bond,0,CONFLICT
 kafka.producer.config.retries_config,case,0,CONFLICT
+kafka.producer.config.retries_config,casemanagement,0,CONFLICT
 kafka.producer.config.retries_config,ctc,0,CONFLICT
 kafka.producer.config.retries_config,digitalized-documents,0,CONFLICT
 kafka.producer.config.retries_config,e-sign-svc,0,CONFLICT
@@ -870,6 +918,7 @@ kafka.topics.consumer,advocate,save-advocate-application,CONFLICT
 kafka.topics.consumer,advocate-office-management,service-consumer-topic,CONFLICT
 kafka.topics.consumer,application,service-consumer-topic,CONFLICT
 kafka.topics.consumer,bail-bond,service-consumer-topic,CONFLICT
+kafka.topics.consumer,casemanagement,service-consumer-topic,CONFLICT
 kafka.topics.consumer,digitalized-documents,service-consumer-topic,CONFLICT
 kafka.topics.consumer,evidence,service-consumer-topic,CONFLICT
 kafka.topics.consumer,inportal-survey,service-consumer-topic,CONFLICT
@@ -882,6 +931,7 @@ kafka.topics.receipt.create,advocate-office-management,dss-collection,CONFLICT
 kafka.topics.receipt.create,application,dss-collection,CONFLICT
 kafka.topics.receipt.create,bail-bond,dss-collection,CONFLICT
 kafka.topics.receipt.create,case,egov.collection.payment-create,CONFLICT
+kafka.topics.receipt.create,casemanagement,dss-collection,CONFLICT
 kafka.topics.receipt.create,ctc,dss-collection,CONFLICT
 kafka.topics.receipt.create,digitalized-documents,dss-collection,CONFLICT
 kafka.topics.receipt.create,e-sign-svc,dss-collection,CONFLICT
@@ -901,6 +951,7 @@ logging.level.root,advocate,INFO,CONFLICT
 logging.level.root,application,INFO,CONFLICT
 logging.level.root,bail-bond,INFO,CONFLICT
 logging.level.root,case,INFO,CONFLICT
+logging.level.root,casemanagement,INFO,CONFLICT
 logging.level.root,ctc,INFO,CONFLICT
 logging.level.root,e-sign-svc,INFO,CONFLICT
 logging.level.root,epost-tracker,INFO,CONFLICT
@@ -920,6 +971,7 @@ logging.loki.enabled,advocate,false,CONFLICT
 logging.loki.enabled,application,false,CONFLICT
 logging.loki.enabled,bail-bond,false,CONFLICT
 logging.loki.enabled,case,false,CONFLICT
+logging.loki.enabled,casemanagement,false,CONFLICT
 logging.loki.enabled,ctc,false,CONFLICT
 logging.loki.enabled,e-sign-svc,false,CONFLICT
 logging.loki.enabled,epost-tracker,false,CONFLICT
@@ -939,6 +991,7 @@ logging.loki.url,advocate,http://localhost:3100/loki/api/v1/push,CONFLICT
 logging.loki.url,application,http://localhost:3100/loki/api/v1/push,CONFLICT
 logging.loki.url,bail-bond,http://localhost:3100/loki/api/v1/push,CONFLICT
 logging.loki.url,case,http://localhost:3100/loki/api/v1/push,CONFLICT
+logging.loki.url,casemanagement,http://localhost:3100/loki/api/v1/push,CONFLICT
 logging.loki.url,ctc,http://localhost:3100/loki/api/v1/push,CONFLICT
 logging.loki.url,e-sign-svc,http://localhost:3100/loki/api/v1/push,CONFLICT
 logging.loki.url,epost-tracker,http://localhost:3100/loki/api/v1/push,CONFLICT
@@ -964,6 +1017,7 @@ otel.exporter.otlp.endpoint,application,http://jaeger-collector.tracing:4318,CON
 otel.exporter.otlp.endpoint,bail-bond,http://jaeger-collector.tracing:4318,CONFLICT
 otel.exporter.otlp.endpoint,bank-details,http://jaeger-collector.tracing:4318,CONFLICT
 otel.exporter.otlp.endpoint,case,http://jaeger-collector.tracing:4318,CONFLICT
+otel.exporter.otlp.endpoint,casemanagement,http://jaeger-collector.tracing:4318,CONFLICT
 otel.exporter.otlp.endpoint,digitalized-documents,http://jaeger-collector.tracing:4318,CONFLICT
 otel.exporter.otlp.endpoint,e-sign-svc,http://jaeger-collector.tracing:4318,CONFLICT
 otel.exporter.otlp.endpoint,epost-tracker,http://jaeger-collector.tracing:4318,CONFLICT
@@ -985,6 +1039,7 @@ otel.exporter.otlp.protocol,application,http/protobuf,CONFLICT
 otel.exporter.otlp.protocol,bail-bond,http/protobuf,CONFLICT
 otel.exporter.otlp.protocol,bank-details,http/protobuf,CONFLICT
 otel.exporter.otlp.protocol,case,http/protobuf,CONFLICT
+otel.exporter.otlp.protocol,casemanagement,http/protobuf,CONFLICT
 otel.exporter.otlp.protocol,digitalized-documents,http/protobuf,CONFLICT
 otel.exporter.otlp.protocol,e-sign-svc,http/protobuf,CONFLICT
 otel.exporter.otlp.protocol,epost-tracker,http/protobuf,CONFLICT
@@ -1006,6 +1061,7 @@ otel.instrumentation.http.server.ignore-urls,application,"/application/health,/a
 otel.instrumentation.http.server.ignore-urls,bail-bond,"/bail-bond/health,/bail-bond/prometheus",CONFLICT
 otel.instrumentation.http.server.ignore-urls,bank-details,"/bank-details/health,/bank-details/prometheus",CONFLICT
 otel.instrumentation.http.server.ignore-urls,case,"/case/health,/case/prometheus",CONFLICT
+otel.instrumentation.http.server.ignore-urls,casemanagement,"/casemanagement/health,/casemanagement/prometheus",CONFLICT
 otel.instrumentation.http.server.ignore-urls,digitalized-documents,"/digitalized-documents/health,/digitalized-documents/prometheus",CONFLICT
 otel.instrumentation.http.server.ignore-urls,e-sign-svc,"/e-sign-svc/health,/e-sign-svc/prometheus",CONFLICT
 otel.instrumentation.http.server.ignore-urls,epost-tracker,"/epost-tracker/health,/epost-tracker/prometheus",CONFLICT
@@ -1027,6 +1083,7 @@ otel.instrumentation.kafka.enabled,application,true,CONFLICT
 otel.instrumentation.kafka.enabled,bail-bond,true,CONFLICT
 otel.instrumentation.kafka.enabled,bank-details,true,CONFLICT
 otel.instrumentation.kafka.enabled,case,true,CONFLICT
+otel.instrumentation.kafka.enabled,casemanagement,true,CONFLICT
 otel.instrumentation.kafka.enabled,digitalized-documents,true,CONFLICT
 otel.instrumentation.kafka.enabled,e-sign-svc,true,CONFLICT
 otel.instrumentation.kafka.enabled,epost-tracker,true,CONFLICT
@@ -1048,6 +1105,7 @@ otel.instrumentation.kafka.experimental-span-attributes,application,true,CONFLIC
 otel.instrumentation.kafka.experimental-span-attributes,bail-bond,true,CONFLICT
 otel.instrumentation.kafka.experimental-span-attributes,bank-details,true,CONFLICT
 otel.instrumentation.kafka.experimental-span-attributes,case,true,CONFLICT
+otel.instrumentation.kafka.experimental-span-attributes,casemanagement,true,CONFLICT
 otel.instrumentation.kafka.experimental-span-attributes,digitalized-documents,true,CONFLICT
 otel.instrumentation.kafka.experimental-span-attributes,e-sign-svc,true,CONFLICT
 otel.instrumentation.kafka.experimental-span-attributes,epost-tracker,true,CONFLICT
@@ -1069,6 +1127,7 @@ otel.logs.exporter,application,none,CONFLICT
 otel.logs.exporter,bail-bond,none,CONFLICT
 otel.logs.exporter,bank-details,none,CONFLICT
 otel.logs.exporter,case,none,CONFLICT
+otel.logs.exporter,casemanagement,none,CONFLICT
 otel.logs.exporter,digitalized-documents,none,CONFLICT
 otel.logs.exporter,e-sign-svc,none,CONFLICT
 otel.logs.exporter,epost-tracker,none,CONFLICT
@@ -1090,6 +1149,7 @@ otel.metrics.exporter,application,none,CONFLICT
 otel.metrics.exporter,bail-bond,none,CONFLICT
 otel.metrics.exporter,bank-details,none,CONFLICT
 otel.metrics.exporter,case,none,CONFLICT
+otel.metrics.exporter,casemanagement,none,CONFLICT
 otel.metrics.exporter,digitalized-documents,none,CONFLICT
 otel.metrics.exporter,e-sign-svc,none,CONFLICT
 otel.metrics.exporter,epost-tracker,none,CONFLICT
@@ -1111,6 +1171,7 @@ otel.traces.exporter,application,otlp,CONFLICT
 otel.traces.exporter,bail-bond,otlp,CONFLICT
 otel.traces.exporter,bank-details,otlp,CONFLICT
 otel.traces.exporter,case,otlp,CONFLICT
+otel.traces.exporter,casemanagement,otlp,CONFLICT
 otel.traces.exporter,digitalized-documents,otlp,CONFLICT
 otel.traces.exporter,e-sign-svc,otlp,CONFLICT
 otel.traces.exporter,epost-tracker,otlp,CONFLICT
@@ -1126,6 +1187,22 @@ otel.traces.exporter,template-configuration,otlp,CONFLICT
 otel.traces.exporter,treasury-backend,otlp,CONFLICT
 sla.envelope.sla.value,task,432000000,CONFLICT
 sla.envelope.sla.value,task-management,432000000,CONFLICT
+spring.datasource.reader.driver-class-name,casemanagement,org.postgresql.Driver,CONFLICT
+spring.datasource.reader.driver-class-name,hearing,org.postgresql.Driver,CONFLICT
+spring.datasource.reader.password,casemanagement,root,CONFLICT
+spring.datasource.reader.password,hearing,root,CONFLICT
+spring.datasource.reader.url,casemanagement,jdbc:postgresql://localhost:5432/casemanagement,CONFLICT
+spring.datasource.reader.url,hearing,jdbc:postgresql://localhost:5432/hearing,CONFLICT
+spring.datasource.reader.username,casemanagement,postgres,CONFLICT
+spring.datasource.reader.username,hearing,postgres,CONFLICT
+spring.datasource.writer.driver-class-name,casemanagement,org.postgresql.Driver,CONFLICT
+spring.datasource.writer.driver-class-name,hearing,org.postgresql.Driver,CONFLICT
+spring.datasource.writer.password,casemanagement,,CONFLICT
+spring.datasource.writer.password,hearing,root,CONFLICT
+spring.datasource.writer.url,casemanagement,jdbc:postgresql://localhost:5432/casemanagement,CONFLICT
+spring.datasource.writer.url,hearing,jdbc:postgresql://localhost:5432/hearing,CONFLICT
+spring.datasource.writer.username,casemanagement,postgres,CONFLICT
+spring.datasource.writer.username,hearing,postgres,CONFLICT
 spring.redis.host,advocate-office-management,localhost,CONFLICT
 spring.redis.host,case,localhost,CONFLICT
 spring.redis.host,ctc,localhost,CONFLICT
@@ -1179,12 +1256,20 @@ booked.delivery.status.list,epost-tracker,BOOKED,SERVICE-SPECIFIC
 break.down.code,ctc,CTC_APPLICATION_FEE,SERVICE-SPECIFIC
 break.down.type,ctc,Ctc Application Fee,SERVICE-SPECIFIC
 bulk.reschedule.topic,hearing,bulk-reschedule,SERVICE-SPECIFIC
+case.allowed.status,casemanagement,"PENDING_REGISTRATION,CASE_ADMITTED,CASE_REASSIGNED,PENDING_RESPONSE",SERVICE-SPECIFIC
 case.conversion.topic,case,update-case-conversion,SERVICE-SPECIFIC
 case.kafka.add.address.topic,case,add-address,SERVICE-SPECIFIC
 case.kafka.create.topic,case,save-case-application,SERVICE-SPECIFIC
 case.kafka.edit.topic,case,edit-case,SERVICE-SPECIFIC
 case.kafka.status.update.topic,case,update-case-status-application,SERVICE-SPECIFIC
 caseDiary.create.topic,ab-diary,save-diary,SERVICE-SPECIFIC
+casemanagement.delay.time,casemanagement,5000,SERVICE-SPECIFIC
+casemanagement.kafka.bundle.create.topic,casemanagement,bundle-create-topic,SERVICE-SPECIFIC
+casemanagement.kafka.case.application.topic,casemanagement,save-case-application,SERVICE-SPECIFIC
+casemanagement.kafka.non.workflow.transition.topics,casemanagement,"update-application-comments-application,representative-join-case,save-artifact-application,save-artifact-withoutworkflow-application,update-artifact-withoutworkflow-application,litigant-join-case",SERVICE-SPECIFIC
+casemanagement.kafka.update.casebundles.topic,casemanagement,update-ctc-casebundles,SERVICE-SPECIFIC
+casemanagement.kafka.vc.create.topic,casemanagement,create-vc,SERVICE-SPECIFIC
+casemanagement.kafka.workflow.transition.topic,casemanagement,save-wf-transitions,SERVICE-SPECIFIC
 challan.test.amount,treasury-backend,3.5,SERVICE-SPECIFIC
 config.application.payment.pending,case,00 30 18 * * *,SERVICE-SPECIFIC
 config.case.esign.pending,case,00 00 18 * * *,SERVICE-SPECIFIC
@@ -1207,10 +1292,27 @@ drishti.postalhub.update.topic,payment-calculator-svc,postal-hub-update,SERVICE-
 drishti.summon.pages.count,payment-calculator-svc,2,SERVICE-SPECIFIC
 dristi.advocate.clerk.search.endpoint,application,/advocate/clerk/v1/_search,SERVICE-SPECIFIC
 dristi.analytics.offline.payment.endpoint,task-management,/analytics/offline-payment/_create,SERVICE-SPECIFIC
+dristi.application.host,casemanagement,http://localhost:8079,SERVICE-SPECIFIC
+dristi.application.index,casemanagement,application-index,SERVICE-SPECIFIC
+dristi.application.search.endpoint,casemanagement,/application/v1/search,SERVICE-SPECIFIC
+dristi.artifact.index,casemanagement,artifact-index,SERVICE-SPECIFIC
 dristi.bar.registration.number.format,advocate,"^K/(?!0+/)(\\d{1,6})/\\d{4}$",SERVICE-SPECIFIC
+dristi.bundle.index,casemanagement,case-bundle-pdf,SERVICE-SPECIFIC
+dristi.case.index,casemanagement,case-index,SERVICE-SPECIFIC
 dristi.case.member.search.endpoint,advocate-office-management,/case/v1/_searchCaseMember,SERVICE-SPECIFIC
+dristi.case.search.url,casemanagement,/case/v1/_search,SERVICE-SPECIFIC
+dristi.ctc.host,casemanagement,http://localhost:8083,SERVICE-SPECIFIC
+dristi.ctc.search.endpoint,casemanagement,/ctc/applications/_search,SERVICE-SPECIFIC
+dristi.ctc.update.endpoint,casemanagement,/ctc/applications/_update,SERVICE-SPECIFIC
+dristi.digitalized.documents.host,casemanagement,http://localhost:8087,SERVICE-SPECIFIC
+dristi.digitalized.documents.search.endpoint,casemanagement,/digitalized-documents/v1/_search,SERVICE-SPECIFIC
 dristi.esign.host,task,http://localhost:8052,SERVICE-SPECIFIC
 dristi.esign.location.endpoint,task,/e-sign-svc/v1/_getLocation,SERVICE-SPECIFIC
+dristi.evidence.host,casemanagement,http://localhost:8082,SERVICE-SPECIFIC
+dristi.evidence.search.endpoint,casemanagement,/evidence/v1/_search,SERVICE-SPECIFIC
+dristi.file.delete.path,casemanagement,/filestore/v1/files/delete,SERVICE-SPECIFIC
+dristi.file.search.path,casemanagement,/filestore/v1/files/url,SERVICE-SPECIFIC
+dristi.hearing.index,casemanagement,hearing-index,SERVICE-SPECIFIC
 dristi.inbox.host,task-management,http://localhost:8059,SERVICE-SPECIFIC
 dristi.inbox.index.search.endpoint,task-management,/inbox/v2/index/_search,SERVICE-SPECIFIC
 dristi.individual.host,advocate-office-management,http://localhost:8081,SERVICE-SPECIFIC
@@ -1218,7 +1320,10 @@ dristi.individual.search.endpoint,advocate-office-management,/individual/v1/_sea
 dristi.notification.create.topic,Notification,create-notification,SERVICE-SPECIFIC
 dristi.notification.update.topic,Notification,update-notification,SERVICE-SPECIFIC
 dristi.order.create.endpoint,hearing,/order/v1/create,SERVICE-SPECIFIC
+dristi.order.index,casemanagement,order-index,SERVICE-SPECIFIC
+dristi.order.search.url,casemanagement,/order/v1/search,SERVICE-SPECIFIC
 dristi.pending.task.name,hearing,Schedule Hearing,SERVICE-SPECIFIC
+dristi.preview.index,casemanagement,ctc-case-preview-index,SERVICE-SPECIFIC
 dristi.process.case.member.endpoint,advocate-office-management,/case/v1/_processCaseMember,SERVICE-SPECIFIC
 dristi.scheduler.bulk.reschedule.endpoint,hearing,/scheduler/hearing/v1/bulk/_reschedule,SERVICE-SPECIFIC
 dristi.scheduler.calendar.update.endpoint,hearing,/scheduler/judge/v1/_update,SERVICE-SPECIFIC
@@ -1226,12 +1331,18 @@ dristi.scheduler.create.endpoint,hearing,/scheduler/hearing/v1/_schedule,SERVICE
 dristi.scheduler.host,hearing,http://localhost:8081,SERVICE-SPECIFIC
 dristi.scheduler.search.endpoint,hearing,/scheduler/hearing/v1/_search?limit=1000&offset=0,SERVICE-SPECIFIC
 dristi.scheduler.update.endpoint,hearing,/scheduler/hearing/v1/bulk/_update,SERVICE-SPECIFIC
+dristi.search.index.path,casemanagement,/_search,SERVICE-SPECIFIC
 dristi.summon.host,task,http://localhost:8090,SERVICE-SPECIFIC
 dristi.summon.send.summon.path,task,/summons-svc/summons/v1/_sendSummons,SERVICE-SPECIFIC
 dristi.task-management.host,hearing,http://localhost:8080,SERVICE-SPECIFIC
 dristi.task-management.search.endpoint,hearing,/task-management/v1/_search,SERVICE-SPECIFIC
 dristi.task-management.update.endpoint,hearing,/task-management/v1/_update,SERVICE-SPECIFIC
 dristi.task.create.endpoint,task-management,/task/v1/create,SERVICE-SPECIFIC
+dristi.task.index,casemanagement,task-index,SERVICE-SPECIFIC
+dristi.task.search.url,casemanagement,/task/v1/search,SERVICE-SPECIFIC
+dristi.taskmanagement.host,casemanagement,http://localhost:8085,SERVICE-SPECIFIC
+dristi.taskmanagement.search.endpoint,casemanagement,/task-management/v1/_search,SERVICE-SPECIFIC
+dristi.witness.index,casemanagement,witness-index,SERVICE-SPECIFIC
 egov.additional.join.case.kafka.topic,case,join-case-update-case-additional-details,SERVICE-SPECIFIC
 egov.adiary.create.bulk,evidence,/ab-diary/case/diary/v1/bulkEntry,SERVICE-SPECIFIC
 egov.adiary.host,evidence,http://localhost:8058,SERVICE-SPECIFIC
@@ -1252,12 +1363,15 @@ egov.case.update.path,evidence,case/v2/_update,SERVICE-SPECIFIC
 egov.case.witness.add.path,evidence,case/v2/add/witness,SERVICE-SPECIFIC
 egov.collectionservice.host,treasury-backend,http://egov-collection:8080,SERVICE-SPECIFIC
 egov.collectionservice.payment.create,treasury-backend,/collection-services/payments/_create,SERVICE-SPECIFIC
+egov.credential.host,casemanagement,http://localhost:8080,SERVICE-SPECIFIC
+egov.credential.url,casemanagement,/sunbirdrc-credential-service/qrcode/_get,SERVICE-SPECIFIC
 egov.demand.host,treasury-backend,http://localhost:8088,SERVICE-SPECIFIC
 egov.documenttype.path,order,$.MdmsRes.Order.DocumentType[?(@.value == '{}' && @.isActive == true)],SERVICE-SPECIFIC
 egov.dristi.case.pdf.host,case,http://localhost:8090,SERVICE-SPECIFIC
 egov.dristi.case.pdf.path,case,/dristi-case-pdf/v1/generateCasePdf,SERVICE-SPECIFIC
+egov.dristi.pdf.bundle,casemanagement,/egov-pdf/dristi-pdf/case-bundle,SERVICE-SPECIFIC
 egov.dristi.pdf.ctc,ctc,/egov-pdf/ctc-certification,SERVICE-SPECIFIC
-egov.dristi.pdf.host,ctc,http://localhost:8070,SERVICE-SPECIFIC
+egov.dristi.pdf.process.bundle,casemanagement,/egov-pdf/dristi-pdf/process-case-bundle,SERVICE-SPECIFIC
 egov.enc.mdms.security.policy.bail.decrypt,bail-bond,BailDecrypt,SERVICE-SPECIFIC
 egov.enc.mdms.security.policy.bail.encrypt,bail-bond,BailEncrypt,SERVICE-SPECIFIC
 egov.enc.mdms.security.policy.case.decrypt.self,case,CaseDecryptSelfNew,SERVICE-SPECIFIC
@@ -1335,6 +1449,9 @@ egov.idgen.taskNumber,task,task.task_number,SERVICE-SPECIFIC
 egov.idgen.taskSummonsConfig,task,case.summons.[TENANT_ID],SERVICE-SPECIFIC
 egov.idgen.taskWarrantConfig,task,case.warrant.[TENANT_ID],SERVICE-SPECIFIC
 egov.idgen.warrantIdFormat,task,WR[SEQ_WARRANT_[TENANT_ID]],SERVICE-SPECIFIC
+egov.indexer.es.cluster.name,casemanagement,elasticsearch,SERVICE-SPECIFIC
+egov.indexer.es.host.name,casemanagement,127.0.0.1,SERVICE-SPECIFIC
+egov.indexer.es.port.no,casemanagement,9200,SERVICE-SPECIFIC
 egov.kafka.order.save.topic,order,save-order-application,SERVICE-SPECIFIC
 egov.kafka.order.update.topic,order,update-order-application,SERVICE-SPECIFIC
 egov.kafka.order.update.uniqueid.topic,order,update-order-uniqueid,SERVICE-SPECIFIC
@@ -1353,6 +1470,7 @@ egov.mdms.module.name,hearing,Hearing,SERVICE-SPECIFIC
 egov.mdms.order.nonoverlapping.composite.orders,order,NonOverlappingCompositeOrders,SERVICE-SPECIFIC
 egov.mdms.order.nonrepeating.composite.orders,order,NonRepeatingCompositeOrders,SERVICE-SPECIFIC
 egov.mdms.payment.business.service.name,hearing,payment,SERVICE-SPECIFIC
+egov.mdms.schema.search.endpoint,casemanagement,/egov-mdms-service/schema/v1/_search,SERVICE-SPECIFIC
 egov.mdms.survey.master.name,inportal-survey,SurveyConfig,SERVICE-SPECIFIC
 egov.mdms.survey.module.name,inportal-survey,survey,SERVICE-SPECIFIC
 egov.mediation.base.url,digitalized-documents,/ui/citizen/dristi/home/mediation-form-sign,SERVICE-SPECIFIC
@@ -1363,8 +1481,6 @@ egov.order.search.endpoint,case,/order/v1/search,SERVICE-SPECIFIC
 egov.order.search.path,task,order/v1/search,SERVICE-SPECIFIC
 egov.payment.calculator.endpoint,case,payment-calculator/v1/join-case/fees/_calculate,SERVICE-SPECIFIC
 egov.payment.calculator.host,case,http://localhost:8088/,SERVICE-SPECIFIC
-egov.pdf.create,hearing,/pdf-service/v1/_createnosave,SERVICE-SPECIFIC
-egov.pdf.host,hearing,http://egov-pdf-service:8080,SERVICE-SPECIFIC
 egov.pdf.service.template.key,epost-tracker,ePostMonthlyReport,SERVICE-SPECIFIC
 egov.pdf.template.key,treasury-backend,etreasury-receipt,SERVICE-SPECIFIC
 egov.pdf.witness.key,hearing,witness-deposition,SERVICE-SPECIFIC
@@ -1571,6 +1687,7 @@ evidence.kafka.update.topic,evidence,update-artifact-application,SERVICE-SPECIFI
 evidence.kafka.update.withoutWorkflow.topic,evidence,update-artifact-withoutworkflow-application,SERVICE-SPECIFIC
 examination.of.accused.kafka.update.topic,digitalized-documents,update-examination-of-accused-document,SERVICE-SPECIFIC
 examination.of.accused.kakfa.create.topic,digitalized-documents,create-examination-of-accused-document,SERVICE-SPECIFIC
+generate.vc.code,casemanagement,Pucar.SummonOrder10,SERVICE-SPECIFIC
 get.data.based.user.logged.in,epost-tracker,true,SERVICE-SPECIFIC
 hearing.statuses.to.filter,hearing,SCHEDULED,SERVICE-SPECIFIC
 indexer.join.case.kafka.topic,case,join-case-indexer,SERVICE-SPECIFIC
@@ -1578,7 +1695,6 @@ isMock.enabled,treasury-backend,false,SERVICE-SPECIFIC
 isTest.enabled,treasury-backend,true,SERVICE-SPECIFIC
 judge.designation,ab-diary,Judicial First Class Magistrate III,SERVICE-SPECIFIC
 judge.id,ab-diary,super,SERVICE-SPECIFIC
-kafka.case.update.last.modified.time,case,case-update-last-modified-time,SERVICE-SPECIFIC
 kafka.save.task-management.topic,task-management,save-task-management,SERVICE-SPECIFIC
 kafka.topic.create.treasury.payment.data,treasury-backend,save-treasury-payment-data,SERVICE-SPECIFIC
 kafka.topics.bail.create,bail-bond,create-bail-application,SERVICE-SPECIFIC
@@ -1589,6 +1705,8 @@ kafka.update.task-management.topic,task-management,update-task-management,SERVIC
 lpr.stage,case,Long Pending Register,SERVICE-SPECIFIC
 lpr.sub.stage,case,Long Pending Register,SERVICE-SPECIFIC
 mdms.case.module.name,case,case,SERVICE-SPECIFIC
+mdms.kafka.save.topic,casemanagement,save-mdms-data,SERVICE-SPECIFIC
+mdms.kafka.update.topic,casemanagement,update-mdms-data,SERVICE-SPECIFIC
 mdms.order.category.path,order,$.MdmsRes.Order.OrderCategory[?(@.id == '{}' && @.isactive == true)],SERVICE-SPECIFIC
 mdms.order.module.name,order,Order,SERVICE-SPECIFIC
 mdms.order.type.path,order,$.MdmsRes.Order.OrderType[?(@.id == '{}' && @.isactive == true)],SERVICE-SPECIFIC
@@ -1614,16 +1732,14 @@ redis.enabled,hearing,true,SERVICE-SPECIFIC
 role.system.admin,task,SYSTEM_ADMIN,SERVICE-SPECIFIC
 schedule.cron.expression,ab-diary,0 59 23 * * *,SERVICE-SPECIFIC
 schedule.hearing.sla,hearing,0,SERVICE-SPECIFIC
+schemacode.casebundle.master,casemanagement,CaseManagement.case_bundle_master,SERVICE-SPECIFIC
+schemacode.casebundle.section.order,casemanagement,CaseManagement.CaseBundleSectionOrder,SERVICE-SPECIFIC
+schemacode.state.master,casemanagement,CaseManagement.case_bundle_state_master,SERVICE-SPECIFIC
 service-dept-code,treasury-backend,01BUP7,SERVICE-SPECIFIC
+spring.data.redis.host,casemanagement,redis.backbone,SERVICE-SPECIFIC
+spring.data.redis.port,casemanagement,6379,SERVICE-SPECIFIC
+spring.data.redis.timeout,casemanagement,10,SERVICE-SPECIFIC
 spring.datasource.enabled,e-sign-svc,false,SERVICE-SPECIFIC
-spring.datasource.reader.driver-class-name,hearing,org.postgresql.Driver,SERVICE-SPECIFIC
-spring.datasource.reader.password,hearing,root,SERVICE-SPECIFIC
-spring.datasource.reader.url,hearing,jdbc:postgresql://localhost:5432/hearing,SERVICE-SPECIFIC
-spring.datasource.reader.username,hearing,postgres,SERVICE-SPECIFIC
-spring.datasource.writer.driver-class-name,hearing,org.postgresql.Driver,SERVICE-SPECIFIC
-spring.datasource.writer.password,hearing,root,SERVICE-SPECIFIC
-spring.datasource.writer.url,hearing,jdbc:postgresql://localhost:5432/hearing,SERVICE-SPECIFIC
-spring.datasource.writer.username,hearing,postgres,SERVICE-SPECIFIC
 spring.http.converters.multipart.enabled,e-sign-svc,true,SERVICE-SPECIFIC
 spring.http.converters.multipart.serializer.class,e-sign-svc,org.springframework.http.converter.ByteArrayHttpMessageConverter,SERVICE-SPECIFIC
 spring.http.multipart.enabled,e-sign-svc,true,SERVICE-SPECIFIC

@@ -16,7 +16,7 @@ import java.util.Map;
 import static org.pucar.dristi.caselifecycle.hearing.internal.config.ServiceConstants.ERROR_WHILE_FETCHING_FROM_APPLICATION_SERVICE;
 
 @Slf4j
-@Component
+@Component("hearingApplicationUtil")
 public class ApplicationUtil {
 
     private final RestTemplate restTemplate;

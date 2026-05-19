@@ -19,7 +19,7 @@ import java.util.List;
 
 import static org.pucar.dristi.caselifecycle.hearing.internal.config.ServiceConstants.*;
 
-@Component
+@Component("hearingEsUtil")
 @Slf4j
 public class EsUtil {
 
