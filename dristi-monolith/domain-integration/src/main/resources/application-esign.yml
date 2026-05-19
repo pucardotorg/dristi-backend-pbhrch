@@ -97,6 +97,14 @@ esign:
   y:
     coordinate:
       offset: 20
+drishti:
+  esign:
+    redirect:
+      url: https://dristi-kerala-dev.pucar.org
+    landing:
+      page:
+        redirect:
+          url: /landing
 logging:
   loki:
     enabled: false
