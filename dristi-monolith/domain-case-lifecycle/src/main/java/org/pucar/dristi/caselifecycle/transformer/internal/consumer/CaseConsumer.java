@@ -75,7 +75,7 @@ public class CaseConsumer {
         return null;
     }
 
-    @KafkaListener(topics = {"${transformer.consumer.create.case.topic}"})
+    @KafkaListener(topics = {"${transformer.consumer.create.case.topic}"}, containerFactory = "stringKafkaListenerContainerFactory")
     public void saveCase(ConsumerRecord<String, Object> payload,
                          @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         publishCase(payload, transformerProperties.getSaveCaseTopic());
@@ -83,7 +83,7 @@ public class CaseConsumer {
         publishCaseSearchFromCaseRequest(caseRequest);
     }
 
-    @KafkaListener(topics = {"${transformer.consumer.update.case.topic}"})
+    @KafkaListener(topics = {"${transformer.consumer.update.case.topic}"}, containerFactory = "stringKafkaListenerContainerFactory")
     public void updateCase(ConsumerRecord<String, Object> payload,
                            @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         publishCase(payload, transformerProperties.getUpdateCaseTopic());
@@ -119,7 +119,7 @@ public class CaseConsumer {
         publishCaseSearchFromCaseRequest(caseRequest);
     }
 
-    @KafkaListener(topics = {"${transformer.consumer.case.status.update.topic}"})
+    @KafkaListener(topics = {"${transformer.consumer.case.status.update.topic}"}, containerFactory = "stringKafkaListenerContainerFactory")
     public void updateCaseStatus(ConsumerRecord<String, Object> payload,
                            @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         publishCase(payload, transformerProperties.getUpdateCaseTopic());
@@ -127,24 +127,24 @@ public class CaseConsumer {
         publishCaseSearchFromCaseRequest(caseRequest);
     }
 
-    @KafkaListener(topics = {"${transformer.consumer.join.case.kafka.topic}"})
+    @KafkaListener(topics = {"${transformer.consumer.join.case.kafka.topic}"}, containerFactory = "stringKafkaListenerContainerFactory")
     public void updateJoinCase(ConsumerRecord<String, Object> payload,
                            @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         publishCase(payload, transformerProperties.getUpdateCaseTopic());
     }
 
-    @KafkaListener(topics = {"${transformer.consumer.case.overall.status.topic}"})
+    @KafkaListener(topics = {"${transformer.consumer.case.overall.status.topic}"}, containerFactory = "stringKafkaListenerContainerFactory")
     public void updateCaseOverallStatus(ConsumerRecord<String, Object> payload,
                                         @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         fetchAndPublishCaseForOverAllStatus(payload, transformerProperties.getUpdateCaseTopic());
     }
 
-    @KafkaListener(topics = {"${transformer.consumer.edit.case.topic}"})
+    @KafkaListener(topics = {"${transformer.consumer.edit.case.topic}"}, containerFactory = "stringKafkaListenerContainerFactory")
     public void editCase(ConsumerRecord<String, Object> payload, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         fetchAndPublishEditCase(payload, transformerProperties.getUpdateCaseTopic());
     }
 
-    @KafkaListener(topics = {"${transformer.consumer.case.outcome.topic}"})
+    @KafkaListener(topics = {"${transformer.consumer.case.outcome.topic}"}, containerFactory = "stringKafkaListenerContainerFactory")
     public void updateCaseOutcome(ConsumerRecord<String, Object> payload,
                                   @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         fetchAndPublishCaseForOutcome(payload, transformerProperties.getUpdateCaseTopic());
@@ -259,7 +259,7 @@ public class CaseConsumer {
         producer.push("case-legacy-topic", caseResponse);
     }
 
-    @KafkaListener(topics = {"${case.kafka.edit.topic}"})
+    @KafkaListener(topics = {"${case.kafka.edit.topic}"}, containerFactory = "stringKafkaListenerContainerFactory")
     public void consumeCaseRequest(ConsumerRecord<String, Object> payload,
                                    @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         CaseRequest caseRequest = deserializeConsumerRecordIntoCaseRequest(payload);
@@ -267,7 +267,7 @@ public class CaseConsumer {
     }
 
 
-    @KafkaListener(topics = {"${egov.update.additional.join.case.kafka.topic}"})
+    @KafkaListener(topics = {"${egov.update.additional.join.case.kafka.topic}"}, containerFactory = "stringKafkaListenerContainerFactory")
     public void consumeCourtCase(ConsumerRecord<String, Object> payload,
                                  @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         publishCaseSearchFromCourtCase(payload, transformerProperties.getCaseSearchTopic());
@@ -275,7 +275,7 @@ public class CaseConsumer {
 
     @KafkaListener(topics = {"${egov.litigant.join.case.kafka.topic}",
             "${egov.representative.join.case.kafka.topic}",
-            "${egov.update.representative.join.case.kafka.topic}"})
+            "${egov.update.representative.join.case.kafka.topic}"}, containerFactory = "stringKafkaListenerContainerFactory")
     public void consumeJoinCaseRequest(ConsumerRecord<String, Object> payload, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         try {
             JoinCaseRequest joinCaseRequest = objectMapper.readValue((String) payload.value(), new TypeReference<>() {});
@@ -287,7 +287,7 @@ public class CaseConsumer {
         }
     }
 
-    @KafkaListener(topics = {"${egov.additional.join.case.kafka.topic}"})
+    @KafkaListener(topics = {"${egov.additional.join.case.kafka.topic}"}, containerFactory = "stringKafkaListenerContainerFactory")
     public void consumeAddWitnessRequest(ConsumerRecord<String, Object> payload, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         try {
             AddWitnessRequest addWitnessRequest = objectMapper.readValue((String) payload.value(), new TypeReference<>() {});
@@ -308,7 +308,7 @@ public class CaseConsumer {
         return RequestInfo.builder().userInfo(userInfo).msgId(msgId).build();
     }
 
-    @KafkaListener(topics = {"${transformer.consumer.case.overall.status.topic}"})
+    @KafkaListener(topics = {"${transformer.consumer.case.overall.status.topic}"}, containerFactory = "stringKafkaListenerContainerFactory")
     public void consumeCaseStageSubstage(ConsumerRecord<String, Object> payload, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         try {
             CaseStageSubStage caseStageSubStage = objectMapper.readValue((String) payload.value(), new TypeReference<>() {});
@@ -321,7 +321,7 @@ public class CaseConsumer {
         }
     }
 
-    @KafkaListener(topics = {"${transformer.consumer.case.reference.number.update}"})
+    @KafkaListener(topics = {"${transformer.consumer.case.reference.number.update}"}, containerFactory = "stringKafkaListenerContainerFactory")
     public void updateCaseReferenceNumber(ConsumerRecord<String, Object> payload,
                                           @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         CaseReferenceNumberUpdateRequest caseReferenceNumberUpdateRequest = deserializeConsumerRecordIntoCaseReferenceNumberUpdateRequest(payload);

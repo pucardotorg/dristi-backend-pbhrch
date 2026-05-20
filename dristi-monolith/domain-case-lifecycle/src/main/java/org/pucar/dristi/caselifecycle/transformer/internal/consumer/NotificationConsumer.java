@@ -28,7 +28,7 @@ public class NotificationConsumer {
     }
 
 
-    @KafkaListener(topics = {"${transformer.consumer.update.notification.topic}"})
+    @KafkaListener(topics = {"${transformer.consumer.update.notification.topic}"}, containerFactory = "stringKafkaListenerContainerFactory")
     public void updateOrder(ConsumerRecord<String, Object> payload,
                             @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
 

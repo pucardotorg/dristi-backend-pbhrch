@@ -39,7 +39,7 @@ public class OrderConsumer {
         this.eventManager = eventManager;
     }
 
-    @KafkaListener(topics = {"${transformer.consumer.create.order.topic}"})
+    @KafkaListener(topics = {"${transformer.consumer.create.order.topic}"}, containerFactory = "stringKafkaListenerContainerFactory")
     public void saveOrder(ConsumerRecord<String, Object> payload,
                           @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         try {
@@ -51,7 +51,7 @@ public class OrderConsumer {
 
     }
 
-    @KafkaListener(topics = {"${transformer.consumer.update.order.topic}"})
+    @KafkaListener(topics = {"${transformer.consumer.update.order.topic}"}, containerFactory = "stringKafkaListenerContainerFactory")
     public void updateOrder(ConsumerRecord<String, Object> payload,
                             @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
 

@@ -32,25 +32,25 @@ public class ApplicationConsumer {
         this.transformerProperties = transformerProperties;
     }
 
-    @KafkaListener(topics = {"${transformer.consumer.create.application.topic}"})
+    @KafkaListener(topics = {"${transformer.consumer.create.application.topic}"}, containerFactory = "stringKafkaListenerContainerFactory")
     public void saveApplication(ConsumerRecord<String, Object> payload,
                                 @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         publishApplication(payload, transformerProperties.getSaveApplicationTopic());
     }
 
-    @KafkaListener(topics = {"${transformer.consumer.update.application.topic}"})
+    @KafkaListener(topics = {"${transformer.consumer.update.application.topic}"}, containerFactory = "stringKafkaListenerContainerFactory")
     public void updateApplication(ConsumerRecord<String, Object> payload,
                                   @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         publishApplication(payload, transformerProperties.getUpdateApplicationTopic());
     }
 
-    @KafkaListener(topics = {"${transformer.consumer.application.status.update.topic}"})
+    @KafkaListener(topics = {"${transformer.consumer.application.status.update.topic}"}, containerFactory = "stringKafkaListenerContainerFactory")
     public void updateApplicationStatus(ConsumerRecord<String, Object> payload,
                                   @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         publishApplication(payload, transformerProperties.getUpdateApplicationTopic());
     }
 
-    @KafkaListener(topics = {"${transformer.consumer.application.comments.update.topic}"})
+    @KafkaListener(topics = {"${transformer.consumer.application.comments.update.topic}"}, containerFactory = "stringKafkaListenerContainerFactory")
     public void updateApplicationComments(ConsumerRecord<String, Object> payload,
                                         @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         publishApplication(payload, transformerProperties.getUpdateApplicationTopic());

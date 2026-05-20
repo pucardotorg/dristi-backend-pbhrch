@@ -35,13 +35,13 @@ public class TaskConsumer {
 
     }
 
-    @KafkaListener(topics = {"${transformer.consumer.create.task.topic}", "${transformer.consumer.update.task.topic}"})
+    @KafkaListener(topics = {"${transformer.consumer.create.task.topic}", "${transformer.consumer.update.task.topic}"}, containerFactory = "stringKafkaListenerContainerFactory")
     public void saveTask(ConsumerRecord<String, Object> payload,
                          @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         publishTask(payload, transformerProperties.getSaveTaskTopic());
     }
 
-    @KafkaListener(topics = {"${transformer.consumer.create.task.topic}", "${transformer.consumer.update.task.topic}"})
+    @KafkaListener(topics = {"${transformer.consumer.create.task.topic}", "${transformer.consumer.update.task.topic}"}, containerFactory = "stringKafkaListenerContainerFactory")
     public void updateTask(ConsumerRecord<String, Object> payload,
                            @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         publishTask(payload, transformerProperties.getUpdateTaskTopic());

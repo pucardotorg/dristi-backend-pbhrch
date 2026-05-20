@@ -47,7 +47,7 @@ public class EvidenceConsumer {
     }
 
     @KafkaListener(topics = {"${transformer.consumer.save.artifact.topic}",
-            "${transformer.consumer.save.withoutworkflow.artifact.topic}"})
+            "${transformer.consumer.save.withoutworkflow.artifact.topic}"}, containerFactory = "stringKafkaListenerContainerFactory")
     public void saveArtifact(ConsumerRecord<String, Object> payload,
                              @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         publishArtifact(payload, topic);

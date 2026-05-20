@@ -35,7 +35,7 @@ public class DigitalizedDocumentConsumer {
             "${transformer.consumer.create.mediation.document.topic}",
             "${transformer.consumer.update.mediation.document.topic}",
             "${transformer.consumer.create.plea.document.topic}",
-            "${transformer.consumer.update.plea.document.topic}"})
+            "${transformer.consumer.update.plea.document.topic}"}, containerFactory = "stringKafkaListenerContainerFactory")
     public void saveDigitalizedDocument(ConsumerRecord<String, Object> payload,
                                         @Header(KafkaHeaders.RECEIVED_TOPIC) String topic){
         publishDigitalizedDocument(payload, topic);

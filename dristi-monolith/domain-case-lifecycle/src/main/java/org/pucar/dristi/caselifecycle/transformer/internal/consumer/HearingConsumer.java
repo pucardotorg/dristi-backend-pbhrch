@@ -41,25 +41,25 @@ public class HearingConsumer {
         this.caseService = caseService;
     }
 
-    @KafkaListener(topics = {"${transformer.consumer.create.hearing.topic}"})
+    @KafkaListener(topics = {"${transformer.consumer.create.hearing.topic}"}, containerFactory = "stringKafkaListenerContainerFactory")
     public void saveHearing(ConsumerRecord<String, Object> payload,
                             @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         publishHearing(payload, transformerProperties.getSaveHearingTopic(),true);
     }
 
-    @KafkaListener(topics = {"${transformer.consumer.update.hearing.topic}"})
+    @KafkaListener(topics = {"${transformer.consumer.update.hearing.topic}"}, containerFactory = "stringKafkaListenerContainerFactory")
     public void updateHearing(ConsumerRecord<String, Object> payload,
                               @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         publishHearing(payload, transformerProperties.getUpdateHearingTopic(),false);
     }
 
-    @KafkaListener(topics = {"${transformer.consumer.update.start.end.time.topic}"})
+    @KafkaListener(topics = {"${transformer.consumer.update.start.end.time.topic}"}, containerFactory = "stringKafkaListenerContainerFactory")
     public void updateStartEndTime(ConsumerRecord<String, Object> payload,
                               @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         publishHearing(payload, transformerProperties.getUpdateHearingTopic(),true);
     }
 
-    @KafkaListener(topics = {"${transformer.consumer.bulk.reschedule.hearing}"})
+    @KafkaListener(topics = {"${transformer.consumer.bulk.reschedule.hearing}"}, containerFactory = "stringKafkaListenerContainerFactory")
     public void bulkRescheduleHearing(ConsumerRecord<String, Object> payload,
                               @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         publishBulkHearing(payload, transformerProperties.getUpdateHearingTopic());
