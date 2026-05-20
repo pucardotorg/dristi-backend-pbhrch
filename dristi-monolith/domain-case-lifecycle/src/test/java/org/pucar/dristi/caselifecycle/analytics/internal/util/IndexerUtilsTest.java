@@ -14,10 +14,12 @@ import org.mockito.MockitoAnnotations;
 import org.pucar.dristi.caselifecycle.analytics.internal.config.Configuration;
 import org.pucar.dristi.caselifecycle.analytics.internal.config.MdmsDataConfig;
 import org.pucar.dristi.caselifecycle.analytics.internal.service.UserService;
+import org.pucar.dristi.identityaccess.advocate.AdvocateApi;
 import org.pucar.dristi.caselifecycle.analytics.internal.web.models.*;
+import org.pucar.dristi.common.contract.analytics.*;
 import org.pucar.dristi.caselifecycle.analytics.internal.web.models.AdvocateMapping;
 import org.pucar.dristi.caselifecycle.analytics.internal.web.models.Party;
-import org.pucar.dristi.caselifecycle.analytics.internal.web.models.PendingTask;
+import org.pucar.dristi.common.contract.analytics.PendingTask;
 import org.pucar.dristi.caselifecycle.analytics.internal.web.models.PendingTaskType;
 import org.springframework.http.*;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -77,6 +79,9 @@ public class IndexerUtilsTest {
 
     @Mock
     private CaseOverallStatusUtil caseOverallStatusUtil;
+
+    @Mock
+    private AdvocateApi advocateApi;
 
     @BeforeEach
     public void setUp() {
@@ -301,7 +306,7 @@ public class IndexerUtilsTest {
         when(jsonUtil.getNestedValue(any(), eq(List.of("advocateName")), eq(String.class)))
                 .thenReturn("John Doe");
 
-        when(mapper.writeValueAsString(argThat(arg -> !(arg instanceof AdvocateUtil))))
+        when(mapper.writeValueAsString(argThat(arg -> !(arg instanceof AdvocateApi))))
                 .thenReturn("{\"complainant\":[\"John Doe\"]}");
 
         when(mapper.convertValue(anyString(), eq(String.class))).thenReturn("{\"key\":\"value\"}");

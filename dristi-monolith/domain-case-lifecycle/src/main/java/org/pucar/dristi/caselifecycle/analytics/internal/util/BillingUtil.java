@@ -19,13 +19,13 @@ import org.pucar.dristi.common.repository.ServiceRequestRepository;
 import org.pucar.dristi.caselifecycle.analytics.internal.util.CaseUtil;
 import org.pucar.dristi.caselifecycle.analytics.internal.util.IndexerUtils;
 import org.pucar.dristi.common.util.MdmsUtil;
-import org.pucar.dristi.caselifecycle.analytics.internal.web.models.CaseSearchRequest;
-import org.pucar.dristi.caselifecycle.analytics.internal.web.models.CaseCriteria;
-import org.pucar.dristi.caselifecycle.analytics.internal.web.models.OfflinePaymentTask;
+import org.pucar.dristi.common.contract.analytics.CaseSearchRequest;
+import org.pucar.dristi.common.contract.analytics.CaseCriteria;
+import org.pucar.dristi.common.contract.analytics.OfflinePaymentTask;
 import org.pucar.dristi.caselifecycle.analytics.internal.web.models.billingservice.Demand;
 import org.pucar.dristi.caselifecycle.analytics.internal.web.models.billingservice.DemandDetail;
 import org.pucar.dristi.caselifecycle.analytics.internal.web.models.billingservice.DemandResponse;
-import org.pucar.dristi.caselifecycle.analytics.internal.web.models.enums.StatusEnum;
+import org.pucar.dristi.common.contract.analytics.StatusEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -173,7 +173,7 @@ public class BillingUtil {
 
     private String getCourtId(String filingNumber, RequestInfo request) {
         try {
-            org.pucar.dristi.caselifecycle.analytics.internal.web.models.CaseSearchRequest caseSearchRequest = createCaseSearchRequest(request, filingNumber);
+            org.pucar.dristi.common.contract.analytics.CaseSearchRequest caseSearchRequest = createCaseSearchRequest(request, filingNumber);
             JsonNode caseDetails = caseUtil.searchCaseDetails(caseSearchRequest);
             return caseDetails.get(0).get("courtId").textValue();
         } catch (Exception e) {

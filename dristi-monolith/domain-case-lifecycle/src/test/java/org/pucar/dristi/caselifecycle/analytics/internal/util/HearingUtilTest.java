@@ -1,35 +1,30 @@
 package org.pucar.dristi.caselifecycle.analytics.internal.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.json.JSONArray;
+import org.egov.common.contract.request.RequestInfo;
 import org.json.JSONObject;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.pucar.dristi.caselifecycle.analytics.internal.config.Configuration;
-import org.pucar.dristi.common.repository.ServiceRequestRepository;
-import org.pucar.dristi.caselifecycle.analytics.internal.util.HearingUtil;
-import org.pucar.dristi.caselifecycle.analytics.internal.util.Util;
+import org.pucar.dristi.caselifecycle.hearing.HearingApi;
+import org.pucar.dristi.common.contract.hearing.Hearing;
+import org.pucar.dristi.common.contract.hearing.HearingSearchRequest;
+
+import java.util.Collections;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
-import static org.pucar.dristi.caselifecycle.analytics.internal.config.ServiceConstants.HEARING_PATH;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class HearingUtilTest {
 
     @Mock
-    private Configuration config;
-
-    @Mock
-    private ServiceRequestRepository repository;
-
-    @Mock
-    private Util util;
+    private HearingApi hearingApi;
 
     @Mock
     private ObjectMapper mapper;
@@ -37,55 +32,41 @@ class HearingUtilTest {
     @InjectMocks
     private HearingUtil hearingUtil;
 
-    private JSONObject request;
-    private String applicationNumber;
-    private String cnrNumber;
-    private String hearingId;
-    private String tenantId;
-
-    @BeforeEach
-    void setUp() {
-        request = new JSONObject();
-        applicationNumber = "app-123";
-        cnrNumber = "cnr-123";
-        hearingId = "hearing-123";
-        tenantId = "tenant-123";
-
-        when(config.getHearingHost()).thenReturn("http://localhost");
-        when(config.getHearingSearchPath()).thenReturn("/hearing/search");
-    }
-
     @Test
     void testGetHearing_Success() throws Exception {
+        JSONObject request = new JSONObject().put("RequestInfo", new JSONObject());
+        RequestInfo requestInfo = RequestInfo.builder().build();
+        Hearing hearing = new Hearing();
+        com.fasterxml.jackson.databind.node.ObjectNode hearingNode =
+                new ObjectMapper().createObjectNode().put("id", "hearing-123");
 
-        String mockResponse = "{\"hearings\": [{\"id\": \"hearing-123\"}]}";
-        JSONArray mockHearingArray = new JSONArray();
-        mockHearingArray.put(new JSONObject().put("id", "hearing-123"));
+        when(mapper.convertValue(any(), eq(RequestInfo.class))).thenReturn(requestInfo);
+        when(hearingApi.search(any(HearingSearchRequest.class))).thenReturn(List.of(hearing));
+        when(mapper.valueToTree(hearing)).thenReturn(hearingNode);
 
-        when(repository.fetchResult(any(), any(JSONObject.class))).thenReturn(mockResponse);
-        when(mapper.writeValueAsString(any())).thenReturn(mockResponse);
-        when(util.constructArray(mockResponse, HEARING_PATH)).thenReturn(mockHearingArray);
-
-        Object result = hearingUtil.getHearing(request, applicationNumber, cnrNumber, hearingId, tenantId);
-
+        Object result = hearingUtil.getHearing(request, "app-123", "cnr-123", "hearing-123", "tenant-123");
         assertNotNull(result);
         assertInstanceOf(JSONObject.class, result);
         assertEquals("hearing-123", ((JSONObject) result).getString("id"));
+    }
 
-        verify(repository, times(1)).fetchResult(any(StringBuilder.class), any(JSONObject.class));
-        verify(util, times(1)).constructArray(mockResponse, HEARING_PATH);
+    @Test
+    void testGetHearing_NoHearings() throws Exception {
+        JSONObject request = new JSONObject().put("RequestInfo", new JSONObject());
+        when(mapper.convertValue(any(), eq(RequestInfo.class))).thenReturn(RequestInfo.builder().build());
+        when(hearingApi.search(any(HearingSearchRequest.class))).thenReturn(Collections.emptyList());
+
+        assertNull(hearingUtil.getHearing(request, null, null, "hearing-999", "tenant-123"));
     }
 
     @Test
     void testGetHearing_Exception() throws Exception {
+        JSONObject request = new JSONObject().put("RequestInfo", new JSONObject());
+        when(mapper.convertValue(any(), eq(RequestInfo.class))).thenReturn(RequestInfo.builder().build());
+        when(hearingApi.search(any())).thenThrow(new RuntimeException("upstream"));
 
-        when(repository.fetchResult(any(), any(JSONObject.class))).thenThrow(new RuntimeException("Fetch error"));
-
-        Exception exception = assertThrows(RuntimeException.class, () -> hearingUtil.getHearing(request, applicationNumber, cnrNumber, hearingId, tenantId));
-
-        assertEquals("Fetch error", exception.getCause().getMessage());
-
-        verify(repository, times(1)).fetchResult(any(StringBuilder.class), any(JSONObject.class));
-        verify(util, times(0)).constructArray(anyString(), anyString());
+        RuntimeException ex = assertThrows(RuntimeException.class,
+                () -> hearingUtil.getHearing(request, null, null, "hearing-123", "tenant-123"));
+        assertEquals("Error while fetching or processing the hearing response", ex.getMessage());
     }
 }

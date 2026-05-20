@@ -10,7 +10,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.pucar.dristi.caselifecycle.analytics.internal.config.Configuration;
-import org.pucar.dristi.caselifecycle.analytics.internal.web.models.PendingTask;
+import org.pucar.dristi.common.contract.analytics.PendingTask;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 import static org.mockito.ArgumentMatchers.*;

@@ -1,7 +1,7 @@
 package org.pucar.dristi.caselifecycle.analytics.internal.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.json.JSONArray;
+import org.egov.common.contract.request.RequestInfo;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,26 +9,25 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.pucar.dristi.caselifecycle.analytics.internal.config.Configuration;
-import org.pucar.dristi.common.repository.ServiceRequestRepository;
-import org.pucar.dristi.caselifecycle.analytics.internal.util.EvidenceUtil;
-import org.pucar.dristi.caselifecycle.analytics.internal.util.Util;
+import org.pucar.dristi.caselifecycle.evidence.EvidenceApi;
+import org.pucar.dristi.common.contract.evidence.Artifact;
+import org.pucar.dristi.common.contract.evidence.EvidenceSearchCriteria;
+import org.pucar.dristi.common.contract.evidence.EvidenceSearchResponse;
+import org.pucar.dristi.common.contract.evidence.Pagination;
+
+import java.util.Collections;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class EvidenceUtilTest {
 
     @Mock
-    private Configuration config;
-
-    @Mock
-    private ServiceRequestRepository repository;
-
-    @Mock
-    private Util util;
+    private EvidenceApi evidenceApi;
 
     @Mock
     private ObjectMapper mapper;
@@ -36,65 +35,50 @@ class EvidenceUtilTest {
     @InjectMocks
     private EvidenceUtil evidenceUtil;
 
-    @BeforeEach
-    void setUp() {
-        String evidenceHost = "http://localhost";
-        String evidenceSearchPath = "/evidence-search";
-        when(config.getEvidenceHost()).thenReturn(evidenceHost);
-        when(config.getEvidenceSearchPath()).thenReturn(evidenceSearchPath);
-    }
-
     @Test
     void testGetEvidence_WithArtifactNumber() throws Exception {
-        JSONObject request = new JSONObject();
-        String tenantId = "tenant1";
-        String artifactNumber = "ART123";
+        JSONObject request = new JSONObject().put("RequestInfo", new JSONObject());
+        RequestInfo requestInfo = RequestInfo.builder().build();
+        Artifact artifact = Artifact.builder().artifactNumber("ART123").build();
+        EvidenceSearchResponse response = EvidenceSearchResponse.builder()
+                .artifacts(List.of(artifact)).build();
+        com.fasterxml.jackson.databind.node.ObjectNode artifactNode =
+                new ObjectMapper().createObjectNode().put("artifactNumber", "ART123");
 
-        String mockResponse = "{\"artifacts\": [{\"artifactNumber\": \"ART123\", \"details\": \"Artifact Details\"}]}";
-        when(repository.fetchResult(any(StringBuilder.class), any(JSONObject.class))).thenReturn(mockResponse);
-        when(mapper.writeValueAsString(any())).thenReturn(mockResponse);
+        when(mapper.convertValue(any(), eq(RequestInfo.class))).thenReturn(requestInfo);
+        when(evidenceApi.searchEvidence(eq(requestInfo), any(EvidenceSearchCriteria.class), any(Pagination.class)))
+                .thenReturn(response);
+        when(mapper.valueToTree(artifact)).thenReturn(artifactNode);
 
-        JSONArray mockArtifacts = new JSONArray();
-        mockArtifacts.put(new JSONObject().put("artifactNumber", artifactNumber).put("details", "Artifact Details"));
-        when(util.constructArray(anyString(), anyString())).thenReturn(mockArtifacts);
-
-        Object result = evidenceUtil.getEvidence(request, tenantId, artifactNumber);
-
+        Object result = evidenceUtil.getEvidence(request, "tenant1", "ART123");
         assertNotNull(result);
         assertInstanceOf(JSONObject.class, result);
         assertEquals("ART123", ((JSONObject) result).getString("artifactNumber"));
     }
 
     @Test
-    void testGetEvidence_WithNullArtifactNumber() throws Exception {
-        JSONObject request = new JSONObject();
-        String tenantId = "tenant1";
-        String artifactNumber = null;
+    void testGetEvidence_NoArtifacts() throws Exception {
+        JSONObject request = new JSONObject().put("RequestInfo", new JSONObject());
+        RequestInfo requestInfo = RequestInfo.builder().build();
+        EvidenceSearchResponse response = EvidenceSearchResponse.builder()
+                .artifacts(Collections.emptyList()).build();
 
-        String mockResponse = "{\"artifacts\": []}";
-        when(repository.fetchResult(any(StringBuilder.class), any(JSONObject.class))).thenReturn(mockResponse);
-        when(mapper.writeValueAsString(any())).thenReturn(mockResponse);
+        when(mapper.convertValue(any(), eq(RequestInfo.class))).thenReturn(requestInfo);
+        when(evidenceApi.searchEvidence(eq(requestInfo), any(EvidenceSearchCriteria.class), any(Pagination.class)))
+                .thenReturn(response);
 
-        JSONArray mockArtifacts = new JSONArray();
-        when(util.constructArray(anyString(), anyString())).thenReturn(mockArtifacts);
-
-        Object result = evidenceUtil.getEvidence(request, tenantId, artifactNumber);
-
-        assertNull(result);
+        assertNull(evidenceUtil.getEvidence(request, "tenant1", "ART999"));
     }
 
     @Test
     void testGetEvidence_Exception() throws Exception {
-        JSONObject request = new JSONObject();
-        String tenantId = "tenant1";
-        String artifactNumber = "ART123";
+        JSONObject request = new JSONObject().put("RequestInfo", new JSONObject());
+        RequestInfo requestInfo = RequestInfo.builder().build();
+        when(mapper.convertValue(any(), eq(RequestInfo.class))).thenReturn(requestInfo);
+        when(evidenceApi.searchEvidence(any(), any(), any())).thenThrow(new RuntimeException("upstream"));
 
-        when(repository.fetchResult(any(StringBuilder.class), any(JSONObject.class))).thenThrow(new RuntimeException("Error fetching evidence"));
-
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-            evidenceUtil.getEvidence(request, tenantId, artifactNumber);
-        });
-
-        assertEquals("Error while fetching or processing the evidence response", exception.getMessage());
+        RuntimeException ex = assertThrows(RuntimeException.class,
+                () -> evidenceUtil.getEvidence(request, "tenant1", "ART123"));
+        assertEquals("Error while fetching or processing the evidence response", ex.getMessage());
     }
 }

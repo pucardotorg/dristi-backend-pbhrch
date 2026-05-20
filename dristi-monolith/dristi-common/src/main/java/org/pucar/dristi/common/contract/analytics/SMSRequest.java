@@ -1,4 +1,5 @@
-package org.pucar.dristi.caselifecycle.analytics.internal.web.models;
+// HAND-CURATED — lifted by Phase 35 (contract-lift)
+package org.pucar.dristi.common.contract.analytics;
 
 
 import lombok.*;

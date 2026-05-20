@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
+import org.pucar.dristi.common.contract.analytics.PendingTask;
 @Slf4j
 @Component
 public class PendingTaskUpdateConsumer {

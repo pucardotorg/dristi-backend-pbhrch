@@ -2,7 +2,7 @@ package org.pucar.dristi.caselifecycle.analytics.internal.web.models;
 
 import org.egov.common.contract.request.User;
 import org.junit.jupiter.api.Test;
-import org.pucar.dristi.caselifecycle.analytics.internal.web.models.PendingTask;
+import org.pucar.dristi.common.contract.analytics.PendingTask;
 
 import java.util.ArrayList;
 import java.util.List;

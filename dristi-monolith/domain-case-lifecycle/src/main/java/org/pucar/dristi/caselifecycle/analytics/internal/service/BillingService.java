@@ -12,7 +12,7 @@ import org.pucar.dristi.caselifecycle.analytics.internal.util.BillingUtil;
 import org.pucar.dristi.caselifecycle.analytics.internal.util.IndexerUtils;
 import org.pucar.dristi.common.util.MdmsUtil;
 import org.pucar.dristi.caselifecycle.analytics.internal.util.Util;
-import org.pucar.dristi.caselifecycle.analytics.internal.web.models.OfflinePaymentTaskRequest;
+import org.pucar.dristi.common.contract.analytics.OfflinePaymentTaskRequest;
 import org.pucar.dristi.caselifecycle.analytics.internal.web.models.billingservice.Demand;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import java.util.Arrays;
 import java.util.List;
 
+import org.pucar.dristi.common.contract.analytics.Advocate;
 @Component("analyticsConfiguration")
 @Data
 @Import({TracerConfiguration.class})
@@ -59,13 +60,6 @@ public class Configuration {
 	@Value("${egov.statelevel.tenantId}")
 	private  String stateLevelTenantId;
 
-	//Hearing Config
-	@Value("${egov.hearing.host}")
-	private String hearingHost;
-
-	@Value("${egov.hearing.search.endpoint}")
-	private String hearingSearchPath;
-
 	//Case Config
 	@Value("${egov.case.host}")
 	private String caseHost;
@@ -78,13 +72,6 @@ public class Configuration {
 
 	@Value("${egov.case.member.advocates.endpoint}")
 	private String caseMemberAdvocatesPath;
-
-	//Evidence Config
-	@Value("${egov.evidence.host}")
-	private String evidenceHost;
-
-	@Value("${egov.evidence.search.endpoint}")
-	private String evidenceSearchPath;
 
 	//Task Config
 	@Value("${egov.task.host}")
@@ -99,13 +86,6 @@ public class Configuration {
 
 	@Value("${egov.application.search.endpoint}")
 	private String applicationSearchPath;
-
-	//Order Config
-	@Value("${egov.order.host}")
-	private String orderHost;
-
-	@Value("${egov.order.search.endpoint}")
-	private String orderSearchPath;
 
 	@Value("${api.call.delay.in.seconds}")
 	private Integer apiCallDelayInSeconds;
@@ -219,13 +199,6 @@ public class Configuration {
 	@Value("${egov.sms.notification.case.status.changed.template.id}")
 	private String smsNotificationCaseStatusChangeTemplateId;
 
-	// Advocate Config
-	@Value("${egov.advocate.host}")
-	private String advocateHost;
-
-	@Value("${egov.advocate.path}")
-	private String advocatePath;
-
 	//Elasticsearch config
 
 	@Value("${elastic.pending.task.endpoint}")
@@ -258,13 +231,6 @@ public class Configuration {
     // case section and sub section
     @Value("${case.section.and.sub.section}")
     private String caseSectionAndSubSection;
-
-	// task management config
-	@Value("${dristi.task-management.host}")
-	private String taskManagementServiceHost;
-
-	@Value("${dristi.task-management.search.endpoint}")
-	private String taskManagementSearchEndpoint;
 
 	// CTC application config
 	@Value("${dristi.ctc.host}")

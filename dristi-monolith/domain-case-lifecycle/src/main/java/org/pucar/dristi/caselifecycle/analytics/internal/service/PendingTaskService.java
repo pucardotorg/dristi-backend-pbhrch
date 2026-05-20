@@ -10,12 +10,11 @@ import org.egov.common.models.individual.Individual;
 import org.egov.tracer.model.CustomException;
 import org.json.JSONObject;
 import org.pucar.dristi.caselifecycle.analytics.internal.config.Configuration;
-import org.pucar.dristi.caselifecycle.analytics.internal.util.AdvocateUtil;
 import org.pucar.dristi.caselifecycle.analytics.internal.util.CaseUtil;
 import org.pucar.dristi.caselifecycle.analytics.internal.util.IndexerUtils;
 import org.pucar.dristi.caselifecycle.analytics.internal.util.PendingTaskUtil;
-import org.pucar.dristi.caselifecycle.analytics.internal.web.models.PendingTask;
-import org.pucar.dristi.caselifecycle.analytics.internal.web.models.PendingTaskRequest;
+import org.pucar.dristi.common.contract.analytics.PendingTask;
+import org.pucar.dristi.common.contract.analytics.PendingTaskRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,17 +31,15 @@ public class PendingTaskService {
     private final IndexerUtils indexerUtils;
     private final PendingTaskUtil pendingTaskUtil;
     private final IndividualService individualService;
-    private final AdvocateUtil advocateUtil;
     private final CaseUtil caseUtil;
     private final ObjectMapper objectMapper;
 
     @Autowired
-    public PendingTaskService(Configuration config, IndexerUtils indexerUtils, PendingTaskUtil pendingTaskUtil, IndividualService individualService, AdvocateUtil advocateUtil, CaseUtil caseUtil, ObjectMapper objectMapper) {
+    public PendingTaskService(Configuration config, IndexerUtils indexerUtils, PendingTaskUtil pendingTaskUtil, IndividualService individualService, CaseUtil caseUtil, ObjectMapper objectMapper) {
         this.config = config;
         this.indexerUtils = indexerUtils;
         this.pendingTaskUtil = pendingTaskUtil;
         this.individualService = individualService;
-        this.advocateUtil = advocateUtil;
         this.caseUtil = caseUtil;
         this.objectMapper = objectMapper;
     }

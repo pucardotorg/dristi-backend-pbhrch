@@ -18,7 +18,9 @@ import org.pucar.dristi.caselifecycle.analytics.internal.kafka.consumer.EventCon
 import org.pucar.dristi.caselifecycle.analytics.internal.service.IndividualService;
 import org.pucar.dristi.caselifecycle.analytics.internal.service.SmsNotificationService;
 import org.pucar.dristi.caselifecycle.analytics.internal.service.UserService;
+import org.pucar.dristi.identityaccess.advocate.AdvocateApi;
 import org.pucar.dristi.caselifecycle.analytics.internal.web.models.*;
+import org.pucar.dristi.common.contract.analytics.*;
 import org.pucar.dristi.caselifecycle.analytics.internal.web.models.casemodels.CaseAdvocateOffice;
 import org.pucar.dristi.caselifecycle.analytics.internal.web.models.taskManagement.Pagination;
 import org.pucar.dristi.caselifecycle.analytics.internal.web.models.taskManagement.TaskManagement;
@@ -72,7 +74,7 @@ public class IndexerUtils {
 
     private final IndividualService individualService;
 
-    private final AdvocateUtil advocateUtil;
+    private final AdvocateApi advocateApi;
 
     private final Clock clock;
 
@@ -91,7 +93,7 @@ public class IndexerUtils {
     public IndexerUtils(RestTemplate restTemplate, Configuration config, CaseUtil caseUtil, EvidenceUtil evidenceUtil,
             TaskUtil taskUtil, ApplicationUtil applicationUtil, ObjectMapper mapper, MdmsDataConfig mdmsDataConfig,
             CaseOverallStatusUtil caseOverallStatusUtil, SmsNotificationService notificationService,
-            IndividualService individualService, AdvocateUtil advocateUtil, Clock clock, UserService userService,
+            IndividualService individualService, AdvocateApi advocateApi, Clock clock, UserService userService,
             JsonUtil jsonUtil, TaskManagementUtil taskManagementUtil, CtcApplicationUtil ctcApplicationUtil,
             WorkflowUtil workflowUtil) {
         this.restTemplate = restTemplate;
@@ -105,7 +107,7 @@ public class IndexerUtils {
         this.caseOverallStatusUtil = caseOverallStatusUtil;
         this.notificationService = notificationService;
         this.individualService = individualService;
-        this.advocateUtil = advocateUtil;
+        this.advocateApi = advocateApi;
         this.clock = clock;
         this.userService = userService;
         this.jsonUtil = jsonUtil;
@@ -510,7 +512,7 @@ public class IndexerUtils {
                     }
 
                     if (!representativeIds.isEmpty()) {
-                        representativeIds = advocateUtil.getAdvocate(request, representativeIds.stream().toList());
+                        representativeIds = advocateApi.getAdvocateIndividualIds(request, representativeIds.stream().toList());
                     }
                     individualIds.addAll(representativeIds);
                     SmsTemplateData smsTemplateData = enrichSmsTemplateData(details, tenantId);
@@ -781,7 +783,7 @@ public class IndexerUtils {
     private String getCourtId(String filingNumber, RequestInfo request) {
         try {
             request.getUserInfo().setType("EMPLOYEE");
-            org.pucar.dristi.caselifecycle.analytics.internal.web.models.CaseSearchRequest caseSearchRequest = createCaseSearchRequest(request, filingNumber, null);
+            org.pucar.dristi.common.contract.analytics.CaseSearchRequest caseSearchRequest = createCaseSearchRequest(request, filingNumber, null);
             JsonNode caseDetails = caseUtil.searchCaseDetails(caseSearchRequest);
             return caseDetails.get(0).path("courtId").textValue();
         } catch (Exception e) {

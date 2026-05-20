@@ -2,8 +2,8 @@ package org.pucar.dristi.caselifecycle.analytics.internal.web.models;
 
 import org.egov.common.contract.response.ResponseInfo;
 import org.junit.jupiter.api.Test;
-import org.pucar.dristi.caselifecycle.analytics.internal.web.models.PendingTask;
-import org.pucar.dristi.caselifecycle.analytics.internal.web.models.PendingTaskResponse;
+import org.pucar.dristi.common.contract.analytics.PendingTask;
+import org.pucar.dristi.common.contract.analytics.PendingTaskResponse;
 
 import static org.junit.jupiter.api.Assertions.*;
 

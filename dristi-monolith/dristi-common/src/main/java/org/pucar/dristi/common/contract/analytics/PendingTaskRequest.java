@@ -1,4 +1,5 @@
-package org.pucar.dristi.caselifecycle.analytics.internal.web.models;
+// HAND-CURATED — lifted by Phase 35 (contract-lift)
+package org.pucar.dristi.common.contract.analytics;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -8,7 +9,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.egov.common.contract.request.RequestInfo;
-import org.pucar.dristi.caselifecycle.analytics.internal.web.models.PendingTask;
 import org.springframework.validation.annotation.Validated;
 
 /**

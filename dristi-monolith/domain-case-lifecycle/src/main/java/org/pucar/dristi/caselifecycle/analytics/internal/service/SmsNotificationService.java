@@ -8,7 +8,7 @@ import org.egov.common.contract.request.RequestInfo;
 import org.pucar.dristi.caselifecycle.analytics.internal.config.Configuration;
 import org.pucar.dristi.common.kafka.Producer;
 import org.pucar.dristi.common.repository.ServiceRequestRepository;
-import org.pucar.dristi.caselifecycle.analytics.internal.web.models.SMSRequest;
+import org.pucar.dristi.common.contract.analytics.SMSRequest;
 import org.pucar.dristi.caselifecycle.analytics.internal.web.models.SmsTemplateData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

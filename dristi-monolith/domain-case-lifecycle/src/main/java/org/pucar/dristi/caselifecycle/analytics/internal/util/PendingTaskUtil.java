@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.tracer.model.CustomException;
 import org.pucar.dristi.caselifecycle.analytics.internal.config.Configuration;
-import org.pucar.dristi.caselifecycle.analytics.internal.web.models.PendingTask;
+import org.pucar.dristi.common.contract.analytics.PendingTask;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;

@@ -17,8 +17,8 @@ import org.pucar.dristi.caselifecycle.analytics.internal.config.Configuration;
 import org.pucar.dristi.caselifecycle.analytics.internal.service.PendingTaskService;
 import org.pucar.dristi.caselifecycle.analytics.internal.util.IndexerUtils;
 import org.pucar.dristi.caselifecycle.analytics.internal.util.PendingTaskUtil;
-import org.pucar.dristi.caselifecycle.analytics.internal.web.models.PendingTask;
-import org.pucar.dristi.caselifecycle.analytics.internal.web.models.PendingTaskRequest;
+import org.pucar.dristi.common.contract.analytics.PendingTask;
+import org.pucar.dristi.common.contract.analytics.PendingTaskRequest;
 import org.egov.tracer.model.CustomException;
 
 import java.util.ArrayList;

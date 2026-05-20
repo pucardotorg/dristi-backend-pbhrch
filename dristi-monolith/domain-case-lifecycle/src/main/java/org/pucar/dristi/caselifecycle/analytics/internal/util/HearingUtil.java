@@ -1,64 +1,54 @@
 package org.pucar.dristi.caselifecycle.analytics.internal.util;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.json.JSONArray;
+import org.egov.common.contract.request.RequestInfo;
 import org.json.JSONObject;
-import org.pucar.dristi.caselifecycle.analytics.internal.config.Configuration;
-import org.pucar.dristi.common.repository.ServiceRequestRepository;
-import org.pucar.dristi.caselifecycle.analytics.internal.util.Util;
+import org.pucar.dristi.caselifecycle.hearing.HearingApi;
+import org.pucar.dristi.common.contract.hearing.Hearing;
+import org.pucar.dristi.common.contract.hearing.HearingCriteria;
+import org.pucar.dristi.common.contract.hearing.HearingSearchRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import static org.pucar.dristi.caselifecycle.analytics.internal.config.ServiceConstants.HEARING_PATH;
+import java.util.List;
 
 @Slf4j
 @Component("analyticsHearingUtil")
 public class HearingUtil {
 
-	private final Configuration config;
-	private final ServiceRequestRepository repository;
-	private final Util util;
+	private final HearingApi hearingApi;
 	private final ObjectMapper mapper;
 
 	@Autowired
-	public HearingUtil(Configuration config, ServiceRequestRepository repository, Util util, ObjectMapper mapper) {
-		this.config = config;
-		this.repository = repository;
-		this.util = util;
+	public HearingUtil(HearingApi hearingApi, ObjectMapper mapper) {
+		this.hearingApi = hearingApi;
 		this.mapper = mapper;
 	}
 
 	public Object getHearing(JSONObject request, String applicationNumber, String cnrNumber, String hearingId, String tenantId) {
-		StringBuilder url = getSearchURLWithParams();
-		log.info("Inside HearingUtil getHearing :: URL: {}", url);
-
-		request.put("tenantId", tenantId);
-		JSONObject criteria = new JSONObject();
-		if (!(applicationNumber == null)) criteria.put("applicationNumber", applicationNumber);
-		if (!(cnrNumber == null)) criteria.put("cnrNumber", cnrNumber);
-		criteria.put("hearingId",hearingId);
-		criteria.put("tenantId", tenantId);
-		request.put("criteria", criteria);
-
-		log.info("Inside HearingUtil getHearing :: Request: {}", request);
-
 		try {
-			Object responseObj = repository.fetchResult(url, request);
-			String response = responseObj == null ? null : mapper.writeValueAsString(responseObj);
-			log.info("Inside HearingUtil getHearing :: Response: {}", response);
-
-			JSONArray hearings = util.constructArray(response, HEARING_PATH);
-			return hearings.length() > 0 ? hearings.get(0) : null;
+			RequestInfo requestInfo = mapper.convertValue(request.get("RequestInfo"), RequestInfo.class);
+			HearingCriteria criteria = HearingCriteria.builder()
+					.applicationNumber(applicationNumber)
+					.cnrNumber(cnrNumber)
+					.hearingId(hearingId)
+					.tenantId(tenantId)
+					.build();
+			HearingSearchRequest searchRequest = HearingSearchRequest.builder()
+					.requestInfo(requestInfo)
+					.criteria(criteria)
+					.build();
+			List<Hearing> hearings = hearingApi.search(searchRequest);
+			if (hearings == null || hearings.isEmpty()) {
+				return null;
+			}
+			JsonNode firstHearing = mapper.valueToTree(hearings.get(0));
+			return new JSONObject(firstHearing.toString());
 		} catch (Exception e) {
 			log.error("Error while fetching or processing the hearing response", e);
 			throw new RuntimeException("Error while fetching or processing the hearing response", e);
 		}
-	}
-
-	private StringBuilder getSearchURLWithParams() {
-		StringBuilder url = new StringBuilder(config.getHearingHost());
-		url.append(config.getHearingSearchPath());
-		return url;
 	}
 }

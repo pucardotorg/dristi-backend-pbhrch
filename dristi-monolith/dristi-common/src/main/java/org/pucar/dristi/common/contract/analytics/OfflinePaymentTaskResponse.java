@@ -1,13 +1,12 @@
-package org.pucar.dristi.caselifecycle.analytics.internal.web.models;
+// HAND-CURATED — lifted by Phase 35 (contract-lift)
+package org.pucar.dristi.common.contract.analytics;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.springframework.validation.annotation.Validated;
 
 @Validated
@@ -15,16 +14,12 @@ import org.springframework.validation.annotation.Validated;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class OfflinePaymentTaskRequest {
+public class OfflinePaymentTaskResponse {
 
-    @JsonProperty("RequestInfo")
-    @NotNull
-    @Valid
-    private RequestInfo requestInfo;
+    @JsonProperty("responseInfo")
+    private ResponseInfo responseInfo;
 
     @JsonProperty("offlinePaymentTask")
-    @NotNull
-    @Valid
     private OfflinePaymentTask offlinePaymentTask;
 
 }

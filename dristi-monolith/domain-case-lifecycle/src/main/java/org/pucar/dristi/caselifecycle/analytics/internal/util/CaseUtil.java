@@ -6,18 +6,24 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.model.CustomException;
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.pucar.dristi.caselifecycle.analytics.internal.config.Configuration;
-import org.pucar.dristi.common.repository.ServiceRequestRepository;
-import org.pucar.dristi.caselifecycle.analytics.internal.util.Util;
 import org.pucar.dristi.caselifecycle.analytics.internal.web.models.casemodels.CaseAdvocateOffice;
-import org.pucar.dristi.caselifecycle.analytics.internal.web.models.CaseSearchRequest;
+import org.pucar.dristi.caselifecycle.cases.CaseApi;
+import org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseCriteria;
+import org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseListResponse;
+import org.pucar.dristi.caselifecycle.cases.internal.web.models.CourtCase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import static org.pucar.dristi.caselifecycle.analytics.internal.config.ServiceConstants.*;
 
@@ -26,75 +32,59 @@ import static org.pucar.dristi.caselifecycle.analytics.internal.config.ServiceCo
 public class CaseUtil {
 
 	private final Configuration config;
-	private final ServiceRequestRepository repository;
-	private final Util util;
-
+	private final CaseApi caseApi;
 	private final RestTemplate restTemplate;
-
 	private final ObjectMapper mapper;
 
 	@Autowired
-	public CaseUtil(Configuration config, ServiceRequestRepository repository, Util util, RestTemplate restTemplate, ObjectMapper mapper) {
+	public CaseUtil(Configuration config, CaseApi caseApi, RestTemplate restTemplate, ObjectMapper mapper) {
 		this.config = config;
-		this.repository = repository;
-		this.util = util;
+		this.caseApi = caseApi;
 		this.restTemplate = restTemplate;
 		this.mapper = mapper;
 	}
 
 	public Object getCase(JSONObject request, String tenantId, String cnrNumber, String filingNumber, String caseId) {
-		StringBuilder url = getSearchURLWithParams();
-		log.info("Inside CaseUtil getCaseInternal :: URL: {}", url);
-
-		request.put("tenantId", tenantId);
-		JSONArray criteriaArray = new JSONArray();
-		JSONObject criteria = new JSONObject();
-
-		if (cnrNumber != null) {
-			criteria.put("cnrNumber", cnrNumber);
-		}
-		if (filingNumber != null) {
-			criteria.put("filingNumber", filingNumber);
-		}
-		if (caseId != null) {
-			criteria.put("caseId", caseId);
-		}
-		criteriaArray.put(criteria);
-		request.put("criteria", criteriaArray);
-		request.put("flow",FLOW_JAC);
-
-		log.info("Inside CaseUtil getCaseInternal :: Criteria: {}", criteriaArray);
-
 		try {
-			Object responseObj = repository.fetchResult(url, request);
-			String response = responseObj == null ? null : mapper.writeValueAsString(responseObj);
-			log.info("Inside CaseUtil getCaseInternal :: Response: {}", response);
-			JSONArray cases = util.constructArray(response, CASE_PATH);
-			return cases.length() > 0 ? cases.get(0) : null;
+			RequestInfo requestInfo = mapper.convertValue(request.get("RequestInfo"), RequestInfo.class);
+			CaseCriteria criteria = new CaseCriteria();
+			if (cnrNumber != null) criteria.setCnrNumber(cnrNumber);
+			if (filingNumber != null) criteria.setFilingNumber(filingNumber);
+			if (caseId != null) criteria.setCaseId(caseId);
+			org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseSearchRequest searchRequest =
+					org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseSearchRequest.builder()
+							.requestInfo(requestInfo)
+							.criteria(new ArrayList<>(List.of(criteria)))
+							.flow(FLOW_JAC)
+							.build();
+			CaseListResponse response = caseApi.search(searchRequest);
+			List<CourtCase> cases = response.getCriteria().get(0).getResponseList();
+			if (cases == null || cases.isEmpty()) {
+				return null;
+			}
+			JsonNode firstCase = mapper.valueToTree(cases.get(0));
+			return new JSONObject(firstCase.toString());
 		} catch (Exception e) {
 			log.error("Error while processing case response", e);
 			throw new RuntimeException("Error while processing case response", e);
 		}
 	}
 
-	public JsonNode searchCaseDetails(CaseSearchRequest caseSearchRequest) {
-		StringBuilder uri = new StringBuilder();
-		uri.append(config.getCaseHost()).append(config.getCaseSearchPath());
-
-		Object response = new HashMap<>();
-		JsonNode caseList = null;
+	public JsonNode searchCaseDetails(org.pucar.dristi.common.contract.analytics.CaseSearchRequest analyticsRequest) {
 		try {
-			response = restTemplate.postForObject(uri.toString(), caseSearchRequest, Map.class);
-			JsonNode jsonNode = mapper.readTree(mapper.writeValueAsString(response));
-			caseList = jsonNode.get("criteria").get(0).get("responseList");
-
+			org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseSearchRequest bridged =
+					mapper.convertValue(analyticsRequest,
+							org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseSearchRequest.class);
+			CaseListResponse response = caseApi.search(bridged);
+			List<CourtCase> cases = response.getCriteria().get(0).getResponseList();
+			return mapper.valueToTree(cases == null ? Collections.emptyList() : cases);
 		} catch (Exception e) {
 			log.error(ERROR_WHILE_FETCHING_FROM_CASE, e);
 			throw new CustomException(ERROR_WHILE_FETCHING_FROM_CASE, e.getMessage());
 		}
-		return caseList;
 	}
 
+	// /case/advocate/search has no matching CaseApi method (Rule 39) — defer.
 	public List<Map<String, String>> getCasesByAdvocateId(String advocateId, RequestInfo requestInfo) {
 		try {
 			StringBuilder uri = new StringBuilder();
@@ -199,11 +189,6 @@ public class CaseUtil {
 		return individualIds;
 	}
 
-	private StringBuilder getSearchURLWithParams() {
-		return new StringBuilder(config.getCaseHost())
-				.append(config.getCaseSearchPath());
-	}
-
 	public String getCourtCaseNumber(JsonNode caseList) {
 		if (caseList != null && caseList.isArray() && !caseList.isEmpty()) {
 			JsonNode courtCaseNode = caseList.get(0).get("courtCaseNumber");
@@ -248,6 +233,7 @@ public class CaseUtil {
 		}
 	}
 
+	// /case/member-advocates has no matching CaseApi method (Rule 39) — defer.
 	public List<String> getAdvocatesForMember(RequestInfo requestInfo, String memberUserUuid, String caseId) {
 		try {
 			StringBuilder uri = new StringBuilder();

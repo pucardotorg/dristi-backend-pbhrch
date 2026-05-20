@@ -1,64 +1,46 @@
 package org.pucar.dristi.caselifecycle.analytics.internal.util;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.tracer.model.CustomException;
-import org.egov.tracer.model.ServiceCallException;
-import org.pucar.dristi.caselifecycle.analytics.internal.config.Configuration;
-import org.pucar.dristi.common.kafka.Producer;
-import org.pucar.dristi.common.repository.ServiceRequestRepository;
 import org.pucar.dristi.caselifecycle.analytics.internal.web.models.taskManagement.TaskManagement;
-import org.pucar.dristi.caselifecycle.analytics.internal.web.models.taskManagement.TaskManagementSearchResponse;
 import org.pucar.dristi.caselifecycle.analytics.internal.web.models.taskManagement.TaskSearchRequest;
+import org.pucar.dristi.caselifecycle.taskmanagement.TaskmanagementApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.HttpClientErrorException;
 
-import java.util.*;
-
-import static org.pucar.dristi.caselifecycle.analytics.internal.config.ServiceConstants.EXTERNAL_SERVICE_EXCEPTION;
-import static org.pucar.dristi.caselifecycle.analytics.internal.config.ServiceConstants.SEARCHER_SERVICE_EXCEPTION;
+import java.util.Collections;
+import java.util.List;
 
 @Component("analyticsTaskManagementUtil")
 @Slf4j
 public class TaskManagementUtil {
 
-    private final ServiceRequestRepository serviceRequestRepository;
+    private final TaskmanagementApi taskmanagementApi;
     private final ObjectMapper objectMapper;
-    private final JsonUtil jsonUtil;
-    private final Configuration config;
-    private final Producer producer;
 
     @Autowired
-    public TaskManagementUtil(ServiceRequestRepository serviceRequestRepository, ObjectMapper objectMapper, JsonUtil jsonUtil, Configuration config, Producer producer) {
-        this.serviceRequestRepository = serviceRequestRepository;
+    public TaskManagementUtil(TaskmanagementApi taskmanagementApi, ObjectMapper objectMapper) {
+        this.taskmanagementApi = taskmanagementApi;
         this.objectMapper = objectMapper;
-        this.jsonUtil = jsonUtil;
-        this.config = config;
-        this.producer = producer;
     }
 
     public List<TaskManagement> searchTaskManagement(TaskSearchRequest request) {
-        objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-        StringBuilder uri = new StringBuilder(config.getTaskManagementServiceHost())
-                .append(config.getTaskManagementSearchEndpoint());
-        Object response = serviceRequestRepository.fetchResult(uri, request);
         try {
-            TaskManagementSearchResponse searchResponse = objectMapper.convertValue(response, TaskManagementSearchResponse.class);
-            if (searchResponse != null && searchResponse.getTaskManagementRecords() != null) {
-                return searchResponse.getTaskManagementRecords();
-            } else {
+            org.pucar.dristi.caselifecycle.taskmanagement.internal.web.models.TaskSearchRequest bridged =
+                    objectMapper.convertValue(request,
+                            org.pucar.dristi.caselifecycle.taskmanagement.internal.web.models.TaskSearchRequest.class);
+            List<org.pucar.dristi.caselifecycle.taskmanagement.internal.web.models.TaskManagement> records =
+                    taskmanagementApi.search(bridged);
+            if (records == null || records.isEmpty()) {
                 return Collections.emptyList();
             }
-        } catch (HttpClientErrorException e) {
-            log.error(EXTERNAL_SERVICE_EXCEPTION, e);
-            throw new ServiceCallException(e.getResponseBodyAsString());
+            return objectMapper.convertValue(records, new TypeReference<List<TaskManagement>>() {});
         } catch (Exception e) {
-            log.error(SEARCHER_SERVICE_EXCEPTION, e);
+            log.error("Error occurred while fetching task management records", e);
             throw new CustomException("TASK_SEARCH_ERROR", "Error occurred while fetching task management records");
         }
     }
 
 }
-

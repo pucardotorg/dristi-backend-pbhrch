@@ -18,6 +18,7 @@ import org.pucar.dristi.common.kafka.Producer;
 import org.pucar.dristi.caselifecycle.analytics.internal.service.IndividualService;
 import org.pucar.dristi.caselifecycle.analytics.internal.service.SmsNotificationService;
 import org.pucar.dristi.caselifecycle.analytics.internal.web.models.*;
+import org.pucar.dristi.common.contract.analytics.*;
 import org.pucar.dristi.caselifecycle.analytics.internal.web.models.CaseOutcome;
 import org.pucar.dristi.caselifecycle.analytics.internal.web.models.CaseOutcomeType;
 import org.pucar.dristi.caselifecycle.analytics.internal.web.models.CaseOverallStatus;
@@ -48,15 +49,13 @@ public class CaseOverallStatusUtil {
 
 	private final CaseUtil caseUtil;
 
-	private final AdvocateUtil advocateUtil;
-
 	private final IndividualService individualService;
 
 	private final SmsNotificationService notificationService;
 
 
 	@Autowired
-	public CaseOverallStatusUtil(Configuration config, HearingUtil hearingUtil, OrderUtil orderUtil, Producer producer, ObjectMapper mapper, MdmsDataConfig mdmsDataConfig, CaseUtil caseUtil, AdvocateUtil advocateUtil, IndividualService individualService, SmsNotificationService notificationService,Util util) {
+	public CaseOverallStatusUtil(Configuration config, HearingUtil hearingUtil, OrderUtil orderUtil, Producer producer, ObjectMapper mapper, MdmsDataConfig mdmsDataConfig, CaseUtil caseUtil, IndividualService individualService, SmsNotificationService notificationService,Util util) {
 		this.config = config;
         this.hearingUtil = hearingUtil;
         this.orderUtil = orderUtil;
@@ -64,7 +63,6 @@ public class CaseOverallStatusUtil {
 		this.mapper = mapper;
         this.mdmsDataConfig = mdmsDataConfig;
         this.caseUtil = caseUtil;
-        this.advocateUtil = advocateUtil;
         this.individualService = individualService;
         this.notificationService = notificationService;
 		this.util = util;
@@ -190,7 +188,7 @@ public class CaseOverallStatusUtil {
 	}
 
 	private void sendSmsForCaseSubStageChange(String filingNumber, RequestInfo requestInfo, String subStage) {
-		org.pucar.dristi.caselifecycle.analytics.internal.web.models.CaseSearchRequest caseSearchRequest = createCaseSearchRequest(requestInfo, filingNumber);
+		org.pucar.dristi.common.contract.analytics.CaseSearchRequest caseSearchRequest = createCaseSearchRequest(requestInfo, filingNumber);
 		JsonNode caseDetails = caseUtil.searchCaseDetails(caseSearchRequest);
 		String courtCaseNumber = caseUtil.getCourtCaseNumber(caseDetails);
 		String cmpNumber = caseUtil.getCmpNumber(caseDetails);
