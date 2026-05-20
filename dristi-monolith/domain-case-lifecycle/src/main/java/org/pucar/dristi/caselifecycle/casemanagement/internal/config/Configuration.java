@@ -68,7 +68,7 @@ public class Configuration {
 	@Value("${egov.mdms.host}")
 	private String mdmsHost;
 
-	@Value("${egov.mdms.search.endpoint}")
+	@Value("${egov.mdms.v2.search.endpoint}")
 	private String mdmsEndPoint;
 
 	@Value("${egov.mdms.schema.search.endpoint}")
