@@ -29,7 +29,7 @@ import java.util.Map;
 
 @Configuration
 @EnableKafka
-@PropertySource("classpath:application.properties")
+@PropertySource("classpath:application-analytics.yml")
 @Order(1)
 @Slf4j
 public class EventConsumerConfig implements ApplicationRunner {
