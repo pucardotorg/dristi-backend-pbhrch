@@ -33,7 +33,7 @@ public class NotificationConsumer {
                             @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
 
         try {
-            NotificationRequest request = (objectMapper.readValue((String) payload.value(), new TypeReference<NotificationRequest>() {
+            NotificationRequest request = (objectMapper.convertValue(payload.value(), new TypeReference<NotificationRequest>() {
             }));
             eventManager.notifyByObjects(request.getNotification(), request.getRequestInfo());
         } catch (Exception e) {

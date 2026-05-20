@@ -68,9 +68,9 @@ public class HearingConsumer {
     private void publishHearing(ConsumerRecord<String, Object> payload,
                                 @Header(KafkaHeaders.RECEIVED_TOPIC) String topic,boolean isCreateHearing) {
         try {
-            Hearing hearing = (objectMapper.readValue((String) payload.value(), new TypeReference<HearingRequest>() {
+            Hearing hearing = (objectMapper.convertValue(payload.value(), new TypeReference<HearingRequest>() {
             })).getHearing();
-            HearingRequest hearingRequest = objectMapper.readValue(payload.value().toString(), HearingRequest.class);
+            HearingRequest hearingRequest = objectMapper.convertValue(payload.value(), HearingRequest.class);
             logger.info(objectMapper.writeValueAsString(hearing));
             hearingService.addCaseDetailsToHearing(hearing, topic);
             hearingService.enrichOpenHearings(hearingRequest,isCreateHearing);
@@ -84,7 +84,7 @@ public class HearingConsumer {
     private void publishBulkHearing(ConsumerRecord<String, Object> payload,
                                 @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         try {
-            HearingBulkRequest bulkRequest = objectMapper.readValue(payload.value().toString(), HearingBulkRequest.class);
+            HearingBulkRequest bulkRequest = objectMapper.convertValue(payload.value(), HearingBulkRequest.class);
             List<Hearing> hearings = bulkRequest.getHearings();
             log.info("Updating bulk hearings.");
             for (Hearing hearing: hearings) {
