@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.pucar.dristi.common.models.workflow.WorkflowObject;
 import org.egov.common.contract.models.AuditDetails;
 import org.egov.common.contract.models.Document;
-import org.egov.common.contract.models.Workflow;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;

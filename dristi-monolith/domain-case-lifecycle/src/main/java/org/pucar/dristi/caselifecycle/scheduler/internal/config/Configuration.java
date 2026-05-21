@@ -10,8 +10,6 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 
-import org.pucar.dristi.common.contract.scheduler.User;
-import org.pucar.dristi.common.contract.scheduler.Workflow;
 @Component("schedulerConfiguration")
 @Data
 @Import({TracerConfiguration.class})
@@ -241,12 +239,6 @@ public class Configuration {
     @Value("${judge.designation}")
     private String judgeDesignation;
 
-
-    @Value("${egov.advocate.host}")
-    private String advocateHost;
-
-    @Value("${egov.advocate.path}")
-    private String advocatePath;
 
     //individual
     @Value("${egov.individual.host}")

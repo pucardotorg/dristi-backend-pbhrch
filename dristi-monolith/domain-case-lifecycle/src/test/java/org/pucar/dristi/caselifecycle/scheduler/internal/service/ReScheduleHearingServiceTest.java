@@ -8,7 +8,9 @@ import org.pucar.dristi.common.kafka.Producer;
 import org.pucar.dristi.caselifecycle.scheduler.internal.repository.ReScheduleRequestRepository;
 import org.pucar.dristi.caselifecycle.scheduler.internal.util.CaseUtil;
 import org.pucar.dristi.caselifecycle.scheduler.internal.util.DateUtil;
+import org.pucar.dristi.caselifecycle.scheduler.internal.util.HearingUtil;
 import org.pucar.dristi.caselifecycle.scheduler.internal.util.MasterDataUtil;
+import org.pucar.dristi.identityaccess.advocate.AdvocateApi;
 import org.pucar.dristi.caselifecycle.scheduler.internal.validator.ReScheduleRequestValidator;
 import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.*;
 import org.pucar.dristi.common.contract.scheduler.*;
@@ -68,6 +70,12 @@ public class ReScheduleHearingServiceTest {
 
     @Mock
     private DateUtil dateUtil;
+
+    @Mock
+    private HearingUtil hearingUtil;
+
+    @Mock
+    private AdvocateApi advocateApi;
 
     @Mock
     private Configuration config;
