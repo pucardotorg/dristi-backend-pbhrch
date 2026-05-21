@@ -67,7 +67,7 @@ public class OrderConsumer {
     private void publishOrder(ConsumerRecord<String, Object> payload,
                               @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         try {
-            Order order = (objectMapper.readValue((String) payload.value(), new TypeReference<OrderRequest>() {
+            Order order = (objectMapper.convertValue(payload.value(), new TypeReference<OrderRequest>() {
             })).getOrder();
             logger.info(objectMapper.writeValueAsString(order));
             orderService.addOrderDetails(order, topic);
@@ -79,9 +79,9 @@ public class OrderConsumer {
     private void pushOrderAndNotification(ConsumerRecord<String, Object> payload, String topic) {
 
         try {
-            Order order = (objectMapper.readValue((String) payload.value(), new TypeReference<OrderRequest>() {
+            Order order = (objectMapper.convertValue(payload.value(), new TypeReference<OrderRequest>() {
             })).getOrder();
-            RequestInfo requestInfo = (objectMapper.readValue((String) payload.value(), new TypeReference<OrderRequest>() {
+            RequestInfo requestInfo = (objectMapper.convertValue(payload.value(), new TypeReference<OrderRequest>() {
             })).getRequestInfo();
             eventManager.notifyByObjects(order, requestInfo);
 

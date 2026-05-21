@@ -56,7 +56,7 @@ public class EvidenceConsumer {
     private void publishArtifact(ConsumerRecord<String, Object> payload, String targetTopic) {
         try {
 
-            EvidenceRequest evidenceRequest = objectMapper.readValue((String) payload.value(), EvidenceRequest.class);
+            EvidenceRequest evidenceRequest = objectMapper.convertValue(payload.value(), EvidenceRequest.class);
             Artifact artifact = evidenceRequest.getArtifact();
 
             logger.info("Parsed Artifact with filingNumber: {}, tenantId: {}", artifact.getFilingNumber(), artifact.getTenantId());

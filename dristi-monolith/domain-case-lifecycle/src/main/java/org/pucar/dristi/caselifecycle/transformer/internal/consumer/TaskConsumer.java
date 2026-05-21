@@ -50,7 +50,7 @@ public class TaskConsumer {
     private void publishTask(ConsumerRecord<String, Object> payload,
                              @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         try {
-            Task task = (objectMapper.readValue((String) payload.value(), new TypeReference<TaskRequest>() {
+            Task task = (objectMapper.convertValue(payload.value(), new TypeReference<TaskRequest>() {
             })).getTask();
             logger.info(objectMapper.writeValueAsString(task));
             taskService.addTaskDetails(task, topic);

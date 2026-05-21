@@ -45,8 +45,8 @@ public class DigitalizedDocumentConsumer {
                                            @Header(KafkaHeaders.RECEIVED_TOPIC) String topic){
         DigitalizedDocumentRequest request = null;
         try {
-            request = objectMapper.readValue((String) payload.value(), DigitalizedDocumentRequest.class);
-        } catch (JsonProcessingException e) {
+            request = objectMapper.convertValue(payload.value(), DigitalizedDocumentRequest.class);
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
         DigitalizedDocument digitalizedDocument = request.getDigitalizedDocument();

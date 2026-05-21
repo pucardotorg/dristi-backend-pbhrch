@@ -59,7 +59,7 @@ public class ApplicationConsumer {
     private void publishApplication(ConsumerRecord<String, Object> payload,
                                     @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         try {
-            Application application = (objectMapper.readValue((String) payload.value(), new TypeReference<ApplicationRequest>() {
+            Application application = (objectMapper.convertValue(payload.value(), new TypeReference<ApplicationRequest>() {
             })).getApplication();
             logger.info(objectMapper.writeValueAsString(application));
             ApplicationRequest applicationRequest = new ApplicationRequest();
