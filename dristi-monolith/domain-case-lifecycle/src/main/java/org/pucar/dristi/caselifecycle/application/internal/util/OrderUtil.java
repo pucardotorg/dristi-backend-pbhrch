@@ -17,7 +17,7 @@ import static org.pucar.dristi.caselifecycle.application.internal.config.Service
 import static org.pucar.dristi.caselifecycle.application.internal.config.ServiceConstants.ERROR_WHILE_FETCHING_FROM_ORDER;
 
 @Slf4j
-@Component
+@Component("applicationOrderUtil")
 public class OrderUtil {
     private final RestTemplate restTemplate;
     private final ObjectMapper mapper;
