@@ -1,0 +1,5 @@
+dristi-monolith/domain-case-lifecycle/src/main/java/org/pucar/dristi/caselifecycle/analytics/internal/util/AdvocateUtil.java  uses ['AdvocateHost', 'AdvocatePath']
+dristi-monolith/domain-case-lifecycle/src/main/java/org/pucar/dristi/caselifecycle/analytics/internal/util/CtcApplicationUtil.java  uses ['CtcApplicationServiceHost']
+dristi-monolith/domain-case-lifecycle/src/main/java/org/pucar/dristi/caselifecycle/analytics/internal/util/PendingTaskUtil.java  uses ['BulkPath', 'PendingTaskSearchPath']
+dristi-monolith/domain-case-lifecycle/src/main/java/org/pucar/dristi/caselifecycle/analytics/internal/util/TaskManagementUtil.java  uses ['TaskManagementServiceHost']
+dristi-monolith/domain-case-lifecycle/src/main/java/org/pucar/dristi/caselifecycle/analytics/internal/util/CaseUtil.java  uses ['AdvocateCaseSearchPath', 'CaseHost', 'CaseMemberAdvocatesPath', 'CaseSearchPath']

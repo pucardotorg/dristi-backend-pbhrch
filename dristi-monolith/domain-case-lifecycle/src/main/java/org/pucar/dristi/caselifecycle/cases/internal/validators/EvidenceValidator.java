@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Component
+@Component("casesEvidenceValidator")
 @Slf4j
 public class EvidenceValidator {
 
