@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -42,6 +43,9 @@ public class CaseEnrichment implements PartyEnricher {
     private final CaseRepository repository;
     private final JsonUtil jsonUtil;
     private final Producer producer;
+
+    @Value("${kafka.topic.save.extra.advocate.details}")
+    private String saveExtraAdvocateDetailsTopic;
 
     // -------------------- PARTY ENRICHER INTERFACE METHODS --------------------
 
@@ -273,7 +277,7 @@ public class CaseEnrichment implements PartyEnricher {
             for (int i = 0; i < extraAdvocateDetailsList.size(); i++) {
                 extraAdvocateDetailsList.get(i).setSrNo(i + 1);
             }
-            producer.push("save-extra-advocate-details", extraAdvocateDetailsList);
+            producer.push(saveExtraAdvocateDetailsTopic, extraAdvocateDetailsList);
         }
     }
 

@@ -28,7 +28,7 @@ public class NjdgConsumer {
     private final HearingRepository hearingRepository;
     private final AdvocateRepository advocateRepository;
 
-    @KafkaListener(topics = "#{'${kafka.topic.save.case.details}'}")
+    @KafkaListener(topics = "#{'${kafka.topic.save.case.details}'}", groupId = "transformer-njdg")
     public void listen(ConsumerRecord<String, Object> payload, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         String messageId = extractMessageId(payload);
         String cino = null;
@@ -85,7 +85,7 @@ public class NjdgConsumer {
         }
     }
 
-    @KafkaListener(topics = "#{'${kafka.topic.save.order.details}'}")
+    @KafkaListener(topics = "#{'${kafka.topic.save.order.details}'}", groupId = "transformer-njdg")
     public void listenOrder(ConsumerRecord<String, Object> payload, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         String messageId = extractMessageId(payload);
         String orderNo = null;
@@ -118,7 +118,7 @@ public class NjdgConsumer {
         }
     }
 
-    @KafkaListener(topics = "#{'${kafka.topic.save.hearing.details}'}")
+    @KafkaListener(topics = "#{'${kafka.topic.save.hearing.details}'}", groupId = "transformer-njdg")
     public void listenHearing(ConsumerRecord<String, Object> payload, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         String messageId = extractMessageId(payload);
         String cino = null;
@@ -149,7 +149,7 @@ public class NjdgConsumer {
         }
     }
 
-    @KafkaListener(topics = "#{'${kafka.topic.update.hearing.details}'}")
+    @KafkaListener(topics = "#{'${kafka.topic.update.hearing.details}'}", groupId = "transformer-njdg")
     public void updateHearingDetails(ConsumerRecord<String, Object> payload, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         String messageId = extractMessageId(payload);
         String cino = null;
@@ -215,7 +215,7 @@ public class NjdgConsumer {
         }
     }
 
-    @KafkaListener(topics = "#{'${kafka.topic.save.extra.parties}'}")
+    @KafkaListener(topics = "#{'${kafka.topic.save.extra.parties}'}", groupId = "transformer-njdg")
     public void listenExtraParties(ConsumerRecord<String, Object> payload, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         String messageId = extractMessageId(payload);
         int totalParties = 0;
@@ -254,7 +254,7 @@ public class NjdgConsumer {
         }
     }
 
-    @KafkaListener(topics = "#{'${kafka.topic.save.advocate.details}'}")
+    @KafkaListener(topics = "#{'${kafka.topic.save.advocate.details}'}", groupId = "transformer-njdg")
     public void listenAdvocates(ConsumerRecord<String, Object> payload, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         String messageId = extractMessageId(payload);
         Integer advocateCode = null;
@@ -276,7 +276,7 @@ public class NjdgConsumer {
         }
     }
 
-    @KafkaListener(topics = "#{'${kafka.topic.update.advocate.details}'}")
+    @KafkaListener(topics = "#{'${kafka.topic.update.advocate.details}'}", groupId = "transformer-njdg")
     public void listenAdvocateUpdates(ConsumerRecord<String, Object> payload, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         String messageId = extractMessageId(payload);
         Integer advocateCode = null;
@@ -300,7 +300,7 @@ public class NjdgConsumer {
         }
     }
 
-    @KafkaListener(topics = "#{'${kafka.topic.save.act.details}'}")
+    @KafkaListener(topics = "#{'${kafka.topic.save.act.details}'}", groupId = "transformer-njdg")
     public void listenActDetails(ConsumerRecord<String, Object> payload, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         String messageId = extractMessageId(payload);
         Integer actCode = null;
@@ -322,7 +322,7 @@ public class NjdgConsumer {
         }
     }
 
-    @KafkaListener(topics = "#{'${kafka.topic.save.extra.advocate.details}'}")
+    @KafkaListener(topics = "#{'${kafka.topic.save.extra.advocate.details}'}", groupId = "transformer-njdg")
     public void listenExtraAdvocateDetails(ConsumerRecord<String, Object> payload, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         String messageId = extractMessageId(payload);
         int totalAdvocates = 0;
@@ -379,7 +379,7 @@ public class NjdgConsumer {
         }
     }
 
-    @KafkaListener(topics = "#{'${kafka.topic.save.case.conversion.details}'}")
+    @KafkaListener(topics = "#{'${kafka.topic.save.case.conversion.details}'}", groupId = "transformer-njdg")
     public void listenCaseConversionDetails(ConsumerRecord<String, Object> payload, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         String messageId = extractMessageId(payload);
 

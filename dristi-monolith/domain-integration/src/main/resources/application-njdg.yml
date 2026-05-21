@@ -37,7 +37,9 @@ kafka:
         status: case-overall-status-topic
       conversion: update-case-conversion
     update:
-      advocate: update-advocate-application
+      advocate:
+        application: update-advocate-application
+        details: update-advocate-details
       hearing:
         details: update-hearing-details
     save:
@@ -122,4 +124,3 @@ notification:
     processing:
       delay:
         ms: 5000
-kafka.topic.update.advocate.details: update-advocate-details

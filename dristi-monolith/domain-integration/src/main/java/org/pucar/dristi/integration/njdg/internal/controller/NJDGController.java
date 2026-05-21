@@ -43,7 +43,7 @@ public class NJDGController {
      * @param request The case request containing court case details
      * @return ResponseEntity containing the processed case in NJDG format
      */
-    @PostMapping("/_processcase")
+    @PostMapping("_processcase")
     public ResponseEntity<CaseResponse> processAndUpsertCase(
             @Valid @RequestBody CaseRequest request) {
         
@@ -108,8 +108,8 @@ public class NJDGController {
             NJDGTransformRecord record = caseService.getNjdgTransformRecord(cino);
             return ResponseEntity.ok(record);
         } catch (Exception e) {
-            log.error("No record found for cino:: {}", cino);
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new NJDGTransformRecord());
+            log.error("No record found for cino: {}", cino);
+            return ResponseEntity.notFound().<NJDGTransformRecord>build();
         }
     }
 
