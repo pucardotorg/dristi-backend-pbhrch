@@ -1,6 +1,5 @@
-package org.pucar.dristi.integration.njdg.internal.model.inbox;
+package org.pucar.dristi.common.contract.hearingmanagement;
 
-import org.pucar.dristi.integration.njdg.internal.model.enums.Order;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,5 +16,5 @@ public class OrderBy {
     private String code;
 
     @JsonProperty("order")
-    private Order order;
+    private SortOrder order;
 }

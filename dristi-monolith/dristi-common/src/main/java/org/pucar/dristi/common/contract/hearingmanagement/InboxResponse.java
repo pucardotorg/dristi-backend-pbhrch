@@ -1,4 +1,4 @@
-package org.pucar.dristi.integration.njdg.internal.model.inbox;
+package org.pucar.dristi.common.contract.hearingmanagement;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -10,7 +10,6 @@ import org.egov.common.contract.response.ResponseInfo;
 import java.util.HashMap;
 import java.util.List;
 
-
 @Builder
 @Data
 @AllArgsConstructor
@@ -21,13 +20,13 @@ public class InboxResponse {
     private ResponseInfo responseInfo = null;
 
     @JsonProperty("totalCount")
-    private Integer totalCount =null;
+    private Integer totalCount = null;
 
     @JsonProperty("nearingSlaCount")
-    private Integer nearingSlaCount =null;
+    private Integer nearingSlaCount = null;
 
     @JsonProperty("statusMap")
-    private List<HashMap<String,Object>> statusMap = null;
+    private List<HashMap<String, Object>> statusMap = null;
 
     @JsonProperty("items")
     private List<Inbox> items = null;

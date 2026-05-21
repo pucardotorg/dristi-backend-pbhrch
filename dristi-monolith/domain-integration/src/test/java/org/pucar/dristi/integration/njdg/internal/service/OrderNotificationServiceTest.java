@@ -11,8 +11,8 @@ import org.pucar.dristi.common.kafka.Producer;
 import org.pucar.dristi.integration.njdg.internal.repository.CaseRepository;
 import org.pucar.dristi.integration.njdg.internal.repository.HearingRepository;
 import org.pucar.dristi.integration.njdg.internal.utils.HearingUtil;
-import org.pucar.dristi.integration.njdg.internal.utils.InboxUtil;
-import org.pucar.dristi.integration.njdg.internal.model.inbox.InboxResponse;
+import org.pucar.dristi.common.contract.hearingmanagement.InboxResponse;
+import org.pucar.dristi.common.hearingmanagement.HearingManagementApi;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.egov.common.contract.request.RequestInfo;
 import org.junit.jupiter.api.BeforeEach;
@@ -53,7 +53,7 @@ class OrderNotificationServiceTest {
     private ObjectMapper objectMapper;
 
     @Mock
-    private InboxUtil inboxUtil;
+    private HearingManagementApi hearingManagementApi;
 
     @InjectMocks
     private OrderNotificationService orderNotificationService;
@@ -104,7 +104,7 @@ class OrderNotificationServiceTest {
                 .cnrNumbers(Collections.singletonList("CNR-001"))
                 .build();
 
-        lenient().when(inboxUtil.getOrders(any())).thenReturn(InboxResponse.builder().items(Collections.emptyList()).build());
+        lenient().when(hearingManagementApi.search(any())).thenReturn(InboxResponse.builder().items(Collections.emptyList()).build());
     }
 
     @Test

@@ -1,4 +1,4 @@
-package org.pucar.dristi.integration.njdg.internal.model.inbox;
+package org.pucar.dristi.common.contract.hearingmanagement;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.Valid;
@@ -8,7 +8,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.egov.common.contract.request.RequestInfo;
 
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,9 +15,9 @@ import org.egov.common.contract.request.RequestInfo;
 public class InboxRequest {
 
     @JsonProperty("RequestInfo")
-    private RequestInfo RequestInfo;
+    private RequestInfo requestInfo;
 
     @Valid
     @JsonProperty("inbox")
-    private InboxSearchCriteria inbox ;
+    private InboxSearchCriteria inbox;
 }

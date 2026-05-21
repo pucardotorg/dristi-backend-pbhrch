@@ -7,17 +7,25 @@ import org.pucar.dristi.integration.njdg.internal.model.JudgeDetails;
 import org.pucar.dristi.integration.njdg.internal.model.hearing.Hearing;
 import org.pucar.dristi.integration.njdg.internal.model.hearing.HearingCriteria;
 import org.pucar.dristi.integration.njdg.internal.model.hearing.HearingSearchRequest;
-import org.pucar.dristi.integration.njdg.internal.model.inbox.*;
+import org.pucar.dristi.integration.njdg.internal.model.inbox.OrderDetails;
 import org.pucar.dristi.integration.njdg.internal.model.order.Notification;
 import org.pucar.dristi.integration.njdg.internal.model.order.Order;
+import org.pucar.dristi.common.contract.hearingmanagement.Inbox;
+import org.pucar.dristi.common.contract.hearingmanagement.InboxRequest;
+import org.pucar.dristi.common.contract.hearingmanagement.InboxResponse;
+import org.pucar.dristi.common.contract.hearingmanagement.InboxSearchCriteria;
+import org.pucar.dristi.common.contract.hearingmanagement.OrderBy;
+import org.pucar.dristi.common.contract.hearingmanagement.ProcessInstanceSearchCriteria;
+import org.pucar.dristi.common.contract.hearingmanagement.SortOrder;
+import org.pucar.dristi.common.hearingmanagement.HearingManagementApi;
 import org.pucar.dristi.common.kafka.Producer;
 import org.pucar.dristi.integration.njdg.internal.repository.CaseRepository;
 import org.pucar.dristi.integration.njdg.internal.repository.HearingRepository;
 import org.pucar.dristi.integration.njdg.internal.utils.HearingUtil;
-import org.pucar.dristi.integration.njdg.internal.utils.InboxUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -39,7 +47,13 @@ public class OrderNotificationService {
     private final TransformerProperties properties;
     private final HearingRepository hearingRepository;
     private final Producer producer;
-    private final InboxUtil inboxUtil;
+    private final HearingManagementApi hearingManagementApi;
+
+    @Value("${egov.inbox.search.limit}")
+    private Integer inboxSearchLimit;
+
+    @Value("${egov.inbox.search.offset}")
+    private Integer inboxSearchOffset;
 
     /**
      * Process orders by fetching all hearings for the case using filing number.
@@ -223,11 +237,11 @@ public class OrderNotificationService {
 
         criteria.setTenantId(order.getTenantId());
         OrderBy orderBy = new OrderBy();
-        orderBy.setOrder(org.pucar.dristi.integration.njdg.internal.model.enums.Order.DESC);
+        orderBy.setOrder(SortOrder.DESC);
         orderBy.setCode("Data.orderNotification.date");
         criteria.setSortOrder(List.of(orderBy));
-        criteria.setLimit(properties.getLimit());
-        criteria.setOffset(properties.getOffset());
+        criteria.setLimit(inboxSearchLimit);
+        criteria.setOffset(inboxSearchOffset);
 
         ProcessInstanceSearchCriteria processCriteria = new ProcessInstanceSearchCriteria();
         processCriteria.setBusinessService(Collections.singletonList("notification"));
@@ -243,7 +257,7 @@ public class OrderNotificationService {
 
         inboxRequest.setInbox(criteria);
 
-        InboxResponse inboxResponse = inboxUtil.getOrders(inboxRequest);
+        InboxResponse inboxResponse = hearingManagementApi.search(inboxRequest);
         List<OrderDetails> orderDetailsList = getOrdersDetails(inboxResponse);
         if(!orderDetailsList.isEmpty()) {
             for (OrderDetails orderDetails : orderDetailsList) {

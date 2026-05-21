@@ -1,4 +1,4 @@
-package org.pucar.dristi.integration.njdg.internal.model.inbox;
+package org.pucar.dristi.common.contract.hearingmanagement;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.Valid;
@@ -21,34 +21,34 @@ import java.util.List;
 @Builder
 @EqualsAndHashCode(of = {"id"})
 @ToString
-public class ProcessInstance   {
+public class ProcessInstance {
 
-    @Size(max=64)
+    @Size(max = 64)
     @JsonProperty("id")
     private String id;
 
     @NotNull
-    @Size(max=128)
+    @Size(max = 128)
     @JsonProperty("tenantId")
     private String tenantId;
 
     @NotNull
-    @Size(max=128)
+    @Size(max = 128)
     @JsonProperty("businessService")
     private String businessService;
 
     @NotNull
-    @Size(max=128)
+    @Size(max = 128)
     @JsonProperty("businessId")
     private String businessId;
 
     @NotNull
-    @Size(max=128)
+    @Size(max = 128)
     @JsonProperty("action")
     private String action;
 
     @NotNull
-    @Size(max=64)
+    @Size(max = 64)
     @JsonProperty("moduleName")
     private String moduleName;
 
@@ -79,7 +79,7 @@ public class ProcessInstance   {
     private Long businesssServiceSla;
 
     @JsonProperty("previousStatus")
-    @Size(max=128)
+    @Size(max = 128)
     private String previousStatus;
 
     @JsonProperty("entity")
@@ -101,9 +101,8 @@ public class ProcessInstance   {
         if (this.documents == null) {
             this.documents = new ArrayList<>();
         }
-        if(!this.documents.contains(documentsItem))
+        if (!this.documents.contains(documentsItem))
             this.documents.add(documentsItem);
-
         return this;
     }
 
@@ -114,6 +113,4 @@ public class ProcessInstance   {
         this.nextActions.add(nextActionsItem);
         return this;
     }
-
 }
-

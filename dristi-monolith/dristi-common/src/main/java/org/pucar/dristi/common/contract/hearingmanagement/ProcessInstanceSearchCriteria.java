@@ -1,4 +1,4 @@
-package org.pucar.dristi.integration.njdg.internal.model.inbox;
+package org.pucar.dristi.common.contract.hearingmanagement;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -9,7 +9,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
-
 
 @Data
 @AllArgsConstructor
@@ -27,7 +26,7 @@ public class ProcessInstanceSearchCriteria {
     private List<String> businessIds;
 
     @JsonProperty("assignee")
-    private String  assignee;
+    private String assignee;
 
     @JsonProperty("ids")
     private List<String> ids;
@@ -62,5 +61,4 @@ public class ProcessInstanceSearchCriteria {
 
     @JsonIgnore
     private Boolean isNearingSlaCount;
-
 }

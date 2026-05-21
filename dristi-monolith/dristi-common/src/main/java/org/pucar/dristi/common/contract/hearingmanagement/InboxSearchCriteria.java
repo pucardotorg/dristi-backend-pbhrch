@@ -1,4 +1,4 @@
-package org.pucar.dristi.integration.njdg.internal.model.inbox;
+package org.pucar.dristi.common.contract.hearingmanagement;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.Valid;
@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 
 import java.util.HashMap;
 import java.util.List;
-
 
 @Data
 @NoArgsConstructor

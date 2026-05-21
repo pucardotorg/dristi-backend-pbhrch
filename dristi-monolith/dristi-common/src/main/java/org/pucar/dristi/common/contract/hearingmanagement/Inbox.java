@@ -1,4 +1,4 @@
-package org.pucar.dristi.integration.njdg.internal.model.inbox;
+package org.pucar.dristi.common.contract.hearingmanagement;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 
 import java.util.Map;
 
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,11 +15,11 @@ import java.util.Map;
 public class Inbox {
 
     @JsonProperty("ProcessInstance")
-    private ProcessInstance ProcessInstance;
+    private ProcessInstance processInstance;
 
     @JsonProperty("businessObject")
-    private Map<String,Object> businessObject;
+    private Map<String, Object> businessObject;
 
     @JsonProperty("serviceObject")
-    private Map<String,Object>	serviceObject;
+    private Map<String, Object> serviceObject;
 }
