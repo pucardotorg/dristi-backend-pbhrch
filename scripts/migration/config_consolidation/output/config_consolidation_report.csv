@@ -1782,6 +1782,8 @@ legacyindex.pagination.size.default,analytics,100,SERVICE-SPECIFIC
 logging.level.org.springframework,analytics,DEBUG,SERVICE-SPECIFIC
 logging.pattern.console,analytics,%clr(%X{CORRELATION_ID:-}) %clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx},SERVICE-SPECIFIC
 mdms.case.module.name,case,case,SERVICE-SPECIFIC
+mdms.kafka.save.topic,casemanagement,save-mdms-data,SERVICE-SPECIFIC
+mdms.kafka.update.topic,casemanagement,update-mdms-data,SERVICE-SPECIFIC
 mdms.order.category.path,order,$.MdmsRes.Order.OrderCategory[?(@.id == '{}' && @.isactive == true)],SERVICE-SPECIFIC
 mdms.order.module.name,order,Order,SERVICE-SPECIFIC
 mdms.order.type.path,order,$.MdmsRes.Order.OrderType[?(@.id == '{}' && @.isactive == true)],SERVICE-SPECIFIC

@@ -172,6 +172,12 @@ case:
 generate:
   vc:
     code: Pucar.SummonOrder10
+mdms:
+  kafka:
+    save:
+      topic: save-mdms-data
+    update:
+      topic: update-mdms-data
 logging:
   loki:
     enabled: false
