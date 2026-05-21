@@ -252,6 +252,34 @@ SERVICE_DEAD_KEYS: dict[str, set[str]] = {
         "dristi.digitalized.documents.host",
         "dristi.digitalized.documents.search.endpoint",
         "dristi.ctc.search.endpoint",
+        # PR #101 review sweep: 21 legacy-boilerplate keys carried over
+        # from the source service's application.properties whose @Value
+        # bindings in casemanagement/Configuration.java had no consumer
+        # in caselifecycle/casemanagement/internal/. Distinct from the
+        # Rule 32 cutover keys above — these were dead pre-migration.
+        # User / Idgen / Workflow / HRMS / URL-shortener / SMS / filestore-
+        # delete / preview-index / mdms-kafka / delay-time.
+        "egov.user.host",
+        "egov.user.context.path",
+        "egov.user.create.path",
+        "egov.user.search.path",
+        "egov.user.update.path",
+        "egov.idgen.host",
+        "egov.idgen.path",
+        "egov.workflow.host",
+        "egov.workflow.transition.path",
+        "egov.workflow.businessservice.search.path",
+        "egov.workflow.processinstance.search.path",
+        "egov.hrms.host",
+        "egov.hrms.search.endpoint",
+        "egov.url.shortner.host",
+        "egov.url.shortner.endpoint",
+        "egov.sms.notification.topic",
+        "dristi.file.delete.path",
+        "dristi.preview.index",
+        "mdms.kafka.save.topic",
+        "mdms.kafka.update.topic",
+        "casemanagement.delay.time",
     },
 }
 

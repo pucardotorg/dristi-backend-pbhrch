@@ -23,46 +23,8 @@ import org.pucar.dristi.common.contract.casemanagement.Application;
 public class Configuration {
 
 
-	// User Config
-	@Value("${egov.user.host}")
-	private String userHost;
-
-	@Value("${egov.user.context.path}")
-	private String userContextPath;
-
-	@Value("${egov.user.create.path}")
-	private String userCreateEndpoint;
-
-	@Value("${egov.user.search.path}")
-	private String userSearchEndpoint;
-
-	@Value("${egov.user.update.path}")
-	private String userUpdateEndpoint;
-
 	@Value("${spring.data.redis.timeout}")
 	private Long redisTimeout;
-
-	//Idgen Config
-	@Value("${egov.idgen.host}")
-	private String idGenHost;
-
-	@Value("${egov.idgen.path}")
-	private String idGenPath;
-
-
-	//Workflow Config
-	@Value("${egov.workflow.host}")
-	private String wfHost;
-
-	@Value("${egov.workflow.transition.path}")
-	private String wfTransitionPath;
-
-	@Value("${egov.workflow.businessservice.search.path}")
-	private String wfBusinessServiceSearchPath;
-
-	@Value("${egov.workflow.processinstance.search.path}")
-	private String wfProcessInstanceSearchPath;
-
 
 	//MDMS
 	@Value("${egov.mdms.host}")
@@ -84,34 +46,11 @@ public class Configuration {
 	private String caseBundleMasterSchema;
 
 
-	//HRMS
-	@Value("${egov.hrms.host}")
-	private String hrmsHost;
-
-	@Value("${egov.hrms.search.endpoint}")
-	private String hrmsEndPoint;
-
-
-	//URLShortening
-	@Value("${egov.url.shortner.host}")
-	private String urlShortnerHost;
-
-	@Value("${egov.url.shortner.endpoint}")
-	private String urlShortnerEndpoint;
-
-
-	//SMSNotification
-	@Value("${egov.sms.notification.topic}")
-	private String smsNotificationTopic;
-
 	@Value("${egov.filestore.host}")
 	private String fileStoreHost;
 
 	@Value("${dristi.file.search.path}")
 	private String fileStorePath;
-
-	@Value("${dristi.file.delete.path}")
-	private String fileStoreDeleteEndPoint;
 
 	@Value("${egov.pdf.create}")
 	private String generatePdfUrl;
@@ -150,9 +89,6 @@ public class Configuration {
 	@Value("${dristi.bundle.index}")
 	private String caseBundleIndex;
 
-	@Value("${dristi.preview.index}")
-	private String casePreviewIndex;
-
 	@Value("${dristi.hearing.index}")
 	private String hearingIndex;
 
@@ -184,18 +120,8 @@ public class Configuration {
 	@Value("${casemanagement.kafka.update.casebundles.topic}")
 	private String updateCaseBundlesTopic;
 
-	@Value("${mdms.kafka.save.topic}")
-	private String saveMdmsDataTopic;
-
-	@Value("${mdms.kafka.update.topic}")
-	private String updateMdmsDataTopic;
-
 	@Value("${generate.vc.code}")
 	private String vcCode;
-
-	// delay time for calling process case bundle
-	@Value("${casemanagement.delay.time}")
-	private Integer delayTime;
 
 	@Value("${case.allowed.status}")
 	private String caseAllowedStatuses;
