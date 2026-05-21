@@ -82,8 +82,6 @@ egov:
     outcome:
       topic: case-outcome-topic
     host: http://localhost:8099
-    search:
-      endpoint: /case/v1/_search
     member:
       advocates:
         endpoint: /case/v1/member/_advocates
@@ -92,21 +90,13 @@ egov:
   statelevel:
     tenantId: pb
   hearing:
-    host: http://localhost:8081
-    search:
-      endpoint: /hearing/v1/search
     business:
       services: hearing-default
   advocate:
     case:
       search:
         endpoint: /case/v1/advocate/_cases
-    host: http://localhost:8080/
-    path: advocate/v1/_search
   evidence:
-    host: http://localhost:8083
-    search:
-      endpoint: /evidence/v1/_search
     business:
       services: artifact-default,witness-deposition-default
   task:
@@ -129,9 +119,6 @@ egov:
     business:
       services: application-order-submission-default,application-order-submission-feedback,application-voluntary-submission,delay-condonation-submission
   order:
-    host: http://localhost:8086
-    search:
-      endpoint: /order/v1/search
     business:
       services: order-default
   adiary:
@@ -265,10 +252,6 @@ cache:
       masters:
         minutes: 15
 dristi:
-  task-management:
-    host: http://localhost:8080
-    search:
-      endpoint: /task-management/v1/_search
   ctc:
     host: http://localhost:8080
   ctc-application:

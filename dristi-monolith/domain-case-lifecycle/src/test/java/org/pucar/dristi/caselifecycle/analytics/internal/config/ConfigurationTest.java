@@ -74,7 +74,6 @@ class ConfigurationTest {
         configuration.setTimezone("UTC");
         configuration.setStateLevelTenantId("tenantId");
         configuration.setCaseHost("http://case-host");
-        configuration.setCaseSearchPath("/case/search");
         configuration.setTaskHost("http://task-host");
         configuration.setTaskSearchPath("/task/search");
         configuration.setApplicationHost("http://application-host");
@@ -95,7 +94,6 @@ class ConfigurationTest {
         assertEquals("UTC", configuration.getTimezone());
         assertEquals("tenantId", configuration.getStateLevelTenantId());
         assertEquals("http://case-host", configuration.getCaseHost());
-        assertEquals("/case/search", configuration.getCaseSearchPath());
         assertEquals("http://task-host", configuration.getTaskHost());
         assertEquals("/task/search", configuration.getTaskSearchPath());
         assertEquals("http://application-host", configuration.getApplicationHost());

@@ -85,9 +85,7 @@ dristi.order.host,hearing,http://localhost:8051,CONFLICT
 dristi.order.host,task-management,http://localhost:8051,CONFLICT
 dristi.order.search.endpoint,hearing,/order/v1/search,CONFLICT
 dristi.order.search.endpoint,task-management,/order/v1/search,CONFLICT
-dristi.task-management.host,analytics,http://localhost:8080,CONFLICT
 dristi.task-management.host,hearing,http://localhost:8080,CONFLICT
-dristi.task-management.search.endpoint,analytics,/task-management/v1/_search,CONFLICT
 dristi.task-management.search.endpoint,hearing,/task-management/v1/_search,CONFLICT
 dristi.task.host,hearing,http://localhost:8054,CONFLICT
 dristi.task.host,task-management,http://localhost:8054,CONFLICT
@@ -99,11 +97,9 @@ egov-state-level-tenant-id,analytics,pb,CONFLICT
 egov-state-level-tenant-id,epost-tracker,pb,CONFLICT
 egov-state-level-tenant-id,inportal-survey,pb,CONFLICT
 egov-state-level-tenant-id,treasury-backend,pb,CONFLICT
-egov.advocate.host,analytics,http://localhost:8080/,CONFLICT
 egov.advocate.host,evidence,http://localhost:8080/,CONFLICT
 egov.advocate.host,hearing,http://localhost:8080/,CONFLICT
 egov.advocate.host,treasury-backend,http://localhost:8080/,CONFLICT
-egov.advocate.path,analytics,advocate/v1/_search,CONFLICT
 egov.advocate.path,evidence,advocate/v1/_search,CONFLICT
 egov.advocate.path,hearing,advocate/v1/_search,CONFLICT
 egov.advocate.path,treasury-backend,advocate/v1/_search,CONFLICT
@@ -150,7 +146,6 @@ egov.case.path,ctc,case/v1/_exists,CONFLICT
 egov.case.path,evidence,case/v1/_exists,CONFLICT
 egov.case.path,order,case/v1/_exists,CONFLICT
 egov.case.path,task,case/v1/_exists,CONFLICT
-egov.case.search.endpoint,analytics,/case/v1/_search,CONFLICT
 egov.case.search.endpoint,bail-bond,/case/v1/_search,CONFLICT
 egov.case.search.endpoint,digitalized-documents,/case/v1/_search,CONFLICT
 egov.case.search.endpoint,task,case/v1/_search,CONFLICT
@@ -193,7 +188,6 @@ egov.etreasury.host,ctc,http://localhost:8090,CONFLICT
 egov.etreasury.host,task-management,http://localhost:8076,CONFLICT
 egov.evidence.create.path,application,/evidence/v1/_create,CONFLICT
 egov.evidence.create.path,case,/evidence/v1/_create,CONFLICT
-egov.evidence.host,analytics,http://localhost:8083,CONFLICT
 egov.evidence.host,application,http://localhost:8080,CONFLICT
 egov.evidence.host,case,http://localhost:8089,CONFLICT
 egov.file.store.delete.endpoint,Notification,/filestore/v1/files/delete,CONFLICT
@@ -243,9 +237,7 @@ egov.filestore.search.endpoint,digitalized-documents,/filestore/v1/files/id,CONF
 egov.filestore.search.endpoint,e-sign-svc,filestore/v1/files/id,CONFLICT
 egov.filestore.search.endpoint,evidence,/filestore/v1/files/id,CONFLICT
 egov.filestore.search.endpoint,task,/filestore/v1/files/id,CONFLICT
-egov.hearing.host,analytics,http://localhost:8081,CONFLICT
 egov.hearing.host,evidence,http://localhost:8092/,CONFLICT
-egov.hearing.search.endpoint,analytics,/hearing/v1/search,CONFLICT
 egov.hearing.search.endpoint,evidence,/hearing/v1/search,CONFLICT
 egov.hrms.host,Notification,https://dev.digit.org,CONFLICT
 egov.hrms.host,ab-diary,https://dev.digit.org,CONFLICT
@@ -505,7 +497,6 @@ egov.mdms.search.endpoint,payment-calculator-svc,/egov-mdms-service/v1/_search,C
 egov.mdms.search.endpoint,task,/egov-mdms-service/v1/_search,CONFLICT
 egov.mdms.search.endpoint,task-management,/egov-mdms-service/v1/_search,CONFLICT
 egov.mdms.search.endpoint,treasury-backend,/egov-mdms-service/v1/_search,CONFLICT
-egov.order.host,analytics,http://localhost:8086,CONFLICT
 egov.order.host,application,http://localhost:8091/,CONFLICT
 egov.order.host,case,http://localhost:8086,CONFLICT
 egov.order.host,evidence,http://localhost:8091/,CONFLICT
@@ -513,7 +504,6 @@ egov.order.host,task,http://localhost:8085/,CONFLICT
 egov.order.path,application,order/v1/exists,CONFLICT
 egov.order.path,evidence,order/v1/exists,CONFLICT
 egov.order.path,task,order/v1/exists,CONFLICT
-egov.order.search.endpoint,analytics,/order/v1/search,CONFLICT
 egov.order.search.endpoint,case,/order/v1/search,CONFLICT
 egov.pdf.service.create.endpoint,ab-diary,/pdf-service/v1/_createnosave,CONFLICT
 egov.pdf.service.create.endpoint,epost-tracker,/pdf-service/v1/_createnosave,CONFLICT
@@ -1361,7 +1351,6 @@ egov.enc.mdms.security.policy.court.decrypt.other,case,CaseDecryptOther,SERVICE-
 egov.etreasury.create.demand.path,application,/etreasury/payment/v1/_createDemand,SERVICE-SPECIFIC
 egov.etreasury.payment.receipt.endpoint,ctc,/etreasury/payment/v1/_getPaymentReceipt,SERVICE-SPECIFIC
 egov.evidence.business.services,analytics,"artifact-default,witness-deposition-default",SERVICE-SPECIFIC
-egov.evidence.search.endpoint,analytics,/evidence/v1/_search,SERVICE-SPECIFIC
 egov.file.store.host,treasury-backend,http://egov-filestore:8080,SERVICE-SPECIFIC
 egov.file.store.treasury.module,treasury-backend,treasury,SERVICE-SPECIFIC
 egov.filestore.case.module,case,case,SERVICE-SPECIFIC

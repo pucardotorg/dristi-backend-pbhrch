@@ -64,9 +64,6 @@ public class Configuration {
 	@Value("${egov.case.host}")
 	private String caseHost;
 
-	@Value("${egov.case.search.endpoint}")
-	private String caseSearchPath;
-
 	@Value("${egov.advocate.case.search.endpoint}")
 	private String advocateCaseSearchPath;
 
