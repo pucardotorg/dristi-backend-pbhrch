@@ -9,7 +9,7 @@ import org.pucar.dristi.integration.njdg.internal.service.OrderNotificationServi
 import org.pucar.dristi.integration.njdg.internal.service.OrderService;
 import org.pucar.dristi.integration.njdg.internal.utils.JsonUtil;
 import org.pucar.dristi.common.util.MdmsUtil;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -98,7 +98,7 @@ public class OrderConsumer {
         log.info("Starting notification order processing...");
 
         try {
-            NotificationRequest notificationRequest = objectMapper.readValue(payload.value().toString(), NotificationRequest.class);
+            NotificationRequest notificationRequest = objectMapper.convertValue(payload.value(), new TypeReference<NotificationRequest>() {});
             Notification notification = notificationRequest.getNotification();
             String status = notification.getStatus();
 
@@ -152,8 +152,8 @@ public class OrderConsumer {
 
     private OrderRequest parsePayload(ConsumerRecord<String, Object> payload) {
         try {
-            return objectMapper.readValue(payload.value().toString(), OrderRequest.class);
-        } catch (JsonProcessingException e) {
+            return objectMapper.convertValue(payload.value(), new TypeReference<OrderRequest>() {});
+        } catch (IllegalArgumentException e) {
             log.error("Failed to parse order payload", e);
             throw new CustomException("ORDER_PAYLOAD_PARSE_ERROR", "Unable to parse order payload");
         }

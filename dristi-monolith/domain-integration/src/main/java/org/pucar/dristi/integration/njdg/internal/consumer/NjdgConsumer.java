@@ -5,6 +5,7 @@ import org.pucar.dristi.integration.njdg.internal.repository.AdvocateRepository;
 import org.pucar.dristi.integration.njdg.internal.repository.CaseRepository;
 import org.pucar.dristi.integration.njdg.internal.repository.HearingRepository;
 import org.pucar.dristi.integration.njdg.internal.repository.OrderRepository;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,7 +38,7 @@ public class NjdgConsumer {
                 topic, messageId, payload.partition(), payload.offset());
         
         try {
-            NJDGTransformRecord record = objectMapper.readValue(payload.value().toString(), NJDGTransformRecord.class);
+            NJDGTransformRecord record = objectMapper.convertValue(payload.value(), new TypeReference<NJDGTransformRecord>() {});
             cino = record.getCino();
             
             log.info("Processing case details | CINO: {}", cino);
@@ -94,7 +95,7 @@ public class NjdgConsumer {
                 topic, messageId, payload.partition(), payload.offset());
 
         try {
-            InterimOrder interimOrder = objectMapper.readValue(payload.value().toString(), InterimOrder.class);
+            InterimOrder interimOrder = objectMapper.convertValue(payload.value(), new TypeReference<InterimOrder>() {});
             orderNo = interimOrder.getCourtOrderNumber();
 
             log.info("Processing order details | orderNo: {}", orderNo);
@@ -129,7 +130,7 @@ public class NjdgConsumer {
         
         try {
             // Deserialize payload
-            HearingDetails hearingDetails = objectMapper.readValue(payload.value().toString(), HearingDetails.class);
+            HearingDetails hearingDetails = objectMapper.convertValue(payload.value(), new TypeReference<HearingDetails>() {});
             cino = hearingDetails.getCino();
             hearingId = hearingDetails.getHearingId();
 
@@ -159,7 +160,7 @@ public class NjdgConsumer {
                 topic, messageId, payload.partition(), payload.offset());
         try {
             // Deserialize payload
-            HearingDetails hearingDetails = objectMapper.readValue(payload.value().toString(), HearingDetails.class);
+            HearingDetails hearingDetails = objectMapper.convertValue(payload.value(), new TypeReference<HearingDetails>() {});
             cino = hearingDetails.getCino();
             hearingId = hearingDetails.getHearingId();
 
@@ -227,8 +228,7 @@ public class NjdgConsumer {
         
         try {
             // Convert payload to List of PartyDetails
-            List<PartyDetails> partyDetailsList = objectMapper.readValue((String) payload.value(),
-                    objectMapper.getTypeFactory().constructCollectionType(List.class, PartyDetails.class));
+            List<PartyDetails> partyDetailsList = objectMapper.convertValue(payload.value(), new TypeReference<List<PartyDetails>>() {});
             
             totalParties = partyDetailsList.size();
             log.info("Processing extra parties | totalParties: {}", totalParties);
@@ -263,7 +263,7 @@ public class NjdgConsumer {
                 topic, messageId, payload.partition(), payload.offset());
         
         try {
-            AdvocateDetails advocateDetails = objectMapper.readValue(payload.value().toString(), AdvocateDetails.class);
+            AdvocateDetails advocateDetails = objectMapper.convertValue(payload.value(), new TypeReference<AdvocateDetails>() {});
             advocateCode = advocateDetails.getAdvocateCode();
             
             log.info("Processing advocate details | advocateCode: {}", advocateCode);
@@ -286,7 +286,7 @@ public class NjdgConsumer {
                 topic, messageId, payload.partition(), payload.offset());
         
         try {
-            AdvocateDetails advocateDetails = objectMapper.readValue(payload.value().toString(), AdvocateDetails.class);
+            AdvocateDetails advocateDetails = objectMapper.convertValue(payload.value(), new TypeReference<AdvocateDetails>() {});
             advocateCode = advocateDetails.getAdvocateCode();
             advocateId = advocateDetails.getAdvocateId();
             
@@ -309,7 +309,7 @@ public class NjdgConsumer {
                 topic, messageId, payload.partition(), payload.offset());
         
         try {
-            Act act = objectMapper.readValue(payload.value().toString(), Act.class);
+            Act act = objectMapper.convertValue(payload.value(), new TypeReference<Act>() {});
             actCode = act.getActCode();
             
             log.info("Processing act details | actCode: {} | CINO: {}", actCode, act.getCino());
@@ -333,8 +333,7 @@ public class NjdgConsumer {
                 topic, messageId, payload.partition(), payload.offset());
         
         try {
-            List<ExtraAdvocateDetails> extraAdvocateDetails = objectMapper.readValue(payload.value().toString(),
-                    objectMapper.getTypeFactory().constructCollectionType(List.class, ExtraAdvocateDetails.class));
+            List<ExtraAdvocateDetails> extraAdvocateDetails = objectMapper.convertValue(payload.value(), new TypeReference<List<ExtraAdvocateDetails>>() {});
             
             totalAdvocates = extraAdvocateDetails.size();
             log.info("Processing extra advocates | totalAdvocates: {}", totalAdvocates);
@@ -387,7 +386,7 @@ public class NjdgConsumer {
                 topic, messageId, payload.partition(), payload.offset());
 
         try {
-            CaseTypeDetails caseTypeDetails = objectMapper.readValue(payload.value().toString(), CaseTypeDetails.class);
+            CaseTypeDetails caseTypeDetails = objectMapper.convertValue(payload.value(), new TypeReference<CaseTypeDetails>() {});
 
             log.info("Processing case conversion details | CINO: {}", caseTypeDetails.getCino());
 

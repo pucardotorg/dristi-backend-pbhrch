@@ -3,6 +3,7 @@ package org.pucar.dristi.integration.njdg.internal.consumer;
 
 import org.pucar.dristi.integration.njdg.internal.model.advocate.AdvocateRequest;
 import org.pucar.dristi.integration.njdg.internal.service.AdvocateService;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -53,7 +54,7 @@ public class AdvocateConsumer {
         String status = null;
         
         try {
-            AdvocateRequest advocateRequest = objectMapper.readValue(payload.value().toString(), AdvocateRequest.class);
+            AdvocateRequest advocateRequest = objectMapper.convertValue(payload.value(), new TypeReference<AdvocateRequest>() {});
             advocateId = advocateRequest.getAdvocate().getId().toString();
             status = advocateRequest.getAdvocate().getStatus();
             

@@ -5,6 +5,7 @@ import org.pucar.dristi.integration.njdg.internal.model.cases.*;
 import org.pucar.dristi.integration.njdg.internal.service.CaseService;
 import org.pucar.dristi.integration.njdg.internal.utils.CaseUtil;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -52,7 +53,7 @@ public class CaseConsumer {
         String status = null;
         
         try {
-            CaseRequest caseRequest = objectMapper.readValue(payload.value().toString(), CaseRequest.class);
+            CaseRequest caseRequest = objectMapper.convertValue(payload.value(), new TypeReference<CaseRequest>() {});
             filingNumber = caseRequest.getCourtCase().getFilingNumber();
             status = caseRequest.getCourtCase().getStatus();
             
@@ -116,7 +117,7 @@ public class CaseConsumer {
         String filingNumber = null;
         
         try {
-            CourtCase courtCase = objectMapper.readValue(payload.value().toString(), CourtCase.class);
+            CourtCase courtCase = objectMapper.convertValue(payload.value(), new TypeReference<CourtCase>() {});
             filingNumber = courtCase.getFilingNumber();
             
             log.info("Processing join case | filingNumber: {}", filingNumber);
@@ -166,7 +167,7 @@ public class CaseConsumer {
                 topic, messageId, payload.partition(), payload.offset());
         
         try {
-            CaseOutcome outcome = objectMapper.readValue(payload.value().toString(), CaseOutcome.class);
+            CaseOutcome outcome = objectMapper.convertValue(payload.value(), new TypeReference<CaseOutcome>() {});
             filingNumber = outcome.getOutcome().getFilingNumber();
             
             log.info("Processing case outcome | filingNumber: {}", filingNumber);
@@ -198,7 +199,7 @@ public class CaseConsumer {
                 topic, messageId, payload.partition(), payload.offset());
         
         try {
-            CaseStageSubStage overallStatus = objectMapper.readValue(payload.value().toString(), CaseStageSubStage.class);
+            CaseStageSubStage overallStatus = objectMapper.convertValue(payload.value(), new TypeReference<CaseStageSubStage>() {});
             filingNumber = overallStatus.getCaseOverallStatus().getFilingNumber();
             
             log.info("Processing case status update | filingNumber: {}", filingNumber);
@@ -229,7 +230,7 @@ public class CaseConsumer {
                 topic, messageId, payload.partition(), payload.offset());
 
         try {
-            CaseConversionRequest caseConversionRequest = objectMapper.readValue(payload.value().toString(), CaseConversionRequest.class);
+            CaseConversionRequest caseConversionRequest = objectMapper.convertValue(payload.value(), new TypeReference<CaseConversionRequest>() {});
             filingNumber = caseConversionRequest.getCaseConversionDetails().getFilingNumber();
             caseService.updateCaseConversionDetails(caseConversionRequest);
             log.info("Successfully processed case conversion | messageId: {} | filingNumber: {}", messageId, filingNumber);
