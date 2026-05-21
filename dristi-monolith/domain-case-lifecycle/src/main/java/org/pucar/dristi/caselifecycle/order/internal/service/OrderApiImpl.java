@@ -3,7 +3,7 @@ package org.pucar.dristi.caselifecycle.order.internal.service;
 import java.util.List;
 
 import org.egov.common.contract.response.ResponseInfo;
-import org.pucar.dristi.caselifecycle.order.OrderApi;
+import org.pucar.dristi.common.order.OrderApi;
 import org.pucar.dristi.common.contract.order.Order;
 import org.pucar.dristi.common.contract.order.OrderListResponse;
 import org.pucar.dristi.common.contract.order.OrderSearchRequest;

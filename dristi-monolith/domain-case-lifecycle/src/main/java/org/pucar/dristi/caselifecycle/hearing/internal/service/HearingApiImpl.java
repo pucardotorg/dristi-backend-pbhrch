@@ -1,7 +1,7 @@
 package org.pucar.dristi.caselifecycle.hearing.internal.service;
 
 import lombok.RequiredArgsConstructor;
-import org.pucar.dristi.caselifecycle.hearing.HearingApi;
+import org.pucar.dristi.common.hearing.HearingApi;
 import org.pucar.dristi.common.contract.hearing.Hearing;
 import org.pucar.dristi.common.contract.hearing.HearingRequest;
 import org.pucar.dristi.common.contract.hearing.HearingSearchRequest;

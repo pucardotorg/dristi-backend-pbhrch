@@ -1,4 +1,4 @@
-package org.pucar.dristi.caselifecycle.hearing;
+package org.pucar.dristi.common.hearing;
 
 import org.pucar.dristi.common.contract.hearing.Hearing;
 import org.pucar.dristi.common.contract.hearing.HearingRequest;
