@@ -260,13 +260,20 @@ SERVICE_DEAD_KEYS: dict[str, set[str]] = {
         "dristi.digitalized.documents.host",
         "dristi.digitalized.documents.search.endpoint",
         "dristi.ctc.search.endpoint",
-        # PR #101 review sweep: 21 legacy-boilerplate keys carried over
-        # from the source service's application.properties whose @Value
-        # bindings in casemanagement/Configuration.java had no consumer
-        # in caselifecycle/casemanagement/internal/. Distinct from the
-        # Rule 32 cutover keys above — these were dead pre-migration.
-        # User / Idgen / Workflow / HRMS / URL-shortener / SMS / filestore-
-        # delete / preview-index / mdms-kafka / delay-time.
+        # PR #101 review sweep: legacy-boilerplate keys carried over from
+        # the source service's application.properties whose @Value bindings
+        # in casemanagement/Configuration.java had no consumer in
+        # caselifecycle/casemanagement/internal/. Distinct from the Rule 32
+        # cutover keys above — these were dead pre-migration. User / Idgen /
+        # Workflow / HRMS / URL-shortener / SMS / filestore-delete /
+        # preview-index / delay-time.
+        #
+        # mdms.kafka.{save,update}.topic intentionally NOT listed — though
+        # the @Value-bound fields are unread, casemanagement/internal/kafka/
+        # Consumer.java's @KafkaListener references the property keys
+        # directly (`topics = {"${mdms.kafka.save.topic}", ...}`), so the
+        # YAML keys must stay live for Spring to resolve the placeholders
+        # at bean init.
         "egov.user.host",
         "egov.user.context.path",
         "egov.user.create.path",
@@ -285,8 +292,6 @@ SERVICE_DEAD_KEYS: dict[str, set[str]] = {
         "egov.sms.notification.topic",
         "dristi.file.delete.path",
         "dristi.preview.index",
-        "mdms.kafka.save.topic",
-        "mdms.kafka.update.topic",
         "casemanagement.delay.time",
     },
     # 73eef3e08 refactor(analytics): contract uplift + REST→direct calls
