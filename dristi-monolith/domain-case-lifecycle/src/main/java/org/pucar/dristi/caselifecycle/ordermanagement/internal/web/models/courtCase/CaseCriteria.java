@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.pucar.dristi.caselifecycle.ordermanagement.internal.web.models.Pagination;
+import org.pucar.dristi.common.contract.ordermanagement.Pagination;
 
 import java.util.List;
 

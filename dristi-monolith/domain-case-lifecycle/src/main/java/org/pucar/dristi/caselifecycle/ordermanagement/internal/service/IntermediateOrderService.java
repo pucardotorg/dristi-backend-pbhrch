@@ -4,7 +4,7 @@ package org.pucar.dristi.caselifecycle.ordermanagement.internal.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.pucar.dristi.caselifecycle.ordermanagement.internal.web.models.OrderRequest;
+import org.pucar.dristi.common.contract.ordermanagement.OrderRequest;
 import org.pucar.dristi.caselifecycle.ordermanagement.internal.web.models.adiary.CaseDiaryEntry;
 
 import java.util.List;

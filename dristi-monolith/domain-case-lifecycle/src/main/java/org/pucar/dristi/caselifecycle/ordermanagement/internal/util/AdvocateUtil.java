@@ -1,137 +1,51 @@
 package org.pucar.dristi.caselifecycle.ordermanagement.internal.util;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
-import org.pucar.dristi.caselifecycle.ordermanagement.internal.config.Configuration;
-import org.pucar.dristi.caselifecycle.ordermanagement.internal.web.models.advocate.Advocate;
-import org.pucar.dristi.caselifecycle.ordermanagement.internal.web.models.advocate.AdvocateListResponse;
-import org.pucar.dristi.caselifecycle.ordermanagement.internal.web.models.advocate.AdvocateSearchCriteria;
-import org.pucar.dristi.caselifecycle.ordermanagement.internal.web.models.advocate.AdvocateSearchRequest;
 import org.pucar.dristi.caselifecycle.ordermanagement.internal.web.models.courtCase.CourtCase;
 import org.pucar.dristi.caselifecycle.ordermanagement.internal.web.models.courtCase.Party;
+import org.pucar.dristi.common.contract.advocate.Advocate;
+import org.pucar.dristi.identityaccess.advocate.AdvocateApi;
 
 import java.util.*;
 import java.util.stream.Collectors;
-
-import static org.pucar.dristi.caselifecycle.ordermanagement.internal.config.ServiceConstants.ERROR_WHILE_FETCHING_FROM_ADVOCATE;
 
 @Component("ordermanagementAdvocateUtil")
 @Slf4j
 public class AdvocateUtil {
 
-    private final RestTemplate restTemplate;
-    private final ObjectMapper mapper;
-    private final Configuration configs;
+    private final AdvocateApi advocateApi;
     private final JsonUtil jsonUtil;
 
-
     @Autowired
-    public AdvocateUtil(RestTemplate restTemplate, ObjectMapper mapper, Configuration configs, JsonUtil jsonUtil) {
-        this.restTemplate = restTemplate;
-        this.mapper = mapper;
-        this.configs = configs;
+    public AdvocateUtil(AdvocateApi advocateApi, JsonUtil jsonUtil) {
+        this.advocateApi = advocateApi;
         this.jsonUtil = jsonUtil;
     }
 
-    public List<Advocate> fetchAdvocates(RequestInfo requestInfo, AdvocateSearchCriteria advocateSearchCriteria) {
-        StringBuilder uri = new StringBuilder();
-        uri.append(configs.getAdvocateHost()).append(configs.getAdvocateSearchEndPoint());
-
-        AdvocateSearchRequest advocateSearchRequest = new AdvocateSearchRequest();
-        advocateSearchRequest.setRequestInfo(requestInfo);
-
-        List<AdvocateSearchCriteria> criteriaList = new ArrayList<>();
-        criteriaList.add(advocateSearchCriteria);
-        advocateSearchRequest.setCriteria(criteriaList);
-
-        Object response;
-        AdvocateListResponse advocateResponse;
-        try {
-            response = restTemplate.postForObject(uri.toString(), advocateSearchRequest, Map.class);
-            advocateResponse = mapper.convertValue(response, AdvocateListResponse.class);
-            log.info("Advocate response :: {}", advocateResponse);
-        } catch (Exception e) {
-            log.error(ERROR_WHILE_FETCHING_FROM_ADVOCATE, e);
-            throw new CustomException(ERROR_WHILE_FETCHING_FROM_ADVOCATE, e.getMessage());
-        }
-
-        return advocateResponse.getAdvocates().get(0).getResponseList().stream().filter(Advocate::getIsActive).toList();
-
-    }
-
-    public List<Advocate> fetchAdvocatesById(RequestInfo requestInfo, String advocateId) {
-
-        AdvocateSearchCriteria advocateSearchCriteria = new AdvocateSearchCriteria();
-        advocateSearchCriteria.setId(advocateId);
-
-        return fetchAdvocates(requestInfo, advocateSearchCriteria);
-
-    }
-
-    public List<Advocate> fetchAdvocatesByIndividualId(RequestInfo requestInfo, String individualId) {
-
-        AdvocateSearchCriteria advocateSearchCriteria = new AdvocateSearchCriteria();
-        advocateSearchCriteria.setIndividualId(individualId);
-
-        return fetchAdvocates(requestInfo, advocateSearchCriteria);
-
-    }
-
-    public Boolean doesAdvocateExist(RequestInfo requestInfo, String advocateId) {
-
-        List<Advocate> list = fetchAdvocatesById(requestInfo, advocateId);
-
-        return !list.isEmpty();
-    }
-
+    /**
+     * Builds an advocate {@code individualId -> username} map for the
+     * supplied advocate ids via {@link AdvocateApi#searchAdvocatesById}.
+     * One direct call per id (in-process); active-filter applied per
+     * the legacy REST behaviour.
+     */
     public Map<String, String> getAdvocate(RequestInfo requestInfo, List<String> advocateIds) {
-        StringBuilder uri = new StringBuilder();
-        uri.append(configs.getAdvocateHost()).append(configs.getAdvocateSearchEndPoint());
-
-        AdvocateSearchRequest advocateSearchRequest = new AdvocateSearchRequest();
-        advocateSearchRequest.setRequestInfo(requestInfo);
-        List<AdvocateSearchCriteria> criteriaList = new ArrayList<>();
+        Map<String, String> map = new HashMap<>();
         for (String id : advocateIds) {
-            AdvocateSearchCriteria advocateSearchCriteria = new AdvocateSearchCriteria();
-            advocateSearchCriteria.setId(id);
-            criteriaList.add(advocateSearchCriteria);
-        }
-        advocateSearchRequest.setCriteria(criteriaList);
-        Object response;
-        AdvocateListResponse advocateResponse;
-        try {
-            response = restTemplate.postForObject(uri.toString(), advocateSearchRequest, Map.class);
-            advocateResponse = mapper.convertValue(response, AdvocateListResponse.class);
-            log.info("Advocate response :: {}", advocateResponse);
-        } catch (Exception e) {
-            log.error("ERROR_WHILE_FETCHING_FROM_ADVOCATE", e);
-            throw new CustomException("ERROR_WHILE_FETCHING_FROM_ADVOCATE", e.getMessage());
-        }
-        List<Advocate> list = new ArrayList<>();
-
-        advocateResponse.getAdvocates().forEach(advocate -> {
-            List<Advocate> activeAdvocates = advocate.getResponseList().stream()
+            List<Advocate> advocates = advocateApi.searchAdvocatesById(requestInfo, id).stream()
                     .filter(Advocate::getIsActive)
                     .toList();
-            list.addAll(activeAdvocates);
-        });
-
-        Map<String, String> map = new HashMap<>();
-
-        for (Advocate advocate : list) {
-            map.put(advocate.getIndividualId(), getUserName(advocate));
+            for (Advocate advocate : advocates) {
+                map.put(advocate.getIndividualId(), getUserName(advocate));
+            }
         }
-
         return map;
     }
 
-
     private String getUserName(Advocate advocate) {
+        @SuppressWarnings("unchecked")
         Map<String, Object> additionalDetails = (Map<String, Object>) advocate.getAdditionalDetails();
         return additionalDetails != null ? (String) additionalDetails.get("username") : null;
     }
@@ -167,6 +81,4 @@ public class AdvocateUtil {
     private String getUUIDFromAdditionalDetails(Object additionalDetails) {
         return jsonUtil.getNestedValue(additionalDetails, List.of("uuid"), String.class);
     }
-
-
 }

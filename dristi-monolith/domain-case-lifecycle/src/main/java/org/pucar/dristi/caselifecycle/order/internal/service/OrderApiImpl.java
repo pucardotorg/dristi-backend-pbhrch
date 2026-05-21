@@ -5,8 +5,12 @@ import java.util.List;
 import org.egov.common.contract.response.ResponseInfo;
 import org.pucar.dristi.caselifecycle.order.OrderApi;
 import org.pucar.dristi.common.contract.order.Order;
+import org.pucar.dristi.common.contract.order.OrderExists;
+import org.pucar.dristi.common.contract.order.OrderExistsRequest;
 import org.pucar.dristi.common.contract.order.OrderListResponse;
+import org.pucar.dristi.common.contract.order.OrderRequest;
 import org.pucar.dristi.common.contract.order.OrderSearchRequest;
+import org.pucar.dristi.common.contract.order.RemoveItemRequest;
 import org.pucar.dristi.common.util.ResponseInfoFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -39,5 +43,30 @@ public class OrderApiImpl implements OrderApi {
                 .pagination(request.getPagination())
                 .responseInfo(responseInfo)
                 .build();
+    }
+
+    @Override
+    public List<OrderExists> exists(OrderExistsRequest request) {
+        return orderRegistrationService.existsOrder(request);
+    }
+
+    @Override
+    public Order create(OrderRequest request) {
+        return orderRegistrationService.createOrder(request);
+    }
+
+    @Override
+    public Order update(OrderRequest request) {
+        return orderRegistrationService.updateOrder(request);
+    }
+
+    @Override
+    public Order addOrderItem(OrderRequest request) {
+        return orderRegistrationService.addItem(request);
+    }
+
+    @Override
+    public Order removeOrderItem(RemoveItemRequest request) {
+        return orderRegistrationService.removeItem(request);
     }
 }

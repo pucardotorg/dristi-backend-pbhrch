@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import org.pucar.dristi.caselifecycle.ordermanagement.internal.config.Configuration;
 import org.pucar.dristi.common.kafka.Producer;
 import org.pucar.dristi.common.repository.ServiceRequestRepository;
-import org.pucar.dristi.caselifecycle.ordermanagement.internal.web.models.SMSRequest;
+import org.pucar.dristi.common.contract.ordermanagement.SMSRequest;
 import org.pucar.dristi.caselifecycle.ordermanagement.internal.web.models.SMSTemplateData;
 
 import java.util.HashMap;

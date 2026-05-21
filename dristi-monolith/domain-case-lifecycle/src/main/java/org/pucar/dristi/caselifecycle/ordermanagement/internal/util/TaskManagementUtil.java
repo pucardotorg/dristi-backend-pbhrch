@@ -1,23 +1,18 @@
 package org.pucar.dristi.caselifecycle.ordermanagement.internal.util;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.Role;
 import org.egov.tracer.model.CustomException;
-import org.egov.tracer.model.ServiceCallException;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
 import org.pucar.dristi.caselifecycle.ordermanagement.internal.config.Configuration;
+import org.pucar.dristi.caselifecycle.taskmanagement.TaskmanagementApi;
 import org.pucar.dristi.common.kafka.Producer;
-import org.pucar.dristi.common.repository.ServiceRequestRepository;
-import org.pucar.dristi.common.util.DateUtil;
-import org.pucar.dristi.caselifecycle.ordermanagement.internal.web.models.Order;
+import org.pucar.dristi.common.contract.ordermanagement.Order;
 import org.pucar.dristi.common.models.workflow.WorkflowObject;
+import org.pucar.dristi.common.util.RequestInfoUtil;
 import org.pucar.dristi.caselifecycle.ordermanagement.internal.web.models.taskManagement.*;
 import org.pucar.dristi.caselifecycle.ordermanagement.internal.web.models.taskManagement.TaskSearchRequest;
 
@@ -29,14 +24,14 @@ import static org.pucar.dristi.caselifecycle.ordermanagement.internal.config.Ser
 @Slf4j
 public class TaskManagementUtil {
 
-    private final ServiceRequestRepository serviceRequestRepository;
+    private final TaskmanagementApi taskmanagementApi;
     private final ObjectMapper objectMapper;
     private final JsonUtil jsonUtil;
     private final Configuration config;
     private final Producer producer;
 
-    public TaskManagementUtil(RestTemplate restTemplate, ServiceRequestRepository serviceRequestRepository, ObjectMapper objectMapper, DateUtil dateUtil, JsonUtil jsonUtil, Configuration config, Producer producer) {
-        this.serviceRequestRepository = serviceRequestRepository;
+    public TaskManagementUtil(TaskmanagementApi taskmanagementApi, ObjectMapper objectMapper, JsonUtil jsonUtil, Configuration config, Producer producer) {
+        this.taskmanagementApi = taskmanagementApi;
         this.objectMapper = objectMapper;
         this.jsonUtil = jsonUtil;
         this.config = config;
@@ -44,20 +39,18 @@ public class TaskManagementUtil {
     }
 
     public List<TaskManagement> searchTaskManagement(TaskSearchRequest request) {
-        objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-        StringBuilder uri = new StringBuilder(config.getTaskManagementServiceHost())
-                .append(config.getTaskManagementSearchEndpoint());
-        Object response = serviceRequestRepository.fetchResult(uri, request);
         try {
-            TaskManagementSearchResponse searchResponse = objectMapper.convertValue(response, TaskManagementSearchResponse.class);
-            if (searchResponse != null && searchResponse.getTaskManagementRecords() != null) {
-                return searchResponse.getTaskManagementRecords();
-            } else {
+            org.pucar.dristi.caselifecycle.taskmanagement.internal.web.models.TaskSearchRequest bridgedRequest =
+                    objectMapper.convertValue(request,
+                            org.pucar.dristi.caselifecycle.taskmanagement.internal.web.models.TaskSearchRequest.class);
+            List<org.pucar.dristi.caselifecycle.taskmanagement.internal.web.models.TaskManagement> apiResult =
+                    taskmanagementApi.search(bridgedRequest);
+            if (apiResult == null) {
                 return Collections.emptyList();
             }
-        } catch (HttpClientErrorException e) {
-            log.error(EXTERNAL_SERVICE_EXCEPTION, e);
-            throw new ServiceCallException(e.getResponseBodyAsString());
+            return apiResult.stream()
+                    .map(tm -> objectMapper.convertValue(tm, TaskManagement.class))
+                    .toList();
         } catch (Exception e) {
             log.error(SEARCHER_SERVICE_EXCEPTION, e);
             throw new CustomException("TASK_SEARCH_ERROR", "Error occurred while fetching task management records");
@@ -65,22 +58,17 @@ public class TaskManagementUtil {
     }
 
     public TaskManagementResponse updateTaskManagement(TaskManagementRequest request) {
-
-        objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-        StringBuilder uri = new StringBuilder(config.getTaskManagementServiceHost()).append(config.getTaskManagementUpdateEndPoint());
-        Object response = serviceRequestRepository.fetchResult(uri, request);
-
         try {
-            JsonNode jsonNode = objectMapper.valueToTree(response);
-            return objectMapper.readValue(jsonNode.toString(), TaskManagementResponse.class);
-        } catch (HttpClientErrorException e) {
-            log.error(EXTERNAL_SERVICE_EXCEPTION, e);
-            throw new ServiceCallException(e.getResponseBodyAsString());
+            org.pucar.dristi.caselifecycle.taskmanagement.internal.web.models.TaskManagementRequest bridgedRequest =
+                    objectMapper.convertValue(request,
+                            org.pucar.dristi.caselifecycle.taskmanagement.internal.web.models.TaskManagementRequest.class);
+            org.pucar.dristi.caselifecycle.taskmanagement.internal.web.models.TaskManagementResponse apiResponse =
+                    taskmanagementApi.update(bridgedRequest);
+            return objectMapper.convertValue(apiResponse, TaskManagementResponse.class);
         } catch (Exception e) {
             log.error(SEARCHER_SERVICE_EXCEPTION, e);
-            throw new CustomException(); // add log and code
+            throw new CustomException("TASK_UPDATE_ERROR", "Error occurred while updating task management record");
         }
-
     }
 
 
@@ -500,10 +488,10 @@ public class TaskManagementUtil {
             taskManagement.setOrderItemId(getItemId(order));
 
             Role role = Role.builder().code(SYSTEM_ADMIN).name(SYSTEM_ADMIN).tenantId(taskManagement.getTenantId()).build();
-            requestInfo.getUserInfo().getRoles().add(role);
+            RequestInfo elevatedRequestInfo = RequestInfoUtil.withExtraRole(requestInfo, role);
 
             updateTaskManagement(TaskManagementRequest.builder()
-                    .requestInfo(requestInfo)
+                    .requestInfo(elevatedRequestInfo)
                     .taskManagement(taskManagement)
                     .build());
 

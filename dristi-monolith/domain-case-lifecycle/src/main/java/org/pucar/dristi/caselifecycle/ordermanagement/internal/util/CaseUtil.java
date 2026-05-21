@@ -1,70 +1,42 @@
 package org.pucar.dristi.caselifecycle.ordermanagement.internal.util;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.tracer.model.CustomException;
-import org.egov.tracer.model.ServiceCallException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
-import org.pucar.dristi.caselifecycle.ordermanagement.internal.config.Configuration;
-import org.pucar.dristi.common.repository.ServiceRequestRepository;
+import org.pucar.dristi.caselifecycle.cases.CaseApi;
 import org.pucar.dristi.caselifecycle.ordermanagement.internal.web.models.courtCase.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.pucar.dristi.caselifecycle.ordermanagement.internal.config.ServiceConstants.*;
+import static org.pucar.dristi.caselifecycle.ordermanagement.internal.config.ServiceConstants.ERROR_WHILE_FETCHING_FROM_CASE;
+import static org.pucar.dristi.caselifecycle.ordermanagement.internal.config.ServiceConstants.SEARCHER_SERVICE_EXCEPTION;
 
 @Component("ordermanagementCaseUtil")
 @Slf4j
 public class CaseUtil {
 
-    private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
-    private final Configuration configuration;
-    private final ServiceRequestRepository serviceRequestRepository;
+    private final CaseApi caseApi;
     private final CacheUtil cacheUtil;
 
     @Autowired
-    public CaseUtil(RestTemplate restTemplate, ObjectMapper objectMapper, Configuration configuration, ServiceRequestRepository serviceRequestRepository, CacheUtil cacheUtil) {
-        this.restTemplate = restTemplate;
+    public CaseUtil(ObjectMapper objectMapper, CaseApi caseApi, CacheUtil cacheUtil) {
         this.objectMapper = objectMapper;
-        this.configuration = configuration;
-        this.serviceRequestRepository = serviceRequestRepository;
+        this.caseApi = caseApi;
         this.cacheUtil = cacheUtil;
     }
 
-    public CaseExistsResponse existCaseSearch(CaseExistsRequest caseExistsRequest) {
-        StringBuilder uri = new StringBuilder();
-        uri.append(configuration.getCaseHost()).append(configuration.getCaseExistsEndPoint());
-
-        Object response = new HashMap<>();
-        CaseExistsResponse caseExistsResponse = new CaseExistsResponse();
-        try {
-            response = restTemplate.postForObject(uri.toString(), caseExistsRequest, Map.class);
-            caseExistsResponse = objectMapper.convertValue(response, CaseExistsResponse.class);
-        } catch (Exception e) {
-            log.error(ERROR_WHILE_FETCHING_FROM_CASE, e);
-            throw new CustomException(ERROR_WHILE_FETCHING_FROM_CASE, e.getMessage());
-
-        }
-        return caseExistsResponse;
-    }
-
     public CaseListResponse searchCaseDetails(CaseSearchRequest caseSearchRequest) {
-        StringBuilder uri = new StringBuilder();
-        uri.append(configuration.getCaseHost()).append(configuration.getCaseSearchEndPoint());
-
-        Object response;
         try {
-            response = restTemplate.postForObject(uri.toString(), caseSearchRequest, Map.class);
-            JsonNode jsonNode = objectMapper.readTree(objectMapper.writeValueAsString(response));
-            CaseListResponse caseListResponse = objectMapper.convertValue(jsonNode, CaseListResponse.class);
-            return caseListResponse;
+            org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseSearchRequest bridgedRequest =
+                    objectMapper.convertValue(caseSearchRequest,
+                            org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseSearchRequest.class);
+            org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseListResponse apiResponse =
+                    caseApi.search(bridgedRequest);
+            return objectMapper.convertValue(apiResponse, CaseListResponse.class);
         } catch (Exception e) {
             log.error(ERROR_WHILE_FETCHING_FROM_CASE, e);
             throw new CustomException(ERROR_WHILE_FETCHING_FROM_CASE, e.getMessage());
@@ -72,42 +44,37 @@ public class CaseUtil {
     }
 
     public List<CourtCase> getCaseDetailsForSingleTonCriteria(CaseSearchRequest caseSearchRequest) {
-
-        // add redis cache here based on filing number
-        Object courtCase = cacheUtil.findById(caseSearchRequest.getCriteria().get(0).getTenantId() + ":" + caseSearchRequest.getCriteria().get(0).getFilingNumber());
+        Object courtCase = cacheUtil.findById(
+                caseSearchRequest.getCriteria().get(0).getTenantId() + ":"
+                        + caseSearchRequest.getCriteria().get(0).getFilingNumber());
         if (courtCase != null) {
             return List.of(objectMapper.convertValue(courtCase, CourtCase.class));
         }
         CaseListResponse caseListResponse = searchCaseDetails(caseSearchRequest);
-        cacheUtil.save(caseListResponse.getCriteria().get(0).getTenantId() + ":" + caseListResponse.getCriteria().get(0).getFilingNumber(),
+        cacheUtil.save(caseListResponse.getCriteria().get(0).getTenantId() + ":"
+                        + caseListResponse.getCriteria().get(0).getFilingNumber(),
                 caseListResponse.getCriteria().get(0).getResponseList().get(0));
         return caseListResponse.getCriteria().get(0).getResponseList();
     }
 
 
     public CaseResponse updateCase(CaseRequest request) {
-
-        objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-        StringBuilder uri = new StringBuilder(configuration.getCaseHost()).append(configuration.getCaseUpdateEndPoint());
-        Object response = serviceRequestRepository.fetchResult(uri, request);
-
         try {
-            JsonNode jsonNode = objectMapper.valueToTree(response);
-            CaseResponse caseResponse = objectMapper.readValue(jsonNode.toString(), CaseResponse.class);
-            if (caseResponse != null) {
-                CourtCase courtCase = objectMapper.convertValue(caseResponse.getCases().get(0), CourtCase.class);
+            org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseRequest bridgedRequest =
+                    objectMapper.convertValue(request,
+                            org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseRequest.class);
+            org.pucar.dristi.caselifecycle.cases.internal.web.models.CourtCase apiResult =
+                    caseApi.update(bridgedRequest);
+            if (apiResult != null) {
+                CourtCase courtCase = objectMapper.convertValue(apiResult, CourtCase.class);
                 cacheUtil.save(courtCase.getTenantId() + ":" + courtCase.getFilingNumber(), courtCase);
+                return CaseResponse.builder().cases(List.of(courtCase)).build();
             }
-            return caseResponse;
-        } catch (HttpClientErrorException e) {
-            log.error(EXTERNAL_SERVICE_EXCEPTION, e);
-            throw new ServiceCallException(e.getResponseBodyAsString());
+            return CaseResponse.builder().build();
         } catch (Exception e) {
             log.error(SEARCHER_SERVICE_EXCEPTION, e);
-            throw new CustomException();  // write msg and code here
+            throw new CustomException();
         }
-
-
     }
 
     public List<Party> getRespondentOrComplainant(CourtCase caseDetails, String type) {
@@ -119,19 +86,20 @@ public class CaseUtil {
 
 
     public CaseResponse processProfileRequest(ProcessProfileRequest request) {
-        objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-        StringBuilder uri = new StringBuilder(configuration.getCaseHost()).append(configuration.getProcessProfileEndPoint());
-        Object response = serviceRequestRepository.fetchResult(uri, request);
-
         try {
-            JsonNode jsonNode = objectMapper.valueToTree(response);
-            return objectMapper.convertValue(jsonNode, CaseResponse.class);
-        } catch (HttpClientErrorException e) {
-            log.error(EXTERNAL_SERVICE_EXCEPTION, e);
-            throw new ServiceCallException(e.getResponseBodyAsString());
+            org.pucar.dristi.caselifecycle.cases.internal.web.models.ProcessProfileRequest bridgedRequest =
+                    objectMapper.convertValue(request,
+                            org.pucar.dristi.caselifecycle.cases.internal.web.models.ProcessProfileRequest.class);
+            org.pucar.dristi.caselifecycle.cases.internal.web.models.CourtCase apiResult =
+                    caseApi.processProfile(bridgedRequest);
+            if (apiResult != null) {
+                CourtCase courtCase = objectMapper.convertValue(apiResult, CourtCase.class);
+                return CaseResponse.builder().cases(List.of(courtCase)).build();
+            }
+            return CaseResponse.builder().build();
         } catch (Exception e) {
             log.error(SEARCHER_SERVICE_EXCEPTION, e);
-            throw new CustomException();  // write msg and code here
+            throw new CustomException();
         }
     }
 
@@ -159,13 +127,11 @@ public class CaseUtil {
     }
 
     public void addWitnessToCase(WitnessDetailsRequest witnessDetailsRequest) {
-        StringBuilder uri = new StringBuilder(configuration.getCaseHost()).append(configuration.getAddWitnessEndPoint());
-        Object response = serviceRequestRepository.fetchResult(uri, witnessDetailsRequest);
         try {
-            objectMapper.valueToTree(response);
-        } catch (HttpClientErrorException e) {
-            log.error(EXTERNAL_SERVICE_EXCEPTION, e);
-            throw new ServiceCallException(e.getResponseBodyAsString());
+            org.pucar.dristi.caselifecycle.cases.internal.web.models.v2.WitnessDetailsRequest bridgedRequest =
+                    objectMapper.convertValue(witnessDetailsRequest,
+                            org.pucar.dristi.caselifecycle.cases.internal.web.models.v2.WitnessDetailsRequest.class);
+            caseApi.addWitnessToCase(bridgedRequest);
         } catch (Exception e) {
             log.error(ERROR_WHILE_FETCHING_FROM_CASE, e);
             throw new CustomException(ERROR_WHILE_FETCHING_FROM_CASE, e.getMessage());
@@ -173,13 +139,11 @@ public class CaseUtil {
     }
 
     public void updateLprDetailsInCase(CaseRequest caseRequest) {
-        StringBuilder uri = new StringBuilder(configuration.getCaseHost()).append(configuration.getUpdateLprDetailsEndPoint());
-        Object response = serviceRequestRepository.fetchResult(uri, caseRequest);
         try {
-            objectMapper.valueToTree(response);
-        } catch (HttpClientErrorException e) {
-            log.error(EXTERNAL_SERVICE_EXCEPTION, e);
-            throw new ServiceCallException(e.getResponseBodyAsString());
+            org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseRequest bridgedRequest =
+                    objectMapper.convertValue(caseRequest,
+                            org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseRequest.class);
+            caseApi.updateLPRDetails(bridgedRequest);
         } catch (Exception e) {
             log.error(ERROR_WHILE_FETCHING_FROM_CASE, e);
             throw new CustomException(ERROR_WHILE_FETCHING_FROM_CASE, e.getMessage());

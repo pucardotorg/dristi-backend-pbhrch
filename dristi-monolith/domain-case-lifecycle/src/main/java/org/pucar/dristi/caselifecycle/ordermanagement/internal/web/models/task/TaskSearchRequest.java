@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.egov.common.contract.request.RequestInfo;
-import org.pucar.dristi.caselifecycle.ordermanagement.internal.web.models.Pagination;
+import org.pucar.dristi.common.contract.ordermanagement.Pagination;
 
 @Getter
 @Setter

@@ -3,18 +3,15 @@ package org.pucar.dristi.caselifecycle.ordermanagement.internal.util;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.model.CustomException;
 import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
+import org.pucar.dristi.caselifecycle.order.OrderApi;
 import org.pucar.dristi.caselifecycle.ordermanagement.internal.config.Configuration;
-import org.pucar.dristi.common.repository.ServiceRequestRepository;
-import org.pucar.dristi.caselifecycle.ordermanagement.internal.web.models.*;
+import org.pucar.dristi.common.contract.ordermanagement.*;
 
 import java.time.Instant;
 import java.time.ZoneId;
@@ -29,80 +26,78 @@ public class OrderUtil {
 
     private final Configuration configuration;
     private final ObjectMapper objectMapper;
-    private final ServiceRequestRepository serviceRequestRepository;
+    private final OrderApi orderApi;
     private final LocalizationUtil localizationUtil;
 
     @Autowired
-    public OrderUtil(RestTemplate restTemplate, ObjectMapper objectMapper, Configuration configuration, ServiceRequestRepository serviceRequestRepository, LocalizationUtil localizationUtil) {
+    public OrderUtil(ObjectMapper objectMapper, Configuration configuration, OrderApi orderApi, LocalizationUtil localizationUtil) {
         this.configuration = configuration;
         this.objectMapper = objectMapper;
-        this.serviceRequestRepository = serviceRequestRepository;
+        this.orderApi = orderApi;
         this.localizationUtil = localizationUtil;
     }
 
     public Boolean fetchOrderDetails(OrderExistsRequest orderExistsRequest) {
-        StringBuilder uri = new StringBuilder();
-        uri.append(configuration.getOrderHost()).append(configuration.getOrderExistsEndPoint());
-
-        Object response = new HashMap<>();
-        OrderExistsResponse orderExistsResponse;
         try {
-            response = serviceRequestRepository.fetchResult(uri, orderExistsRequest);
-            orderExistsResponse = objectMapper.convertValue(response, OrderExistsResponse.class);
+            org.pucar.dristi.common.contract.order.OrderExistsRequest bridgedRequest =
+                    objectMapper.convertValue(orderExistsRequest,
+                            org.pucar.dristi.common.contract.order.OrderExistsRequest.class);
+            List<org.pucar.dristi.common.contract.order.OrderExists> apiResult =
+                    orderApi.exists(bridgedRequest);
+            if (apiResult == null || apiResult.isEmpty()) {
+                return Boolean.FALSE;
+            }
+            return apiResult.get(0).getExists();
         } catch (Exception e) {
             log.error(ERROR_WHILE_FETCHING_FROM_ORDER, e);
             throw new CustomException(ERROR_WHILE_FETCHING_FROM_ORDER, e.getMessage());
-
         }
-        return orderExistsResponse.getOrder().get(0).getExists();
     }
 
     public OrderResponse updateOrder(OrderRequest orderRequest) {
-        StringBuilder uri = new StringBuilder();
-        uri.append(configuration.getOrderHost()).append(configuration.getOrderUpdateEndPoint());
-        Object response;
-        OrderResponse orderResponse;
         try {
-            response = serviceRequestRepository.fetchResult(uri, orderRequest);
-            orderResponse = objectMapper.convertValue(response, OrderResponse.class);
+            org.pucar.dristi.common.contract.order.OrderRequest bridgedRequest =
+                    objectMapper.convertValue(orderRequest,
+                            org.pucar.dristi.common.contract.order.OrderRequest.class);
+            org.pucar.dristi.common.contract.order.Order apiResult =
+                    orderApi.update(bridgedRequest);
+            return OrderResponse.builder()
+                    .order(objectMapper.convertValue(apiResult, Order.class))
+                    .build();
         } catch (Exception e) {
             log.error(ERROR_WHILE_FETCHING_FROM_ORDER, e);
             throw new CustomException(ERROR_WHILE_FETCHING_FROM_ORDER, e.getMessage());
-
         }
-        return orderResponse;
     }
 
     public OrderResponse createOrder(OrderRequest orderRequest) {
-        StringBuilder uri = new StringBuilder();
-        uri.append(configuration.getOrderHost()).append(configuration.getOrderCreateEndPoint());
-        Object response;
-        OrderResponse orderResponse;
         try {
-            response = serviceRequestRepository.fetchResult(uri, orderRequest);
-            orderResponse = objectMapper.convertValue(response, OrderResponse.class);
+            org.pucar.dristi.common.contract.order.OrderRequest bridgedRequest =
+                    objectMapper.convertValue(orderRequest,
+                            org.pucar.dristi.common.contract.order.OrderRequest.class);
+            org.pucar.dristi.common.contract.order.Order apiResult =
+                    orderApi.create(bridgedRequest);
+            return OrderResponse.builder()
+                    .order(objectMapper.convertValue(apiResult, Order.class))
+                    .build();
         } catch (Exception e) {
             log.error(ERROR_WHILE_FETCHING_FROM_ORDER, e);
             throw new CustomException(ERROR_WHILE_FETCHING_FROM_ORDER, e.getMessage());
-
         }
-        return orderResponse;
     }
 
     public OrderListResponse getOrders(OrderSearchRequest searchRequest) {
-        StringBuilder uri = new StringBuilder();
-        uri.append(configuration.getOrderHost()).append(configuration.getOrderSearchEndPoint());
-        Object response;
-        OrderListResponse orderListResponse;
         try {
-            response = serviceRequestRepository.fetchResult(uri, searchRequest);
-            orderListResponse = objectMapper.convertValue(response, OrderListResponse.class);
+            org.pucar.dristi.common.contract.order.OrderSearchRequest bridgedRequest =
+                    objectMapper.convertValue(searchRequest,
+                            org.pucar.dristi.common.contract.order.OrderSearchRequest.class);
+            org.pucar.dristi.common.contract.order.OrderListResponse apiResponse =
+                    orderApi.search(bridgedRequest);
+            return objectMapper.convertValue(apiResponse, OrderListResponse.class);
         } catch (Exception e) {
             log.error(ERROR_WHILE_FETCHING_FROM_ORDER, e);
             throw new CustomException(ERROR_WHILE_FETCHING_FROM_ORDER, e.getMessage());
-
         }
-        return orderListResponse;
     }
 
 
@@ -296,37 +291,19 @@ public class OrderUtil {
     }
 
 
-    public OrderResponse removeOrderItem(@Valid OrderRequest request) {
-
-        StringBuilder uri = new StringBuilder();
-        uri.append(configuration.getOrderHost()).append(configuration.getRemoveOrderItemEndPoint());
-        Object response;
-        OrderResponse orderResponse;
-        try {
-            response = serviceRequestRepository.fetchResult(uri, request);
-            orderResponse = objectMapper.convertValue(response, OrderResponse.class);
-        } catch (Exception e) {
-            log.error(ERROR_WHILE_FETCHING_FROM_ORDER, e);
-            throw new CustomException(ERROR_WHILE_FETCHING_FROM_ORDER, e.getMessage());
-
-        }
-        return orderResponse;
-    }
-
     public OrderResponse addOrderItem(@Valid OrderRequest request) {
-
-        StringBuilder uri = new StringBuilder();
-        uri.append(configuration.getOrderHost()).append(configuration.getAddOrderItemEndPoint());
-        Object response;
-        OrderResponse orderResponse;
         try {
-            response = serviceRequestRepository.fetchResult(uri, request);
-            orderResponse = objectMapper.convertValue(response, OrderResponse.class);
+            org.pucar.dristi.common.contract.order.OrderRequest bridgedRequest =
+                    objectMapper.convertValue(request,
+                            org.pucar.dristi.common.contract.order.OrderRequest.class);
+            org.pucar.dristi.common.contract.order.Order apiResult =
+                    orderApi.addOrderItem(bridgedRequest);
+            return OrderResponse.builder()
+                    .order(objectMapper.convertValue(apiResult, Order.class))
+                    .build();
         } catch (Exception e) {
             log.error(ERROR_WHILE_FETCHING_FROM_ORDER, e);
             throw new CustomException(ERROR_WHILE_FETCHING_FROM_ORDER, e.getMessage());
-
         }
-        return orderResponse;
     }
 }

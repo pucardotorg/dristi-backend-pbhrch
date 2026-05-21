@@ -2,21 +2,18 @@ package org.pucar.dristi.caselifecycle.ordermanagement.internal.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.egov.tracer.model.CustomException;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.pucar.dristi.caselifecycle.order.OrderApi;
 import org.pucar.dristi.caselifecycle.ordermanagement.internal.config.Configuration;
-import org.pucar.dristi.common.repository.ServiceRequestRepository;
-import org.pucar.dristi.caselifecycle.ordermanagement.internal.web.models.*;
-
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import org.pucar.dristi.common.contract.ordermanagement.OrderExistsRequest;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -25,31 +22,24 @@ class OrderUtilTest {
     @Mock
     private Configuration configuration;
 
-    @Mock
-    private ObjectMapper objectMapper;
+    @Spy
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     @Mock
-    private ServiceRequestRepository serviceRequestRepository;
+    private OrderApi orderApi;
+
+    @Mock
+    private LocalizationUtil localizationUtil;
 
     @InjectMocks
     private OrderUtil orderUtil;
 
-    @BeforeEach
-    void setUp() {
-        when(configuration.getOrderHost()).thenReturn("http://order-service");
-        when(configuration.getOrderExistsEndPoint()).thenReturn("/order/exists");
-        when(configuration.getOrderUpdateEndPoint()).thenReturn("/order/update");
-        when(configuration.getOrderSearchEndPoint()).thenReturn("/order/search");
-    }
-
     @Test
     void testFetchOrderDetails_Exception() {
         OrderExistsRequest request = new OrderExistsRequest();
-        String url = "http://order-service/order/exists";
-
-        when(serviceRequestRepository.fetchResult(new StringBuilder(url), request)).thenThrow(new RuntimeException("Service error"));
+        when(orderApi.exists(any(org.pucar.dristi.common.contract.order.OrderExistsRequest.class)))
+                .thenThrow(new RuntimeException("Service error"));
 
         assertThrows(CustomException.class, () -> orderUtil.fetchOrderDetails(request));
     }
-
 }

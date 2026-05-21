@@ -2,24 +2,15 @@ package org.pucar.dristi.caselifecycle.ordermanagement.internal.util;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.models.Document;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.model.CustomException;
-import org.egov.tracer.model.ServiceCallException;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
-import org.pucar.dristi.caselifecycle.ordermanagement.internal.config.Configuration;
-import org.pucar.dristi.common.repository.ServiceRequestRepository;
+import org.pucar.dristi.caselifecycle.task.TaskApi;
 import org.pucar.dristi.common.util.DateUtil;
-import org.pucar.dristi.caselifecycle.ordermanagement.internal.web.models.Order;
+import org.pucar.dristi.common.contract.ordermanagement.Order;
 import org.pucar.dristi.common.models.workflow.WorkflowObject;
 import org.pucar.dristi.caselifecycle.ordermanagement.internal.web.models.courtCase.CourtCase;
 import org.pucar.dristi.caselifecycle.ordermanagement.internal.web.models.task.*;
@@ -36,36 +27,27 @@ import static org.pucar.dristi.caselifecycle.ordermanagement.internal.config.Ser
 @Slf4j
 public class TaskUtil {
 
-    private final RestTemplate restTemplate;
-    private final ServiceRequestRepository serviceRequestRepository;
+    private final TaskApi taskApi;
     private final ObjectMapper objectMapper;
     private final DateUtil dateUtil;
     private final JsonUtil jsonUtil;
-    private final Configuration config;
 
-    public TaskUtil(RestTemplate restTemplate, ServiceRequestRepository serviceRequestRepository, ObjectMapper objectMapper, DateUtil dateUtil, JsonUtil jsonUtil, Configuration config) {
-        this.restTemplate = restTemplate;
-        this.serviceRequestRepository = serviceRequestRepository;
+    public TaskUtil(TaskApi taskApi, ObjectMapper objectMapper, DateUtil dateUtil, JsonUtil jsonUtil) {
+        this.taskApi = taskApi;
         this.objectMapper = objectMapper;
         this.dateUtil = dateUtil;
         this.jsonUtil = jsonUtil;
-        this.config = config;
     }
 
     public TaskResponse callCreateTask(TaskRequest taskRequest) {
         try {
-            StringBuilder uri = new StringBuilder();
-            uri.append(config.getTaskServiceHost()).append(config.getTaskServiceCreateEndpoint());
-
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
-            HttpEntity<TaskRequest> requestEntity = new HttpEntity<>(taskRequest, headers);
-
-            ResponseEntity<TaskResponse> responseEntity = restTemplate.postForEntity(uri.toString(),
-                    requestEntity, TaskResponse.class);
-            log.info("Response of create task :: {}", requestEntity.getBody());
-
-            return responseEntity.getBody();
+            org.pucar.dristi.common.contract.task.TaskRequest bridgedRequest =
+                    objectMapper.convertValue(taskRequest,
+                            org.pucar.dristi.common.contract.task.TaskRequest.class);
+            org.pucar.dristi.common.contract.task.Task apiResult = taskApi.create(bridgedRequest);
+            return TaskResponse.builder()
+                    .task(objectMapper.convertValue(apiResult, Task.class))
+                    .build();
         } catch (Exception e) {
             log.error("Error getting response from Task Service", e);
             throw new CustomException("TASK_CREATE_ERROR", "Error getting response from task Service");
@@ -73,41 +55,38 @@ public class TaskUtil {
     }
 
     public TaskListResponse searchTask(TaskSearchRequest request) {
-
-        objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-        StringBuilder uri = new StringBuilder(config.getTaskServiceHost()).append(config.getTaskSearchEndpoint());
-        Object response = serviceRequestRepository.fetchResult(uri, request);
-
         try {
-            JsonNode jsonNode = objectMapper.valueToTree(response);
-            return objectMapper.readValue(jsonNode.toString(), TaskListResponse.class);
-        } catch (HttpClientErrorException e) {
-            log.error(EXTERNAL_SERVICE_EXCEPTION, e);
-            throw new ServiceCallException(e.getResponseBodyAsString());
+            org.pucar.dristi.common.contract.task.TaskSearchRequest bridgedRequest =
+                    objectMapper.convertValue(request,
+                            org.pucar.dristi.common.contract.task.TaskSearchRequest.class);
+            List<org.pucar.dristi.common.contract.task.Task> apiResult = taskApi.search(bridgedRequest);
+            List<Task> tasks = apiResult == null ? Collections.emptyList() :
+                    apiResult.stream()
+                            .map(t -> objectMapper.convertValue(t, Task.class))
+                            .toList();
+            return TaskListResponse.builder()
+                    .list(tasks)
+                    .totalCount(tasks.size())
+                    .build();
         } catch (Exception e) {
             log.error(SEARCHER_SERVICE_EXCEPTION, e);
-            throw new CustomException(); // add log and code
+            throw new CustomException();
         }
-
     }
 
     public TaskResponse updateTask(TaskRequest request) {
-
-        objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-        StringBuilder uri = new StringBuilder(config.getTaskServiceHost()).append(config.getTaskUpdateEndPoint());
-        Object response = serviceRequestRepository.fetchResult(uri, request);
-
         try {
-            JsonNode jsonNode = objectMapper.valueToTree(response);
-            return objectMapper.readValue(jsonNode.toString(), TaskResponse.class);
-        } catch (HttpClientErrorException e) {
-            log.error(EXTERNAL_SERVICE_EXCEPTION, e);
-            throw new ServiceCallException(e.getResponseBodyAsString());
+            org.pucar.dristi.common.contract.task.TaskRequest bridgedRequest =
+                    objectMapper.convertValue(request,
+                            org.pucar.dristi.common.contract.task.TaskRequest.class);
+            org.pucar.dristi.common.contract.task.Task apiResult = taskApi.update(bridgedRequest);
+            return TaskResponse.builder()
+                    .task(objectMapper.convertValue(apiResult, Task.class))
+                    .build();
         } catch (Exception e) {
             log.error(SEARCHER_SERVICE_EXCEPTION, e);
-            throw new CustomException(); // add log and code
+            throw new CustomException();
         }
-
     }
 
 
@@ -173,7 +152,7 @@ public class TaskUtil {
      * If hasUpfrontPayment is true, uses CREATE action (requires payment).
      * If hasUpfrontPayment is false, uses CREATE_WITH_OUT_PAYMENT action.
      */
-    public TaskRequest createWarrantTaskRequest(RequestInfo requestInfo, Order order, Object taskDetails, 
+    public TaskRequest createWarrantTaskRequest(RequestInfo requestInfo, Order order, Object taskDetails,
                                                  CourtCase courtCase, String channel, boolean hasUpfrontPayment) {
 
         String itemId = jsonUtil.getNestedValue(order.getAdditionalDetails(), List.of("itemId"), String.class);
@@ -185,7 +164,7 @@ public class TaskUtil {
 
         WorkflowObject workflowObject = new WorkflowObject();
         JsonNode taskDetailsNode = objectMapper.convertValue(taskDetails, JsonNode.class);
-        
+
         // Determine workflow action based on upfront payment status
         // hasUpfrontPayment=true means payment was done upfront, so no payment required now
         // hasUpfrontPayment=false means no upfront payment found, so payment is required
@@ -259,4 +238,3 @@ public class TaskUtil {
                 : nameWithDesignation;
     }
 }
-

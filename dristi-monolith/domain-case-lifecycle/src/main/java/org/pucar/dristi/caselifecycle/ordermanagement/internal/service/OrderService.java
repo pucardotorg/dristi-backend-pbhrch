@@ -19,6 +19,7 @@ import org.pucar.dristi.common.util.DateUtil;
 import org.pucar.dristi.caselifecycle.ordermanagement.internal.util.HearingUtil;
 import org.pucar.dristi.caselifecycle.ordermanagement.internal.util.OrderUtil;
 import org.pucar.dristi.caselifecycle.ordermanagement.internal.web.models.*;
+import org.pucar.dristi.common.contract.ordermanagement.*;
 import org.pucar.dristi.caselifecycle.ordermanagement.internal.web.models.adiary.BulkDiaryEntryRequest;
 import org.pucar.dristi.caselifecycle.ordermanagement.internal.web.models.adiary.CaseDiaryEntry;
 import org.pucar.dristi.caselifecycle.ordermanagement.internal.web.models.courtCase.CaseCriteria;

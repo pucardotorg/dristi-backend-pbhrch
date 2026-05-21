@@ -1,21 +1,18 @@
 package org.pucar.dristi.caselifecycle.ordermanagement.internal.util;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.tracer.model.CustomException;
-import org.egov.tracer.model.ServiceCallException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.HttpClientErrorException;
-import org.pucar.dristi.caselifecycle.ordermanagement.internal.config.Configuration;
-import org.pucar.dristi.common.repository.ServiceRequestRepository;
+import org.pucar.dristi.caselifecycle.abdiary.AbdiaryApi;
 import org.pucar.dristi.caselifecycle.ordermanagement.internal.web.models.adiary.BulkDiaryEntryRequest;
 import org.pucar.dristi.caselifecycle.ordermanagement.internal.web.models.adiary.BulkDiaryEntryResponse;
+import org.pucar.dristi.caselifecycle.ordermanagement.internal.web.models.adiary.CaseDiaryEntry;
 
+import java.util.Collections;
+import java.util.List;
 
-import static org.pucar.dristi.caselifecycle.ordermanagement.internal.config.ServiceConstants.EXTERNAL_SERVICE_EXCEPTION;
 import static org.pucar.dristi.caselifecycle.ordermanagement.internal.config.ServiceConstants.SEARCHER_SERVICE_EXCEPTION;
 
 @Component("ordermanagementADiaryUtil")
@@ -23,32 +20,31 @@ import static org.pucar.dristi.caselifecycle.ordermanagement.internal.config.Ser
 public class ADiaryUtil {
 
     private final ObjectMapper objectMapper;
-    private final Configuration configuration;
-    private final ServiceRequestRepository serviceRequestRepository;
+    private final AbdiaryApi abdiaryApi;
 
     @Autowired
-    public ADiaryUtil(ObjectMapper objectMapper, Configuration configuration, ServiceRequestRepository serviceRequestRepository) {
+    public ADiaryUtil(ObjectMapper objectMapper, AbdiaryApi abdiaryApi) {
         this.objectMapper = objectMapper;
-        this.configuration = configuration;
-        this.serviceRequestRepository = serviceRequestRepository;
+        this.abdiaryApi = abdiaryApi;
     }
 
     public BulkDiaryEntryResponse createBulkADiaryEntry(BulkDiaryEntryRequest request) {
-
-        objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-        StringBuilder uri = new StringBuilder(configuration.getADiaryHost()).append(configuration.getADiaryCreateBulkEndPoint());
-        Object response = serviceRequestRepository.fetchResult(uri, request);
-
         try {
-            JsonNode jsonNode = objectMapper.valueToTree(response);
-            return objectMapper.readValue(jsonNode.toString(), BulkDiaryEntryResponse.class);
-        } catch (HttpClientErrorException e) {
-            log.error(EXTERNAL_SERVICE_EXCEPTION, e);
-            throw new ServiceCallException(e.getResponseBodyAsString());
+            org.pucar.dristi.common.contract.abdiary.BulkDiaryEntryRequest bridgedRequest =
+                    objectMapper.convertValue(request,
+                            org.pucar.dristi.common.contract.abdiary.BulkDiaryEntryRequest.class);
+            List<org.pucar.dristi.common.contract.abdiary.CaseDiaryEntry> apiResult =
+                    abdiaryApi.createBulkDiaryEntries(bridgedRequest);
+            List<CaseDiaryEntry> bridgedResult = apiResult == null ? Collections.emptyList() :
+                    apiResult.stream()
+                            .map(entry -> objectMapper.convertValue(entry, CaseDiaryEntry.class))
+                            .toList();
+            return BulkDiaryEntryResponse.builder()
+                    .caseDiaryEntries(bridgedResult)
+                    .build();
         } catch (Exception e) {
             log.error(SEARCHER_SERVICE_EXCEPTION, e);
-            throw new CustomException(); // add log and code
+            throw new CustomException();
         }
-
     }
 }

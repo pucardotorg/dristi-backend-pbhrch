@@ -6,6 +6,9 @@ import org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseListResponse
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseRequest;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseSearchRequest;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.CourtCase;
+import org.pucar.dristi.caselifecycle.cases.internal.web.models.ProcessProfileRequest;
+import org.pucar.dristi.caselifecycle.cases.internal.web.models.v2.WitnessDetailsRequest;
+import org.pucar.dristi.caselifecycle.cases.internal.web.models.v2.WitnessDetailsResponse;
 
 /**
  * Public, cross-subdomain API of the cases subdomain. Other modules
@@ -45,4 +48,29 @@ public interface CaseApi {
      * {@link CourtCase} is the decrypted post-edit state.
      */
     CourtCase edit(CaseRequest request);
+
+    /**
+     * Workflow-driven update — mirrors the {@code /case/v1/_update} REST
+     * endpoint. Used by order-management when an order resolution mutates
+     * the parent case (status transitions, assignment changes, etc.).
+     */
+    CourtCase update(CaseRequest request);
+
+    /**
+     * Profile-change request — mirrors the {@code /case/v2/profilerequest/process}
+     * REST endpoint. Used to apply a pending profile change to the case.
+     */
+    CourtCase processProfile(ProcessProfileRequest request);
+
+    /**
+     * Adds witness details to a case — mirrors the
+     * {@code /case/v2/add/witness} REST endpoint.
+     */
+    WitnessDetailsResponse addWitnessToCase(WitnessDetailsRequest request);
+
+    /**
+     * Updates LPR (long-pending-register) details — mirrors the
+     * {@code /case/v1/_updateLPRDetails} REST endpoint.
+     */
+    CourtCase updateLPRDetails(CaseRequest request);
 }

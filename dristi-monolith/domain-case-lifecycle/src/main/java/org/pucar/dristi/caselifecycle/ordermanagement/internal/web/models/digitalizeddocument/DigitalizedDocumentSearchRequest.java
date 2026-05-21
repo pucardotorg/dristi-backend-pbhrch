@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import org.egov.common.contract.request.RequestInfo;
 import org.springframework.validation.annotation.Validated;
 
+import org.pucar.dristi.common.contract.ordermanagement.Pagination;
 /**
  * DigitalizedDocumentSearchRequest
  */

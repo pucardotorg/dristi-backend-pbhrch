@@ -220,6 +220,64 @@ SERVICE_DEAD_KEYS: dict[str, set[str]] = {
         "dristi.advocate.search.endpoint",
         "dristi.advocate.clerk.search.endpoint",
     },
+    # order-management C2: ordermanagement now reads AdvocateApi /
+    # ApplicationApi / CaseApi / HearingApi / TaskApi / TaskmanagementApi /
+    # EsignApi / AbdiaryApi directly (Rule 32). No @Value consumers remain
+    # in caselifecycle/ordermanagement/internal/ for these REST host /
+    # endpoint keys. The platform-side keys (egov.hrms.*, egov.user.*,
+    # egov.url.shortner.*, egov.base.url, domain.url,
+    # egov.localization.context.path) were never read by ordermanagement
+    # to begin with — dropping from this service's overlay only.
+    # `dristi.hearing.{host,update.endpoint,create.endpoint,summary.update.endpoint}`
+    # stay live: HearingUtil.createOrUpdateHearing still uses them as a
+    # URI-string discriminator (Rule 38 refactor follow-up).
+    "order-management": {
+        "dristi.filestore.search.endpoint",
+        "dristi.filestore.delete.endpoint",
+        "dristi.filestore.exists.endpoint",
+        "dristi.order.host",
+        "dristi.order.exists.endpoint",
+        "dristi.order.update.endpoint",
+        "dristi.order.search.endpoint",
+        "dristi.order.create.endpoint",
+        "dristi.order.add.item.endpoint",
+        "dristi.order.remove.item.endpoint",
+        "dristi.esign.host",
+        "dristi.esign.location.endpoint",
+        "dristi.advocate.host",
+        "dristi.advocate.search.endpoint",
+        "dristi.task-management.host",
+        "dristi.task-management.create.endpoint",
+        "dristi.task-management.search.endpoint",
+        "dristi.task-management.update.endpoint",
+        "dristi.task.host",
+        "dristi.task.create.endpoint",
+        "dristi.task.search.endpoint",
+        "dristi.task.update.endpoint",
+        "dristi.application.host",
+        "dristi.application.exists.endpoint",
+        "dristi.application.search.endpoint",
+        "dristi.application.update.endpoint",
+        "dristi.case.host",
+        "dristi.case.exists.endpoint",
+        "dristi.case.search.endpoint",
+        "dristi.case.update.endpoint",
+        "dristi.case.update.lpr.details.endpoint",
+        "dristi.case.process.profile.endpoint",
+        "dristi.case.add.witness.endpoint",
+        "dristi.hearing.search.endpoint",
+        "dristi.adiary.host",
+        "dristi.adiary.create.bulk",
+        "egov.hrms.host",
+        "egov.hrms.search.endpoint",
+        "egov.user.host",
+        "egov.user.search.path",
+        "egov.url.shortner.host",
+        "egov.url.shortner.endpoint",
+        "egov.base.url",
+        "domain.url",
+        "egov.localization.context.path",
+    },
 }
 
 # Two-source-into-one-subdomain (e-sign-svc + esign-interceptor): the

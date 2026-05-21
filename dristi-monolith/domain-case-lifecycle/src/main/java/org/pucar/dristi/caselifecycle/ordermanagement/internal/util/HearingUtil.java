@@ -1,21 +1,17 @@
 package org.pucar.dristi.caselifecycle.ordermanagement.internal.util;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.model.CustomException;
-import org.egov.tracer.model.ServiceCallException;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.HttpClientErrorException;
+import org.pucar.dristi.caselifecycle.hearing.HearingApi;
 import org.pucar.dristi.caselifecycle.ordermanagement.internal.config.Configuration;
-import org.pucar.dristi.common.repository.ServiceRequestRepository;
 import org.pucar.dristi.common.util.DateUtil;
-import org.pucar.dristi.caselifecycle.ordermanagement.internal.web.models.Order;
-import org.pucar.dristi.caselifecycle.ordermanagement.internal.web.models.OrderRequest;
+import org.pucar.dristi.common.contract.ordermanagement.Order;
+import org.pucar.dristi.common.contract.ordermanagement.OrderRequest;
 import org.pucar.dristi.caselifecycle.ordermanagement.internal.web.models.OrderStatus;
 import org.pucar.dristi.common.models.workflow.WorkflowObject;
 import org.pucar.dristi.caselifecycle.ordermanagement.internal.web.models.courtCase.AdvocateMapping;
@@ -39,7 +35,7 @@ public class HearingUtil {
 
     private final ObjectMapper objectMapper;
     private final Configuration configuration;
-    private final ServiceRequestRepository serviceRequestRepository;
+    private final HearingApi hearingApi;
     private final AdvocateUtil advocateUtil;
     private final CacheUtil cacheUtil;
     private final JsonUtil jsonUtil;
@@ -50,10 +46,10 @@ public class HearingUtil {
     private final EsUtil esUtil;
     private final PendingTaskUtil pendingTaskUtil;
 
-    public HearingUtil(ObjectMapper objectMapper, Configuration configuration, ServiceRequestRepository serviceRequestRepository, AdvocateUtil advocateUtil, CacheUtil cacheUtil, JsonUtil jsonUtil, DateUtil dateUtil, CaseUtil caseUtil, OrderUtil orderUtil, InboxUtil inboxUtil, EsUtil esUtil, PendingTaskUtil pendingTaskUtil) {
+    public HearingUtil(ObjectMapper objectMapper, Configuration configuration, HearingApi hearingApi, AdvocateUtil advocateUtil, CacheUtil cacheUtil, JsonUtil jsonUtil, DateUtil dateUtil, CaseUtil caseUtil, OrderUtil orderUtil, InboxUtil inboxUtil, EsUtil esUtil, PendingTaskUtil pendingTaskUtil) {
         this.objectMapper = objectMapper;
         this.configuration = configuration;
-        this.serviceRequestRepository = serviceRequestRepository;
+        this.hearingApi = hearingApi;
         this.advocateUtil = advocateUtil;
         this.cacheUtil = cacheUtil;
         this.jsonUtil = jsonUtil;
@@ -67,49 +63,58 @@ public class HearingUtil {
 
 
     public List<Hearing> fetchHearing(HearingSearchRequest request) {
-        objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-        StringBuilder uri = new StringBuilder(configuration.getHearingHost().concat(configuration.getHearingSearchEndPoint()));
-
         Object redisResponse = cacheUtil.findById(request.getCriteria().getTenantId() + ":" + request.getCriteria().getHearingId());
         if (redisResponse != null) {
             return List.of(objectMapper.convertValue(redisResponse, Hearing.class));
         }
-        Object response = serviceRequestRepository.fetchResult(uri, request);
-        List<Hearing> hearingList = null;
         try {
-            JsonNode jsonNode = objectMapper.valueToTree(response);
-            JsonNode hearingListNode = jsonNode.get("HearingList");
-            hearingList = objectMapper.readValue(hearingListNode.toString(), new TypeReference<>() {
-            });
+            org.pucar.dristi.common.contract.hearing.HearingSearchRequest bridgedRequest =
+                    objectMapper.convertValue(request,
+                            org.pucar.dristi.common.contract.hearing.HearingSearchRequest.class);
+            List<org.pucar.dristi.common.contract.hearing.Hearing> apiResult =
+                    hearingApi.search(bridgedRequest);
+            if (apiResult == null || apiResult.isEmpty()) {
+                return Collections.emptyList();
+            }
+            List<Hearing> hearingList = apiResult.stream()
+                    .map(h -> objectMapper.convertValue(h, Hearing.class))
+                    .toList();
             cacheUtil.save(hearingList.get(0).getTenantId() + ":" + hearingList.get(0).getHearingId(), hearingList.get(0));
-        } catch (HttpClientErrorException e) {
-            log.error(EXTERNAL_SERVICE_EXCEPTION, e);
-            throw new ServiceCallException(e.getResponseBodyAsString());
+            return hearingList;
         } catch (Exception e) {
             log.error(SEARCHER_SERVICE_EXCEPTION, e);
+            return Collections.emptyList();
         }
-        return hearingList;
     }
 
     public HearingResponse createOrUpdateHearing(HearingRequest request, StringBuilder uri) {
-
         log.info("type of request {}", uri);
-
-        objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-        Object response = serviceRequestRepository.fetchResult(uri, request);
         try {
-            JsonNode jsonNode = objectMapper.valueToTree(response);
-            HearingResponse hearingResponse = objectMapper.readValue(jsonNode.toString(), HearingResponse.class);
-            cacheUtil.save(hearingResponse.getHearing().getTenantId() + ":" + hearingResponse.getHearing().getHearingId(), hearingResponse.getHearing());
+            org.pucar.dristi.common.contract.hearing.HearingRequest bridgedRequest =
+                    objectMapper.convertValue(request,
+                            org.pucar.dristi.common.contract.hearing.HearingRequest.class);
+            String uriStr = uri == null ? "" : uri.toString();
+            Hearing resultHearing;
+            if (uriStr.contains(configuration.getHearingCreateEndPoint())) {
+                org.pucar.dristi.common.contract.hearing.Hearing apiResult = hearingApi.createHearing(bridgedRequest);
+                resultHearing = objectMapper.convertValue(apiResult, Hearing.class);
+            } else if (uriStr.contains(configuration.getUpdateHearingSummaryEndPoint())) {
+                // transcript / additional-attendees endpoint — void return
+                hearingApi.update(bridgedRequest);
+                resultHearing = request.getHearing();
+            } else {
+                org.pucar.dristi.common.contract.hearing.Hearing apiResult = hearingApi.updateHearing(bridgedRequest);
+                resultHearing = objectMapper.convertValue(apiResult, Hearing.class);
+            }
+            HearingResponse hearingResponse = HearingResponse.builder().hearing(resultHearing).build();
+            if (resultHearing != null && resultHearing.getHearingId() != null) {
+                cacheUtil.save(resultHearing.getTenantId() + ":" + resultHearing.getHearingId(), resultHearing);
+            }
             return hearingResponse;
-        } catch (HttpClientErrorException e) {
-            log.error(EXTERNAL_SERVICE_EXCEPTION, e);
-            throw new ServiceCallException(e.getResponseBodyAsString());
         } catch (Exception e) {
             log.error(SEARCHER_SERVICE_EXCEPTION, e);
-            throw new CustomException();  // write msg and code here
+            throw new CustomException();
         }
-
     }
 
     public String getHearingTypeFromAdditionalDetails(Object additionalDetails) {

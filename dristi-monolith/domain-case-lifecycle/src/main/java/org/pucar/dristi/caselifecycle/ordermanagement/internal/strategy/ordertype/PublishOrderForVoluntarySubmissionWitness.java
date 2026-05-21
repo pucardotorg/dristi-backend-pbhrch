@@ -12,8 +12,8 @@ import org.pucar.dristi.caselifecycle.ordermanagement.internal.util.ApplicationU
 import org.pucar.dristi.caselifecycle.ordermanagement.internal.util.CaseUtil;
 import org.pucar.dristi.caselifecycle.ordermanagement.internal.util.JsonUtil;
 import org.pucar.dristi.caselifecycle.ordermanagement.internal.util.OrderUtil;
-import org.pucar.dristi.caselifecycle.ordermanagement.internal.web.models.Order;
-import org.pucar.dristi.caselifecycle.ordermanagement.internal.web.models.OrderRequest;
+import org.pucar.dristi.common.contract.ordermanagement.Order;
+import org.pucar.dristi.common.contract.ordermanagement.OrderRequest;
 import org.pucar.dristi.caselifecycle.ordermanagement.internal.web.models.adiary.CaseDiaryEntry;
 import org.pucar.dristi.caselifecycle.ordermanagement.internal.web.models.application.Application;
 import org.pucar.dristi.caselifecycle.ordermanagement.internal.web.models.application.ApplicationCriteria;

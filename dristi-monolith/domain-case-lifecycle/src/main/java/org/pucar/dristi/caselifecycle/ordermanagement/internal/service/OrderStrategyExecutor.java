@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.util.ObjectUtils;
 import org.springframework.stereotype.Service;
 import org.pucar.dristi.caselifecycle.ordermanagement.internal.strategy.OrderUpdateStrategy;
-import org.pucar.dristi.caselifecycle.ordermanagement.internal.web.models.OrderRequest;
+import org.pucar.dristi.common.contract.ordermanagement.OrderRequest;
 import org.pucar.dristi.caselifecycle.ordermanagement.internal.web.models.adiary.CaseDiaryEntry;
 
 import java.util.ArrayList;

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 import org.pucar.dristi.common.models.individual.Individual;
+import org.pucar.dristi.common.contract.ordermanagement.Order;
 @Component("ordermanagementConfiguration")
 @Data
 @Import({TracerConfiguration.class})
@@ -25,120 +26,15 @@ public class Configuration {
     @Value("${dristi.filestore.save.endpoint}")
     private String fileStoreSaveEndPoint;
 
-
-    @Value("${dristi.filestore.search.endpoint}")
-    private String fileStoreSearchEndpoint;
-
-    @Value("${dristi.filestore.delete.endpoint}")
-    private String fileStoreDeleteEndPoint;
-
-    // Order Config
-    @Value("${dristi.order.host}")
-    private String orderHost;
-
-    @Value("${dristi.order.add.item.endpoint}")
-    private String addOrderItemEndPoint;
-
-    @Value("${dristi.order.remove.item.endpoint}")
-    private String removeOrderItemEndPoint;
-
-    @Value("${dristi.order.exists.endpoint}")
-    private String orderExistsEndPoint;
-
-    @Value("${dristi.order.update.endpoint}")
-    private String orderUpdateEndPoint;
-
-    @Value("${dristi.order.search.endpoint}")
-    private String orderSearchEndPoint;
-
-    @Value("${dristi.order.create.endpoint}")
-    private String orderCreateEndPoint;
-
-    // ESign Config
-    @Value("${dristi.esign.host}")
-    private String esignHost;
-
-    @Value("${dristi.esign.location.endpoint}")
-    private String esignLocationEndPoint;
-
+    // ESign Config (signature dimensions only — host/endpoint reached via EsignApi)
     @Value("${dristi.esign.signature.width:250}")
     private int esignSignatureWidth;
 
     @Value("${dristi.esign.signature.height:50}")
     private int esignSignatureHeight;
 
-
-    // Advocate Config
-    @Value("${dristi.advocate.host}")
-    private String advocateHost;
-
-    @Value("${dristi.advocate.search.endpoint}")
-    private String advocateSearchEndPoint;
-
-
-    // Task Config
-    @Value("${dristi.task-management.host}")
-    private String taskManagementServiceHost;
-
-    @Value("${dristi.task-management.create.endpoint}")
-    private String taskManagementServiceCreateEndpoint;
-
-    @Value("${dristi.task-management.search.endpoint}")
-    private String taskManagementSearchEndpoint;
-
-    @Value("${dristi.task-management.update.endpoint}")
-    private String taskManagementUpdateEndPoint;
-
-    // Task Config
-    @Value("${dristi.task.host}")
-    private String taskServiceHost;
-
-    @Value("${dristi.task.create.endpoint}")
-    private String taskServiceCreateEndpoint;
-
-    @Value("${dristi.task.search.endpoint}")
-    private String taskSearchEndpoint;
-
-    @Value("${dristi.task.update.endpoint}")
-    private String taskUpdateEndPoint;
-
-    // Application Config
-    @Value("${dristi.application.host}")
-    private String applicationHost;
-
-    @Value("${dristi.application.exists.endpoint}")
-    private String applicationExistsEndPoint;
-
-    @Value("${dristi.application.search.endpoint}")
-    private String applicationSearchEndPoint;
-
-    @Value("${dristi.application.update.endpoint}")
-    private String applicationUpdateEndPoint;
-
-
-    // Case Config
-    @Value("${dristi.case.host}")
-    private String caseHost;
-
-    @Value("${dristi.case.exists.endpoint}")
-    private String caseExistsEndPoint;
-
-    @Value("${dristi.case.search.endpoint}")
-    private String caseSearchEndPoint;
-
-    @Value("${dristi.case.update.endpoint}")
-    private String caseUpdateEndPoint;
-
-    @Value("${dristi.case.process.profile.endpoint}")
-    private String processProfileEndPoint;
-
-    @Value("${dristi.case.add.witness.endpoint}")
-    private String addWitnessEndPoint;
-
-    @Value("${dristi.case.update.lpr.details.endpoint}")
-    private String updateLprDetailsEndPoint;
-
-    //Hearing config
+    //Hearing config — URI strings still drive HearingUtil.createOrUpdateHearing
+    // discriminator; refactor to enum/method-pointer is a Rule 38 follow-up.
     @Value("${dristi.hearing.host}")
     private String HearingHost;
 
@@ -150,17 +46,6 @@ public class Configuration {
 
     @Value("${dristi.hearing.create.endpoint}")
     private String HearingCreateEndPoint;
-
-    @Value("${dristi.hearing.search.endpoint}")
-    private String hearingSearchEndPoint;
-
-    // ADiary config
-
-    @Value("${dristi.adiary.host}")
-    private String aDiaryHost;
-
-    @Value("${dristi.adiary.create.bulk}")
-    private String aDiaryCreateBulkEndPoint;
 
     // Inbox Config
     @Value("${dristi.inbox.host}")
@@ -203,13 +88,6 @@ public class Configuration {
     @Value("${app.zone.id}")
     private String zoneId;
 
-    //HRMS
-    @Value("${egov.hrms.host}")
-    private String hrmsHost;
-
-    @Value("${egov.hrms.search.endpoint}")
-    private String hrmsEndPoint;
-
     @Value("${file.max.size}")
     private long maxFileSize;
 
@@ -220,18 +98,8 @@ public class Configuration {
     @Value("${egov.localization.host}")
     private String localizationHost;
 
-    @Value("${egov.localization.context.path}")
-    private String localizationContextPath;
-
     @Value("${egov.localization.search.endpoint}")
     private String localizationSearchEndpoint;
-
-    // User Config
-    @Value("${egov.user.host}")
-    private String userHost;
-
-    @Value("${egov.user.search.path}")
-    private String userSearchEndpoint;
 
     @Value("${egov.sms.notification.process.fee.payment.template.id}")
     private String smsNotificationProcessFeePaymentTemplateId;
@@ -255,20 +123,6 @@ public class Configuration {
 
     @Value("${task.upfront.create.topic}")
     private String taskUpFrontCreateTopic;
-
-    // URLShortening
-    @Value("${egov.url.shortner.host}")
-    private String urlShortnerHost;
-
-    @Value("${egov.url.shortner.endpoint}")
-    private String urlShortnerEndpoint;
-
-    // long url
-    @Value("${domain.url}")
-    private String domainUrl;
-
-    @Value("${egov.base.url}")
-    private String baseUrl;
 
     @Value("${task.management.action.category}")
     private String taskManagementActionCategory;

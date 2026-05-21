@@ -10,8 +10,8 @@ import org.pucar.dristi.caselifecycle.ordermanagement.internal.strategy.OrderUpd
 import org.pucar.dristi.caselifecycle.ordermanagement.internal.util.CaseUtil;
 import org.pucar.dristi.caselifecycle.ordermanagement.internal.util.HearingUtil;
 import org.pucar.dristi.caselifecycle.ordermanagement.internal.util.PendingTaskUtil;
-import org.pucar.dristi.caselifecycle.ordermanagement.internal.web.models.Order;
-import org.pucar.dristi.caselifecycle.ordermanagement.internal.web.models.OrderRequest;
+import org.pucar.dristi.common.contract.ordermanagement.Order;
+import org.pucar.dristi.common.contract.ordermanagement.OrderRequest;
 import org.pucar.dristi.common.models.workflow.WorkflowObject;
 import org.pucar.dristi.caselifecycle.ordermanagement.internal.web.models.adiary.CaseDiaryEntry;
 import org.pucar.dristi.caselifecycle.ordermanagement.internal.web.models.courtCase.*;
