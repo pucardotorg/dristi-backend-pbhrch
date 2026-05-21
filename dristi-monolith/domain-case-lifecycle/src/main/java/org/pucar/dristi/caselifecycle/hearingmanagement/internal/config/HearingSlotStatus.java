@@ -5,10 +5,7 @@ import lombok.Getter;
 @Getter
 public enum HearingSlotStatus {
 
-    COURT_NON_WORKING("Court Non-Working"),
-    SLOTS_FULL("Slots Full"),
-    SLOT_AVAILABLE("Slot Available"),
-    OPTED_OUT("Opted Out");
+    COURT_NON_WORKING("Court Non-Working");
 
     private final String value;
 

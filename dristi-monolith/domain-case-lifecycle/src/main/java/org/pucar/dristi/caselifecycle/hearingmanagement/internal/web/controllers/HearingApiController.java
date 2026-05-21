@@ -22,7 +22,6 @@ import jakarta.validation.Valid;
 
 import java.util.List;
 
-import org.pucar.dristi.common.contract.hearingmanagement.Hearing;
 @Slf4j
 @jakarta.annotation.Generated(value = "org.egov.codegen.SpringBootCodegen", date = "2025-05-07T18:50:26.938815960+05:30[Asia/Kolkata]")
 @Controller("hearingmanagementHearingApiController")
