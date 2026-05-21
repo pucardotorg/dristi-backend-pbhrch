@@ -32,6 +32,7 @@ import argparse
 import csv
 import json
 import re
+import sys
 from collections import defaultdict
 from pathlib import Path
 from typing import Any
@@ -43,6 +44,13 @@ MONOLITH_ROOT = REPO_ROOT / "dristi-monolith"
 APP_RESOURCES = MONOLITH_ROOT / "dristi-app" / "src" / "main" / "resources"
 OUT_DIR = Path(__file__).resolve().parent / "output"
 MANIFEST_DIR = REPO_ROOT / "scripts" / "migration" / "per_module" / "output"
+
+# Pull the auto-written dead-key sidecar (Phase 96 output) so consolidation
+# unions it with the hand-maintained SERVICE_DEAD_KEYS literal below. Sidecar
+# path: scripts/migration/config_consolidation/auto_dead_keys.json. See
+# Rule 42 in PIPELINE_RULES.md.
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from dead_keys_lib import load_auto_dead_keys  # noqa: E402
 
 
 def domain_module_resources(target_module: str) -> Path:
@@ -423,10 +431,16 @@ def main() -> int:
             continue
         by_service[svc] = parse_properties(props_path)
 
+    # Union the hand-maintained literal with the Phase-96-written sidecar.
+    # Both sources contain `{service: set(keys)}`; the auto file (Rule 42)
+    # is regenerated on every migration that drops a `@Value` from any
+    # Configuration.java, so this re-read picks up the latest state.
+    auto_dead = load_auto_dead_keys()
+
     # all keys → {service: value}
     key_values: dict[str, dict[str, str]] = defaultdict(dict)
     for svc, props in by_service.items():
-        dead_for_svc = SERVICE_DEAD_KEYS.get(svc, set())
+        dead_for_svc = SERVICE_DEAD_KEYS.get(svc, set()) | auto_dead.get(svc, set())
         for key, value in props.items():
             if key in ALL_DROPPED:
                 continue
