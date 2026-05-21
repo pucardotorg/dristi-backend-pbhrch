@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.*;
 
-@Repository
+@Repository("transformerElasticSearchRepository")
 @Slf4j
 public class ElasticSearchRepository {
 
