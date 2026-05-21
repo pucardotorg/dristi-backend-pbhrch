@@ -1702,6 +1702,20 @@ discipline — it was a missing pipeline phase. Phase 5 detects what
 REST callers need converting but doesn't project forward to the
 `@Value` bindings that will go dead. Phase 95 closes that loop.
 
+**Refined again (PR #111).** PR #101 (casemanagement) hit the inverse
+failure mode: it stripped `@Value("${mdms.kafka.save.topic}")` and
+`@Value("${mdms.kafka.update.topic}")` from `Configuration.java`, but
+those keys were ALSO read by `@KafkaListener(topics = "${X}")`
+annotations elsewhere. The detector saw only the `@Value` removal,
+registered the keys as dead, and consolidation's next regen would
+have yanked them out of `application-casemanagement.yml`, crashing
+the listeners at startup. The follow-up fix (`ccb7e2b34`) restored
+the bindings; this rule was refined so the detector treats a key as
+*alive* if **any** reference form survives — `@Value`, the bare
+`${X}` placeholder used by `@KafkaListener.topics` / `@Scheduled`,
+`@ConditionalOnProperty(name|value|prefix = "X")`, or
+`env.getProperty("X")`. See `dead_keys_lib.parse_all_key_references`.
+
 **Operator action.** None at the dictionary level. Run Phase 95/96
 (included in the pipeline's default `--phase` list) at the end of a
 migration session. Review `<service>_dead_keys.txt`; if any line

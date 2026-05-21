@@ -95,14 +95,63 @@ DOMAIN_BASE_PACKAGES = (
 )
 
 # Matches single-line `@Value("${KEY}")` and `@Value("${KEY:default}")`.
-# Captures KEY only (stops at `:`, `}`, or whitespace). Multi-line forms
-# are rare in Configuration.java; flag by hand if they appear.
+# Captures KEY only (stops at `:`, `}`, or whitespace).
 _VALUE_RE = re.compile(r'@Value\(\s*"\$\{([^}:\s]+)')
+
+# Any `${KEY}` placeholder anywhere in the source — catches
+# `@KafkaListener(topics = "${X}")`, `@Scheduled(cron = "${X}")`,
+# `@KafkaListener(topics = {"${X}", "${Y}"})`, multi-line, etc.
+# Used for the *cur* side of the diff so a key that *moved* from
+# `@Value` to a listener / cron annotation is still recognised as
+# alive (the casemanagement #101 / #111 regression).
+_PLACEHOLDER_RE = re.compile(r'\$\{([^}:\s]+)')
+
+# `@ConditionalOnProperty(name = "X" | value = "X" | prefix = "X")` —
+# bare bean-condition key without `${}` wrapping. Extract the
+# annotation block first, then pull every `name|value|prefix = "X"`
+# attribute inside (a single annotation can carry multiple).
+_CONDITIONAL_ON_PROPERTY_BLOCK_RE = re.compile(
+    r'@ConditionalOnProperty\s*\(([^)]*)\)', re.DOTALL
+)
+_PROPERTY_ATTR_RE = re.compile(r'(?:name|value|prefix)\s*=\s*"([^"\s]+)')
+
+# `env.getProperty("X")` / `environment.getRequiredProperty("X")` — same
+# bare-key form Spring lets you read at runtime without an annotation.
+_ENV_GET_RE = re.compile(
+    r'(?:env|environment)\.(?:getProperty|getRequiredProperty)\(\s*"([^"\s]+)'
+)
 
 
 def parse_value_keys(text: str) -> set[str]:
-    """Every `${KEY}` referenced by an `@Value(...)` annotation in `text`."""
+    """Every `${KEY}` referenced by an `@Value(...)` annotation in `text`.
+
+    Used for the *pre* side of the diff: "what was bound via `@Value`
+    before the operator's REST→direct sweep." A key that disappears
+    from this set is a candidate dead key — provided it also doesn't
+    appear in any other reference form (see `parse_all_key_references`).
+    """
     return set(_VALUE_RE.findall(text))
+
+
+def parse_all_key_references(text: str) -> set[str]:
+    """Every property key referenced anywhere in `text` — `@Value`,
+    `@KafkaListener(topics = …)`, `@Scheduled(cron = …)`, any other
+    `${X}` placeholder, plus `@ConditionalOnProperty(name = …)` and
+    `env.getProperty("…")`.
+
+    Used for the *cur* side of the diff so the detector treats a key
+    that moved from `@Value` to a listener annotation as still alive.
+    Without this, dropping the `@Value` field while keeping the
+    `@KafkaListener(topics = "${X}")` registers `X` as dead — and the
+    next consolidation regen yanks `X` out of the per-service yml,
+    crashing the listener at startup. See PR #111 regression on PR #101
+    (casemanagement) for the live example this guard prevents.
+    """
+    keys = set(_PLACEHOLDER_RE.findall(text))
+    for block in _CONDITIONAL_ON_PROPERTY_BLOCK_RE.findall(text):
+        keys.update(_PROPERTY_ATTR_RE.findall(block))
+    keys.update(_ENV_GET_RE.findall(text))
+    return keys
 
 
 def subdomain_from_path(path: Path) -> str | None:
@@ -179,7 +228,13 @@ def detect_dead_keys(base: str | None = None) -> list[tuple[str, str, Path]]:
     for cfg in git_diff_configurations(base):
         pre_text = git_show(base, cfg)
         cur_text = cfg.read_text(encoding="utf-8") if cfg.exists() else ""
-        removed = parse_value_keys(pre_text) - parse_value_keys(cur_text)
+        # `pre` is restricted to @Value bindings — the cleanup pattern
+        # this gate targets (Rule 37 sweeps following REST→direct).
+        # `cur` is the union of every reference form (Rule 42, refined
+        # by PR #111): if a key moved from @Value to @KafkaListener /
+        # @Scheduled / @ConditionalOnProperty, it's still alive and
+        # must NOT be registered as dead.
+        removed = parse_value_keys(pre_text) - parse_all_key_references(cur_text)
         if not removed:
             continue
         subdomain = subdomain_from_path(cfg)
