@@ -1,0 +1,18 @@
+# Classes lifted from internal/web/models/ to dristi-common/contract/<subdomain>/
+org.pucar.dristi.common.contract.analytics.Advocate
+org.pucar.dristi.common.contract.analytics.AdvocateListResponse
+org.pucar.dristi.common.contract.analytics.AdvocateOffice
+org.pucar.dristi.common.contract.analytics.AdvocateSearchCriteria
+org.pucar.dristi.common.contract.analytics.AdvocateSearchRequest
+org.pucar.dristi.common.contract.analytics.CaseCriteria
+org.pucar.dristi.common.contract.analytics.CaseSearchRequest
+org.pucar.dristi.common.contract.analytics.IndividualSearch
+org.pucar.dristi.common.contract.analytics.IndividualSearchRequest
+org.pucar.dristi.common.contract.analytics.OfflinePaymentTask
+org.pucar.dristi.common.contract.analytics.OfflinePaymentTaskRequest
+org.pucar.dristi.common.contract.analytics.OfflinePaymentTaskResponse
+org.pucar.dristi.common.contract.analytics.PendingTask
+org.pucar.dristi.common.contract.analytics.PendingTaskRequest
+org.pucar.dristi.common.contract.analytics.PendingTaskResponse
+org.pucar.dristi.common.contract.analytics.SMSRequest
+org.pucar.dristi.common.contract.analytics.package-info

@@ -81,40 +81,6 @@ egov:
     schema:
       search:
         endpoint: /egov-mdms-service/schema/v1/_search
-  hrms:
-    host: https://dev.digit.org
-    search:
-      endpoint: /egov-hrms/employees/_search
-  user:
-    host: https://dev.digit.org
-    context:
-      path: /user/users
-    create:
-      path: /_createnovalidate
-    search:
-      path: /user/_search
-    update:
-      path: /_updatenovalidate
-  idgen:
-    host: https://dev.digit.org/
-    path: egov-idgen/id/_generate
-  workflow:
-    host: https://dev.digit.org
-    transition:
-      path: /egov-workflow-v2/egov-wf/process/_transition
-    businessservice:
-      search:
-        path: /egov-workflow-v2/egov-wf/businessservice/_search
-    processinstance:
-      search:
-        path: /egov-workflow-v2/egov-wf/process/_search
-  url:
-    shortner:
-      host: https://dev.digit.org
-      endpoint: /egov-url-shortening/shortener
-  sms:
-    notification:
-      topic: egov.core.notification.sms
   pdf:
     host: http://localhost:9000
     create: /pdf-service/v1/_create
@@ -137,8 +103,8 @@ egov:
         name: 127.0.0.1
       port:
         'no': 9200
-      username:
-      password:
+      username: ${ES_USERNAME}
+      password: ${ES_PASSWORD}
   infra:
     indexer:
       host: http://localhost:9200/
@@ -146,33 +112,29 @@ is:
   workflow:
     enabled: true
 dristi:
-  case:
-    index: case-index
-  application:
-    index: application-index
   ctc:
     host: http://localhost:8083
     update:
       endpoint: /ctc/applications/_update
-  task:
-    index: task-index
-  order:
-    index: order-index
   file:
     search:
       path: /filestore/v1/files/url
-    delete:
-      path: /filestore/v1/files/delete
+  case:
+    index: case-index
   hearing:
     index: hearing-index
   witness:
     index: witness-index
+  order:
+    index: order-index
+  task:
+    index: task-index
+  application:
+    index: application-index
   artifact:
     index: artifact-index
   bundle:
     index: case-bundle-pdf
-  preview:
-    index: ctc-case-preview-index
   search:
     index:
       path: /_search
@@ -204,20 +166,12 @@ casemanagement:
     update:
       casebundles:
         topic: update-ctc-casebundles
-  delay:
-    time: 5000
 case:
   allowed:
     status: PENDING_REGISTRATION,CASE_ADMITTED,CASE_REASSIGNED,PENDING_RESPONSE
 generate:
   vc:
     code: Pucar.SummonOrder10
-mdms:
-  kafka:
-    save:
-      topic: save-mdms-data
-    update:
-      topic: update-mdms-data
 logging:
   loki:
     enabled: false
