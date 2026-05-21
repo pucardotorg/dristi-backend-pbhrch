@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
-@Component
+@Component("digitalizeddocumentsDigitalizedDocumentUtil")
 @Slf4j
 public class DigitalizedDocumentUtil {
 

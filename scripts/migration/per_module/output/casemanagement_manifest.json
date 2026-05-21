@@ -1,0 +1,43 @@
+{
+  "service": "casemanagement",
+  "source_dir": "dristi-services/casemanagement",
+  "target_module": "case-lifecycle",
+  "target_subdomain": "casemanagement",
+  "current_package": "org.pucar.dristi",
+  "target_package": "org.pucar.dristi.caselifecycle.casemanagement",
+  "main_file_count": 198,
+  "test_file_count": 19,
+  "has_spring_boot_main": true,
+  "duplicated_protected_classes": [
+    "MdmsUtil",
+    "IdgenUtil",
+    "WorkflowUtil",
+    "FileStoreUtil",
+    "UserUtil",
+    "UrlShortenerUtil",
+    "ResponseInfoFactory",
+    "Producer",
+    "KafkaProducerService",
+    "ServiceRequestRepository",
+    "AuditDetails",
+    "Document",
+    "WorkflowObject"
+  ],
+  "rest_call_files": [
+    "dristi-services/casemanagement/src/main/java/org/pucar/dristi/repository/ServiceRequestRepository.java",
+    "dristi-services/casemanagement/src/main/java/org/pucar/dristi/service/CaseBundleGeneratorService.java",
+    "dristi-services/casemanagement/src/main/java/org/pucar/dristi/service/CaseBundleService.java",
+    "dristi-services/casemanagement/src/main/java/org/pucar/dristi/service/CaseBundleIndexBuilderService.java",
+    "dristi-services/casemanagement/src/main/java/org/pucar/dristi/service/PdfSummonsOrderRequestService.java",
+    "dristi-services/casemanagement/src/main/java/org/pucar/dristi/util/ApplicationUtil.java",
+    "dristi-services/casemanagement/src/main/java/org/pucar/dristi/util/UserUtil.java",
+    "dristi-services/casemanagement/src/main/java/org/pucar/dristi/util/TaskManagementUtil.java",
+    "dristi-services/casemanagement/src/main/java/org/pucar/dristi/util/OrderUtil.java",
+    "dristi-services/casemanagement/src/main/java/org/pucar/dristi/util/CtcUtil.java",
+    "dristi-services/casemanagement/src/main/java/org/pucar/dristi/util/IdgenUtil.java",
+    "dristi-services/casemanagement/src/main/java/org/pucar/dristi/util/WorkflowUtil.java",
+    "dristi-services/casemanagement/src/main/java/org/pucar/dristi/util/CaseUtil.java",
+    "dristi-services/casemanagement/src/main/java/org/pucar/dristi/util/TaskUtil.java"
+  ],
+  "source_context_path": "/casemanagement"
+}

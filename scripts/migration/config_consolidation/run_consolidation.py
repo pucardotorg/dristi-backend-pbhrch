@@ -228,6 +228,67 @@ SERVICE_DEAD_KEYS: dict[str, set[str]] = {
         "dristi.advocate.search.endpoint",
         "dristi.advocate.clerk.search.endpoint",
     },
+    # casemanagement C2: full Rule 32 sweep — every outgoing REST helper
+    # whose target subdomain is in the monolith was converted to *Api
+    # direct calls. casemanagement now reads CaseApi (CaseBundleService +
+    # CaseBundleIndexBuilderService convert the typed CaseListResponse
+    # back to Map<String,Object> for legacy downstream code),
+    # TaskmanagementApi, EvidenceApi, OrderApi (OrderSearchService maps
+    # the VC-entity referenceId onto OrderCriteria.id), ApplicationApi
+    # (exposed in this PR — first cross-subdomain caller), TaskApi
+    # (re-introduced; safe because casemanagement has no incoming edges
+    # so the cases↔task↔order cycle from a89087936 cannot re-form),
+    # CtcApi (read-side only; updates stay on REST per Rule 35), and
+    # DigitalizeddocumentsApi (exposed in this PR). The only outgoing
+    # REST left is CtcUtil.updateCtcApplication (Rule 35) plus
+    # MdmsV2Util and SummonsOrderPdfUtil (egov platform services per
+    # Rule 17). Pipeline 5 would otherwise re-add the dead keys on
+    # every regen.
+    "casemanagement": {
+        "dristi.taskmanagement.host",
+        "dristi.taskmanagement.search.endpoint",
+        "dristi.evidence.host",
+        "dristi.evidence.search.endpoint",
+        "dristi.application.host",
+        "dristi.application.search.endpoint",
+        "dristi.case.host",
+        "dristi.case.search.url",
+        "dristi.order.host",
+        "dristi.order.search.url",
+        "dristi.task.host",
+        "dristi.task.search.url",
+        "dristi.digitalized.documents.host",
+        "dristi.digitalized.documents.search.endpoint",
+        "dristi.ctc.search.endpoint",
+        # PR #101 review sweep: 21 legacy-boilerplate keys carried over
+        # from the source service's application.properties whose @Value
+        # bindings in casemanagement/Configuration.java had no consumer
+        # in caselifecycle/casemanagement/internal/. Distinct from the
+        # Rule 32 cutover keys above — these were dead pre-migration.
+        # User / Idgen / Workflow / HRMS / URL-shortener / SMS / filestore-
+        # delete / preview-index / mdms-kafka / delay-time.
+        "egov.user.host",
+        "egov.user.context.path",
+        "egov.user.create.path",
+        "egov.user.search.path",
+        "egov.user.update.path",
+        "egov.idgen.host",
+        "egov.idgen.path",
+        "egov.workflow.host",
+        "egov.workflow.transition.path",
+        "egov.workflow.businessservice.search.path",
+        "egov.workflow.processinstance.search.path",
+        "egov.hrms.host",
+        "egov.hrms.search.endpoint",
+        "egov.url.shortner.host",
+        "egov.url.shortner.endpoint",
+        "egov.sms.notification.topic",
+        "dristi.file.delete.path",
+        "dristi.preview.index",
+        "mdms.kafka.save.topic",
+        "mdms.kafka.update.topic",
+        "casemanagement.delay.time",
+    },
     # 73eef3e08 refactor(analytics): contract uplift + REST→direct calls
     # (PR #106). Rule 37 dropped the @Value bindings from
     # caselifecycle/analytics/internal/config/Configuration.java for the
