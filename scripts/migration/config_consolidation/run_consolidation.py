@@ -228,6 +228,30 @@ SERVICE_DEAD_KEYS: dict[str, set[str]] = {
         "dristi.advocate.search.endpoint",
         "dristi.advocate.clerk.search.endpoint",
     },
+    # 73eef3e08 refactor(analytics): contract uplift + REST→direct calls
+    # (PR #106). Rule 37 dropped the @Value bindings from
+    # caselifecycle/analytics/internal/config/Configuration.java for the
+    # six utils converted to direct *Api calls (Advocate/Case/Evidence/
+    # Hearing/Order/TaskManagement). egov.case.search.endpoint joined the
+    # set after analytics CaseUtil.searchCaseDetails was rewired onto
+    # CaseApi.search; egov.{advocate.{host,path}} fell out with the
+    # Rule 38 deletion of analytics AdvocateUtil. egov.{case.host,
+    # case.member.advocates.endpoint, advocate.case.search.endpoint} stay
+    # live — CaseUtil.{getCasesByAdvocateId,getAdvocatesForMember} are
+    # the Rule 39 deferrals with no matching *Api method yet.
+    "analytics": {
+        "egov.advocate.host",
+        "egov.advocate.path",
+        "egov.case.search.endpoint",
+        "egov.evidence.host",
+        "egov.evidence.search.endpoint",
+        "egov.hearing.host",
+        "egov.hearing.search.endpoint",
+        "egov.order.host",
+        "egov.order.search.endpoint",
+        "dristi.task-management.host",
+        "dristi.task-management.search.endpoint",
+    },
 }
 
 # Two-source-into-one-subdomain (e-sign-svc + esign-interceptor): the
