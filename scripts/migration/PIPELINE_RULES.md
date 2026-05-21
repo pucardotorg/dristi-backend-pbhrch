@@ -1678,6 +1678,69 @@ the cleanest pipeline fix; deferred until the smoke-test PR.
 
 ---
 
+## Rule 42 — Dead `@Value` Keys Are Auto-Registered, Not Hand-Curated
+
+**Rule.** Every `@Value("${X}")` field deleted from any
+`Configuration.java` during a migration creates a dead key for the
+source service whose subdomain owned the field. Pipeline Phase 95
+detects these from the branch's git diff; Phase 96 writes them to
+`scripts/migration/config_consolidation/auto_dead_keys.json`.
+`run_consolidation.py` unions the auto file with the hand-maintained
+`SERVICE_DEAD_KEYS` literal on every regen. The dead-keys CI gate
+(`scripts/migration/gates/dead_keys_gate.py`) fails the build if a
+`Configuration.java` drops a `@Value` binding without a matching
+registration in either source.
+
+**Refined by reality.** Eight historical PRs (PR #57 + #64 +
+inportal-survey + esign + advocate + ab-diary + #92 + the May-2026
+absorption batch's PR #106) merged Rule 37 sweeps that deleted
+`@Value` fields, but several of them forgot to extend
+`SERVICE_DEAD_KEYS`. Pipeline 5's next regen mechanically re-added
+the dropped keys to the subdomain's `application-<subdomain>.yml`,
+silently undoing the sweep. The recurrence wasn't operator
+discipline — it was a missing pipeline phase. Phase 5 detects what
+REST callers need converting but doesn't project forward to the
+`@Value` bindings that will go dead. Phase 95 closes that loop.
+
+**Operator action.** None at the dictionary level. Run Phase 95/96
+(included in the pipeline's default `--phase` list) at the end of a
+migration session. Review `<service>_dead_keys.txt`; if any line
+looks wrong (a still-live `@Value` was flagged because of an
+inadvertent reformat), reconcile before Phase 96 writes. The CI
+gate is the safety net for hand-edits that bypass `/migrate-service`
+entirely.
+
+The hand-maintained `SERVICE_DEAD_KEYS` literal in
+`run_consolidation.py` is reserved for edge cases the regex can't
+capture (typo-source keys like `dristhi.oath.*`, multi-source
+subdomains like `esign` ← `e-sign-svc` + `esign-interceptor`).
+Routine REST→direct cleanup goes through the auto pipe.
+
+**Enforcement.**
+
+1. **Pipeline auto-register** (`scripts/migration/per_module/run_module_migration.py`
+   Phase 95 + 96). Convenient path; runs by default during
+   `/migrate-service`.
+2. **CI gate** (`scripts/migration/gates/dead_keys_gate.py`). Independent
+   safety net. Re-detects from git diff and fails if any dropped
+   key is unregistered. Wire alongside `BeanNameCollisionTest` and
+   `ModuleStructureTest` in the dristi-app reactor build.
+3. **Consumer-side union** (`scripts/migration/config_consolidation/run_consolidation.py`).
+   Reads the sidecar on every regen — no manual sync required.
+
+**File map.**
+
+| Component | Path |
+|---|---|
+| Shared detection library | `scripts/migration/dead_keys_lib.py` |
+| Phase 95 + 96 | `scripts/migration/per_module/run_module_migration.py` |
+| Sidecar (auto-written) | `scripts/migration/config_consolidation/auto_dead_keys.json` |
+| Consolidation consumer | `scripts/migration/config_consolidation/run_consolidation.py` (unions sidecar) |
+| CI gate | `scripts/migration/gates/dead_keys_gate.py` |
+| Hand-curated literal | `SERVICE_DEAD_KEYS` in `run_consolidation.py` (edge cases only) |
+
+---
+
 ## Useful checks at a glance
 
 | What                                  | Where                                             |

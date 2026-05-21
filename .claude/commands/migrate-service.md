@@ -353,6 +353,45 @@ If lifted DTOs need legacy deps in `dristi-common` (e.g.
 `digit-models`, `swagger-core:1.5.18`), add them to
 `dristi-monolith/dristi-common/pom.xml` per Rule 24's note.
 
+### 3.3.5 Auto-register dead `@Value` keys (Rule 42)
+
+After the REST→direct sweep deletes the `@Value` fields, Phase 95
+diffs every `Configuration.java` modified in this branch against
+`origin/monolith/main` and emits the now-dead property keys. Phase
+96 splices them into the auto sidecar so the next
+`run_consolidation.py` regen suppresses them.
+
+```bash
+python3 scripts/migration/per_module/run_module_migration.py \
+  --service <service> --module <module> --subdomain <subdomain> \
+  --phase 95,96
+```
+
+Review `scripts/migration/per_module/output/<service>_dead_keys.txt`:
+
+- Each line is `service<TAB>key<TAB>path`. The **service** is the
+  source service that read the key (may differ from `<service>`
+  when a peer subdomain dropped a binding because of this
+  migration — e.g. `hearing` dropping `dristi.scheduler.*` when
+  `scheduler-svc` lands).
+- If a line looks wrong (a still-live binding was flagged because
+  of an inadvertent reformat), reconcile **before** running Phase
+  96 — Phase 96 unions findings into
+  `scripts/migration/config_consolidation/auto_dead_keys.json`.
+
+Confirm via the gate:
+
+```bash
+python3 scripts/migration/gates/dead_keys_gate.py
+# → "dead_keys_gate: all N dropped @Value key(s) registered — PASS"
+```
+
+The sidecar (`auto_dead_keys.json`) is committed alongside the
+migration. Do **not** hand-edit `SERVICE_DEAD_KEYS` in
+`run_consolidation.py` for routine cutovers — that literal is
+reserved for edge cases (multi-source subdomain, typo-source key)
+the regex can't capture.
+
 ### 3.4 Build verification
 
 #### 3.4.1 Rule 40 mutation scan
