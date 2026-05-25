@@ -9,7 +9,6 @@ import org.pucar.dristi.caselifecycle.transformer.internal.config.TransformerPro
 import org.pucar.dristi.caselifecycle.transformer.internal.models.*;
 import org.pucar.dristi.caselifecycle.transformer.internal.models.inbox.InboxRequest;
 import org.pucar.dristi.caselifecycle.transformer.internal.producer.TransformerProducer;
-import org.pucar.dristi.common.repository.ServiceRequestRepository;
 import org.pucar.dristi.caselifecycle.transformer.internal.util.AdvocateUtil;
 import org.pucar.dristi.caselifecycle.transformer.internal.util.InboxUtil;
 import org.pucar.dristi.caselifecycle.transformer.internal.util.JsonUtil;
@@ -32,19 +31,17 @@ public class HearingService {
     private final TransformerProperties properties;
     private final JsonUtil jsonUtil;
     private final MdmsUtil mdmsUtil;
-    private final ServiceRequestRepository serviceRequestRepository;
     private final ObjectMapper objectMapper;
     private final AdvocateUtil advocateUtil;
     private final InboxUtil inboxUtil;
 
     @Autowired
-    public HearingService(TransformerProducer producer, CaseService caseService, TransformerProperties properties, JsonUtil jsonUtil, MdmsUtil mdmsUtil, ServiceRequestRepository serviceRequestRepository, ObjectMapper objectMapper, AdvocateUtil advocateUtil, InboxUtil inboxUtil) {
+    public HearingService(TransformerProducer producer, CaseService caseService, TransformerProperties properties, JsonUtil jsonUtil, MdmsUtil mdmsUtil, ObjectMapper objectMapper, AdvocateUtil advocateUtil, InboxUtil inboxUtil) {
         this.producer = producer;
         this.caseService = caseService;
         this.properties = properties;
         this.jsonUtil = jsonUtil;
         this.mdmsUtil = mdmsUtil;
-        this.serviceRequestRepository = serviceRequestRepository;
         this.objectMapper = objectMapper;
         this.advocateUtil = advocateUtil;
         this.inboxUtil = inboxUtil;
