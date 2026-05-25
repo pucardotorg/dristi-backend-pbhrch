@@ -6,18 +6,18 @@ import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.pucar.dristi.caselifecycle.digitalizeddocuments.DigitalizedDocumentsApi;
 import org.pucar.dristi.caselifecycle.ordermanagement.internal.config.Configuration;
 import org.pucar.dristi.caselifecycle.ordermanagement.internal.service.FileStoreService;
 import org.pucar.dristi.caselifecycle.ordermanagement.internal.strategy.OrderUpdateStrategy;
-import org.pucar.dristi.caselifecycle.ordermanagement.internal.util.DigitalizedDocumentUtil;
 import org.pucar.dristi.caselifecycle.ordermanagement.internal.util.MdmsV2Util;
 import org.pucar.dristi.caselifecycle.ordermanagement.internal.util.PdfServiceUtil;
 import org.pucar.dristi.caselifecycle.ordermanagement.internal.util.JsonUtil;
 import org.pucar.dristi.common.contract.ordermanagement.Order;
 import org.pucar.dristi.common.contract.ordermanagement.OrderRequest;
+import org.pucar.dristi.common.contract.digitalizeddocuments.*;
 import org.pucar.dristi.common.models.workflow.WorkflowObject;
 import org.pucar.dristi.caselifecycle.ordermanagement.internal.web.models.adiary.CaseDiaryEntry;
-import org.pucar.dristi.caselifecycle.ordermanagement.internal.web.models.digitalizeddocument.*;
 
 import java.util.*;
 import static org.pucar.dristi.caselifecycle.ordermanagement.internal.config.ServiceConstants.*;
@@ -27,7 +27,7 @@ import org.pucar.dristi.common.models.Document;
 @Slf4j
 public class PublishOrderReferralCaseToAdr implements OrderUpdateStrategy {
 
-    private final DigitalizedDocumentUtil digitalizedDocumentUtil;
+    private final DigitalizedDocumentsApi digitalizedDocumentsApi;
     private final ObjectMapper objectMapper;
     private final Configuration configuration;
     private final PdfServiceUtil pdfServiceUtil;
@@ -36,8 +36,8 @@ public class PublishOrderReferralCaseToAdr implements OrderUpdateStrategy {
     private final MdmsV2Util mdmsV2Util;
 
     @Autowired
-    public PublishOrderReferralCaseToAdr(DigitalizedDocumentUtil digitalizedDocumentUtil, ObjectMapper objectMapper, Configuration configuration, PdfServiceUtil pdfServiceUtil, FileStoreService fileStoreService, JsonUtil jsonUtil, MdmsV2Util mdmsV2Util) {
-        this.digitalizedDocumentUtil = digitalizedDocumentUtil;
+    public PublishOrderReferralCaseToAdr(DigitalizedDocumentsApi digitalizedDocumentsApi, ObjectMapper objectMapper, Configuration configuration, PdfServiceUtil pdfServiceUtil, FileStoreService fileStoreService, JsonUtil jsonUtil, MdmsV2Util mdmsV2Util) {
+        this.digitalizedDocumentsApi = digitalizedDocumentsApi;
         this.objectMapper = objectMapper;
         this.configuration = configuration;
         this.pdfServiceUtil = pdfServiceUtil;
@@ -101,7 +101,7 @@ public class PublishOrderReferralCaseToAdr implements OrderUpdateStrategy {
                     .criteria(criteria)
                     .build();
 
-            List<DigitalizedDocument> existingDocuments = digitalizedDocumentUtil.searchDigitalizedDocuments(searchRequest);
+            List<DigitalizedDocument> existingDocuments = digitalizedDocumentsApi.search(searchRequest);
 
             String action = adrDetails.has("modeOfSigning") ? adrDetails.get("modeOfSigning").textValue() : null;
             String caseNumber = adrDetails.has("caseNumber") ? adrDetails.get("caseNumber").textValue() : null;
@@ -136,7 +136,7 @@ public class PublishOrderReferralCaseToAdr implements OrderUpdateStrategy {
                 log.info("Generating PDF for updating digitalized document {}", existingDoc.getDocumentNumber());
                 generateAndUploadPdf(updateRequest);
 
-                DigitalizedDocument digitalizedDocument = digitalizedDocumentUtil.updateDigitalizedDocument(updateRequest);
+                DigitalizedDocument digitalizedDocument = digitalizedDocumentsApi.update(updateRequest);
                 log.info("Updated digitalized document successfully {} : ", digitalizedDocument.getDocumentNumber());
             } else {
                 // Create new document
@@ -169,7 +169,7 @@ public class PublishOrderReferralCaseToAdr implements OrderUpdateStrategy {
                 log.info("Generating PDF for creating digitalized document {}", newDocument.getDocumentNumber());
                 generateAndUploadPdf(createRequest);
 
-                DigitalizedDocument digitalizedDocument = digitalizedDocumentUtil.createDigitalizedDocument(createRequest);
+                DigitalizedDocument digitalizedDocument = digitalizedDocumentsApi.create(createRequest);
                 log.info("Created digitalized document successfully {} : ", digitalizedDocument.getDocumentNumber());
             }
 

@@ -222,12 +222,13 @@ SERVICE_DEAD_KEYS: dict[str, set[str]] = {
     },
     # order-management C2: ordermanagement now reads AdvocateApi /
     # ApplicationApi / CaseApi / HearingApi / TaskApi / TaskmanagementApi /
-    # EsignApi / AbdiaryApi directly (Rule 32). No @Value consumers remain
-    # in caselifecycle/ordermanagement/internal/ for these REST host /
-    # endpoint keys. The platform-side keys (egov.hrms.*, egov.user.*,
-    # egov.url.shortner.*, egov.base.url, domain.url,
-    # egov.localization.context.path) were never read by ordermanagement
-    # to begin with — dropping from this service's overlay only.
+    # EsignApi / AbdiaryApi / DigitalizedDocumentsApi directly (Rule 32).
+    # No @Value consumers remain in caselifecycle/ordermanagement/internal/
+    # for these REST host / endpoint keys. The platform-side keys
+    # (egov.hrms.*, egov.user.*, egov.url.shortner.*, egov.base.url,
+    # domain.url, egov.localization.context.path) were never read by
+    # ordermanagement to begin with — dropping from this service's overlay
+    # only.
     # `dristi.hearing.{host,update.endpoint,create.endpoint,summary.update.endpoint}`
     # stay live: HearingUtil.createOrUpdateHearing still uses them as a
     # URI-string discriminator (Rule 38 refactor follow-up).
@@ -268,6 +269,10 @@ SERVICE_DEAD_KEYS: dict[str, set[str]] = {
         "dristi.hearing.search.endpoint",
         "dristi.adiary.host",
         "dristi.adiary.create.bulk",
+        "dristi.digitalized-documents.host",
+        "dristi.digitalized-documents.create.endpoint",
+        "dristi.digitalized-documents.search.endpoint",
+        "dristi.digitalized-documents.update.endpoint",
         "egov.hrms.host",
         "egov.hrms.search.endpoint",
         "egov.user.host",

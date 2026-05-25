@@ -139,14 +139,6 @@ dristi:
   nature:
     of:
       complainant: NIA S138
-  digitalized-documents:
-    host: http://localhost:8062
-    create:
-      endpoint: /digitalized-documents/v1/_create
-    search:
-      endpoint: /digitalized-documents/v1/_search
-    update:
-      endpoint: /digitalized-documents/v1/_update
   court:
     name: Special Court Of Judicial Magistrate of the First Class, for the trial of
       cases under section 138 of NI Act , 1881 at Kollam ( "24X7 ON Court" )
