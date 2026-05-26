@@ -1,0 +1,30 @@
+{
+  "service": "transformer",
+  "source_dir": "dristi-services/transformer",
+  "target_module": "case-lifecycle",
+  "target_subdomain": "transformer",
+  "current_package": "org.egov.transformer",
+  "target_package": "org.pucar.dristi.caselifecycle.transformer",
+  "main_file_count": 121,
+  "test_file_count": 1,
+  "has_spring_boot_main": true,
+  "duplicated_protected_classes": [
+    "MdmsUtil",
+    "DateUtil",
+    "KafkaProducerService",
+    "ServiceRequestRepository",
+    "AuditDetails",
+    "Document",
+    "WorkflowObject"
+  ],
+  "rest_call_files": [
+    "dristi-services/transformer/src/main/java/org/egov/transformer/repository/ServiceRequestRepository.java",
+    "dristi-services/transformer/src/main/java/org/egov/transformer/service/CaseService.java",
+    "dristi-services/transformer/src/main/java/org/egov/transformer/service/HearingService.java",
+    "dristi-services/transformer/src/main/java/org/egov/transformer/service/UserService.java",
+    "dristi-services/transformer/src/main/java/org/egov/transformer/util/InboxUtil.java",
+    "dristi-services/transformer/src/main/java/org/egov/transformer/util/LocalizationUtil.java",
+    "dristi-services/transformer/src/main/java/org/egov/transformer/util/MdmsUtil.java"
+  ],
+  "source_context_path": "/transformer"
+}

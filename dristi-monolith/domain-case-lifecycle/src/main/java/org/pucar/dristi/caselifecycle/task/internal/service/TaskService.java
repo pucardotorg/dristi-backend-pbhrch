@@ -43,7 +43,7 @@ import org.pucar.dristi.common.util.FileStoreUtil;
 import org.pucar.dristi.common.util.WorkflowUtil;
 import org.pucar.dristi.common.util.UserUtil;
 import org.pucar.dristi.common.models.workflow.WorkflowObject;
-@Service
+@Service("taskTaskService")
 @Slf4j
 public class TaskService {
 
