@@ -1,0 +1,2 @@
+epost-tracker	egov.summons.host	dristi-monolith/domain-integration/src/main/java/org/pucar/dristi/integration/epost/internal/config/EPostConfiguration.java
+epost-tracker	egov.summons.update.endpoint	dristi-monolith/domain-integration/src/main/java/org/pucar/dristi/integration/epost/internal/config/EPostConfiguration.java

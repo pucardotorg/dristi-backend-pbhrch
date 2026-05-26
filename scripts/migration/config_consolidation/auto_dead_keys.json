@@ -1,1 +1,11 @@
-{}
+{
+  "epost-tracker": {
+    "commits": [
+      "aadca9b68"
+    ],
+    "keys": [
+      "egov.summons.host",
+      "egov.summons.update.endpoint"
+    ]
+  }
+}
