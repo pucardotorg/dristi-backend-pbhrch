@@ -30,6 +30,13 @@ Phases:
                               if not already present
   9 DB migrations           — copy src/main/resources/db/migration/**/*.sql -> target
                               submodule's resources, preserving sub-folder structure
+ 95 Dead-key detect          — find `@Value("${X}")` keys removed from any
+                              Configuration.java between branch base and HEAD;
+                              writes <service>_dead_keys.txt (Rule 42).
+ 96 Dead-key register        — splice Phase 95 findings into
+                              config_consolidation/auto_dead_keys.json so
+                              run_consolidation.py suppresses them on every
+                              regen (Rule 42).
 
 Phase 8 (commit + PR) is left to the caller — running this script does not
 auto-commit so the diff can be reviewed first.
@@ -50,12 +57,17 @@ import os
 import re
 import shutil
 import subprocess
+import sys
 from collections import Counter, defaultdict
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 MONOLITH_ROOT = REPO_ROOT / "dristi-monolith"
 COMMON_PKG = "org.pucar.dristi.common"
+
+# Phase 95/96 (Rule 42) share helpers with the dead-keys gate; both import
+# from `scripts/migration/dead_keys_lib.py`.
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 # Marker that opts a target file out of overwrite during re-runs of the
 # pipeline (mirrors the dristi-common Phase 3 guard).
@@ -1636,6 +1648,71 @@ def phase_8_wire_module_deps(manifest: dict) -> bool:
     return True
 
 
+def phase_95_detect_dead_keys(manifest: dict) -> list[tuple[str, str, Path]]:
+    """Phase 95 (dead keys, detector). Compares every `Configuration.java`
+    modified between `origin/monolith/main` and `HEAD` to find
+    `@Value("${X}")` bindings removed in this branch.
+
+    Writes `per_module/output/<service>_dead_keys.txt` (empty if nothing
+    found). Each line is `service<TAB>key<TAB>path` so the operator can
+    audit before Phase 96 splices into the sidecar.
+
+    Per Rule 42. Detection logic lives in `scripts/migration/dead_keys_lib.py`.
+    """
+    from dead_keys_lib import detect_dead_keys
+
+    findings = detect_dead_keys()
+    out = (
+        REPO_ROOT
+        / "scripts"
+        / "migration"
+        / "per_module"
+        / "output"
+        / f"{manifest['service']}_dead_keys.txt"
+    )
+    if findings:
+        body = "\n".join(
+            f"{svc}\t{key}\t{path.relative_to(REPO_ROOT)}"
+            for svc, key, path in findings
+        )
+        out.write_text(body + "\n", encoding="utf-8")
+    else:
+        out.write_text("", encoding="utf-8")
+    print(
+        f"Phase 95 (dead keys detect): {len(findings)} candidate(s); "
+        f"see {out.relative_to(REPO_ROOT)}"
+    )
+    return findings
+
+
+def phase_96_register_dead_keys(
+    findings: list[tuple[str, str, Path]] | None = None,
+) -> None:
+    """Phase 96 (dead keys, writer). Splices Phase 95 findings into
+    `scripts/migration/config_consolidation/auto_dead_keys.json`. Re-runs
+    are idempotent — duplicate (service, key) pairs are unioned. The
+    sidecar is read on every `run_consolidation.py` invocation, so once
+    a key is here the next regen suppresses it.
+
+    When `findings` is None (Phase 96 run alone), this re-detects from
+    the current branch state.
+
+    Per Rule 42.
+    """
+    from dead_keys_lib import detect_dead_keys, head_short, write_auto_dead_keys
+
+    if findings is None:
+        findings = detect_dead_keys()
+    if not findings:
+        print("Phase 96 (dead keys register): nothing to register")
+        return
+    write_auto_dead_keys(findings, commit=head_short())
+    print(
+        f"Phase 96 (dead keys register): {len(findings)} key(s) → "
+        f"scripts/migration/config_consolidation/auto_dead_keys.json"
+    )
+
+
 # --- driver -----------------------------------------------------------------
 
 
@@ -1644,10 +1721,11 @@ def main() -> int:
     parser.add_argument("--service", required=True)
     parser.add_argument("--module", required=True, help="case-lifecycle | identity-access | integration | payments")
     parser.add_argument("--subdomain", required=True)
-    parser.add_argument("--phase", default="1,2,3,35,4,5,6,7,8,9",
+    parser.add_argument("--phase", default="1,2,3,35,4,5,6,7,8,9,95,96",
                         help="comma-separated subset of phases to run "
                              "(35 = contract-lift, alias for the conceptual "
-                             "'Phase 3.5'; runs between 3 and 6)")
+                             "'Phase 3.5'; runs between 3 and 6. "
+                             "95/96 = dead-key detect+register per Rule 42)")
     args = parser.parse_args()
 
     phases = {int(p) for p in args.phase.split(",") if p.strip()}
@@ -1694,6 +1772,13 @@ def main() -> int:
         nfail, _ = phase_7_validate(manifest, target_dir)
         if nfail:
             return 1
+    # Phase 95/96 (Rule 42) run last so they see the operator's REST→direct
+    # Configuration.java sweep, not the pre-sweep state.
+    dead_findings: list[tuple[str, str, Path]] = []
+    if 95 in phases:
+        dead_findings = phase_95_detect_dead_keys(manifest)
+    if 96 in phases:
+        phase_96_register_dead_keys(dead_findings if 95 in phases else None)
     return 0
 
 

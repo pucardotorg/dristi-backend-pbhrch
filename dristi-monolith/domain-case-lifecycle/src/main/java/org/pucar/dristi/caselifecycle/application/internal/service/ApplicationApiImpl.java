@@ -16,7 +16,7 @@ public class ApplicationApiImpl implements ApplicationApi {
     private final ApplicationService applicationService;
 
     @Override
-    public List<Application> searchApplications(ApplicationSearchRequest request) {
+    public List<Application> search(ApplicationSearchRequest request) {
         return applicationService.searchApplications(request);
     }
 

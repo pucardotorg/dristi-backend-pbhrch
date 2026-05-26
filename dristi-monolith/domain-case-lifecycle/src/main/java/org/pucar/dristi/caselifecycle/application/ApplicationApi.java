@@ -8,8 +8,8 @@ import java.util.List;
 
 /**
  * Public, cross-subdomain API of the application subdomain. Other modules
- * (order-management today) consume application through this interface —
- * never by importing from {@code internal/}.
+ * (casemanagement, order-management today) consume application through
+ * this interface — never by importing from {@code internal/}.
  *
  * <p>Application's contract DTOs live at
  * {@code dristi-common/contract/application/} (lifted by Phase 35 during
@@ -22,7 +22,7 @@ public interface ApplicationApi {
      * Search applications matching the criteria in the request.
      * Mirrors the {@code /application/v1/_search} REST endpoint.
      */
-    List<Application> searchApplications(ApplicationSearchRequest request);
+    List<Application> search(ApplicationSearchRequest request);
 
     /**
      * Update an existing application — mirrors {@code /application/v1/_update}.

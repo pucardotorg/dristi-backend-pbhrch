@@ -44,7 +44,7 @@ public class ApplicationUtil {
                     objectMapper.convertValue(request,
                             org.pucar.dristi.common.contract.application.ApplicationSearchRequest.class);
             List<org.pucar.dristi.common.contract.application.Application> apiResult =
-                    applicationApi.searchApplications(bridgedRequest);
+                    applicationApi.search(bridgedRequest);
             if (apiResult == null || apiResult.isEmpty()) {
                 return Collections.emptyList();
             }

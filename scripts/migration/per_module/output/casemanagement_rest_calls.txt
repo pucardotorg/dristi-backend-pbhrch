@@ -1,0 +1,3 @@
+dristi-monolith/domain-case-lifecycle/src/main/java/org/pucar/dristi/caselifecycle/casemanagement/internal/util/TaskManagementUtil.java  uses ['TaskManagementServiceHost']
+dristi-monolith/domain-case-lifecycle/src/main/java/org/pucar/dristi/caselifecycle/casemanagement/internal/util/CaseUtil.java  uses ['CaseHost']
+dristi-monolith/domain-case-lifecycle/src/main/java/org/pucar/dristi/caselifecycle/casemanagement/internal/util/TaskUtil.java  uses ['TaskSearchHost']
