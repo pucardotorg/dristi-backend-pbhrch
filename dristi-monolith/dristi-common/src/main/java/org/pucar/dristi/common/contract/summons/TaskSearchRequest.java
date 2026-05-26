@@ -3,8 +3,10 @@ package org.pucar.dristi.common.contract.summons;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.egov.common.contract.request.RequestInfo;
 import org.springframework.validation.annotation.Validated;
@@ -17,6 +19,8 @@ import org.springframework.validation.annotation.Validated;
 @Getter
 @Setter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class TaskSearchRequest {
 
     @JsonProperty("RequestInfo")

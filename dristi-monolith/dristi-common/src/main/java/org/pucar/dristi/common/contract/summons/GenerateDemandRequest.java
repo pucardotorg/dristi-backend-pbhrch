@@ -2,8 +2,10 @@
 package org.pucar.dristi.common.contract.summons;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.egov.common.contract.request.RequestInfo;
 
 import javax.validation.Valid;
@@ -13,6 +15,8 @@ import java.util.List;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class GenerateDemandRequest {
     @NotNull
     @JsonProperty("RequestInfo")

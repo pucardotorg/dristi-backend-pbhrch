@@ -15,6 +15,8 @@ import java.util.Map;
 @jakarta.annotation.Generated(value = "org.egov.codegen.SpringBootCodegen", date = "2024-05-29T13:38:04.562296+05:30[Asia/Calcutta]")
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class DeliveryChannel {
 
     @JsonProperty("fees")
