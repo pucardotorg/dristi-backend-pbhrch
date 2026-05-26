@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.pucar.dristi.caselifecycle.evidence.EvidenceApi;
 import org.pucar.dristi.caselifecycle.openapi.internal.config.Configuration;
 import org.pucar.dristi.caselifecycle.openapi.internal.web.models.witnessdeposition.*;
 
@@ -30,6 +31,9 @@ class EvidenceUtilTest {
     @Mock
     private ObjectMapper objectMapper;
 
+    @Mock
+    private EvidenceApi evidenceApi;
+
     @InjectMocks
     private EvidenceUtil evidenceUtil;
 
@@ -41,23 +45,27 @@ class EvidenceUtilTest {
 
         RequestInfo requestInfo = new RequestInfo();
 
-        String mockUri = "http://localhost/evidence/search";
-
-        Map<String, Object> dummyResponse = new HashMap<>();
+        org.pucar.dristi.common.contract.evidence.EvidenceSearchCriteria bridgedCriteria =
+                new org.pucar.dristi.common.contract.evidence.EvidenceSearchCriteria();
+        org.pucar.dristi.common.contract.evidence.EvidenceSearchResponse apiResponse =
+                new org.pucar.dristi.common.contract.evidence.EvidenceSearchResponse();
         EvidenceSearchResponse expectedResponse = new EvidenceSearchResponse();
 
-        when(configuration.getEvidenceServiceHost()).thenReturn("http://localhost");
-        when(configuration.getEvidenceServiceSearchEndpoint()).thenReturn("/evidence/search");
-        when(restTemplate.postForObject(eq(mockUri), any(), eq(Map.class))).thenReturn(dummyResponse);
-        when(objectMapper.convertValue(dummyResponse, EvidenceSearchResponse.class)).thenReturn(expectedResponse);
+        when(objectMapper.convertValue(criteria,
+                org.pucar.dristi.common.contract.evidence.EvidenceSearchCriteria.class))
+                .thenReturn(bridgedCriteria);
+        when(evidenceApi.searchEvidence(eq(requestInfo), eq(bridgedCriteria), isNull()))
+                .thenReturn(apiResponse);
+        when(objectMapper.convertValue(apiResponse, EvidenceSearchResponse.class))
+                .thenReturn(expectedResponse);
 
         // Act
         EvidenceSearchResponse actual = evidenceUtil.searchEvidence(criteria, requestInfo);
 
         // Assert
         assertEquals(expectedResponse, actual);
-        verify(restTemplate).postForObject(eq(mockUri), any(EvidenceSearchRequest.class), eq(Map.class));
-        verify(objectMapper).convertValue(dummyResponse, EvidenceSearchResponse.class);
+        verify(evidenceApi).searchEvidence(eq(requestInfo), eq(bridgedCriteria), isNull());
+        verify(objectMapper).convertValue(apiResponse, EvidenceSearchResponse.class);
     }
 
     @Test
@@ -67,9 +75,8 @@ class EvidenceUtilTest {
 
         RequestInfo requestInfo = new RequestInfo();
 
-        when(configuration.getEvidenceServiceHost()).thenReturn("http://localhost");
-        when(configuration.getEvidenceServiceSearchEndpoint()).thenReturn("/evidence/search");
-        when(restTemplate.postForObject(anyString(), any(), eq(Map.class)))
+        when(objectMapper.convertValue(criteria,
+                org.pucar.dristi.common.contract.evidence.EvidenceSearchCriteria.class))
                 .thenThrow(new RuntimeException("Connection error"));
 
         CustomException ex = assertThrows(CustomException.class,

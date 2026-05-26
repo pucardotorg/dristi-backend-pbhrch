@@ -10,12 +10,13 @@ import org.pucar.dristi.caselifecycle.openapi.internal.util.RequestInfoGenerator
 import org.pucar.dristi.common.util.ResponseInfoFactory;
 import org.pucar.dristi.caselifecycle.openapi.internal.validator.FileStoreValidator;
 import org.pucar.dristi.caselifecycle.openapi.internal.web.models.*;
+import org.pucar.dristi.common.contract.openapi.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.pucar.dristi.caselifecycle.openapi.internal.web.models.LandingPageCaseListRequest;
-import org.pucar.dristi.caselifecycle.openapi.internal.web.models.LandingPageCaseListResponse;
+import org.pucar.dristi.common.contract.openapi.LandingPageCaseListResponse;
 import org.pucar.dristi.caselifecycle.openapi.internal.web.models.address.AddAddressRequest;
 import org.pucar.dristi.caselifecycle.openapi.internal.web.models.address.AddAddressResponse;
 import org.pucar.dristi.caselifecycle.openapi.internal.web.models.bailbond.OpenApiBailResponse;

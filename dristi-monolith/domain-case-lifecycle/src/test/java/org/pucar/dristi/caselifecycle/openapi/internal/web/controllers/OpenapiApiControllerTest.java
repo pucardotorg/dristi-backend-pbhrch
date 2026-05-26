@@ -13,8 +13,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.pucar.dristi.caselifecycle.openapi.internal.service.OpenApiService;
-import org.pucar.dristi.caselifecycle.openapi.internal.web.models.CaseListResponse;
-import org.pucar.dristi.caselifecycle.openapi.internal.web.models.CaseSummaryResponse;
+import org.pucar.dristi.common.contract.openapi.CaseListResponse;
+import org.pucar.dristi.common.contract.openapi.CaseSummaryResponse;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;

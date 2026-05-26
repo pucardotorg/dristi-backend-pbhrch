@@ -6,7 +6,7 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.model.CustomException;
 import org.pucar.dristi.caselifecycle.openapi.internal.config.Configuration;
 import org.pucar.dristi.common.repository.ServiceRequestRepository;
-import org.pucar.dristi.caselifecycle.openapi.internal.web.models.RequestInfoWrapper;
+import org.pucar.dristi.common.contract.openapi.RequestInfoWrapper;
 import org.pucar.dristi.caselifecycle.openapi.internal.web.models.payment.BillResponseV2;
 import org.pucar.dristi.caselifecycle.openapi.internal.web.models.payment.BillSearchCriteria;
 import org.pucar.dristi.caselifecycle.openapi.internal.web.models.payment.CalculationRes;
@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-@Service
+@Service("openapiPaymentService")
 @Slf4j
 public class PaymentService {
 

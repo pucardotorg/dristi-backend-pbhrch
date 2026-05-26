@@ -15,6 +15,7 @@ import org.pucar.dristi.caselifecycle.openapi.internal.util.AdvocateUtil;
 import org.pucar.dristi.caselifecycle.openapi.internal.util.DateUtil;
 import org.pucar.dristi.common.util.ResponseInfoFactory;
 import org.pucar.dristi.caselifecycle.openapi.internal.web.models.*;
+import org.pucar.dristi.common.contract.openapi.*;
 
 import java.time.LocalDate;
 import java.time.ZoneId;

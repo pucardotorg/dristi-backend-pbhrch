@@ -1,3 +1,7 @@
+// Reverted from Phase 35 lift: references subpackage classes (Order, IssuedBy,
+// StatuteSection, PartyDetails, OrderBy, OfflinePaymentTask) that remain under
+// internal/web/models/<subpkg>/. Kept service-local since openapi is a leaf
+// consumer with no peer-subdomain callers.
 package org.pucar.dristi.caselifecycle.openapi.internal.web.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;

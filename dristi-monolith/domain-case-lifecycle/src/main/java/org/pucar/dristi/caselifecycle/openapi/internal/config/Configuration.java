@@ -263,13 +263,6 @@ public class Configuration {
     @Value("${egov.order.search.path}")
     private String orderSearchPath;
 
-    // Case Config
-    @Value("${egov.case.host}")
-    private String caseHost;
-
-    @Value("${egov.case.search.path}")
-    private String caseSearchPath;
-
     @Value("${egov.infra.indexer.host}")
     private String esHostUrl;
 

@@ -9,11 +9,11 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.model.ServiceCallException;
 import org.pucar.dristi.caselifecycle.openapi.internal.config.Configuration;
 import org.pucar.dristi.common.repository.ServiceRequestRepository;
-import org.pucar.dristi.caselifecycle.openapi.internal.web.models.LandingPageCase;
-import org.pucar.dristi.caselifecycle.openapi.internal.web.models.LandingPageCaseListResponse;
-import org.pucar.dristi.caselifecycle.openapi.internal.web.models.OpenHearing;
-import org.pucar.dristi.caselifecycle.openapi.internal.web.models.SearchRequest;
-import org.pucar.dristi.caselifecycle.openapi.internal.web.models.SearchResponse;
+import org.pucar.dristi.common.contract.openapi.LandingPageCase;
+import org.pucar.dristi.common.contract.openapi.LandingPageCaseListResponse;
+import org.pucar.dristi.common.contract.openapi.OpenHearing;
+import org.pucar.dristi.common.contract.openapi.SearchRequest;
+import org.pucar.dristi.common.contract.openapi.SearchResponse;
 import org.pucar.dristi.caselifecycle.openapi.internal.web.models.inbox.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
@@ -24,6 +24,7 @@ import java.util.*;
 
 import static org.pucar.dristi.caselifecycle.openapi.internal.config.ServiceConstants.*;
 
+import org.pucar.dristi.common.contract.openapi.Hearing;
 @Component("openapiInboxUtil")
 @Slf4j
 public class InboxUtil {

@@ -1,9 +1,6 @@
 package org.pucar.dristi.caselifecycle.openapi.internal.web.models.lock;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -16,12 +13,10 @@ import org.pucar.dristi.common.models.AuditDetails;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Entity(name = "lock")
 public class Lock {
 
     @JsonProperty("id")
     @Valid
-    @Id
     private String id = null;
 
     @JsonProperty("tenantId")
@@ -58,7 +53,6 @@ public class Lock {
 
     @JsonProperty("auditDetails")
     @Valid
-    @Embedded
     private AuditDetails auditDetails = null;
 
 

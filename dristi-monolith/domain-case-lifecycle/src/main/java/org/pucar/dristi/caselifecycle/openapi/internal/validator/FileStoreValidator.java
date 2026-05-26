@@ -2,7 +2,7 @@ package org.pucar.dristi.caselifecycle.openapi.internal.validator;
 
 import lombok.extern.slf4j.Slf4j;
 import org.pucar.dristi.caselifecycle.openapi.internal.config.Configuration;
-import org.pucar.dristi.caselifecycle.openapi.internal.web.models.LandingPageFileRequest;
+import org.pucar.dristi.common.contract.openapi.LandingPageFileRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

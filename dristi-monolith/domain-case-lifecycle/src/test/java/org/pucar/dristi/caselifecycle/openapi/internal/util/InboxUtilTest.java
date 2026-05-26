@@ -12,8 +12,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.pucar.dristi.caselifecycle.openapi.internal.config.Configuration;
 import org.pucar.dristi.common.repository.ServiceRequestRepository;
-import org.pucar.dristi.caselifecycle.openapi.internal.web.models.LandingPageCase;
-import org.pucar.dristi.caselifecycle.openapi.internal.web.models.LandingPageCaseListResponse;
+import org.pucar.dristi.common.contract.openapi.LandingPageCase;
+import org.pucar.dristi.common.contract.openapi.LandingPageCaseListResponse;
 import org.egov.common.contract.response.ResponseInfo;
 import org.pucar.dristi.caselifecycle.openapi.internal.web.models.inbox.*;
 

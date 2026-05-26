@@ -110,6 +110,14 @@
             <version>1.0.9-SNAPSHOT</version>
         </dependency>
 
+        <!-- health-services-common provides org.egov.common.data.query.annotations.Exclude
+             used by openapi's lifted IndividualSearch contract DTO. -->
+        <dependency>
+            <groupId>org.egov.common</groupId>
+            <artifactId>health-services-common</artifactId>
+            <version>1.0.12-SNAPSHOT</version>
+        </dependency>
+
 
         <!-- Spring Modulith: only @NamedInterface package-info markers; the
              actual modulith verifier lives in dristi-app (test scope). -->

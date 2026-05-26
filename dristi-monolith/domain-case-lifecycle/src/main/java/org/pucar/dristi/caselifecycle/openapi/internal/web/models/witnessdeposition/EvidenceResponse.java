@@ -1,7 +1,7 @@
 package org.pucar.dristi.caselifecycle.openapi.internal.web.models.witnessdeposition;
 
 import org.egov.common.contract.response.ResponseInfo;
-import org.pucar.dristi.caselifecycle.openapi.internal.web.models.Pagination;
+import org.pucar.dristi.common.contract.openapi.Pagination;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;

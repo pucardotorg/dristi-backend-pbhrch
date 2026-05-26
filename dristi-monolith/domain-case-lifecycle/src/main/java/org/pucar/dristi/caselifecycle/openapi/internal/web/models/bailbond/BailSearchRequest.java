@@ -2,7 +2,7 @@ package org.pucar.dristi.caselifecycle.openapi.internal.web.models.bailbond;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.egov.common.contract.request.RequestInfo;
-import org.pucar.dristi.caselifecycle.openapi.internal.web.models.Pagination;
+import org.pucar.dristi.common.contract.openapi.Pagination;
 import org.springframework.validation.annotation.Validated;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;

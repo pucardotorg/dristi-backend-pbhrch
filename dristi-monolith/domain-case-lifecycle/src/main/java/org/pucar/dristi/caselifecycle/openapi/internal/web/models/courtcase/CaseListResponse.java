@@ -8,7 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.egov.common.contract.response.ResponseInfo;
 import org.pucar.dristi.caselifecycle.openapi.internal.web.models.CaseCriteria;
-import org.pucar.dristi.caselifecycle.openapi.internal.web.models.Pagination;
+import org.pucar.dristi.common.contract.openapi.Pagination;
 
 import java.util.List;
 

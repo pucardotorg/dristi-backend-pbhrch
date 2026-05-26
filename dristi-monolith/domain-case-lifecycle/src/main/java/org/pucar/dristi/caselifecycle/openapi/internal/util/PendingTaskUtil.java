@@ -13,6 +13,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 
+import org.pucar.dristi.common.contract.openapi.Data;
 @Slf4j
 @Component("openapiPendingTaskUtil")
 public class PendingTaskUtil {
