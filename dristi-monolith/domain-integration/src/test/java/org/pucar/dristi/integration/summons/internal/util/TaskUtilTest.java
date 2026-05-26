@@ -1,10 +1,10 @@
 package org.pucar.dristi.integration.summons.internal.util;
 
 import org.pucar.dristi.integration.summons.internal.config.Configuration;
-import org.pucar.dristi.integration.summons.internal.web.models.TaskListResponse;
-import org.pucar.dristi.integration.summons.internal.web.models.TaskRequest;
-import org.pucar.dristi.integration.summons.internal.web.models.TaskResponse;
-import org.pucar.dristi.integration.summons.internal.web.models.TaskSearchRequest;
+import org.pucar.dristi.common.contract.summons.TaskListResponse;
+import org.pucar.dristi.common.contract.summons.TaskRequest;
+import org.pucar.dristi.common.contract.summons.TaskResponse;
+import org.pucar.dristi.common.contract.summons.TaskSearchRequest;
 import org.egov.tracer.model.CustomException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

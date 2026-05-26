@@ -6,8 +6,10 @@ import org.pucar.dristi.integration.summons.internal.config.Configuration;
 import org.pucar.dristi.common.repository.ServiceRequestRepository;
 import org.pucar.dristi.integration.summons.internal.util.CaseUtil;
 import org.pucar.dristi.common.util.MdmsUtil;
+import org.pucar.dristi.common.util.RequestInfoUtil;
 import org.pucar.dristi.integration.summons.internal.util.TaskUtil;
 import org.pucar.dristi.integration.summons.internal.web.models.*;
+import org.pucar.dristi.common.contract.summons.*;
 import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONArray;
 import org.egov.common.contract.models.RequestInfoWrapper;
@@ -394,8 +396,8 @@ public class DemandService {
         String uri = buildFetchBillURI(task.getTenantId(), consumerCodes, businessService);
 
         Role role = Role.builder().code(config.getPaymentCollector()).tenantId(config.getEgovStateTenantId()).build();
-        requestInfo.getUserInfo().getRoles().add(role);
-        RequestInfoWrapper requestInfoWrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
+        RequestInfo enrichedRequestInfo = RequestInfoUtil.withExtraRole(requestInfo, role);
+        RequestInfoWrapper requestInfoWrapper = RequestInfoWrapper.builder().requestInfo(enrichedRequestInfo).build();
         Object response = repository.fetchResult(new StringBuilder(uri), requestInfoWrapper);
 
         return mapper.convertValue(response, BillResponse.class);

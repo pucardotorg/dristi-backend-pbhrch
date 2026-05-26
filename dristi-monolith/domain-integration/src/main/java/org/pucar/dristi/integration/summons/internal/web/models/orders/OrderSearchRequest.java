@@ -1,7 +1,7 @@
 package org.pucar.dristi.integration.summons.internal.web.models.orders;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.pucar.dristi.integration.summons.internal.web.models.Pagination;
+import org.pucar.dristi.common.contract.summons.Pagination;
 import jakarta.validation.Valid;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,6 +9,7 @@ import lombok.Setter;
 import org.egov.common.contract.request.RequestInfo;
 import org.springframework.validation.annotation.Validated;
 
+import org.pucar.dristi.common.contract.summons.CaseSearchRequest;
 /**
  * CaseSearchRequest
  */

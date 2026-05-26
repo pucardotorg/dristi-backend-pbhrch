@@ -1,9 +1,9 @@
 package org.pucar.dristi.integration.summons.internal.util;
 
 import org.pucar.dristi.integration.summons.internal.config.Configuration;
-import org.pucar.dristi.integration.summons.internal.web.models.LocationBasedJurisdiction;
-import org.pucar.dristi.integration.summons.internal.web.models.LocationBasedJurisdictionResponse;
-import org.pucar.dristi.integration.summons.internal.web.models.LocationRequest;
+import org.pucar.dristi.common.contract.summons.LocationBasedJurisdiction;
+import org.pucar.dristi.common.contract.summons.LocationBasedJurisdictionResponse;
+import org.pucar.dristi.common.contract.summons.LocationRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

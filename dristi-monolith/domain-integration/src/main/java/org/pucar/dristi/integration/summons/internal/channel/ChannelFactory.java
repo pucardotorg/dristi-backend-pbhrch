@@ -1,6 +1,6 @@
 package org.pucar.dristi.integration.summons.internal.channel;
 
-import org.pucar.dristi.integration.summons.internal.web.models.ChannelName;
+import org.pucar.dristi.common.contract.summons.ChannelName;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -4,6 +4,7 @@ package org.pucar.dristi.integration.summons.internal.config;
 import org.springframework.stereotype.Component;
 
 
+import org.pucar.dristi.common.contract.summons.Order;
 @Component("summonsServiceConstants")
 public class ServiceConstants {
 

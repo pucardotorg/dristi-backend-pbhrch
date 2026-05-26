@@ -15,6 +15,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.pucar.dristi.integration.summons.internal.config.Configuration;
 import org.pucar.dristi.common.repository.ServiceRequestRepository;
 import org.pucar.dristi.integration.summons.internal.web.models.*;
+import org.pucar.dristi.common.contract.summons.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.*;

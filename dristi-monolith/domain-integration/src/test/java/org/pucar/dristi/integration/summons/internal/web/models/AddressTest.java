@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
+import org.pucar.dristi.common.contract.summons.Address;
 public class AddressTest {
 
     @Test

@@ -1,10 +1,10 @@
 package org.pucar.dristi.integration.summons.internal.util;
 
 import org.pucar.dristi.integration.summons.internal.config.Configuration;
-import org.pucar.dristi.integration.summons.internal.web.models.TaskListResponse;
-import org.pucar.dristi.integration.summons.internal.web.models.TaskRequest;
-import org.pucar.dristi.integration.summons.internal.web.models.TaskResponse;
-import org.pucar.dristi.integration.summons.internal.web.models.TaskSearchRequest;
+import org.pucar.dristi.common.contract.summons.TaskListResponse;
+import org.pucar.dristi.common.contract.summons.TaskRequest;
+import org.pucar.dristi.common.contract.summons.TaskResponse;
+import org.pucar.dristi.common.contract.summons.TaskSearchRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.tracer.model.CustomException;
 import org.springframework.http.HttpEntity;
@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import org.pucar.dristi.common.contract.summons.Task;
 @Component
 @Slf4j
 public class TaskUtil {

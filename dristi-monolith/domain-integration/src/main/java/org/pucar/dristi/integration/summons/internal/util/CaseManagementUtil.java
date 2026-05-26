@@ -4,9 +4,9 @@ package org.pucar.dristi.integration.summons.internal.util;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.pucar.dristi.integration.summons.internal.config.Configuration;
-import org.pucar.dristi.integration.summons.internal.web.models.PdfRequest;
-import org.pucar.dristi.integration.summons.internal.web.models.TaskRequest;
-import org.pucar.dristi.integration.summons.internal.web.models.VcCredentialRequest;
+import org.pucar.dristi.common.contract.summons.PdfRequest;
+import org.pucar.dristi.common.contract.summons.TaskRequest;
+import org.pucar.dristi.common.contract.summons.VcCredentialRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import org.pucar.dristi.common.contract.summons.Task;
 @Component
 @Slf4j
 public class CaseManagementUtil {

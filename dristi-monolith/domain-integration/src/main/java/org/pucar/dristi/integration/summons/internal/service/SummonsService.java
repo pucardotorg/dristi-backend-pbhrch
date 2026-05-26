@@ -7,6 +7,7 @@ import org.pucar.dristi.common.kafka.Producer;
 import org.pucar.dristi.integration.summons.internal.repository.SummonsRepository;
 import org.pucar.dristi.integration.summons.internal.util.*;
 import org.pucar.dristi.integration.summons.internal.web.models.*;
+import org.pucar.dristi.common.contract.summons.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;

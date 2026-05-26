@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.pucar.dristi.integration.summons.internal.config.Configuration;
 import org.pucar.dristi.integration.summons.internal.web.models.*;
+import org.pucar.dristi.common.contract.summons.*;
 import org.egov.tracer.model.CustomException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

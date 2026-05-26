@@ -3,6 +3,7 @@ package org.pucar.dristi.integration.summons.internal.enrichment;
 import org.pucar.dristi.common.util.IdgenUtil;
 import org.pucar.dristi.integration.summons.internal.config.Configuration;
 import org.pucar.dristi.integration.summons.internal.web.models.*;
+import org.pucar.dristi.common.contract.summons.*;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.models.AuditDetails;
 import org.egov.common.contract.request.RequestInfo;

@@ -3,7 +3,7 @@ package org.pucar.dristi.integration.summons.internal.util;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.pucar.dristi.integration.summons.internal.config.Configuration;
-import org.pucar.dristi.integration.summons.internal.web.models.CaseSearchRequest;
+import org.pucar.dristi.common.contract.summons.CaseSearchRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;

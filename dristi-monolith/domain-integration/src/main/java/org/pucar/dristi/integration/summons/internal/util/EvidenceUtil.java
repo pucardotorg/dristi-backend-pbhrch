@@ -1,7 +1,7 @@
 package org.pucar.dristi.integration.summons.internal.util;
 
 import org.pucar.dristi.integration.summons.internal.config.Configuration;
-import org.pucar.dristi.integration.summons.internal.web.models.EvidenceRequest;
+import org.pucar.dristi.common.contract.summons.EvidenceRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.tracer.model.CustomException;
 import org.springframework.http.HttpEntity;

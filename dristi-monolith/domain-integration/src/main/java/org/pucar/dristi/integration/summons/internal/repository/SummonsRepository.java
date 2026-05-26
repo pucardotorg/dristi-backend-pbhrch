@@ -2,8 +2,8 @@ package org.pucar.dristi.integration.summons.internal.repository;
 
 import org.pucar.dristi.integration.summons.internal.repository.querybuilder.SummonsDeliveryQueryBuilder;
 import org.pucar.dristi.integration.summons.internal.repository.rowmapper.SummonsDeliveryRowMapper;
-import org.pucar.dristi.integration.summons.internal.web.models.SummonsDelivery;
-import org.pucar.dristi.integration.summons.internal.web.models.SummonsDeliverySearchCriteria;
+import org.pucar.dristi.common.contract.summons.SummonsDelivery;
+import org.pucar.dristi.common.contract.summons.SummonsDeliverySearchCriteria;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;

@@ -3,6 +3,7 @@ package org.pucar.dristi.integration.summons.internal.web.controllers;
 import org.pucar.dristi.integration.summons.internal.service.SummonsService;
 import org.pucar.dristi.common.util.ResponseInfoFactory;
 import org.pucar.dristi.integration.summons.internal.web.models.*;
+import org.pucar.dristi.common.contract.summons.*;
 import org.egov.common.contract.response.ResponseInfo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

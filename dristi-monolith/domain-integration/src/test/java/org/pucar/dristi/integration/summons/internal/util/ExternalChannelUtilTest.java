@@ -2,8 +2,8 @@ package org.pucar.dristi.integration.summons.internal.util;
 
 import org.pucar.dristi.integration.summons.internal.channel.ChannelFactory;
 import org.pucar.dristi.integration.summons.internal.channel.ExternalChannel;
-import org.pucar.dristi.integration.summons.internal.web.models.SummonsDelivery;
-import org.pucar.dristi.integration.summons.internal.web.models.TaskRequest;
+import org.pucar.dristi.common.contract.summons.SummonsDelivery;
+import org.pucar.dristi.common.contract.summons.TaskRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

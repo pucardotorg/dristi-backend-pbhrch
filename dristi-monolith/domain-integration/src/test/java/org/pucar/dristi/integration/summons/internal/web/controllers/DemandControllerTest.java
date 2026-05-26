@@ -1,8 +1,8 @@
 package org.pucar.dristi.integration.summons.internal.web.controllers;
 
 import org.pucar.dristi.integration.summons.internal.service.DemandService;
-import org.pucar.dristi.integration.summons.internal.web.models.BillResponse;
-import org.pucar.dristi.integration.summons.internal.web.models.TaskRequest;
+import org.pucar.dristi.common.contract.summons.BillResponse;
+import org.pucar.dristi.common.contract.summons.TaskRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

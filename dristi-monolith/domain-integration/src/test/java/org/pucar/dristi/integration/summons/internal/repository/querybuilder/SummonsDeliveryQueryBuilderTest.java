@@ -1,6 +1,6 @@
 package org.pucar.dristi.integration.summons.internal.repository.querybuilder;
 
-import org.pucar.dristi.integration.summons.internal.web.models.SummonsDeliverySearchCriteria;
+import org.pucar.dristi.common.contract.summons.SummonsDeliverySearchCriteria;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

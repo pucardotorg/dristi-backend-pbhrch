@@ -2,10 +2,10 @@ package org.pucar.dristi.integration.summons.internal.repository.rowmapper;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.pucar.dristi.integration.summons.internal.web.models.AdditionalFields;
-import org.pucar.dristi.integration.summons.internal.web.models.ChannelName;
-import org.pucar.dristi.integration.summons.internal.web.models.DeliveryStatus;
-import org.pucar.dristi.integration.summons.internal.web.models.SummonsDelivery;
+import org.pucar.dristi.common.contract.summons.AdditionalFields;
+import org.pucar.dristi.common.contract.summons.ChannelName;
+import org.pucar.dristi.common.contract.summons.DeliveryStatus;
+import org.pucar.dristi.common.contract.summons.SummonsDelivery;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.models.AuditDetails;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -2,9 +2,9 @@ package org.pucar.dristi.integration.summons.internal.channel;
 
 import org.pucar.dristi.integration.summons.internal.config.Configuration;
 import org.pucar.dristi.common.kafka.Producer;
-import org.pucar.dristi.integration.summons.internal.web.models.ChannelMessage;
-import org.pucar.dristi.integration.summons.internal.web.models.ChannelResponse;
-import org.pucar.dristi.integration.summons.internal.web.models.TaskRequest;
+import org.pucar.dristi.common.contract.summons.ChannelMessage;
+import org.pucar.dristi.common.contract.summons.ChannelResponse;
+import org.pucar.dristi.common.contract.summons.TaskRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
