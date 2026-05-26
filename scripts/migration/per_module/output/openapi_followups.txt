@@ -1,0 +1,4 @@
+dristi-monolith/domain-case-lifecycle/src/main/java/org/pucar/dristi/caselifecycle/openapi/internal/util/FileStoreUtil.java has 2 method(s)/overload(s) absent from canonical: [('getFilesByFileStore', 3), ('uploadFiles', 5)]
+dristi-monolith/domain-case-lifecycle/src/main/java/org/pucar/dristi/caselifecycle/openapi/internal/util/DateUtil.java has 2 method(s)/overload(s) absent from canonical: [('getEpochFromLocalDateTime', 1), ('getYearInSeconds', 1)]
+dristi-monolith/domain-case-lifecycle/src/main/java/org/pucar/dristi/caselifecycle/openapi/internal/util/IdgenUtil.java has 1 method(s)/overload(s) absent from canonical: [('getIdList', 5)]
+dristi-monolith/domain-case-lifecycle/src/main/java/org/pucar/dristi/caselifecycle/openapi/internal/util/IndividualUtil.java has 2 method(s)/overload(s) absent from canonical: [('getIndividualFromMobileNumber', 2), ('getIndividuals', 3)]

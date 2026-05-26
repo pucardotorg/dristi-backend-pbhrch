@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-@Component
+@Component("transformerHearingUtil")
 @Slf4j
 public class HearingUtil {
 

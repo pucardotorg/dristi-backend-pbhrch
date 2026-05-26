@@ -4,7 +4,7 @@ import org.egov.common.contract.request.RequestInfo;
 import org.springframework.stereotype.Service;
 import org.pucar.dristi.caselifecycle.locksvc.internal.web.models.Lock;
 
-@Service
+@Service("locksvcLockService")
 public interface LockService {
 
     Lock setLock(RequestInfo requestInfo, Lock lockDetails);
