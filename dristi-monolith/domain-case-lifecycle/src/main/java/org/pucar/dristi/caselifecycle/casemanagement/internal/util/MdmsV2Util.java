@@ -18,7 +18,7 @@ import java.util.Set;
 
 import static org.pucar.dristi.caselifecycle.casemanagement.internal.config.ServiceConstants.ERROR_WHILE_FETCHING_FROM_MDMS;
 
-@Component
+@Component("casemanagementMdmsV2Util")
 @Slf4j
 public class MdmsV2Util {
 

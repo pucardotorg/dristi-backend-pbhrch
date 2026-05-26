@@ -16,7 +16,7 @@ import java.util.*;
 
 import static org.pucar.dristi.caselifecycle.ordermanagement.internal.config.ServiceConstants.ERROR_WHILE_FETCHING_FROM_MDMS;
 
-@Component
+@Component("ordermanagementMdmsV2Util")
 @Slf4j
 public class MdmsV2Util {
 

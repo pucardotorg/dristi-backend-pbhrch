@@ -37,7 +37,7 @@ import static org.pucar.dristi.caselifecycle.ordermanagement.internal.config.Ser
 
 import org.pucar.dristi.common.models.workflow.WorkflowObject;
 import org.pucar.dristi.common.models.Document;
-@Service
+@Service("ordermanagementOrderService")
 @Slf4j
 public class OrderService {
 
