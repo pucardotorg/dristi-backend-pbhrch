@@ -20,7 +20,7 @@ import java.util.LinkedHashMap;
 import java.util.UUID;
 
 @Slf4j
-@Service
+@Service("transformerOrderService")
 public class OrderService {
 
     private static final Logger logger = LoggerFactory.getLogger(OrderService.class);

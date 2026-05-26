@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.model.CustomException;
 import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.digitalizeddocument.DigitalizedDocument;
-import org.pucar.dristi.caselifecycle.digitalizeddocuments.DigitalizeddocumentsApi;
+import org.pucar.dristi.caselifecycle.digitalizeddocuments.DigitalizedDocumentsApi;
 import org.pucar.dristi.common.contract.digitalizeddocuments.DigitalizedDocumentSearchCriteria;
 import org.pucar.dristi.common.contract.digitalizeddocuments.DigitalizedDocumentSearchRequest;
 import org.springframework.stereotype.Component;
@@ -18,11 +18,11 @@ import java.util.List;
 public class DigitalizedDocumentUtil {
 
     private final ObjectMapper objectMapper;
-    private final DigitalizeddocumentsApi digitalizeddocumentsApi;
+    private final DigitalizedDocumentsApi digitalizedDocumentsApi;
 
-    public DigitalizedDocumentUtil(ObjectMapper objectMapper, DigitalizeddocumentsApi digitalizeddocumentsApi) {
+    public DigitalizedDocumentUtil(ObjectMapper objectMapper, DigitalizedDocumentsApi digitalizedDocumentsApi) {
         this.objectMapper = objectMapper;
-        this.digitalizeddocumentsApi = digitalizeddocumentsApi;
+        this.digitalizedDocumentsApi = digitalizedDocumentsApi;
     }
 
     /**
@@ -40,7 +40,7 @@ public class DigitalizedDocumentUtil {
                 .build();
         try {
             List<org.pucar.dristi.common.contract.digitalizeddocuments.DigitalizedDocument> results =
-                    digitalizeddocumentsApi.search(searchRequest);
+                    digitalizedDocumentsApi.search(searchRequest);
             if (results == null || results.isEmpty()) {
                 return Collections.emptyList();
             }
