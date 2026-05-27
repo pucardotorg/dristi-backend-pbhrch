@@ -1,4 +1,4 @@
-package org.pucar.dristi.integration.icops.internal.model;
+package org.pucar.dristi.common.contract.icops;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;

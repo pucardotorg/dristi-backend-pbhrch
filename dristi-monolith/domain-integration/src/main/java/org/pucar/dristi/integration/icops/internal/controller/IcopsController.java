@@ -2,6 +2,7 @@ package org.pucar.dristi.integration.icops.internal.controller;
 
 import org.pucar.dristi.integration.icops.internal.model.*;
 import org.pucar.dristi.integration.icops.internal.service.IcopsService;
+import org.pucar.dristi.common.contract.icops.LocationBasedJurisdiction;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.response.ResponseInfo;
 import org.springframework.beans.factory.annotation.Autowired;

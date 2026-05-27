@@ -2,9 +2,9 @@ package org.pucar.dristi.integration.icops.internal.util;
 
 import org.pucar.dristi.integration.icops.internal.config.IcopsConfiguration;
 import org.pucar.dristi.integration.icops.internal.model.AuthResponse;
-import org.pucar.dristi.integration.icops.internal.model.Location;
-import org.pucar.dristi.integration.icops.internal.model.LocationBasedJurisdiction;
-import org.pucar.dristi.integration.icops.internal.model.PoliceStationDetails;
+import org.pucar.dristi.common.contract.icops.Location;
+import org.pucar.dristi.common.contract.icops.LocationBasedJurisdiction;
+import org.pucar.dristi.common.contract.icops.PoliceStationDetails;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.egov.tracer.model.CustomException;
