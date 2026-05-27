@@ -1,6 +1,6 @@
 package org.pucar.dristi.caselifecycle.hearingmanagement.internal.service;
 
-import org.pucar.dristi.caselifecycle.hearing.HearingApi;
+import org.pucar.dristi.common.hearing.HearingApi;
 import org.pucar.dristi.caselifecycle.hearingmanagement.internal.enrichment.HearingsEnrichment;
 import org.pucar.dristi.common.contract.hearing.Hearing;
 import org.pucar.dristi.common.contract.hearingmanagement.HearingCriteria;

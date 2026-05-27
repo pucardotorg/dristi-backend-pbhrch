@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Component
+@Component("transformerHearingConsumer")
 @Slf4j
 public class HearingConsumer {
     private static final Logger logger = LoggerFactory.getLogger(HearingConsumer.class);

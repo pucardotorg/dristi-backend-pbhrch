@@ -14,7 +14,7 @@ import org.pucar.dristi.common.models.individual.Individual;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Component
+@Component("njdgTransformerProperties")
 public class TransformerProperties {
 
     // Filestore Config
