@@ -84,6 +84,16 @@ esign:
   y:
     coordinate:
       offset: 20
+# HAND-CURATED — drishti.esign.redirect.* merged from esign-interceptor hand-port (commit 87b8aafba).
+# See ABSORBED_SERVICES in run_consolidation.py for why future regens skip esign-interceptor.
+drishti:
+  esign:
+    redirect:
+      url: https://dristi-kerala-dev.pucar.org
+    landing:
+      page:
+        redirect:
+          url: /landing
 logging:
   loki:
     enabled: false
