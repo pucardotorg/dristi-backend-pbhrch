@@ -16,7 +16,8 @@ import org.pucar.dristi.caselifecycle.hearing.internal.enrichment.HearingRegistr
 import org.pucar.dristi.common.kafka.Producer;
 import org.pucar.dristi.caselifecycle.hearing.internal.repository.HearingRepository;
 import org.pucar.dristi.common.util.FileStoreUtil;
-import org.pucar.dristi.caselifecycle.hearing.internal.util.SchedulerUtil;
+import org.pucar.dristi.caselifecycle.scheduler.SchedulerApi;
+import org.pucar.dristi.common.contract.scheduler.ScheduleHearing;
 import org.pucar.dristi.caselifecycle.hearing.internal.validator.HearingRegistrationValidator;
 import org.pucar.dristi.caselifecycle.hearing.internal.web.models.*;
 import org.pucar.dristi.common.contract.hearing.*;
@@ -53,7 +54,7 @@ public class HearingServiceTest {
     private Configuration config;
 
     @Mock
-    private SchedulerUtil schedulerUtil;
+    private SchedulerApi schedulerApi;
 
     @Mock
     private ObjectMapper objectMapper;

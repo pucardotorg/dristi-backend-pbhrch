@@ -13,6 +13,9 @@ import org.pucar.dristi.caselifecycle.hearing.internal.util.OrderUtil;
 import org.pucar.dristi.common.util.ResponseInfoFactory;
 import org.pucar.dristi.caselifecycle.hearing.internal.web.models.*;
 import org.pucar.dristi.common.contract.hearing.*;
+import org.pucar.dristi.common.contract.scheduler.BulkRescheduleRequest;
+import org.pucar.dristi.common.contract.scheduler.BulkRescheduleResponse;
+import org.pucar.dristi.common.contract.scheduler.ScheduleHearing;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
@@ -25,7 +28,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @jakarta.annotation.Generated(value = "org.egov.codegen.SpringBootCodegen", date = "2024-04-18T11:14:11.072458+05:30[Asia/Calcutta]")
-@Controller
+@Controller("hearingInternalApiController")
 @RequestMapping("/hearing")
 @Slf4j
 public class HearingApiController {

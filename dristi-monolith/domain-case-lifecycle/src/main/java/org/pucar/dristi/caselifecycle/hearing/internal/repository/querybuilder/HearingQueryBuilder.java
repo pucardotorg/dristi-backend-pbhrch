@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 import static org.pucar.dristi.caselifecycle.hearing.internal.config.ServiceConstants.*;
 
-@Component
+@Component("hearingHearingQueryBuilder")
 @Slf4j
 public class HearingQueryBuilder {
     private static final String BASE_ATR_QUERY = " SELECT * FROM dristi_hearing WHERE 1=1 ";

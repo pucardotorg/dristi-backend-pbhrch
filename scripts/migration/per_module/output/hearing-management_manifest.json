@@ -1,0 +1,30 @@
+{
+  "service": "hearing-management",
+  "source_dir": "dristi-services\\hearing-management",
+  "target_module": "case-lifecycle",
+  "target_subdomain": "hearingmanagement",
+  "current_package": "digit",
+  "target_package": "org.pucar.dristi.caselifecycle.hearingmanagement",
+  "main_file_count": 36,
+  "test_file_count": 4,
+  "has_spring_boot_main": true,
+  "duplicated_protected_classes": [
+    "MdmsUtil",
+    "IdgenUtil",
+    "WorkflowUtil",
+    "UrlShortenerUtil",
+    "ResponseInfoFactory",
+    "Producer",
+    "KafkaProducerService",
+    "ServiceRequestRepository",
+    "WorkflowObject"
+  ],
+  "rest_call_files": [
+    "dristi-services\\hearing-management\\src\\main\\java\\digit\\repository\\ServiceRequestRepository.java",
+    "dristi-services\\hearing-management\\src\\main\\java\\digit\\util\\HearingUtil.java",
+    "dristi-services\\hearing-management\\src\\main\\java\\digit\\util\\IdgenUtil.java",
+    "dristi-services\\hearing-management\\src\\main\\java\\digit\\util\\SchedulerUtil.java",
+    "dristi-services\\hearing-management\\src\\main\\java\\digit\\util\\WorkflowUtil.java"
+  ],
+  "source_context_path": "/hearing-management"
+}

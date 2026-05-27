@@ -1,0 +1,232 @@
+package org.pucar.dristi.integration.njdg.internal.controller;
+
+import org.pucar.dristi.integration.njdg.internal.model.AdvocateDetails;
+import org.pucar.dristi.integration.njdg.internal.model.HearingDetails;
+import org.pucar.dristi.integration.njdg.internal.model.InterimOrder;
+import org.pucar.dristi.integration.njdg.internal.model.NJDGTransformRecord;
+import org.pucar.dristi.integration.njdg.internal.model.advocate.Advocate;
+import org.pucar.dristi.integration.njdg.internal.model.advocate.AdvocateRequest;
+import org.pucar.dristi.integration.njdg.internal.model.cases.CaseConversionRequest;
+import org.pucar.dristi.integration.njdg.internal.model.cases.CaseRequest;
+import org.pucar.dristi.integration.njdg.internal.model.cases.CaseResponse;
+import org.pucar.dristi.integration.njdg.internal.model.order.NotificationRequest;
+import org.pucar.dristi.integration.njdg.internal.model.order.Order;
+import org.pucar.dristi.integration.njdg.internal.model.order.OrderRequest;
+import org.pucar.dristi.integration.njdg.internal.service.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.*;
+
+import static org.pucar.dristi.integration.njdg.internal.config.ServiceConstants.*;
+
+@RestController
+@RequestMapping("/njdg-transformer/njdg/v1")
+@Slf4j
+@RequiredArgsConstructor
+public class NJDGController {
+
+    private final CaseService caseService;
+    private final OrderService orderService;
+    private final AdvocateService advocateService;
+    private final ObjectMapper objectMapper;
+    private final OrderNotificationService orderNotificationService;
+
+    /**
+     * Process and upsert a court case into NJDG format
+     *
+     * @param request The case request containing court case details
+     * @return ResponseEntity containing the processed case in NJDG format
+     */
+    @PostMapping("_processcase")
+    public ResponseEntity<CaseResponse> processAndUpsertCase(
+            @Valid @RequestBody CaseRequest request) {
+        
+        log.info("Received request to process court case with CNR: {}", 
+                request.getCourtCase() != null ? request.getCourtCase().getCnrNumber() : "null");
+        
+        try {
+            // Process the case
+            NJDGTransformRecord njdgRecord = caseService.processAndUpdateCase(request.getCourtCase(), request.getRequestInfo());
+            
+            // Build success response
+            CaseResponse response = CaseResponse.builder()
+                    .cases(Collections.singletonList(njdgRecord))
+                    .responseInfo(CaseResponse.ResponseInfo.builder()
+                            .status("SUCCESS")
+                            .message("Case processed successfully")
+                            .build())
+                    .build();
+            
+            return new ResponseEntity<>(response, HttpStatus.OK);
+            
+        } catch (IllegalArgumentException e) {
+            log.error("Invalid request: {}", e.getMessage());
+            return new ResponseEntity<>(
+                    buildErrorResponse("INVALID_REQUEST", e.getMessage()),
+                    HttpStatus.BAD_REQUEST
+            );
+        } catch (Exception e) {
+            log.error("Error processing case: {}", e.getMessage(), e);
+            return new ResponseEntity<>(
+                    buildErrorResponse("PROCESSING_ERROR", "Failed to process case: " + e.getMessage()),
+                    HttpStatus.BAD_REQUEST
+            );
+        }
+    }
+
+    
+    /**
+     * Builds an error response with the given status and message
+     */
+    private CaseResponse buildErrorResponse(String status, String message) {
+        return CaseResponse.builder()
+                .responseInfo(CaseResponse.ResponseInfo.builder()
+                        .status(status)
+                        .message(message)
+                        .build())
+                .build();
+    }
+
+    @PostMapping("_processorder")
+    public ResponseEntity<InterimOrder> processAndUpdateOrder(@Valid @RequestBody OrderRequest orderRequest) {
+        log.info("Received request to process order with orderNumber: {}", 
+                orderRequest.getOrder() != null ? orderRequest.getOrder().getOrderNumber() : "null");
+        
+        return orderService.processOrderRequest(orderRequest.getOrder(), orderRequest.getRequestInfo());
+    }
+
+
+    @PostMapping("_search")
+    public ResponseEntity<NJDGTransformRecord> getNjdgTransformRecord(@Valid @RequestParam String cino) {
+        try {
+            NJDGTransformRecord record = caseService.getNjdgTransformRecord(cino);
+            return ResponseEntity.ok(record);
+        } catch (Exception e) {
+            log.error("No record found for cino: {}", cino);
+            return ResponseEntity.notFound().<NJDGTransformRecord>build();
+        }
+    }
+
+    @PostMapping("_processadvocate")
+    public ResponseEntity<?> processAndUpdateAdvocates(@Valid @RequestBody AdvocateRequest advocateRequest) {
+        try {
+            Advocate advocate = advocateRequest.getAdvocate();
+            if (advocate == null || !ACTIVE.equalsIgnoreCase(advocate.getStatus())) {
+                Map<String, String> response = new HashMap<>();
+                response.put("message", "Advocate is not active and will not be processed");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            }
+            AdvocateDetails advocateDetails = advocateService.processAndUpdateAdvocates(advocateRequest);
+            if (advocateDetails == null) {
+                Map<String, String> response = new HashMap<>();
+                response.put("message", "Advocate is already present");
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+            }
+            return ResponseEntity.ok(advocateDetails);
+        } catch (Exception e) {
+            log.error("Error processing advocate: {}", e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new AdvocateDetails());
+        }
+    }
+
+    @PostMapping("_processbusinessorders")
+    public ResponseEntity<?> processBusinessDayOrders(@Valid @RequestBody OrderRequest orderRequest) {
+        String orderNumber = orderRequest.getOrder() != null ? orderRequest.getOrder().getOrderNumber() : null;
+        
+        log.info("Received request to process business day order | orderNumber: {}", orderNumber);
+        
+        try {
+            Order order = orderRequest.getOrder();
+            if (order == null) {
+                Map<String, String> response = new HashMap<>();
+                response.put("message", "Order is required");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            }
+            Map<String, String> response = new HashMap<>();
+            orderNotificationService.processOrdersWithHearings(order, orderRequest.getRequestInfo());
+            response.put("message", "Business day order processed successfully");
+            response.put("orderNumber", orderNumber);
+            return ResponseEntity.ok(response);
+
+        } catch (Exception e) {
+            log.error("Error processing business day order | orderNumber: {} | error: {}", 
+                    orderNumber, e.getMessage(), e);
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "Failed to process business day order: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
+
+    @PostMapping("_processordernotification")
+    public ResponseEntity<?> processOrderNotification(@Valid @RequestBody NotificationRequest notificationRequest) {
+        String notificationNumber = notificationRequest.getNotification() != null ? 
+                notificationRequest.getNotification().getNotificationNumber() : null;
+        
+        log.info("Received request to process order notification | notificationNumber: {}", notificationNumber);
+        
+        try {
+            if (notificationRequest.getNotification() == null) {
+                Map<String, String> response = new HashMap<>();
+                response.put("message", "Notification is required");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            }
+            
+            orderNotificationService.processNotificationOrders(
+                    notificationRequest.getNotification(), 
+                    notificationRequest.getRequestInfo()
+            );
+            
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "Order notification processed successfully");
+            response.put("notificationNumber", notificationNumber);
+            return ResponseEntity.ok(response);
+            
+        } catch (Exception e) {
+            log.error("Error processing order notification | notificationNumber: {} | error: {}", 
+                    notificationNumber, e.getMessage(), e);
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "Failed to process order notification: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
+
+    @PostMapping("_updatecaseconversion")
+    public ResponseEntity<?> updateCaseConversionDetails(@Valid @RequestBody CaseConversionRequest caseConversionRequest) {
+        String cnrNumber = caseConversionRequest.getCaseConversionDetails() != null ? 
+                caseConversionRequest.getCaseConversionDetails().getCnrNumber() : null;
+        String filingNumber = caseConversionRequest.getCaseConversionDetails() != null ? 
+                caseConversionRequest.getCaseConversionDetails().getFilingNumber() : null;
+        
+        log.info("Received request to update case conversion details | cnrNumber: {} | filingNumber: {}", 
+                cnrNumber, filingNumber);
+        
+        try {
+            if (caseConversionRequest.getCaseConversionDetails() == null) {
+                Map<String, String> response = new HashMap<>();
+                response.put("message", "Case conversion details are required");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            }
+            
+            caseService.updateCaseConversionDetails(caseConversionRequest);
+            
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "Case conversion details updated successfully");
+            response.put("cnrNumber", cnrNumber);
+            response.put("filingNumber", filingNumber);
+            return ResponseEntity.ok(response);
+            
+        } catch (Exception e) {
+            log.error("Error updating case conversion details | cnrNumber: {} | filingNumber: {} | error: {}", 
+                    cnrNumber, filingNumber, e.getMessage(), e);
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "Failed to update case conversion details: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
+}
