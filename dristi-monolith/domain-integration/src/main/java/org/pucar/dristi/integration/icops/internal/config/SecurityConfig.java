@@ -37,10 +37,11 @@ public class SecurityConfig {
         serviceAuthenticationFilter.setAuthenticationManager(authenticationManager(http.getSharedObject(AuthenticationConfiguration.class)));
 
         http
+                .securityMatcher("/v1/integrations/iCops/**")
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
-                                .requestMatchers("/v1/integrations/iCops/_getAuthToken", "/v1/integrations/iCops/_sendRequest", "/v1/integrations/iCops/_getLocationBasedJurisdiction", "/health", "/info").permitAll()
+                                .requestMatchers("/v1/integrations/iCops/_getAuthToken", "/v1/integrations/iCops/_sendRequest", "/v1/integrations/iCops/_getLocationBasedJurisdiction").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
