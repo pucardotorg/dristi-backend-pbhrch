@@ -23,7 +23,7 @@ import java.util.List;
 
 import static org.pucar.dristi.integration.njdg.internal.config.ServiceConstants.caseStatus;
 
-@Component
+@Component("njdgCaseConsumer")
 @Slf4j
 @RequiredArgsConstructor
 public class CaseConsumer {

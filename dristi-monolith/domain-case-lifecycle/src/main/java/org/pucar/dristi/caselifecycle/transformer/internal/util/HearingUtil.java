@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.tracer.model.CustomException;
-import org.pucar.dristi.caselifecycle.hearing.HearingApi;
+import org.pucar.dristi.common.hearing.HearingApi;
 import org.pucar.dristi.caselifecycle.transformer.internal.models.Hearing;
 import org.pucar.dristi.caselifecycle.transformer.internal.models.HearingSearchRequest;
 import org.springframework.beans.factory.annotation.Autowired;

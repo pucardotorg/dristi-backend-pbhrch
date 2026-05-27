@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Slf4j
-@Service
+@Service("schedulerPendingTaskService")
 public class PendingTaskService {
 
     private final InboxUtil inboxUtil;
