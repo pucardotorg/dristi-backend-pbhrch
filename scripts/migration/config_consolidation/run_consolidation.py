@@ -228,6 +228,15 @@ SERVICE_DEAD_KEYS: dict[str, set[str]] = {
         "dristi.advocate.search.endpoint",
         "dristi.advocate.clerk.search.endpoint",
     },
+    # monolith/scheduler-svc refactor(scheduler): AdvocateUtil REST→AdvocateApi
+    # direct calls. ReScheduleHearingService now calls AdvocateApi.getAdvocateIndividualIds
+    # directly; no @Value("${egov.advocate...") consumers remain in
+    # caselifecycle/scheduler/internal/. Pipeline 5 would otherwise re-add these
+    # dead keys on every subsequent regen.
+    "scheduler-svc": {
+        "egov.advocate.host",
+        "egov.advocate.path",
+    },
     # order-management C2: ordermanagement now reads AdvocateApi /
     # ApplicationApi / CaseApi / HearingApi / TaskApi / TaskmanagementApi /
     # EsignApi / AbdiaryApi / DigitalizedDocumentsApi directly (Rule 32).

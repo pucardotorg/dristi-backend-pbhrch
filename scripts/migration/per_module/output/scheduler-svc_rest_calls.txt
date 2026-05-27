@@ -1,0 +1,3 @@
+dristi-monolith\domain-case-lifecycle\src\main\java\org\pucar\dristi\caselifecycle\scheduler\internal\util\AdvocateUtil.java  uses ['AdvocateHost', 'AdvocatePath']
+dristi-monolith\domain-case-lifecycle\src\main\java\org\pucar\dristi\caselifecycle\scheduler\internal\util\EsUtil.java  uses ['BulkPath']
+dristi-monolith\domain-case-lifecycle\src\main\java\org\pucar\dristi\caselifecycle\scheduler\internal\util\PdfServiceUtil.java  uses ['PdfServiceHost']
