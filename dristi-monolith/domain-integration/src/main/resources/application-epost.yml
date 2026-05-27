@@ -42,10 +42,6 @@ egov:
     host: http://egov-idgen:8080
     path: /egov-idgen/id/_generate
     name: epost.sh
-  summons:
-    host: http://egov-summons:8080
-    update:
-      endpoint: /summons-svc/summons/v1/_updateSummons
   mdms:
     host: http://localhost:8090
     search:
