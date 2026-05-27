@@ -60,7 +60,7 @@ class NjdgConsumerTest {
 
     @Test
     void testListen_NewRecord_Success() throws Exception {
-        when(objectMapper.readValue(anyString(), eq(NJDGTransformRecord.class))).thenReturn(transformRecord);
+        when(objectMapper.convertValue(any(), any(com.fasterxml.jackson.core.type.TypeReference.class))).thenReturn(transformRecord);
         when(caseRepository.findByCino("CINO-001")).thenReturn(null);
 
         njdgConsumer.listen(consumerRecord, "save-case-details");
@@ -74,7 +74,7 @@ class NjdgConsumerTest {
         existingRecord.setCino("CINO-001");
         existingRecord.setPurposeNext(10);
 
-        when(objectMapper.readValue(anyString(), eq(NJDGTransformRecord.class))).thenReturn(transformRecord);
+        when(objectMapper.convertValue(any(), any(com.fasterxml.jackson.core.type.TypeReference.class))).thenReturn(transformRecord);
         when(caseRepository.findByCino("CINO-001")).thenReturn(existingRecord);
 
         njdgConsumer.listen(consumerRecord, "save-case-details");
@@ -92,7 +92,7 @@ class NjdgConsumerTest {
         newRecord.setCino("CINO-001");
         newRecord.setPurposeNext(null);
 
-        when(objectMapper.readValue(anyString(), eq(NJDGTransformRecord.class))).thenReturn(newRecord);
+        when(objectMapper.convertValue(any(), any(com.fasterxml.jackson.core.type.TypeReference.class))).thenReturn(newRecord);
         when(caseRepository.findByCino("CINO-001")).thenReturn(existingRecord);
 
         njdgConsumer.listen(consumerRecord, "save-case-details");
@@ -103,7 +103,7 @@ class NjdgConsumerTest {
 
     @Test
     void testListen_ExceptionHandling() throws Exception {
-        when(objectMapper.readValue(anyString(), eq(NJDGTransformRecord.class)))
+        when(objectMapper.convertValue(any(), any(com.fasterxml.jackson.core.type.TypeReference.class)))
                 .thenThrow(new RuntimeException("Parse error"));
 
         assertDoesNotThrow(() -> njdgConsumer.listen(consumerRecord, "save-case-details"));
@@ -116,7 +116,7 @@ class NjdgConsumerTest {
         interimOrder.setCino("CINO-001");
         interimOrder.setOrderDate(LocalDate.now());
 
-        when(objectMapper.readValue(anyString(), eq(InterimOrder.class))).thenReturn(interimOrder);
+        when(objectMapper.convertValue(any(), any(com.fasterxml.jackson.core.type.TypeReference.class))).thenReturn(interimOrder);
         when(caseRepository.findByCino("CINO-001")).thenReturn(transformRecord);
 
         njdgConsumer.listenOrder(consumerRecord, "save-order-details");
@@ -131,7 +131,7 @@ class NjdgConsumerTest {
         interimOrder.setCourtOrderNumber("ORD-001");
         interimOrder.setCino("CINO-001");
 
-        when(objectMapper.readValue(anyString(), eq(InterimOrder.class))).thenReturn(interimOrder);
+        when(objectMapper.convertValue(any(), any(com.fasterxml.jackson.core.type.TypeReference.class))).thenReturn(interimOrder);
         when(caseRepository.findByCino("CINO-001")).thenReturn(null);
 
         njdgConsumer.listenOrder(consumerRecord, "save-order-details");
@@ -149,7 +149,7 @@ class NjdgConsumerTest {
         hearingDetails.setHearingDate(LocalDate.now());
         hearingDetails.setPurposeOfListing("5");
 
-        when(objectMapper.readValue(anyString(), eq(HearingDetails.class))).thenReturn(hearingDetails);
+        when(objectMapper.convertValue(any(), any(com.fasterxml.jackson.core.type.TypeReference.class))).thenReturn(hearingDetails);
         when(hearingRepository.getHearingDetailsByCino("CINO-001")).thenReturn(Collections.emptyList());
         when(caseRepository.findByCino("CINO-001")).thenReturn(transformRecord);
 
@@ -165,7 +165,7 @@ class NjdgConsumerTest {
         hearingDetails.setCino("CINO-001");
         hearingDetails.setHearingId("H-001");
 
-        when(objectMapper.readValue(anyString(), eq(HearingDetails.class))).thenReturn(hearingDetails);
+        when(objectMapper.convertValue(any(), any(com.fasterxml.jackson.core.type.TypeReference.class))).thenReturn(hearingDetails);
 
         njdgConsumer.updateHearingDetails(consumerRecord, "update-hearing-details");
 
@@ -183,7 +183,7 @@ class NjdgConsumerTest {
                 .partyName("Party 2")
                 .build();
 
-        lenient().when(objectMapper.readValue(anyString(), any(com.fasterxml.jackson.core.type.TypeReference.class)))
+        lenient().when(objectMapper.convertValue(any(), any(com.fasterxml.jackson.core.type.TypeReference.class)))
                 .thenReturn(Arrays.asList(party1, party2));
 
         njdgConsumer.listenExtraParties(consumerRecord, "save-extra-parties");
@@ -202,7 +202,7 @@ class NjdgConsumerTest {
                 .partyName("Party 2")
                 .build();
 
-        lenient().when(objectMapper.readValue(anyString(), any(com.fasterxml.jackson.core.type.TypeReference.class)))
+        lenient().when(objectMapper.convertValue(any(), any(com.fasterxml.jackson.core.type.TypeReference.class)))
                 .thenReturn(Arrays.asList(party1, party2));
         lenient().doThrow(new RuntimeException("DB Error")).when(caseRepository).updateExtraParties(party1);
 
@@ -217,7 +217,7 @@ class NjdgConsumerTest {
         advocateDetails.setAdvocateCode(1);
         advocateDetails.setAdvocateName("Advocate 1");
 
-        when(objectMapper.readValue(anyString(), eq(AdvocateDetails.class))).thenReturn(advocateDetails);
+        when(objectMapper.convertValue(any(), any(com.fasterxml.jackson.core.type.TypeReference.class))).thenReturn(advocateDetails);
 
         njdgConsumer.listenAdvocates(consumerRecord, "save-advocate-details");
 
@@ -231,7 +231,7 @@ class NjdgConsumerTest {
         advocateDetails.setAdvocateId("ADV-001");
         advocateDetails.setAdvocateName("Advocate 1");
 
-        when(objectMapper.readValue(anyString(), eq(AdvocateDetails.class))).thenReturn(advocateDetails);
+        when(objectMapper.convertValue(any(), any(com.fasterxml.jackson.core.type.TypeReference.class))).thenReturn(advocateDetails);
 
         njdgConsumer.listenAdvocateUpdates(consumerRecord, "update-advocate-details");
 
@@ -245,7 +245,7 @@ class NjdgConsumerTest {
         act.setActCode(1);
         act.setActName("Test Act");
 
-        when(objectMapper.readValue(anyString(), eq(Act.class))).thenReturn(act);
+        when(objectMapper.convertValue(any(), any(com.fasterxml.jackson.core.type.TypeReference.class))).thenReturn(act);
 
         njdgConsumer.listenActDetails(consumerRecord, "save-act-details");
 
@@ -263,7 +263,7 @@ class NjdgConsumerTest {
                 .advName("Advocate 2")
                 .build();
 
-        lenient().when(objectMapper.readValue(anyString(), any(com.fasterxml.jackson.core.type.TypeReference.class)))
+        lenient().when(objectMapper.convertValue(any(), any(com.fasterxml.jackson.core.type.TypeReference.class)))
                 .thenReturn(Arrays.asList(advocate1, advocate2));
 
         njdgConsumer.listenExtraAdvocateDetails(consumerRecord, "save-extra-advocate-details");
@@ -276,7 +276,7 @@ class NjdgConsumerTest {
         CaseTypeDetails caseTypeDetails = new CaseTypeDetails();
         caseTypeDetails.setCino("CINO-001");
 
-        when(objectMapper.readValue(anyString(), eq(CaseTypeDetails.class))).thenReturn(caseTypeDetails);
+        when(objectMapper.convertValue(any(), any(com.fasterxml.jackson.core.type.TypeReference.class))).thenReturn(caseTypeDetails);
         when(caseRepository.getNextSrNoForCaseConversion("CINO-001")).thenReturn(1);
 
         njdgConsumer.listenCaseConversionDetails(consumerRecord, "save-case-conversion-details");
