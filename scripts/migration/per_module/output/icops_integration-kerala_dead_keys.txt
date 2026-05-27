@@ -1,0 +1,1 @@
+summons-svc	egov.icops.location.endpoint	dristi-monolith/domain-integration/src/main/java/org/pucar/dristi/integration/summons/internal/config/Configuration.java
