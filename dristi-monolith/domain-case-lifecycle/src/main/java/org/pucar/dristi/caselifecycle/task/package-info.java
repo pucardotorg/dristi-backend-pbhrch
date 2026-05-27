@@ -4,11 +4,18 @@
  * <p>Marked as a Spring Modulith application module so cross-subdomain
  * boundaries inside {@code domain-case-lifecycle} are enforced by
  * {@code ModuleStructureTest.verify()}. Other subdomains MUST consume
- * task through {@link TaskApi}; reaching into {@code internal/} is a
- * structural violation. (An earlier {@code TaskApi} was reverted in
- * a89087936 to break the cases↔task↔order Spring bean cycle; the
- * current re-introduction is safe because the active caller —
- * casemanagement — is a sink-node with no incoming edges.)
+ * task through {@link org.pucar.dristi.caselifecycle.task.TaskApi};
+ * reaching into {@code internal/} is a structural violation.
+ *
+ * <p><b>Cycle-break history:</b> a {@code TaskApi} was first introduced
+ * by the task migration, then removed in commit {@code a89087936} (C3)
+ * to break the {@code cases→task→order→cases} Spring DI cycle —
+ * {@code cases→task} reverted to REST. Re-introduced by the
+ * order-management and casemanagement migrations for downstream-only
+ * consumption: the active callers are sink-nodes in the dependency
+ * graph (no peer subdomain calls back into them), so no cycle can
+ * re-form; the original cycle stays broken because cases still calls
+ * task via REST.
  *
  * <p>Contract DTOs (HTTP wire format) live in
  * {@code dristi-common/contract/task/} per Rule 24 (Phase 35 lift).

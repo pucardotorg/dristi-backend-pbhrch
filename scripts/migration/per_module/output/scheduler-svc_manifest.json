@@ -1,0 +1,38 @@
+{
+  "service": "scheduler-svc",
+  "source_dir": "dristi-services\\scheduler-svc",
+  "target_module": "case-lifecycle",
+  "target_subdomain": "scheduler",
+  "current_package": "digit",
+  "target_package": "org.pucar.dristi.caselifecycle.scheduler",
+  "main_file_count": 177,
+  "test_file_count": 57,
+  "has_spring_boot_main": true,
+  "duplicated_protected_classes": [
+    "MdmsUtil",
+    "IdgenUtil",
+    "WorkflowUtil",
+    "FileStoreUtil",
+    "IndividualUtil",
+    "ResponseInfoFactory",
+    "DateUtil",
+    "Producer",
+    "KafkaProducerService",
+    "ServiceRequestRepository",
+    "WorkflowObject"
+  ],
+  "rest_call_files": [
+    "dristi-services\\scheduler-svc\\src\\main\\java\\digit\\repository\\ServiceRequestRepository.java",
+    "dristi-services\\scheduler-svc\\src\\main\\java\\digit\\service\\SmsNotificationService.java",
+    "dristi-services\\scheduler-svc\\src\\main\\java\\digit\\service\\UserService.java",
+    "dristi-services\\scheduler-svc\\src\\main\\java\\digit\\util\\ApplicationUtil.java",
+    "dristi-services\\scheduler-svc\\src\\main\\java\\digit\\util\\CaseUtil.java",
+    "dristi-services\\scheduler-svc\\src\\main\\java\\digit\\util\\HearingUtil.java",
+    "dristi-services\\scheduler-svc\\src\\main\\java\\digit\\util\\IdgenUtil.java",
+    "dristi-services\\scheduler-svc\\src\\main\\java\\digit\\util\\InboxUtil.java",
+    "dristi-services\\scheduler-svc\\src\\main\\java\\digit\\util\\IndividualUtil.java",
+    "dristi-services\\scheduler-svc\\src\\main\\java\\digit\\util\\PendingTaskUtil.java",
+    "dristi-services\\scheduler-svc\\src\\main\\java\\digit\\util\\WorkflowUtil.java"
+  ],
+  "source_context_path": "/scheduler"
+}

@@ -30,13 +30,6 @@ public class EPostConfiguration {
     @Value("${egov.idgen.name}")
     private String idName;
 
-    //Summons
-    @Value("${egov.summons.host}")
-    private String summonsHost;
-
-    @Value("${egov.summons.update.endpoint}")
-    private String summonsUpdateEndPoint;
-
     //MDMS
     @Value("${egov.mdms.host}")
     private String mdmsHost;

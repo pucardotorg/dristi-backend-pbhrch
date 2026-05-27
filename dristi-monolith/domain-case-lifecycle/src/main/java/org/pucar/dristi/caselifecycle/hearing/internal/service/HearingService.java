@@ -18,6 +18,13 @@ import org.pucar.dristi.caselifecycle.hearing.internal.validator.HearingRegistra
 import org.pucar.dristi.caselifecycle.hearing.internal.web.models.*;
 import org.pucar.dristi.common.contract.hearing.*;
 import org.pucar.dristi.caselifecycle.hearing.internal.web.models.cases.CaseRequest;
+import org.pucar.dristi.caselifecycle.scheduler.SchedulerApi;
+import org.pucar.dristi.common.contract.scheduler.BulkRescheduleRequest;
+import org.pucar.dristi.common.contract.scheduler.BulkReschedule;
+import org.pucar.dristi.common.contract.scheduler.JudgeCalendarRule;
+import org.pucar.dristi.common.contract.scheduler.JudgeCalendarUpdateRequest;
+import org.pucar.dristi.common.contract.scheduler.ScheduleHearing;
+import org.pucar.dristi.common.contract.scheduler.ScheduleHearingSearchCriteria;
 import org.pucar.dristi.caselifecycle.hearing.internal.web.models.cases.CourtCase;
 import org.pucar.dristi.caselifecycle.hearing.internal.web.models.inbox.InboxRequest;
 import org.pucar.dristi.caselifecycle.hearing.internal.web.models.orders.*;
@@ -58,7 +65,7 @@ public class HearingService {
     private final SmsNotificationService notificationService;
     private final MdmsUtil mdmsUtil;
     private final DateUtil dateUtil;
-    private final SchedulerUtil schedulerUtil;
+    private final SchedulerApi schedulerApi;
     private final FileStoreUtil fileStoreUtil;
     private final InboxUtil inboxUtil;
     private final JsonUtil jsonUtil;
@@ -73,7 +80,7 @@ public class HearingService {
             WorkflowService workflowService,
             HearingRepository hearingRepository,
             Producer producer,
-            Configuration config, CaseUtil caseUtil, ObjectMapper objectMapper, IndividualService individualService, SmsNotificationService notificationService, MdmsUtil mdmsUtil, DateUtil dateUtil, SchedulerUtil schedulerUtil, FileStoreUtil fileStoreUtil, InboxUtil inboxUtil, JsonUtil jsonUtil, EsUtil esUtil, OrderUtil orderUtil, CacheService cacheService) {
+            Configuration config, CaseUtil caseUtil, ObjectMapper objectMapper, IndividualService individualService, SmsNotificationService notificationService, MdmsUtil mdmsUtil, DateUtil dateUtil, SchedulerApi schedulerApi, FileStoreUtil fileStoreUtil, InboxUtil inboxUtil, JsonUtil jsonUtil, EsUtil esUtil, OrderUtil orderUtil, CacheService cacheService) {
         this.validator = validator;
         this.enrichmentUtil = enrichmentUtil;
         this.workflowService = workflowService;
@@ -86,7 +93,7 @@ public class HearingService {
         this.notificationService = notificationService;
         this.mdmsUtil = mdmsUtil;
         this.dateUtil = dateUtil;
-        this.schedulerUtil = schedulerUtil;
+        this.schedulerApi = schedulerApi;
         this.fileStoreUtil = fileStoreUtil;
         this.inboxUtil = inboxUtil;
         this.jsonUtil = jsonUtil;
@@ -586,7 +593,7 @@ public class HearingService {
         request.setBulkReschedule(bulkReschedule);
         log.info("no of hearings to reschedule: {}", hearingIds.size());
 
-        List<ScheduleHearing> scheduleHearings = schedulerUtil.callBulkReschedule(request);
+        List<ScheduleHearing> scheduleHearings = schedulerApi.bulkReschedule(requestInfo, request);
 
         Map<String, OpenHearing> scheduleHearingMap = hearingsToReschedule.stream().collect(Collectors.toMap(OpenHearing::getHearingNumber, obj -> obj));
         for (ScheduleHearing scheduleHearing : scheduleHearings) {
@@ -629,7 +636,7 @@ public class HearingService {
                 .judgeCalendarRule(judgeCalendars)
                 .build();
 
-        schedulerUtil.updateJudgeCalendar(calendarUpdateRequest);
+        schedulerApi.updateJudgeCalendar(request.getRequestInfo(), calendarUpdateRequest);
 
         log.info("operation=updateJudgeCalendar, status=COMPLETED");
 
@@ -757,7 +764,7 @@ public class HearingService {
             }
             // If manualUpdateDateHearings is not empty,
             if (!manualUpdateDateHearings.isEmpty()) {
-                List<ScheduleHearing> manualHearingDateUpdate = schedulerUtil.createScheduleHearing(manualUpdateDateHearings, request.getRequestInfo());
+                List<ScheduleHearing> manualHearingDateUpdate = schedulerApi.createScheduleHearing(request.getRequestInfo(), manualUpdateDateHearings);
                 for (ScheduleHearing scheduleHearing : manualHearingDateUpdate) {
                     Hearing hearing = hearingMap.get(scheduleHearing.getHearingBookingId());
                     if (hearing != null) {
@@ -779,18 +786,13 @@ public class HearingService {
     }
 
     private void updateSchedulerHearings(List<ScheduleHearing> scheduleHearings, @Valid RequestInfo requestInfo) {
-        ScheduleHearingUpdateRequest request = ScheduleHearingUpdateRequest.builder().requestInfo(requestInfo)
-                .scheduleHearings(scheduleHearings).build();
-        schedulerUtil.updateScheduleHearings(request);
+        schedulerApi.updateScheduleHearings(requestInfo, scheduleHearings);
     }
 
     private List<ScheduleHearing> getScheduledHearings(List<Hearing> hearingList, @Valid RequestInfo requestInfo) {
         List<String> hearingIds = hearingList.stream().map(Hearing::getHearingId).toList();
-        ScheduleHearingSearchRequest request = ScheduleHearingSearchRequest.builder().requestInfo(requestInfo).
-                criteria(ScheduleHearingSearchCriteria.builder().hearingIds(hearingIds).build())
-                .build();
-
-        return schedulerUtil.getScheduledHearings(request);
+        ScheduleHearingSearchCriteria criteria = ScheduleHearingSearchCriteria.builder().hearingIds(hearingIds).build();
+        return schedulerApi.getScheduledHearings(requestInfo, criteria);
     }
 
     @NotNull

@@ -1,0 +1,19 @@
+package org.pucar.dristi.caselifecycle.ordermanagement.internal.web.models.pendingtask;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.JsonNode;
+import lombok.*;
+
+import java.util.List;
+
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+public class PendingTaskSearchResponse {
+
+    @JsonProperty("data")
+    private List<Data> data;
+
+}

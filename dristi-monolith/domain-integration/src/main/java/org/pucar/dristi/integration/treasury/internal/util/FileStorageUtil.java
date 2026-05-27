@@ -18,7 +18,7 @@ import org.springframework.web.client.RestTemplate;
 
 import static org.pucar.dristi.integration.treasury.internal.config.ServiceConstants.*;
 
-@Component
+@Component("treasuryFileStorageUtil")
 @Slf4j
 public class FileStorageUtil {
 

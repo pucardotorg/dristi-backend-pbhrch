@@ -3,34 +3,43 @@ package org.pucar.dristi.caselifecycle.task;
 import org.pucar.dristi.common.contract.task.Task;
 import org.pucar.dristi.common.contract.task.TaskCase;
 import org.pucar.dristi.common.contract.task.TaskCaseSearchRequest;
+import org.pucar.dristi.common.contract.task.TaskRequest;
 import org.pucar.dristi.common.contract.task.TaskSearchRequest;
 
 import java.util.List;
 
 /**
- * Public, cross-subdomain API of the task subdomain. Other modules
- * (casemanagement today) consume task through this interface — never
- * by importing from {@code internal/}.
+ * Public, cross-subdomain API of the task subdomain. Consumed by
+ * casemanagement and order-management today.
  *
- * <p>History: an earlier {@code TaskApi} was introduced and then
- * reverted in commit {@code a89087936} because pairing it with a
- * direct {@code task → cases} edge closed a Spring bean cycle
- * (cases ↔ task ↔ cases via CaseApi). The cycle-break kept
- * task→cases direct and pushed cases→task back to REST. Re-introducing
- * TaskApi is safe here because the new caller (casemanagement) is a
- * sink-node in the dependency graph (no peer subdomain calls into
- * casemanagement), so no cycle can form.
+ * <p><b>Cycle history:</b> a TaskApi was deliberately removed in commit
+ * {@code a89087936} during the task migration's C3 cycle-break: the
+ * {@code cases→task→order→cases} Spring DI loop was severed by reverting
+ * the {@code cases→task} edge to REST. This re-introduction is safe
+ * because the active callers — order-management and casemanagement —
+ * are downstream-only / sink-nodes (no peer subdomain calls back into
+ * them), so no cycle can form. The original cycle remains broken:
+ * cases continues to call task via REST.
  *
- * <p>Task's contract DTOs live at
- * {@code dristi-common/contract/task/} (lifted by Phase 35).
+ * <p>Contract DTOs live at {@code dristi-common/contract/task/}.
  */
 public interface TaskApi {
 
     /**
-     * Search tasks matching the criteria in the request. Equivalent
-     * to the {@code /task/v1/search} REST endpoint's behaviour.
+     * Search tasks matching the criteria + pagination in the request.
+     * Mirrors the {@code /task/v1/_search} REST endpoint.
      */
     List<Task> search(TaskSearchRequest request);
+
+    /**
+     * Create a new task — mirrors {@code /task/v1/_create}.
+     */
+    Task create(TaskRequest request);
+
+    /**
+     * Update an existing task — mirrors {@code /task/v1/_update}.
+     */
+    Task update(TaskRequest request);
 
     /**
      * Search the case-task projection (table view) matching the

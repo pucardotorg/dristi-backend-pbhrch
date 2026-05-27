@@ -20,7 +20,7 @@ import static org.pucar.dristi.caselifecycle.hearing.internal.config.ServiceCons
 
 import org.pucar.dristi.common.models.Document;
 @Slf4j
-@Repository
+@Repository("hearingHearingRepository")
 public class HearingRepository {
 
     private final HearingQueryBuilder queryBuilder;
