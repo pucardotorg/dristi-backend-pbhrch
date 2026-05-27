@@ -1,0 +1,3 @@
+dristi-monolith\domain-integration\src\main\java\org\pucar\dristi\integration\njdg\internal\utils\DateUtil.java has 2 method(s)/overload(s) absent from canonical: [('extractYear', 1), ('formatDate', 1)]
+dristi-monolith\domain-integration\src\main\java\org\pucar\dristi\integration\njdg\internal\utils\FileStoreUtil.java has 1 method(s)/overload(s) absent from canonical: [('getFileStore', 3)]
+dristi-monolith\domain-integration\src\main\java\org\pucar\dristi\integration\njdg\internal\utils\IndividualUtil.java has 1 method(s)/overload(s) absent from canonical: [('getIndividualByIndividualId', 1)]

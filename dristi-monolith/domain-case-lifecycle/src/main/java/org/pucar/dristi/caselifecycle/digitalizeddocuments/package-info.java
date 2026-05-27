@@ -4,17 +4,17 @@
  *
  * <p>Marked as a Spring Modulith application module so cross-subdomain
  * boundaries inside {@code domain-case-lifecycle} are enforced by
- * {@code ModuleStructureTest.verify()}. No other subdomain currently
- * consumes digitalized-documents, so there is no public {@code *Api}
- * surface — the {@code @ApplicationModule} marker exists for boundary
- * enforcement (so a future caller is forced to go through a deliberate
- * API rather than reach into {@code internal/}).
+ * {@code ModuleStructureTest.verify()}. Consumers (order-management
+ * today) MUST go through
+ * {@link org.pucar.dristi.caselifecycle.digitalizeddocuments.DigitalizedDocumentsApi};
+ * reaching into {@code internal/} is a structural violation.
  *
  * <p>Outbound: this subdomain consumes
  * {@link org.pucar.dristi.caselifecycle.cases.CaseApi} directly (no
- * REST). The lifted contract DTOs in
- * {@code dristi-common/contract/digitalizeddocuments/} carry the HTTP
- * wire format for the subdomain's own controller endpoints.
+ * REST). Contract DTOs live at
+ * {@code dristi-common/contract/digitalizeddocuments/} (Phase-35
+ * lifted).
  */
 @org.springframework.modulith.ApplicationModule(displayName = "Digitalizeddocuments")
+@org.springframework.modulith.NamedInterface("api")
 package org.pucar.dristi.caselifecycle.digitalizeddocuments;

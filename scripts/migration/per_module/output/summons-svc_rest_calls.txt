@@ -1,0 +1,7 @@
+dristi-monolith/domain-integration/src/main/java/org/pucar/dristi/integration/summons/internal/channel/ICopsChannel.java  uses ['ICopsHost']
+dristi-monolith/domain-integration/src/main/java/org/pucar/dristi/integration/summons/internal/channel/EPostChannel.java  uses ['EPostHost']
+dristi-monolith/domain-integration/src/main/java/org/pucar/dristi/integration/summons/internal/util/IcopsUtil.java  uses ['ICopsHost']
+dristi-monolith/domain-integration/src/main/java/org/pucar/dristi/integration/summons/internal/util/PdfServiceUtil.java  uses ['PdfServiceHost']
+dristi-monolith/domain-integration/src/main/java/org/pucar/dristi/integration/summons/internal/util/CaseManagementUtil.java  uses ['PdfServiceHost']
+dristi-monolith/domain-integration/src/main/java/org/pucar/dristi/integration/summons/internal/util/CaseUtil.java  uses ['CaseHost', 'CaseSearchPath']
+dristi-monolith/domain-integration/src/main/java/org/pucar/dristi/integration/summons/internal/util/TaskUtil.java  uses ['TaskServiceHost']

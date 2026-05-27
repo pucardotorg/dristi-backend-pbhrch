@@ -1,0 +1,92 @@
+package org.pucar.dristi.caselifecycle.scheduler.internal.validator;
+
+
+import org.pucar.dristi.caselifecycle.scheduler.internal.config.Configuration;
+import org.pucar.dristi.caselifecycle.scheduler.internal.config.ServiceConstants;
+import org.pucar.dristi.caselifecycle.scheduler.internal.repository.RescheduleRequestOptOutRepository;
+import org.pucar.dristi.caselifecycle.scheduler.internal.service.ReScheduleHearingService;
+import org.pucar.dristi.caselifecycle.scheduler.internal.util.MasterDataUtil;
+import org.pucar.dristi.caselifecycle.scheduler.internal.web.models.*;
+import org.pucar.dristi.common.contract.scheduler.*;
+import org.egov.tracer.model.CustomException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import static org.pucar.dristi.caselifecycle.scheduler.internal.config.ServiceConstants.OPT_OUT_SELECTION_LIMIT;
+
+@Component
+public class RescheduleRequestOptOutValidator {
+
+    private final RescheduleRequestOptOutRepository repository;
+    private final ReScheduleHearingService reScheduleHearingService;
+    private final MasterDataUtil mdmsUtil;
+    private final ServiceConstants constants;
+
+    @Autowired
+    public RescheduleRequestOptOutValidator(RescheduleRequestOptOutRepository repository, ReScheduleHearingService reScheduleHearingService, MasterDataUtil mdmsUtil, ServiceConstants constants) {
+        this.repository = repository;
+        this.reScheduleHearingService = reScheduleHearingService;
+        this.mdmsUtil = mdmsUtil;
+        this.constants = constants;
+    }
+
+
+    public void validateRequest(OptOutRequest request) {
+
+        OptOut optOut = request.getOptOut();
+
+        ReScheduleHearingReqSearchRequest searchRequest = ReScheduleHearingReqSearchRequest.builder()
+                .requestInfo(request.getRequestInfo())
+                .criteria(ReScheduleHearingReqSearchCriteria.builder().rescheduledRequestId(List.of(optOut.getRescheduleRequestId())).build())
+                .build();
+        List<ReScheduleHearing> reScheduleHearings = reScheduleHearingService.search(searchRequest, null, null);
+
+        if (reScheduleHearings.isEmpty()) {
+            throw new CustomException("DK_OO_INVALID_APPLICATION_ID", "No request with application id:" + optOut.getRescheduleRequestId() + " system");
+        }
+        ReScheduleHearing rescheduleReq = reScheduleHearings.get(0);
+
+
+        if (ServiceConstants.INACTIVE.equals(rescheduleReq.getStatus())) {
+            throw new CustomException("DK_OO_REQUEST_COMPLETED", "Opt out is no longer supported for request");
+        }
+
+        List<SchedulerConfig> dataFromMDMS = mdmsUtil.getDataFromMDMS(SchedulerConfig.class, constants.SCHEDULER_CONFIG_MASTER_NAME, constants.SCHEDULER_CONFIG_MODULE_NAME);
+
+        List<SchedulerConfig> filteredApplications = dataFromMDMS.stream()
+                .filter(application -> application.getIdentifier().equals(OPT_OUT_SELECTION_LIMIT))
+                .toList();
+
+        int unit = filteredApplications.get(0).getUnit();
+
+        //number of opt out validation
+        if (optOut.getOptoutDates().size() > unit) {
+            throw new CustomException("DK_OO_SELECTION_LIMIT_ERR", "you are eligible to opt out " + unit + " only");
+        }
+
+        //already opt out check
+        OptOutSearchCriteria optOutSearchCriteria = OptOutSearchCriteria.builder().individualId(optOut.getIndividualId()).rescheduleRequestId(optOut.getRescheduleRequestId()).build();
+        List<OptOut> optOuts = repository.getOptOut(optOutSearchCriteria, null, null);
+        if (!optOuts.isEmpty()) {
+            throw new CustomException("DK_OO_APP_ERR", "Already Opted out the dates.");
+        }
+
+
+        Set<Long> optOutDates = new HashSet<>(optOut.getOptoutDates());//
+
+        rescheduleReq.getSuggestedDates().forEach(optOutDates::remove);
+
+        if (!optOutDates.isEmpty()) {
+            throw new CustomException("DK_OO_APP_ERR", "opt out dates must be from suggested days");
+
+        }
+
+    }
+
+
+}
+

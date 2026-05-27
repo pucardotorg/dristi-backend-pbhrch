@@ -1,22 +1,14 @@
 package org.pucar.dristi.integration.epost.internal.util;
 
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.tracer.model.CustomException;
-import org.pucar.dristi.integration.epost.internal.config.EPostConfiguration;
 import org.pucar.dristi.common.contract.epost.ChannelReport;
 import org.pucar.dristi.common.contract.epost.DeliveryStatus;
 import org.pucar.dristi.common.contract.epost.EPostRequest;
-import org.pucar.dristi.integration.epost.internal.model.UpdateSummonsRequest;
+import org.pucar.dristi.integration.summons.SummonsApi;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
 
 import static org.pucar.dristi.integration.epost.internal.config.ServiceConstants.ERROR_WHILE_UPDATING_SUMMONS;
 import static org.pucar.dristi.integration.epost.internal.config.ServiceConstants.SUMMONS_UPDATE_ERROR;
@@ -25,42 +17,26 @@ import static org.pucar.dristi.integration.epost.internal.config.ServiceConstant
 @Slf4j
 public class SummonsUtil {
 
-    private final RestTemplate restTemplate;
-
-    private final EPostConfiguration config;
-
-    private final ObjectMapper objectMapper;
+    private final SummonsApi summonsApi;
 
     @Autowired
-    public SummonsUtil(RestTemplate restTemplate, EPostConfiguration config, ObjectMapper objectMapper) {
-        this.restTemplate = restTemplate;
-        this.config = config;
-        this.objectMapper = objectMapper;
+    public SummonsUtil(SummonsApi summonsApi) {
+        this.summonsApi = summonsApi;
     }
 
     public Object updateSummonsDeliveryStatus(EPostRequest request) {
-        String summonsUrl = config.getSummonsHost() + config.getSummonsUpdateEndPoint();
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        ChannelReport channelReport =ChannelReport.builder()
-                .deliveryStatus(enrichDeliveryStatus(request.getEPostTracker().getDeliveryStatus()))
-                .processNumber(request.getEPostTracker().getProcessNumber())
-                .taskNumber(request.getEPostTracker().getTaskNumber())
-                .remarks(request.getEPostTracker().getRemarks())
-                .build();
-        UpdateSummonsRequest summonsRequest = UpdateSummonsRequest.builder().requestInfo(request.getRequestInfo()).channelReport(channelReport).build();
-        HttpEntity<UpdateSummonsRequest> requestEntity = new HttpEntity<>(summonsRequest, headers);
+        org.pucar.dristi.common.contract.summons.ChannelReport channelReport =
+                org.pucar.dristi.common.contract.summons.ChannelReport.builder()
+                        .deliveryStatus(adaptDeliveryStatus(enrichDeliveryStatus(request.getEPostTracker().getDeliveryStatus())))
+                        .processNumber(request.getEPostTracker().getProcessNumber())
+                        .taskNumber(request.getEPostTracker().getTaskNumber())
+                        .remarks(request.getEPostTracker().getRemarks())
+                        .build();
         try {
-            // Send the request and get the response
-            ResponseEntity<Object> responseEntity =
-                    restTemplate.postForEntity(summonsUrl, requestEntity, Object.class);
-            // Print the response body and status code
-            log.info("Status Code: {}", responseEntity.getStatusCode());
-            log.info("Response Body: {}", responseEntity.getBody());
-            return objectMapper.convertValue(responseEntity.getBody(), Object.class);
-        } catch (RestClientException e) {
+            return summonsApi.updateDeliveryStatus(request.getRequestInfo(), channelReport);
+        } catch (Exception e) {
             log.error("Error occurred when sending Process Request ", e);
-            throw new CustomException(SUMMONS_UPDATE_ERROR,ERROR_WHILE_UPDATING_SUMMONS);
+            throw new CustomException(SUMMONS_UPDATE_ERROR, ERROR_WHILE_UPDATING_SUMMONS);
         }
     }
 
@@ -75,5 +51,9 @@ public class SummonsUtil {
         } else {
             return DeliveryStatus.INTERMEDIATE;
         }
+    }
+
+    private org.pucar.dristi.common.contract.summons.DeliveryStatus adaptDeliveryStatus(DeliveryStatus epostStatus) {
+        return org.pucar.dristi.common.contract.summons.DeliveryStatus.valueOf(epostStatus.name());
     }
 }

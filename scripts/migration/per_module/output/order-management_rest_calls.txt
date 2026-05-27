@@ -1,0 +1,5 @@
+dristi-monolith/domain-case-lifecycle/src/main/java/org/pucar/dristi/caselifecycle/ordermanagement/internal/util/AdvocateUtil.java  uses ['AdvocateHost']
+dristi-monolith/domain-case-lifecycle/src/main/java/org/pucar/dristi/caselifecycle/ordermanagement/internal/util/TaskManagementUtil.java  uses ['TaskManagementServiceHost']
+dristi-monolith/domain-case-lifecycle/src/main/java/org/pucar/dristi/caselifecycle/ordermanagement/internal/util/EsUtil.java  uses ['BulkPath']
+dristi-monolith/domain-case-lifecycle/src/main/java/org/pucar/dristi/caselifecycle/ordermanagement/internal/util/PdfServiceUtil.java  uses ['PdfServiceHost']
+dristi-monolith/domain-case-lifecycle/src/main/java/org/pucar/dristi/caselifecycle/ordermanagement/internal/util/TaskUtil.java  uses ['TaskServiceHost']
