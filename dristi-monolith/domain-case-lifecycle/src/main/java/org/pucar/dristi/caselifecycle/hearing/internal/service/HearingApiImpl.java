@@ -24,4 +24,14 @@ public class HearingApiImpl implements HearingApi {
     public void update(HearingRequest request) {
         hearingService.updateTranscriptAdditionalAttendees(request);
     }
+
+    @Override
+    public Hearing createHearing(HearingRequest request) {
+        return hearingService.createHearing(request);
+    }
+
+    @Override
+    public Hearing updateHearing(HearingRequest request) {
+        return hearingService.updateHearing(request);
+    }
 }

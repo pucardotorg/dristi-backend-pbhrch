@@ -32,6 +32,7 @@ import argparse
 import csv
 import json
 import re
+import sys
 from collections import defaultdict
 from pathlib import Path
 from typing import Any
@@ -43,6 +44,13 @@ MONOLITH_ROOT = REPO_ROOT / "dristi-monolith"
 APP_RESOURCES = MONOLITH_ROOT / "dristi-app" / "src" / "main" / "resources"
 OUT_DIR = Path(__file__).resolve().parent / "output"
 MANIFEST_DIR = REPO_ROOT / "scripts" / "migration" / "per_module" / "output"
+
+# Pull the auto-written dead-key sidecar (Phase 96 output) so consolidation
+# unions it with the hand-maintained SERVICE_DEAD_KEYS literal below. Sidecar
+# path: scripts/migration/config_consolidation/auto_dead_keys.json. See
+# Rule 42 in PIPELINE_RULES.md.
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from dead_keys_lib import load_auto_dead_keys  # noqa: E402
 
 
 def domain_module_resources(target_module: str) -> Path:
@@ -219,6 +227,159 @@ SERVICE_DEAD_KEYS: dict[str, set[str]] = {
         "dristi.advocate.host",
         "dristi.advocate.search.endpoint",
         "dristi.advocate.clerk.search.endpoint",
+    },
+    # order-management C2: ordermanagement now reads AdvocateApi /
+    # ApplicationApi / CaseApi / HearingApi / TaskApi / TaskmanagementApi /
+    # EsignApi / AbdiaryApi / DigitalizedDocumentsApi directly (Rule 32).
+    # No @Value consumers remain in caselifecycle/ordermanagement/internal/
+    # for these REST host / endpoint keys. The platform-side keys
+    # (egov.hrms.*, egov.user.*, egov.url.shortner.*, egov.base.url,
+    # domain.url, egov.localization.context.path) were never read by
+    # ordermanagement to begin with — dropping from this service's overlay
+    # only.
+    # `dristi.hearing.{host,update.endpoint,create.endpoint,summary.update.endpoint}`
+    # stay live: HearingUtil.createOrUpdateHearing still uses them as a
+    # URI-string discriminator (Rule 38 refactor follow-up).
+    "order-management": {
+        "dristi.filestore.search.endpoint",
+        "dristi.filestore.delete.endpoint",
+        "dristi.filestore.exists.endpoint",
+        "dristi.order.host",
+        "dristi.order.exists.endpoint",
+        "dristi.order.update.endpoint",
+        "dristi.order.search.endpoint",
+        "dristi.order.create.endpoint",
+        "dristi.order.add.item.endpoint",
+        "dristi.order.remove.item.endpoint",
+        "dristi.esign.host",
+        "dristi.esign.location.endpoint",
+        "dristi.advocate.host",
+        "dristi.advocate.search.endpoint",
+        "dristi.task-management.host",
+        "dristi.task-management.create.endpoint",
+        "dristi.task-management.search.endpoint",
+        "dristi.task-management.update.endpoint",
+        "dristi.task.host",
+        "dristi.task.create.endpoint",
+        "dristi.task.search.endpoint",
+        "dristi.task.update.endpoint",
+        "dristi.application.host",
+        "dristi.application.exists.endpoint",
+        "dristi.application.search.endpoint",
+        "dristi.application.update.endpoint",
+        "dristi.case.host",
+        "dristi.case.exists.endpoint",
+        "dristi.case.search.endpoint",
+        "dristi.case.update.endpoint",
+        "dristi.case.update.lpr.details.endpoint",
+        "dristi.case.process.profile.endpoint",
+        "dristi.case.add.witness.endpoint",
+        "dristi.hearing.search.endpoint",
+        "dristi.adiary.host",
+        "dristi.adiary.create.bulk",
+        "dristi.digitalized-documents.host",
+        "dristi.digitalized-documents.create.endpoint",
+        "dristi.digitalized-documents.search.endpoint",
+        "dristi.digitalized-documents.update.endpoint",
+        "egov.hrms.host",
+        "egov.hrms.search.endpoint",
+        "egov.user.host",
+        "egov.user.search.path",
+        "egov.url.shortner.host",
+        "egov.url.shortner.endpoint",
+        "egov.base.url",
+        "domain.url",
+        "egov.localization.context.path",
+    },
+    # casemanagement C2: full Rule 32 sweep — every outgoing REST helper
+    # whose target subdomain is in the monolith was converted to *Api
+    # direct calls. casemanagement now reads CaseApi (CaseBundleService +
+    # CaseBundleIndexBuilderService convert the typed CaseListResponse
+    # back to Map<String,Object> for legacy downstream code),
+    # TaskmanagementApi, EvidenceApi, OrderApi (OrderSearchService maps
+    # the VC-entity referenceId onto OrderCriteria.id), ApplicationApi
+    # (exposed in this PR — first cross-subdomain caller), TaskApi
+    # (re-introduced; safe because casemanagement has no incoming edges
+    # so the cases↔task↔order cycle from a89087936 cannot re-form),
+    # CtcApi (read-side only; updates stay on REST per Rule 35), and
+    # DigitalizeddocumentsApi (exposed in this PR). The only outgoing
+    # REST left is CtcUtil.updateCtcApplication (Rule 35) plus
+    # MdmsV2Util and SummonsOrderPdfUtil (egov platform services per
+    # Rule 17). Pipeline 5 would otherwise re-add the dead keys on
+    # every regen.
+    "casemanagement": {
+        "dristi.taskmanagement.host",
+        "dristi.taskmanagement.search.endpoint",
+        "dristi.evidence.host",
+        "dristi.evidence.search.endpoint",
+        "dristi.application.host",
+        "dristi.application.search.endpoint",
+        "dristi.case.host",
+        "dristi.case.search.url",
+        "dristi.order.host",
+        "dristi.order.search.url",
+        "dristi.task.host",
+        "dristi.task.search.url",
+        "dristi.digitalized.documents.host",
+        "dristi.digitalized.documents.search.endpoint",
+        "dristi.ctc.search.endpoint",
+        # PR #101 review sweep: legacy-boilerplate keys carried over from
+        # the source service's application.properties whose @Value bindings
+        # in casemanagement/Configuration.java had no consumer in
+        # caselifecycle/casemanagement/internal/. Distinct from the Rule 32
+        # cutover keys above — these were dead pre-migration. User / Idgen /
+        # Workflow / HRMS / URL-shortener / SMS / filestore-delete /
+        # preview-index / delay-time.
+        #
+        # mdms.kafka.{save,update}.topic intentionally NOT listed — though
+        # the @Value-bound fields are unread, casemanagement/internal/kafka/
+        # Consumer.java's @KafkaListener references the property keys
+        # directly (`topics = {"${mdms.kafka.save.topic}", ...}`), so the
+        # YAML keys must stay live for Spring to resolve the placeholders
+        # at bean init.
+        "egov.user.host",
+        "egov.user.context.path",
+        "egov.user.create.path",
+        "egov.user.search.path",
+        "egov.user.update.path",
+        "egov.idgen.host",
+        "egov.idgen.path",
+        "egov.workflow.host",
+        "egov.workflow.transition.path",
+        "egov.workflow.businessservice.search.path",
+        "egov.workflow.processinstance.search.path",
+        "egov.hrms.host",
+        "egov.hrms.search.endpoint",
+        "egov.url.shortner.host",
+        "egov.url.shortner.endpoint",
+        "egov.sms.notification.topic",
+        "dristi.file.delete.path",
+        "dristi.preview.index",
+        "casemanagement.delay.time",
+    },
+    # 73eef3e08 refactor(analytics): contract uplift + REST→direct calls
+    # (PR #106). Rule 37 dropped the @Value bindings from
+    # caselifecycle/analytics/internal/config/Configuration.java for the
+    # six utils converted to direct *Api calls (Advocate/Case/Evidence/
+    # Hearing/Order/TaskManagement). egov.case.search.endpoint joined the
+    # set after analytics CaseUtil.searchCaseDetails was rewired onto
+    # CaseApi.search; egov.{advocate.{host,path}} fell out with the
+    # Rule 38 deletion of analytics AdvocateUtil. egov.{case.host,
+    # case.member.advocates.endpoint, advocate.case.search.endpoint} stay
+    # live — CaseUtil.{getCasesByAdvocateId,getAdvocatesForMember} are
+    # the Rule 39 deferrals with no matching *Api method yet.
+    "analytics": {
+        "egov.advocate.host",
+        "egov.advocate.path",
+        "egov.case.search.endpoint",
+        "egov.evidence.host",
+        "egov.evidence.search.endpoint",
+        "egov.hearing.host",
+        "egov.hearing.search.endpoint",
+        "egov.order.host",
+        "egov.order.search.endpoint",
+        "dristi.task-management.host",
+        "dristi.task-management.search.endpoint",
     },
 }
 
@@ -423,10 +584,16 @@ def main() -> int:
             continue
         by_service[svc] = parse_properties(props_path)
 
+    # Union the hand-maintained literal with the Phase-96-written sidecar.
+    # Both sources contain `{service: set(keys)}`; the auto file (Rule 42)
+    # is regenerated on every migration that drops a `@Value` from any
+    # Configuration.java, so this re-read picks up the latest state.
+    auto_dead = load_auto_dead_keys()
+
     # all keys → {service: value}
     key_values: dict[str, dict[str, str]] = defaultdict(dict)
     for svc, props in by_service.items():
-        dead_for_svc = SERVICE_DEAD_KEYS.get(svc, set())
+        dead_for_svc = SERVICE_DEAD_KEYS.get(svc, set()) | auto_dead.get(svc, set())
         for key, value in props.items():
             if key in ALL_DROPPED:
                 continue

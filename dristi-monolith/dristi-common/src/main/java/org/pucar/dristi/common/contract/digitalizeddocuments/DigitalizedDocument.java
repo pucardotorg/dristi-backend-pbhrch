@@ -98,6 +98,18 @@ public class DigitalizedDocument {
     @JsonProperty("shortenedUrl")
     private String shortenedUrl = null;
 
+    @JsonProperty("caseNumber")
+    private String caseNumber = null;
+
+    @JsonProperty("courtName")
+    private String courtName = null;
+
+    @JsonProperty("place")
+    private String place = null;
+
+    @JsonProperty("state")
+    private String state = null;
+
 
     public DigitalizedDocument putAdditionalDetailsItem(String key, Object additionalDetailsItem) {
         if (this.additionalDetails == null) {
