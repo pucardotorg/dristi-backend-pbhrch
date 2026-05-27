@@ -7,7 +7,7 @@ import org.egov.tracer.model.CustomException;
 import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.order.Order;
 import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.order.OrderCriteria;
 import org.pucar.dristi.caselifecycle.casemanagement.internal.web.models.order.OrderSearchRequest;
-import org.pucar.dristi.caselifecycle.order.OrderApi;
+import org.pucar.dristi.common.order.OrderApi;
 import org.pucar.dristi.common.contract.casemanagement.OrderPagination;
 import org.pucar.dristi.common.contract.casemanagement.Pagination;
 import org.springframework.stereotype.Component;

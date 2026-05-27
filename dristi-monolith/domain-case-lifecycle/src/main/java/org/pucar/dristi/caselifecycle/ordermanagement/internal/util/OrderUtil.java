@@ -9,7 +9,7 @@ import org.egov.tracer.model.CustomException;
 import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.pucar.dristi.caselifecycle.order.OrderApi;
+import org.pucar.dristi.common.order.OrderApi;
 import org.pucar.dristi.caselifecycle.ordermanagement.internal.config.Configuration;
 import org.pucar.dristi.common.contract.ordermanagement.*;
 
