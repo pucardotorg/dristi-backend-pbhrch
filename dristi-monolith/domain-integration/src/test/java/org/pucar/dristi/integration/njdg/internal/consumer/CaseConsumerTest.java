@@ -54,7 +54,7 @@ class CaseConsumerTest {
 
     @Test
     void testListen_Success() throws Exception {
-        when(objectMapper.readValue(anyString(), eq(CaseRequest.class))).thenReturn(caseRequest);
+        when(objectMapper.convertValue(any(), any(com.fasterxml.jackson.core.type.TypeReference.class))).thenReturn(caseRequest);
         
         JsonNode mockJsonNode = mock(JsonNode.class);
         when(caseUtil.searchCaseDetails(any(CaseSearchRequest.class))).thenReturn(mockJsonNode);
@@ -68,7 +68,7 @@ class CaseConsumerTest {
     @Test
     void testListen_InvalidStatus_Skipped() throws Exception {
         courtCase.setStatus("INVALID_STATUS");
-        when(objectMapper.readValue(anyString(), eq(CaseRequest.class))).thenReturn(caseRequest);
+        when(objectMapper.convertValue(any(), any(com.fasterxml.jackson.core.type.TypeReference.class))).thenReturn(caseRequest);
 
         caseConsumer.listen(consumerRecord, "test-topic");
 
@@ -78,7 +78,7 @@ class CaseConsumerTest {
     @Test
     void testListen_NoCnr_Skipped() throws Exception {
         courtCase.setCnrNumber(null);
-        when(objectMapper.readValue(anyString(), eq(CaseRequest.class))).thenReturn(caseRequest);
+        when(objectMapper.convertValue(any(), any(com.fasterxml.jackson.core.type.TypeReference.class))).thenReturn(caseRequest);
         
         JsonNode mockJsonNode = mock(JsonNode.class);
         when(caseUtil.searchCaseDetails(any(CaseSearchRequest.class))).thenReturn(mockJsonNode);
@@ -91,7 +91,7 @@ class CaseConsumerTest {
 
     @Test
     void testListen_ExceptionHandling() throws Exception {
-        when(objectMapper.readValue(anyString(), eq(CaseRequest.class)))
+        when(objectMapper.convertValue(any(), any(com.fasterxml.jackson.core.type.TypeReference.class)))
                 .thenThrow(new RuntimeException("Parse error"));
 
         assertDoesNotThrow(() -> caseConsumer.listen(consumerRecord, "test-topic"));
@@ -100,7 +100,7 @@ class CaseConsumerTest {
 
     @Test
     void testListenJoinCase_Success() throws Exception {
-        when(objectMapper.readValue(anyString(), eq(CourtCase.class))).thenReturn(courtCase);
+        when(objectMapper.convertValue(any(), any(com.fasterxml.jackson.core.type.TypeReference.class))).thenReturn(courtCase);
         
         JsonNode mockJsonNode = mock(JsonNode.class);
         when(caseUtil.searchCaseDetails(any(CaseSearchRequest.class))).thenReturn(mockJsonNode);
@@ -114,7 +114,7 @@ class CaseConsumerTest {
     @Test
     void testListenJoinCase_NoCnr_Skipped() throws Exception {
         courtCase.setCnrNumber(null);
-        when(objectMapper.readValue(anyString(), eq(CourtCase.class))).thenReturn(courtCase);
+        when(objectMapper.convertValue(any(), any(com.fasterxml.jackson.core.type.TypeReference.class))).thenReturn(courtCase);
         
         JsonNode mockJsonNode = mock(JsonNode.class);
         when(caseUtil.searchCaseDetails(any(CaseSearchRequest.class))).thenReturn(mockJsonNode);
@@ -136,7 +136,7 @@ class CaseConsumerTest {
         caseOutcome.setOutcome(outcome);
         caseOutcome.setRequestInfo(RequestInfo.builder().build());
 
-        when(objectMapper.readValue(anyString(), eq(CaseOutcome.class))).thenReturn(caseOutcome);
+        when(objectMapper.convertValue(any(), any(com.fasterxml.jackson.core.type.TypeReference.class))).thenReturn(caseOutcome);
         
         JsonNode mockJsonNode = mock(JsonNode.class);
         when(caseUtil.searchCaseDetails(any(CaseSearchRequest.class))).thenReturn(mockJsonNode);
@@ -159,7 +159,7 @@ class CaseConsumerTest {
         caseOutcome.setOutcome(outcome);
         caseOutcome.setRequestInfo(RequestInfo.builder().build());
 
-        when(objectMapper.readValue(anyString(), eq(CaseOutcome.class))).thenReturn(caseOutcome);
+        when(objectMapper.convertValue(any(), any(com.fasterxml.jackson.core.type.TypeReference.class))).thenReturn(caseOutcome);
         
         JsonNode mockJsonNode = mock(JsonNode.class);
         when(caseUtil.searchCaseDetails(any(CaseSearchRequest.class))).thenReturn(mockJsonNode);
@@ -178,7 +178,7 @@ class CaseConsumerTest {
         caseStageSubStage.setCaseOverallStatus(overallStatus);
         caseStageSubStage.setRequestInfo(RequestInfo.builder().build());
 
-        when(objectMapper.readValue(anyString(), eq(CaseStageSubStage.class))).thenReturn(caseStageSubStage);
+        when(objectMapper.convertValue(any(), any(com.fasterxml.jackson.core.type.TypeReference.class))).thenReturn(caseStageSubStage);
         
         JsonNode mockJsonNode = mock(JsonNode.class);
         when(caseUtil.searchCaseDetails(any(CaseSearchRequest.class))).thenReturn(mockJsonNode);
@@ -196,7 +196,7 @@ class CaseConsumerTest {
         details.setFilingNumber("FN-001");
         conversionRequest.setCaseConversionDetails(details);
 
-        when(objectMapper.readValue(anyString(), eq(CaseConversionRequest.class))).thenReturn(conversionRequest);
+        when(objectMapper.convertValue(any(), any(com.fasterxml.jackson.core.type.TypeReference.class))).thenReturn(conversionRequest);
 
         caseConsumer.listenCaseConversion(consumerRecord, "update-case-conversion");
 

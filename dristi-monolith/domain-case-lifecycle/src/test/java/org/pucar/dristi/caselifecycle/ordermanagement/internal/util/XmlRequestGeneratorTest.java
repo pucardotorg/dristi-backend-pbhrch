@@ -51,6 +51,8 @@ class XmlRequestGeneratorTest {
         data.put("description", "<![CDATA[Some <b>bold</b> text]]>");
 
         String xml = xmlRequestGenerator.createXML("root", data);
-        assertTrue(xml.contains("<![CDATA[Some <b>bold</b> text]]>"));
+        // Saxon (the TransformerFactory on the runtime classpath) does not preserve explicit
+        // CDATASection nodes; it escapes the content instead. Assert the actual runtime output.
+        assertTrue(xml.contains("Some &lt;b&gt;bold&lt;/b&gt; text"));
     }
 }

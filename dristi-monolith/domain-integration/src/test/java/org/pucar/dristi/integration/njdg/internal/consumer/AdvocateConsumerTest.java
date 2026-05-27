@@ -55,7 +55,7 @@ class AdvocateConsumerTest {
 
     @Test
     void testListen_ActiveAdvocate_Success() throws Exception {
-        when(objectMapper.readValue(anyString(), eq(AdvocateRequest.class))).thenReturn(advocateRequest);
+        when(objectMapper.convertValue(any(), any(com.fasterxml.jackson.core.type.TypeReference.class))).thenReturn(advocateRequest);
         when(advocateService.processAndUpdateAdvocates(any(AdvocateRequest.class)))
                 .thenReturn(new AdvocateDetails());
 
@@ -67,7 +67,7 @@ class AdvocateConsumerTest {
     @Test
     void testListen_InactiveAdvocate_Skipped() throws Exception {
         advocate.setStatus("INACTIVE");
-        when(objectMapper.readValue(anyString(), eq(AdvocateRequest.class))).thenReturn(advocateRequest);
+        when(objectMapper.convertValue(any(), any(com.fasterxml.jackson.core.type.TypeReference.class))).thenReturn(advocateRequest);
 
         advocateConsumer.listen(consumerRecord, "update-advocate-application");
 
@@ -77,7 +77,7 @@ class AdvocateConsumerTest {
     @Test
     void testListen_PendingAdvocate_Skipped() throws Exception {
         advocate.setStatus("PENDING");
-        when(objectMapper.readValue(anyString(), eq(AdvocateRequest.class))).thenReturn(advocateRequest);
+        when(objectMapper.convertValue(any(), any(com.fasterxml.jackson.core.type.TypeReference.class))).thenReturn(advocateRequest);
 
         advocateConsumer.listen(consumerRecord, "update-advocate-application");
 
@@ -87,7 +87,7 @@ class AdvocateConsumerTest {
     @Test
     void testListen_NullStatus_Skipped() throws Exception {
         advocate.setStatus(null);
-        when(objectMapper.readValue(anyString(), eq(AdvocateRequest.class))).thenReturn(advocateRequest);
+        when(objectMapper.convertValue(any(), any(com.fasterxml.jackson.core.type.TypeReference.class))).thenReturn(advocateRequest);
 
         advocateConsumer.listen(consumerRecord, "update-advocate-application");
 
@@ -97,7 +97,7 @@ class AdvocateConsumerTest {
     @Test
     void testListen_CaseInsensitiveStatus_Success() throws Exception {
         advocate.setStatus("active");
-        when(objectMapper.readValue(anyString(), eq(AdvocateRequest.class))).thenReturn(advocateRequest);
+        when(objectMapper.convertValue(any(), any(com.fasterxml.jackson.core.type.TypeReference.class))).thenReturn(advocateRequest);
         when(advocateService.processAndUpdateAdvocates(any(AdvocateRequest.class)))
                 .thenReturn(new AdvocateDetails());
 
@@ -108,7 +108,7 @@ class AdvocateConsumerTest {
 
     @Test
     void testListen_ExceptionDuringParsing() throws Exception {
-        when(objectMapper.readValue(anyString(), eq(AdvocateRequest.class)))
+        when(objectMapper.convertValue(any(), any(com.fasterxml.jackson.core.type.TypeReference.class)))
                 .thenThrow(new RuntimeException("Parse error"));
 
         assertDoesNotThrow(() -> advocateConsumer.listen(consumerRecord, "update-advocate-application"));
@@ -117,7 +117,7 @@ class AdvocateConsumerTest {
 
     @Test
     void testListen_ExceptionDuringProcessing() throws Exception {
-        when(objectMapper.readValue(anyString(), eq(AdvocateRequest.class))).thenReturn(advocateRequest);
+        when(objectMapper.convertValue(any(), any(com.fasterxml.jackson.core.type.TypeReference.class))).thenReturn(advocateRequest);
         when(advocateService.processAndUpdateAdvocates(any(AdvocateRequest.class)))
                 .thenThrow(new RuntimeException("Processing error"));
 
@@ -140,7 +140,7 @@ class AdvocateConsumerTest {
 
     @Test
     void testListen_MultipleTopicPartitions() throws Exception {
-        when(objectMapper.readValue(anyString(), eq(AdvocateRequest.class))).thenReturn(advocateRequest);
+        when(objectMapper.convertValue(any(), any(com.fasterxml.jackson.core.type.TypeReference.class))).thenReturn(advocateRequest);
         when(advocateService.processAndUpdateAdvocates(any(AdvocateRequest.class)))
                 .thenReturn(new AdvocateDetails());
 
