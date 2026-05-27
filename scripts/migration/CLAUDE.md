@@ -51,7 +51,11 @@ Local, reversible, low-risk inside the migrated tree.
   PR" hedge once the target's `*Api` exists). Mechanical: switch
   `@Autowired <X>Util` to `@Autowired <X>Api`, update tests to mock the
   Api (Rule 36), drop the now-dead REST helper util (Rule 38) and
-  any obsolete `<svc>.host`/`<svc>.path` config (Rule 37).
+  any obsolete `<svc>.host`/`<svc>.path` config (Rule 37). Dead-key
+  registration in `SERVICE_DEAD_KEYS` is now Phase 95+96's job
+  (Rule 42); do **not** hand-edit `run_consolidation.py`'s literal
+  unless adding an edge case (multi-source subdomain, typo-source
+  key) the auto-detector can't capture.
 - Adding the first method to a subdomain's `*Api` interface that
   another already-migrated subdomain genuinely needs (Rule 31). Same
   with adding a forward-looking method when the registry shows
@@ -251,7 +255,7 @@ Pipeline and Maven output can be large. To keep context efficient:
 | Path | Purpose |
 |---|---|
 | [RUNBOOK.md](RUNBOOK.md) | Human-readable operational guide |
-| [PIPELINE_RULES.md](PIPELINE_RULES.md) | hard-won rules, indexed by gate/symptom (24=contract lift, 24a=`@NamedInterface("contract")` alternative when retro-lift fails, 25=parent pom dep hygiene, 26=canonical return-type drift, 27=REST→direct as follow-up PR — *superseded by 32*, 28=three-commit structure, 29=workflow migration pattern + behavior-union extraction, 30=pre-commit summary protocol, 31=API-first cross-subdomain boundary via `@ApplicationModule` + `*Api`, 31a=`@NamedInterface("api")` for cross-Maven-module `*Api` access, 32=REST→direct converts at target-migration time, 33=`RequestInfo` explicit on every `*Api`, 34=`*Api` signatures use contract DTOs only, 35=cross-module writes are Tier 3, 36=convert tests at the same time as the call, 37=dead code surfaces during cutover (sweep it out), 38=delete REST helper utils on conversion, don't wrap, 39=cross-`*Api` method gap is Tier 4, 40=`RequestInfo` is effectively immutable in direct calls, 41=subdomain `Configuration` classes need explicit bean name) |
+| [PIPELINE_RULES.md](PIPELINE_RULES.md) | hard-won rules, indexed by gate/symptom (24=contract lift, 24a=`@NamedInterface("contract")` alternative when retro-lift fails, 25=parent pom dep hygiene, 26=canonical return-type drift, 27=REST→direct as follow-up PR — *superseded by 32*, 28=three-commit structure, 29=workflow migration pattern + behavior-union extraction, 30=pre-commit summary protocol, 31=API-first cross-subdomain boundary via `@ApplicationModule` + `*Api`, 31a=`@NamedInterface("api")` for cross-Maven-module `*Api` access, 32=REST→direct converts at target-migration time, 33=`RequestInfo` explicit on every `*Api`, 34=`*Api` signatures use contract DTOs only, 35=cross-module writes are Tier 3, 36=convert tests at the same time as the call, 37=dead code surfaces during cutover (sweep it out), 38=delete REST helper utils on conversion, don't wrap, 39=cross-`*Api` method gap is Tier 4, 40=`RequestInfo` is effectively immutable in direct calls, 41=subdomain `Configuration` classes need explicit bean name, 42=dead `@Value` keys auto-registered via Phase 95/96 + gate, no hand-curation) |
 | [FOLLOWUP_RETROLIFT_PATH_A.md](FOLLOWUP_RETROLIFT_PATH_A.md) | Deferred work to relocate case + lock-svc contract DTOs from `internal/web/models/` to `dristi-common/contract/` once Phase 35 is robust enough to handle JPA / subpackage / internal-annotation tendrils |
 | [SERVICE_REGISTRY.md](SERVICE_REGISTRY.md) | Service → module/subdomain mapping |
 | [per_module/run_module_migration.py](per_module/run_module_migration.py) | The 10-phase pipeline (incl. Phase 35 contract-lift) |

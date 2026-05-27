@@ -4,16 +4,20 @@ import lombok.extern.slf4j.Slf4j;
 import org.egov.tracer.model.CustomException;
 import org.pucar.dristi.caselifecycle.cases.internal.config.Configuration;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.EvidenceRequest;
-import org.pucar.dristi.caselifecycle.cases.internal.web.models.EvidenceSearchRequest;
-import org.pucar.dristi.caselifecycle.cases.internal.web.models.EvidenceSearchResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.List;
-
 import static org.pucar.dristi.caselifecycle.cases.internal.config.ServiceConstants.EVIDENCE_CREATE_ERROR;
 
+/**
+ * REST shim for the one remaining cases→evidence write path
+ * ({@code createEvidence}). The read path was lifted onto
+ * {@link org.pucar.dristi.caselifecycle.evidence.EvidenceApi#searchEvidence}
+ * in the evidence migration; {@code createEvidence} stays over REST
+ * for now because cross-subdomain writes are a Rule 35 design call
+ * that hasn't been made yet.
+ */
 @Slf4j
 @Component("casesEvidenceUtil")
 public class EvidenceUtil {
@@ -38,18 +42,4 @@ public class EvidenceUtil {
             throw new CustomException(EVIDENCE_CREATE_ERROR, "Error getting response from Evidence Service");
         }
     }
-
-    public EvidenceSearchResponse searchEvidence(EvidenceSearchRequest evidenceSearchRequest) {
-
-        StringBuilder uri = new StringBuilder();
-        uri.append(config.getEvidenceServiceHost()).append(config.getEvidenceServiceSearchPath());
-        try {
-            return restTemplate.postForObject(uri.toString(), evidenceSearchRequest, EvidenceSearchResponse.class);
-        } catch (Exception e) {
-            log.error("Error getting response from Evidence Service", e);
-            throw new CustomException(EVIDENCE_CREATE_ERROR, "Error getting response from Evidence Service");
-        }
-
-    }
-
 }

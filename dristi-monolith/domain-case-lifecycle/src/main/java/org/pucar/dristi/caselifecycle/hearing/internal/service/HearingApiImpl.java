@@ -1,7 +1,7 @@
 package org.pucar.dristi.caselifecycle.hearing.internal.service;
 
 import lombok.RequiredArgsConstructor;
-import org.pucar.dristi.caselifecycle.hearing.HearingApi;
+import org.pucar.dristi.common.hearing.HearingApi;
 import org.pucar.dristi.common.contract.hearing.Hearing;
 import org.pucar.dristi.common.contract.hearing.HearingRequest;
 import org.pucar.dristi.common.contract.hearing.HearingSearchRequest;
@@ -23,5 +23,15 @@ public class HearingApiImpl implements HearingApi {
     @Override
     public void update(HearingRequest request) {
         hearingService.updateTranscriptAdditionalAttendees(request);
+    }
+
+    @Override
+    public Hearing createHearing(HearingRequest request) {
+        return hearingService.createHearing(request);
+    }
+
+    @Override
+    public Hearing updateHearing(HearingRequest request) {
+        return hearingService.updateHearing(request);
     }
 }

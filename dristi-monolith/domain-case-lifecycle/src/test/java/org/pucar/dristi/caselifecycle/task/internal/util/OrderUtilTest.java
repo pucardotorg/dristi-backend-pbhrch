@@ -7,7 +7,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.pucar.dristi.caselifecycle.order.OrderApi;
+import org.pucar.dristi.common.order.OrderApi;
 import org.pucar.dristi.common.contract.order.Order;
 import org.pucar.dristi.common.contract.order.OrderListResponse;
 import org.pucar.dristi.common.contract.order.OrderSearchRequest;

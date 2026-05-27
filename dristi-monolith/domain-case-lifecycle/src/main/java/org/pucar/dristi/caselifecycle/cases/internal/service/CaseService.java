@@ -28,7 +28,7 @@ import org.pucar.dristi.caselifecycle.cases.internal.util.*;
 import org.pucar.dristi.common.contract.treasury.BreakDown;
 import org.pucar.dristi.common.contract.treasury.Calculation;
 import org.pucar.dristi.common.contract.treasury.DemandCreateRequest;
-import org.pucar.dristi.caselifecycle.hearing.HearingApi;
+import org.pucar.dristi.common.hearing.HearingApi;
 import org.pucar.dristi.common.contract.hearing.Hearing;
 import org.pucar.dristi.common.contract.hearing.HearingCriteria;
 import org.pucar.dristi.common.contract.hearing.HearingRequest;
@@ -77,7 +77,7 @@ import org.pucar.dristi.common.models.individual.Individual;
 import org.pucar.dristi.common.util.FileStoreUtil;
 import org.pucar.dristi.common.models.Document;
 import org.pucar.dristi.common.models.workflow.WorkflowObject;
-@Service
+@Service("casesCaseService")
 @Slf4j
 public class CaseService {
 

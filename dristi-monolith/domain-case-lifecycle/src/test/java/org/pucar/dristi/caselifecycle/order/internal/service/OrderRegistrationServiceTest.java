@@ -60,7 +60,7 @@ import org.pucar.dristi.common.models.workflow.WorkflowObject;
    private FileStoreUtil fileStoreUtil;
 
    @Mock
-   private org.pucar.dristi.caselifecycle.hearing.HearingApi hearingApi;
+   private org.pucar.dristi.common.hearing.HearingApi hearingApi;
 
     @BeforeEach
      void setup() {

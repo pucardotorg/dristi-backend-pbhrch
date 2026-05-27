@@ -40,7 +40,7 @@ import org.pucar.dristi.common.contract.advocate.Advocate;
 import org.pucar.dristi.common.contract.treasury.BreakDown;
 import org.pucar.dristi.common.contract.treasury.Calculation;
 import org.pucar.dristi.common.contract.treasury.DemandCreateRequest;
-import org.pucar.dristi.caselifecycle.hearing.HearingApi;
+import org.pucar.dristi.common.hearing.HearingApi;
 import org.pucar.dristi.identityaccess.advocate.AdvocateApi;
 import org.pucar.dristi.integration.treasury.TreasuryApi;
 import org.pucar.dristi.common.util.DateUtil;

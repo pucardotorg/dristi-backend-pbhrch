@@ -1,25 +1,22 @@
 package org.pucar.dristi.integration.epost.internal.util;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.model.CustomException;
-import org.pucar.dristi.integration.epost.internal.config.EPostConfiguration;
-import org.pucar.dristi.common.contract.epost.*;
-import org.pucar.dristi.integration.epost.internal.model.*;
+import org.pucar.dristi.common.contract.epost.DeliveryStatus;
+import org.pucar.dristi.common.contract.epost.EPostRequest;
+import org.pucar.dristi.common.contract.epost.EPostTracker;
+import org.pucar.dristi.common.contract.summons.ChannelMessage;
+import org.pucar.dristi.common.contract.summons.ChannelReport;
+import org.pucar.dristi.integration.summons.SummonsApi;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.any;
 
 import static org.pucar.dristi.integration.epost.internal.config.ServiceConstants.ERROR_WHILE_UPDATING_SUMMONS;
 import static org.pucar.dristi.integration.epost.internal.config.ServiceConstants.SUMMONS_UPDATE_ERROR;
@@ -27,13 +24,7 @@ import static org.pucar.dristi.integration.epost.internal.config.ServiceConstant
 class SummonsUtilTest {
 
     @Mock
-    private RestTemplate restTemplate;
-
-    @Mock
-    private EPostConfiguration config;
-
-    @Mock
-    private ObjectMapper objectMapper;
+    private SummonsApi summonsApi;
 
     @InjectMocks
     private SummonsUtil summonsUtil;
@@ -53,33 +44,21 @@ class SummonsUtilTest {
     }
 
     @Test
-    void updateSummonsDeliveryStatus_success() throws Exception {
-        // Arrange
-        ResponseEntity<Object> responseEntity = new ResponseEntity<>(new Object(), HttpStatus.OK);
+    void updateSummonsDeliveryStatus_success() {
+        ChannelMessage stub = ChannelMessage.builder().acknowledgementStatus("OK").build();
+        when(summonsApi.updateDeliveryStatus(any(RequestInfo.class), any(ChannelReport.class))).thenReturn(stub);
 
-        when(config.getSummonsHost()).thenReturn("http://localhost");
-        when(config.getSummonsUpdateEndPoint()).thenReturn("/update");
-        when(restTemplate.postForEntity(any(String.class), any(HttpEntity.class), any(Class.class)))
-                .thenReturn(responseEntity);
-        when(objectMapper.convertValue(any(), any(Class.class))).thenReturn(new Object());
-
-        // Act
         Object response = summonsUtil.updateSummonsDeliveryStatus(request);
 
-        // Assert
         assertNotNull(response);
+        assertSame(stub, response);
     }
 
     @Test
-    void updateSummonsDeliveryStatus_restClientException() {
-        // Arrange
+    void updateSummonsDeliveryStatus_apiException() {
+        when(summonsApi.updateDeliveryStatus(any(RequestInfo.class), any(ChannelReport.class)))
+                .thenThrow(new RuntimeException("Boom"));
 
-        when(config.getSummonsHost()).thenReturn("http://localhost");
-        when(config.getSummonsUpdateEndPoint()).thenReturn("/update");
-        when(restTemplate.postForEntity(any(String.class), any(HttpEntity.class), any(Class.class)))
-                .thenThrow(new RestClientException("Test Exception"));
-
-        // Act & Assert
         CustomException thrown = assertThrows(CustomException.class, () ->
                 summonsUtil.updateSummonsDeliveryStatus(request));
         assertEquals(SUMMONS_UPDATE_ERROR, thrown.getCode());

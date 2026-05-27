@@ -1,0 +1,28 @@
+{
+  "service": "summons-svc",
+  "source_dir": "integration-services/summons-svc",
+  "target_module": "integration",
+  "target_subdomain": "summons",
+  "current_package": "digit",
+  "target_package": "org.pucar.dristi.integration.summons",
+  "main_file_count": 125,
+  "test_file_count": 18,
+  "has_spring_boot_main": true,
+  "duplicated_protected_classes": [
+    "MdmsUtil",
+    "IdgenUtil",
+    "ResponseInfoFactory",
+    "Producer",
+    "KafkaProducerService",
+    "ServiceRequestRepository",
+    "Document",
+    "WorkflowObject"
+  ],
+  "rest_call_files": [
+    "integration-services/summons-svc/src/main/java/digit/repository/ServiceRequestRepository.java",
+    "integration-services/summons-svc/src/main/java/digit/service/DemandService.java",
+    "integration-services/summons-svc/src/main/java/digit/util/OrderUtil.java",
+    "integration-services/summons-svc/src/main/java/digit/util/IdgenUtil.java"
+  ],
+  "source_context_path": "/summons-svc"
+}

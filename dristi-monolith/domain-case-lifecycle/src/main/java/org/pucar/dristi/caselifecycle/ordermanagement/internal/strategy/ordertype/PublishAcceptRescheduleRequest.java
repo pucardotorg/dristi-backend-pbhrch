@@ -1,0 +1,157 @@
+package org.pucar.dristi.caselifecycle.ordermanagement.internal.strategy.ordertype;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.JsonPath;
+import lombok.extern.slf4j.Slf4j;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.tracer.model.CustomException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.pucar.dristi.caselifecycle.ordermanagement.internal.config.Configuration;
+import org.pucar.dristi.caselifecycle.ordermanagement.internal.strategy.OrderUpdateStrategy;
+import org.pucar.dristi.caselifecycle.ordermanagement.internal.util.*;
+import org.pucar.dristi.common.util.DateUtil;
+import org.pucar.dristi.common.contract.ordermanagement.Order;
+import org.pucar.dristi.common.contract.ordermanagement.OrderRequest;
+import org.pucar.dristi.common.models.workflow.WorkflowObject;
+import org.pucar.dristi.caselifecycle.ordermanagement.internal.web.models.adiary.CaseDiaryEntry;
+import org.pucar.dristi.caselifecycle.ordermanagement.internal.web.models.courtCase.CaseCriteria;
+import org.pucar.dristi.caselifecycle.ordermanagement.internal.web.models.courtCase.CaseSearchRequest;
+import org.pucar.dristi.caselifecycle.ordermanagement.internal.web.models.courtCase.CourtCase;
+import org.pucar.dristi.caselifecycle.ordermanagement.internal.web.models.hearing.Hearing;
+import org.pucar.dristi.caselifecycle.ordermanagement.internal.web.models.hearing.HearingCriteria;
+import org.pucar.dristi.caselifecycle.ordermanagement.internal.web.models.hearing.HearingRequest;
+import org.pucar.dristi.caselifecycle.ordermanagement.internal.web.models.hearing.HearingSearchRequest;
+import org.pucar.dristi.caselifecycle.ordermanagement.internal.web.models.scheduler.ReScheduleHearing;
+import org.pucar.dristi.caselifecycle.ordermanagement.internal.web.models.scheduler.ReScheduleHearingRequest;
+
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
+import static org.pucar.dristi.caselifecycle.ordermanagement.internal.config.ServiceConstants.*;
+
+@Component
+@Slf4j
+public class PublishAcceptRescheduleRequest implements OrderUpdateStrategy {
+
+    private final HearingUtil hearingUtil;
+    private final OrderUtil orderUtil;
+    private final ApplicationUtil applicationUtil;
+    private final Configuration config;
+    private final SchedulerUtil schedulerUtil;
+    private final CaseUtil caseUtil;
+    private final DateUtil dateUtil;
+
+    @Autowired
+    public PublishAcceptRescheduleRequest(HearingUtil hearingUtil, OrderUtil orderUtil, ApplicationUtil applicationUtil, Configuration config, SchedulerUtil schedulerUtil, CaseUtil caseUtil, DateUtil dateUtil) {
+        this.hearingUtil = hearingUtil;
+        this.orderUtil = orderUtil;
+        this.applicationUtil = applicationUtil;
+        this.config = config;
+        this.schedulerUtil = schedulerUtil;
+        this.caseUtil = caseUtil;
+        this.dateUtil = dateUtil;
+    }
+
+    @Override
+    public boolean supportsPreProcessing(OrderRequest orderRequest) {
+        return false;
+    }
+
+    @Override
+    public boolean supportsPostProcessing(OrderRequest orderRequest) {
+        Order order = orderRequest.getOrder();
+        String action = order.getWorkflow().getAction();
+        return order.getOrderType() != null && E_SIGN.equalsIgnoreCase(action) && ACCEPT_RESCHEDULING_REQUEST.equalsIgnoreCase(order.getOrderType());
+    }
+
+    @Override
+    public OrderRequest preProcess(OrderRequest orderRequest) {
+        return null;
+    }
+
+    @Override
+    public OrderRequest postProcess(OrderRequest orderRequest){
+        RequestInfo requestInfo = orderRequest.getRequestInfo();
+        Order order = orderRequest.getOrder();
+        ZoneId zone = ZoneId.of(config.getZoneId());
+        String refHearingId = "";
+        String newPurposeOfHearing = "";
+        LocalDate hearingDate = null;
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            String jsonAdditionalDetails = mapper.writeValueAsString(orderRequest.getOrder().getAdditionalDetails());
+            refHearingId = JsonPath.read(jsonAdditionalDetails, "$.refHearingId");
+
+            String jsonOrderDetails = mapper.writeValueAsString(orderRequest.getOrder().getOrderDetails());
+            Long  newHearingDateEpoch = JsonPath.read(jsonOrderDetails, "$.newHearingDate");
+            newPurposeOfHearing = JsonPath.read(jsonOrderDetails, "$.purposeOfHearing");
+            hearingDate = Instant.ofEpochMilli(newHearingDateEpoch)
+                    .atZone(zone)
+                    .toLocalDate();
+
+        } catch (Exception e) {
+            throw new CustomException("ERROR", "Error occurred while processing json");
+        }
+        List<Hearing> hearings = hearingUtil.fetchHearing(HearingSearchRequest.builder().requestInfo(requestInfo)
+                .criteria(HearingCriteria.builder().filingNumber(order.getFilingNumber()).tenantId(order.getTenantId()).hearingId(refHearingId).build()).build());
+        Hearing hearing = hearings.get(0);
+
+        LocalDate today = LocalDate.now(zone);
+
+        boolean isSameDate = hearingDate.equals(today);
+        log.info("After order publish process,result = IN_PROGRESS, orderType :{}, orderNumber:{}", order.getOrderType(), order.getOrderNumber());
+        Long time = hearingDate.atStartOfDay(ZoneId.of(config.getZoneId())).toInstant().toEpochMilli();
+        if (time != null) {
+            hearing.setStartTime(time);
+            hearing.setEndTime(time);
+        }
+        hearing.setHearingType(newPurposeOfHearing);
+
+        if (isSameDate) {
+            WorkflowObject workflow = new WorkflowObject();
+            workflow.setAction(MARK_COMPLETE);
+            workflow.setComments("Update Hearing");
+            hearing.setWorkflow(workflow);
+
+            hearingUtil.updateHearingSummary(orderRequest, hearing);
+
+            StringBuilder updateUri = new StringBuilder(config.getHearingHost()).append(config.getHearingUpdateEndPoint());
+            hearingUtil.createOrUpdateHearing(HearingRequest.builder().hearing(hearing).requestInfo(requestInfo).build(), updateUri);
+        } else {
+            if (IN_PROGRESS.equalsIgnoreCase(hearing.getStatus()) || PASSED_OVER.equalsIgnoreCase(hearing.getStatus())) {
+                WorkflowObject workflow = new WorkflowObject();
+                workflow.setAction(RESCHEDULE_ONGOING);
+                workflow.setComments("Update Hearing");
+                hearing.setWorkflow(workflow);
+            } else {
+                WorkflowObject workflow = new WorkflowObject();
+                workflow.setAction(UPDATE_DATE);
+                workflow.setComments("Update Hearing");
+                hearing.setWorkflow(workflow);
+            }
+
+            StringBuilder updateUri = new StringBuilder(config.getHearingHost()).append(config.getHearingUpdateEndPoint());
+            hearingUtil.createOrUpdateHearing(HearingRequest.builder().hearing(hearing).requestInfo(requestInfo).build(), updateUri);
+        }
+        log.info("After order publish process,result = SUCCESS, orderType :{}, orderNumber:{}", order.getOrderType(), order.getOrderNumber());
+        return null;
+    }
+
+    @Override
+    public boolean supportsCommon(OrderRequest orderRequest) {
+        return false;
+    }
+
+    @Override
+    public CaseDiaryEntry execute(OrderRequest request) {
+        return null;
+    }
+
+
+}

@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
 import static org.pucar.dristi.caselifecycle.application.internal.config.ServiceConstants.*;
 
 import org.pucar.dristi.common.models.Document;
-@Service
+@Service("applicationApplicationService")
 @Slf4j
 public class ApplicationService {
     private final ApplicationValidator validator;

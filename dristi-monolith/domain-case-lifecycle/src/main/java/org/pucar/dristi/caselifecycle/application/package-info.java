@@ -3,15 +3,15 @@
  *
  * <p>Marked as a Spring Modulith application module so cross-subdomain
  * boundaries inside {@code domain-case-lifecycle} are enforced by
- * {@code ModuleStructureTest.verify()}.
- *
- * <p>No public {@code ApplicationApi} is exposed yet — no migrated
- * subdomain calls into this one at the time of migration. An
- * {@code ApplicationApi} interface will be added in the PR of the first
- * caller that migrates.
+ * {@code ModuleStructureTest.verify()}. Other subdomains (casemanagement,
+ * order-management today) MUST consume application through
+ * {@link org.pucar.dristi.caselifecycle.application.ApplicationApi};
+ * reaching into {@code internal/} is a structural violation.
  *
  * <p>Contract DTOs live at
- * {@code dristi-common/contract/application/} (Phase-35-lifted).
+ * {@code dristi-common/contract/application/} (Phase-35-lifted during
+ * the application migration).
  */
 @org.springframework.modulith.ApplicationModule(displayName = "Application")
+@org.springframework.modulith.NamedInterface("api")
 package org.pucar.dristi.caselifecycle.application;

@@ -12,6 +12,9 @@ import org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseListResponse
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseRequest;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.CaseSearchRequest;
 import org.pucar.dristi.caselifecycle.cases.internal.web.models.CourtCase;
+import org.pucar.dristi.caselifecycle.cases.internal.web.models.ProcessProfileRequest;
+import org.pucar.dristi.caselifecycle.cases.internal.web.models.v2.WitnessDetailsRequest;
+import org.pucar.dristi.caselifecycle.cases.internal.web.models.v2.WitnessDetailsResponse;
 import org.pucar.dristi.common.util.ResponseInfoFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -53,5 +56,25 @@ public class CaseApiImpl implements CaseApi {
     @Override
     public CourtCase edit(CaseRequest request) {
         return caseService.editCase(request);
+    }
+
+    @Override
+    public CourtCase update(CaseRequest request) {
+        return caseService.updateCase(request);
+    }
+
+    @Override
+    public CourtCase processProfile(ProcessProfileRequest request) {
+        return caseService.processProfileRequest(request);
+    }
+
+    @Override
+    public WitnessDetailsResponse addWitnessToCase(WitnessDetailsRequest request) {
+        return caseService.addWitnessToCase(request);
+    }
+
+    @Override
+    public CourtCase updateLPRDetails(CaseRequest request) {
+        return caseService.updateLPRDetails(request);
     }
 }

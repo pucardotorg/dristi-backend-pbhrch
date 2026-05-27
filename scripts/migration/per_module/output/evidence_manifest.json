@@ -1,0 +1,43 @@
+{
+  "service": "evidence",
+  "source_dir": "dristi-services/evidence",
+  "target_module": "case-lifecycle",
+  "target_subdomain": "evidence",
+  "current_package": "org.pucar.dristi",
+  "target_package": "org.pucar.dristi.caselifecycle.evidence",
+  "main_file_count": 132,
+  "test_file_count": 29,
+  "has_spring_boot_main": true,
+  "duplicated_protected_classes": [
+    "MdmsUtil",
+    "IdgenUtil",
+    "WorkflowUtil",
+    "FileStoreUtil",
+    "UserUtil",
+    "UrlShortenerUtil",
+    "IndividualUtil",
+    "ResponseInfoFactory",
+    "DateUtil",
+    "Producer",
+    "KafkaProducerService",
+    "ServiceRequestRepository",
+    "Individual",
+    "WorkflowObject",
+    "ProcessInstanceObject"
+  ],
+  "rest_call_files": [
+    "dristi-services/evidence/src/main/java/org/pucar/dristi/util/FileStoreUtil.java",
+    "dristi-services/evidence/src/main/java/org/pucar/dristi/util/ESignUtil.java",
+    "dristi-services/evidence/src/main/java/org/pucar/dristi/util/WorkflowUtil.java",
+    "dristi-services/evidence/src/main/java/org/pucar/dristi/util/IdgenUtil.java",
+    "dristi-services/evidence/src/main/java/org/pucar/dristi/util/UserUtil.java",
+    "dristi-services/evidence/src/main/java/org/pucar/dristi/util/IndividualUtil.java",
+    "dristi-services/evidence/src/main/java/org/pucar/dristi/util/ADiaryUtil.java",
+    "dristi-services/evidence/src/main/java/org/pucar/dristi/util/CaseUtil.java",
+    "dristi-services/evidence/src/main/java/org/pucar/dristi/util/HearingUtil.java",
+    "dristi-services/evidence/src/main/java/org/pucar/dristi/service/SmsNotificationService.java",
+    "dristi-services/evidence/src/main/java/org/pucar/dristi/service/WorkflowService.java",
+    "dristi-services/evidence/src/main/java/org/pucar/dristi/repository/ServiceRequestRepository.java"
+  ],
+  "source_context_path": "/evidence"
+}
