@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
 
 import static org.pucar.dristi.caselifecycle.transformer.internal.config.ServiceConstants.*;
 
-@Component
+@Component("transformerCaseConsumer")
 @Slf4j
 public class CaseConsumer {
 

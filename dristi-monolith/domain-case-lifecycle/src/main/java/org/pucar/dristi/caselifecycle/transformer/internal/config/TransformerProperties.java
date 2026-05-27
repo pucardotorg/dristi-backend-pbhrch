@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Component
+@Component("transformerTransformerProperties")
 public class TransformerProperties {
 
     @Value("${transformer.producer.save.case.topic}")

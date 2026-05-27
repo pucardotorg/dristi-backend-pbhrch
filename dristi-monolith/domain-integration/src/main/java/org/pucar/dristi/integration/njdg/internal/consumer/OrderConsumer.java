@@ -30,7 +30,7 @@ import java.util.Map;
 
 import static org.pucar.dristi.integration.njdg.internal.config.ServiceConstants.*;
 
-@Component
+@Component("njdgOrderConsumer")
 @Slf4j
 @RequiredArgsConstructor
 public class OrderConsumer {

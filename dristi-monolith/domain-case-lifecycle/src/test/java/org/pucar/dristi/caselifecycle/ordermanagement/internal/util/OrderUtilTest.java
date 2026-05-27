@@ -8,7 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.pucar.dristi.caselifecycle.order.OrderApi;
+import org.pucar.dristi.common.order.OrderApi;
 import org.pucar.dristi.caselifecycle.ordermanagement.internal.config.Configuration;
 import org.pucar.dristi.common.contract.ordermanagement.OrderExistsRequest;
 

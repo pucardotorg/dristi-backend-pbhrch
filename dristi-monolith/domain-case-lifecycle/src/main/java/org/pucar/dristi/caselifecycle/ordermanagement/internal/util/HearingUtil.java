@@ -7,7 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.model.CustomException;
 import org.springframework.stereotype.Component;
-import org.pucar.dristi.caselifecycle.hearing.HearingApi;
+import org.pucar.dristi.common.hearing.HearingApi;
 import org.pucar.dristi.caselifecycle.ordermanagement.internal.config.Configuration;
 import org.pucar.dristi.common.util.DateUtil;
 import org.pucar.dristi.common.contract.ordermanagement.Order;
