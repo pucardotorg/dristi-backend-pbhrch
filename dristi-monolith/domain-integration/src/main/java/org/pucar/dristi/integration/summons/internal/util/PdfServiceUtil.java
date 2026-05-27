@@ -4,6 +4,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.pucar.dristi.integration.summons.internal.config.Configuration;
 import org.pucar.dristi.integration.summons.internal.web.models.*;
 import org.pucar.dristi.common.contract.summons.*;
+import org.pucar.dristi.integration.icops.IcopsApi;
+import org.pucar.dristi.common.contract.icops.Location;
+import org.pucar.dristi.common.contract.icops.LocationBasedJurisdiction;
 import org.pucar.dristi.integration.summons.internal.web.models.orders.OrderCriteria;
 import org.pucar.dristi.integration.summons.internal.web.models.orders.OrderListResponse;
 import org.pucar.dristi.integration.summons.internal.web.models.orders.OrderSearchRequest;
@@ -44,16 +47,16 @@ public class PdfServiceUtil {
 
     private final CaseUtil caseUtil;
 
-    private final IcopsUtil icopsUtil;
+    private final IcopsApi icopsApi;
 
     private final OrderUtil orderUtil;
 
     @Autowired
-    public PdfServiceUtil(RestTemplate restTemplate, Configuration config, CaseUtil caseUtil, IcopsUtil icopsUtil, OrderUtil orderUtil) {
+    public PdfServiceUtil(RestTemplate restTemplate, Configuration config, CaseUtil caseUtil, IcopsApi icopsApi, OrderUtil orderUtil) {
         this.restTemplate = restTemplate;
         this.config = config;
         this.caseUtil = caseUtil;
-        this.icopsUtil = icopsUtil;
+        this.icopsApi = icopsApi;
         this.orderUtil = orderUtil;
     }
 
@@ -268,10 +271,8 @@ public class PdfServiceUtil {
                 .latitude(taskRequest.getTask().getTaskDetails().getRespondentDetails().getAddress().getCoordinate().getLatitude())
                 .longitude(taskRequest.getTask().getTaskDetails().getRespondentDetails().getAddress().getCoordinate().getLongitude()).build();
 
-        LocationRequest locationRequest = LocationRequest.builder()
-                .requestInfo(taskRequest.getRequestInfo())
-                .location(location).build();
-        LocationBasedJurisdiction locationBasedJurisdiction = icopsUtil.getLocationBasedJurisdiction(locationRequest);
+        LocationBasedJurisdiction locationBasedJurisdiction =
+                icopsApi.getLocationBasedJurisdiction(taskRequest.getRequestInfo(), location);
         return locationBasedJurisdiction.getNearestPoliceStation().getStation();
     }
 

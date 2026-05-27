@@ -1,14 +1,13 @@
-// HAND-CURATED — lifted by Phase 35 (contract-lift)
-package org.pucar.dristi.common.contract.summons;
+package org.pucar.dristi.common.contract.icops;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
+import lombok.Builder;
+import lombok.Data;
+import lombok.ToString;
 
 @Data
 @Builder
 @ToString
-@NoArgsConstructor
-@AllArgsConstructor
 public class LocationBasedJurisdiction {
 
     @JsonProperty("included_jurisdiction")

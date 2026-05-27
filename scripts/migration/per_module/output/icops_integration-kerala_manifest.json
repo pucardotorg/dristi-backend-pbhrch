@@ -1,0 +1,23 @@
+{
+  "service": "icops_integration-kerala",
+  "source_dir": "integration-services/icops_integration-kerala",
+  "target_module": "integration",
+  "target_subdomain": "icops",
+  "current_package": "com.egov.icops_integrationkerala",
+  "target_package": "org.pucar.dristi.integration.icops",
+  "main_file_count": 71,
+  "test_file_count": 18,
+  "has_spring_boot_main": true,
+  "duplicated_protected_classes": [
+    "MdmsUtil",
+    "IdgenUtil",
+    "Producer",
+    "KafkaProducerService",
+    "ServiceRequestRepository"
+  ],
+  "rest_call_files": [
+    "integration-services/icops_integration-kerala/src/main/java/com/egov/icops_integrationkerala/repository/ServiceRequestRepository.java",
+    "integration-services/icops_integration-kerala/src/main/java/com/egov/icops_integrationkerala/util/IdgenUtil.java"
+  ],
+  "source_context_path": "/kerala-icops"
+}
