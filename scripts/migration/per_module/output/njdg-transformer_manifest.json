@@ -1,0 +1,29 @@
+{
+  "service": "njdg-transformer",
+  "source_dir": "integration-services\\njdg-transformer",
+  "target_module": "integration",
+  "target_subdomain": "njdg",
+  "current_package": "com.dristi.njdg_transformer",
+  "target_package": "org.pucar.dristi.integration.njdg",
+  "main_file_count": 132,
+  "test_file_count": 25,
+  "has_spring_boot_main": true,
+  "duplicated_protected_classes": [
+    "MdmsUtil",
+    "FileStoreUtil",
+    "IndividualUtil",
+    "DateUtil",
+    "Producer",
+    "KafkaProducerService",
+    "ServiceRequestRepository",
+    "Individual"
+  ],
+  "rest_call_files": [
+    "integration-services\\njdg-transformer\\src\\main\\java\\com\\dristi\\njdg_transformer\\repository\\ServiceRequestRepository.java",
+    "integration-services\\njdg-transformer\\src\\main\\java\\com\\dristi\\njdg_transformer\\utils\\InboxUtil.java",
+    "integration-services\\njdg-transformer\\src\\main\\java\\com\\dristi\\njdg_transformer\\utils\\IndividualUtil.java",
+    "integration-services\\njdg-transformer\\src\\main\\java\\com\\dristi\\njdg_transformer\\utils\\MdmsUtil.java",
+    "integration-services\\njdg-transformer\\src\\main\\java\\com\\dristi\\njdg_transformer\\utils\\OrderUtil.java"
+  ],
+  "source_context_path": "/njdg-transformer"
+}

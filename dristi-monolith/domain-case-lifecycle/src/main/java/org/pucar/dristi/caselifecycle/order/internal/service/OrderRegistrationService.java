@@ -18,7 +18,7 @@ import org.pucar.dristi.common.kafka.Producer;
 import org.pucar.dristi.caselifecycle.order.internal.repository.OrderRepository;
 import org.pucar.dristi.common.util.DateUtil;
 import org.pucar.dristi.common.util.FileStoreUtil;
-import org.pucar.dristi.caselifecycle.hearing.HearingApi;
+import org.pucar.dristi.common.hearing.HearingApi;
 import org.pucar.dristi.common.util.WorkflowUtil;
 import org.pucar.dristi.caselifecycle.order.internal.validators.OrderRegistrationValidator;
 import org.pucar.dristi.caselifecycle.order.internal.web.models.*;

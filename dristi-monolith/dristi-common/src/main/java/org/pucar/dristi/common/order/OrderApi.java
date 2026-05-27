@@ -1,4 +1,4 @@
-package org.pucar.dristi.caselifecycle.order;
+package org.pucar.dristi.common.order;
 
 import org.pucar.dristi.common.contract.order.Order;
 import org.pucar.dristi.common.contract.order.OrderExists;
