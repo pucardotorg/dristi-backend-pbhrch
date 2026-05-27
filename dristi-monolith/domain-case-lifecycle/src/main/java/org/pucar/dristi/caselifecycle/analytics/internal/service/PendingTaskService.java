@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 
 import static org.pucar.dristi.caselifecycle.analytics.internal.config.ServiceConstants.*;
 
-@Service
+@Service("analyticsPendingTaskService")
 @Slf4j
 public class PendingTaskService {
 

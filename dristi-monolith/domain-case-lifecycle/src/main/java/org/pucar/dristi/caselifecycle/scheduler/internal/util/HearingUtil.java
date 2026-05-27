@@ -18,7 +18,7 @@ import java.util.List;
 
 import static org.pucar.dristi.caselifecycle.scheduler.internal.config.ServiceConstants.*;
 
-@Component
+@Component("schedulerHearingUtil")
 @Slf4j
 public class HearingUtil {
 
