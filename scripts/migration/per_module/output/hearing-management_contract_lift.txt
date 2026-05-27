@@ -1,0 +1,13 @@
+# Classes lifted from internal/web/models/ to dristi-common/contract/<subdomain>/
+org.pucar.dristi.common.contract.hearingmanagement.Attendee
+org.pucar.dristi.common.contract.hearingmanagement.Hearing
+org.pucar.dristi.common.contract.hearingmanagement.HearingCriteria
+org.pucar.dristi.common.contract.hearingmanagement.HearingListResponse
+org.pucar.dristi.common.contract.hearingmanagement.HearingResponse
+org.pucar.dristi.common.contract.hearingmanagement.HearingSearchListResponse
+org.pucar.dristi.common.contract.hearingmanagement.HearingSearchRequest
+org.pucar.dristi.common.contract.hearingmanagement.HearingSearchResponse
+org.pucar.dristi.common.contract.hearingmanagement.Order
+org.pucar.dristi.common.contract.hearingmanagement.Pagination
+org.pucar.dristi.common.contract.hearingmanagement.PresidedBy
+org.pucar.dristi.common.contract.hearingmanagement.package-info
