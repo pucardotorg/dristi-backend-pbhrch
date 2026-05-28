@@ -13,7 +13,20 @@ app:
     tenant:
       ids: pb
 otel:
+  traces:
+    exporter: otlp
+  logs:
+    exporter: none
+  metrics:
+    exporter: none
+  exporter:
+    otlp:
+      endpoint: http://jaeger-collector.tracing:4318
+      protocol: http/protobuf
   instrumentation:
+    kafka:
+      enabled: true
+      experimental-span-attributes: true
     http:
       server:
         ignore-urls: /njdg-transformer/health,/njdg-transformer/prometheus
@@ -37,9 +50,7 @@ kafka:
         status: case-overall-status-topic
       conversion: update-case-conversion
     update:
-      advocate:
-        application: update-advocate-application
-        details: update-advocate-details
+      advocate: update-advocate-application
       hearing:
         details: update-hearing-details
     save:
@@ -124,3 +135,4 @@ notification:
     processing:
       delay:
         ms: 5000
+kafka.topic.update.advocate.details: update-advocate-details

@@ -213,6 +213,9 @@ egov:
     host: http://egov-workflow-v2:8080
     process:
       search: /egov-workflow-v2/egov-wf/process/_search
+  case:
+    host: http://localhost:9090/
+    path: case/v1/_search
   kafka:
     order:
       save:
@@ -262,6 +265,9 @@ egov:
       case:
         kafka:
           topic: join-case-update-case-additional-details
+  advocate:
+    host: http://localhost:8080/
+    path: advocate/v1/_search
   inbox:
     host: http://localhost:8080
     search:
@@ -322,6 +328,13 @@ task:
       topic: update-task-application
 egov-state-level-tenant-id: pb
 dristi:
+  hearing:
+    host: http://localhost:8057
+    search:
+      endpoint: /hearing/v1/search
+    summary:
+      update:
+        endpoint: /hearing/v1/update_transcript_additional_attendees
   court:
     id: KLKM52
 bail:

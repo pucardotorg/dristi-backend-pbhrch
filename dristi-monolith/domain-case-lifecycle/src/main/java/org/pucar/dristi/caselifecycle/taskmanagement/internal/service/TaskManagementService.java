@@ -19,7 +19,7 @@ import java.util.List;
 import static org.pucar.dristi.caselifecycle.taskmanagement.internal.config.ServiceConstants.*;
 
 
-@Service
+@Service("taskmanagementTaskManagementService")
 @Slf4j
 public class TaskManagementService {
 
