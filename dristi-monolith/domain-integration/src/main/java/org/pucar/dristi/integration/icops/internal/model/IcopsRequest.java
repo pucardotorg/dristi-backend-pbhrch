@@ -1,7 +1,7 @@
-// HAND-CURATED — lifted by Phase 35 (contract-lift)
-package org.pucar.dristi.common.contract.summons;
+package org.pucar.dristi.integration.icops.internal.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,11 +12,13 @@ import org.egov.common.contract.request.RequestInfo;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class LocationRequest {
+public class IcopsRequest {
 
     @JsonProperty("RequestInfo")
+    @Valid
     private RequestInfo requestInfo;
 
-    @JsonProperty("location")
-    private Location location;
+    @JsonProperty("IcopsTracker")
+    @Valid
+    private IcopsTracker icopsTracker;
 }

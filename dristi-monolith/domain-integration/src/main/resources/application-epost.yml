@@ -6,7 +6,20 @@
 # Activate via spring.profiles.active=...,epost,...
 
 otel:
+  traces:
+    exporter: otlp
+  logs:
+    exporter: none
+  metrics:
+    exporter: none
+  exporter:
+    otlp:
+      endpoint: http://jaeger-collector.tracing:4318
+      protocol: http/protobuf
   instrumentation:
+    kafka:
+      enabled: true
+      experimental-span-attributes: true
     http:
       server:
         ignore-urls: /epost-tracker/health,/epost-tracker/prometheus
@@ -29,10 +42,6 @@ egov:
     host: http://egov-idgen:8080
     path: /egov-idgen/id/_generate
     name: epost.sh
-  summons:
-    host: http://egov-summons:8080
-    update:
-      endpoint: /summons-svc/summons/v1/_updateSummons
   mdms:
     host: http://localhost:8090
     search:

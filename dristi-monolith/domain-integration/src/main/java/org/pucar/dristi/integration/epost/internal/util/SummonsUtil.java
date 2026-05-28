@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 import static org.pucar.dristi.integration.epost.internal.config.ServiceConstants.ERROR_WHILE_UPDATING_SUMMONS;
 import static org.pucar.dristi.integration.epost.internal.config.ServiceConstants.SUMMONS_UPDATE_ERROR;
 
-@Component
+@Component("epostSummonsUtil")
 @Slf4j
 public class SummonsUtil {
 

@@ -74,7 +74,7 @@ class OrderConsumerTest {
 
     @Test
     void testListen_PublishedOrder_IntermediateCategory_Success() throws Exception {
-        when(objectMapper.readValue(anyString(), eq(OrderRequest.class))).thenReturn(orderRequest);
+        when(objectMapper.convertValue(any(), any(com.fasterxml.jackson.core.type.TypeReference.class))).thenReturn(orderRequest);
         
         Map<String, Map<String, JSONArray>> mdmsResponse = new HashMap<>();
         Map<String, JSONArray> caseMap = new HashMap<>();
@@ -100,7 +100,7 @@ class OrderConsumerTest {
     @Test
     void testListen_NonPublishedOrder_Skipped() throws Exception {
         order.setStatus("DRAFT");
-        when(objectMapper.readValue(anyString(), eq(OrderRequest.class))).thenReturn(orderRequest);
+        when(objectMapper.convertValue(any(), any(com.fasterxml.jackson.core.type.TypeReference.class))).thenReturn(orderRequest);
 
         orderConsumer.listen(consumerRecord, "order-topic");
 
@@ -109,7 +109,7 @@ class OrderConsumerTest {
 
     @Test
     void testListen_NoOutcomeFound_Skipped() throws Exception {
-        when(objectMapper.readValue(anyString(), eq(OrderRequest.class))).thenReturn(orderRequest);
+        when(objectMapper.convertValue(any(), any(com.fasterxml.jackson.core.type.TypeReference.class))).thenReturn(orderRequest);
         
         Map<String, Map<String, JSONArray>> mdmsResponse = new HashMap<>();
         Map<String, JSONArray> caseMap = new HashMap<>();
@@ -134,7 +134,7 @@ class OrderConsumerTest {
         compositeItems.add(item);
         order.setCompositeItems(compositeItems);
 
-        when(objectMapper.readValue(anyString(), eq(OrderRequest.class))).thenReturn(orderRequest);
+        when(objectMapper.convertValue(any(), any(com.fasterxml.jackson.core.type.TypeReference.class))).thenReturn(orderRequest);
         when(objectMapper.convertValue(any(), eq(JsonNode.class))).thenReturn(compositeItems);
         
         Map<String, Map<String, JSONArray>> mdmsResponse = new HashMap<>();
@@ -163,7 +163,7 @@ class OrderConsumerTest {
         order.setHearingNumber("H-001");
         order.setItemText("<p>Test order text</p>");
         
-        when(objectMapper.readValue(anyString(), eq(OrderRequest.class))).thenReturn(orderRequest);
+        when(objectMapper.convertValue(any(), any(com.fasterxml.jackson.core.type.TypeReference.class))).thenReturn(orderRequest);
         
         Map<String, Map<String, JSONArray>> mdmsResponse = new HashMap<>();
         Map<String, JSONArray> caseMap = new HashMap<>();
@@ -189,7 +189,7 @@ class OrderConsumerTest {
 
     @Test
     void testListen_ExceptionHandling() throws Exception {
-        when(objectMapper.readValue(anyString(), eq(OrderRequest.class)))
+        when(objectMapper.convertValue(any(), any(com.fasterxml.jackson.core.type.TypeReference.class)))
                 .thenThrow(new RuntimeException("Parse error"));
 
         assertDoesNotThrow(() -> orderConsumer.listen(consumerRecord, "order-topic"));

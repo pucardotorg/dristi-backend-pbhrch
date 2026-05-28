@@ -1,0 +1,1 @@
+dristi-monolith/domain-integration/src/main/java/org/pucar/dristi/integration/icops/internal/util/SummonsUtil.java  uses ['SummonsHost']

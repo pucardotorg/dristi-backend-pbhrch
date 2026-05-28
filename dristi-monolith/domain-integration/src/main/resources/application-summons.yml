@@ -117,8 +117,6 @@ egov:
     host: http://icops-integrations:8080
     request:
       endpoint: /kerala-icops/v1/integrations/iCops/_sendRequest
-    location:
-      endpoint: /kerala-icops/v1/integrations/iCops/_getLocationBasedJurisdiction
   esummons:
     host: http://egov-eSummons:8080
     request:

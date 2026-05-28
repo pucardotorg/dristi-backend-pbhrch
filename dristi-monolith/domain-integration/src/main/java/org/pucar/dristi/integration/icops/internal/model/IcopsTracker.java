@@ -1,0 +1,27 @@
+package org.pucar.dristi.integration.icops.internal.model;
+
+import lombok.*;
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+public class IcopsTracker {
+    private String processNumber;
+    private String tenantId;
+    private String taskNumber;
+    private String taskType;
+    private String fileStoreId;
+    private Object taskDetails;
+    private DeliveryStatus deliveryStatus;
+    private String remarks;
+    private AdditionalFields additionalDetails;
+    private Integer rowVersion;
+    private String bookingDate;
+    private String receivedDate;
+    private String acknowledgementId;
+    private Object requestBlob;
+    private Object responseBlob;
+    private String failureReason;
+}
