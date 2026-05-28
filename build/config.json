@@ -7,6 +7,14 @@
         "language": "java",
         "version": "17"
     },
+    "dristi-monolith": {
+        "service_group": "core-services",
+        "db_source_path": "dristi-monolith/db",
+        "dockerfile_path": "dristi-monolith/Dockerfile",
+        "service_source_path": "dristi-monolith",
+        "language": "java",
+        "version": "17"
+    },
     "advocate": {
         "service_group": "core-services",
         "db_source_path": "dristi-services/advocate/src/main/resources/db",
