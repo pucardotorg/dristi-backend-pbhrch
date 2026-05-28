@@ -1,0 +1,241 @@
+# =============================================================================
+# dristi-monolith — local docker-compose
+#
+# Services:
+#   postgres     – single database instance
+#   redis        – session/cache
+#   redpanda     – Kafka-compatible broker (no ZooKeeper)
+#   redpanda-console – Redpanda web UI (optional, comment out if not needed)
+#   dristi-app   – the monolith Spring Boot application
+#
+# Usage:
+#   cp .env.example .env          # fill in your values
+#   docker compose up -d          # start everything
+#   docker compose logs -f dristi-app
+#
+# The image for dristi-app can be:
+#   a) Pre-built tag from registry  → set DRISTI_IMAGE in .env
+#   b) Built locally from source    → uncomment the `build:` block below
+#      and run:  docker compose build dristi-app
+# =============================================================================
+
+services:
+
+  # ── PostgreSQL ─────────────────────────────────────────────────────────────
+  postgres:
+    image: postgres:15-alpine
+    container_name: dristi-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB:       ${DB_NAME:-dristi}
+      POSTGRES_USER:     ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres} -d ${DB_NAME:-dristi}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Redis ──────────────────────────────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: dristi-redis
+    restart: unless-stopped
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Redpanda (Kafka-compatible broker) ─────────────────────────────────────
+  redpanda:
+    image: redpandadata/redpanda:${REDPANDA_VERSION:-v24.1.1}
+    container_name: dristi-redpanda
+    restart: unless-stopped
+    command:
+      - redpanda start
+      - --smp 1
+      - --overprovisioned
+      - --node-id 0
+      - --kafka-addr      PLAINTEXT://0.0.0.0:29092,OUTSIDE://0.0.0.0:9092
+      - --advertise-kafka-addr PLAINTEXT://redpanda:29092,OUTSIDE://localhost:9092
+      - --pandaproxy-addr PLAINTEXT://0.0.0.0:28082,OUTSIDE://0.0.0.0:8082
+      - --advertise-pandaproxy-addr PLAINTEXT://redpanda:28082,OUTSIDE://localhost:8082
+      - --schema-registry-addr http://0.0.0.0:8081
+      - --rpc-addr redpanda:33145
+      - --advertise-rpc-addr redpanda:33145
+    ports:
+      - "9092:9092"    # Kafka API (external / from host)
+      - "8082:8082"    # HTTP Proxy
+      - "8081:8081"    # Schema Registry
+    volumes:
+      - redpanda-data:/var/lib/redpanda/data
+    healthcheck:
+      test: ["CMD-SHELL", "rpk cluster health | grep -E 'Healthy:.+true' || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+
+  # ── Redpanda Console (web UI) ──────────────────────────────────────────────
+  redpanda-console:
+    image: redpandadata/console:${REDPANDA_CONSOLE_VERSION:-v2.5.2}
+    container_name: dristi-redpanda-console
+    restart: unless-stopped
+    depends_on:
+      redpanda:
+        condition: service_healthy
+    environment:
+      CONFIG_FILEPATH: /tmp/config.yml
+    volumes:
+      - ./redpanda-console-config.yml:/tmp/config.yml:ro
+    ports:
+      - "${REDPANDA_CONSOLE_PORT:-8089}:8080"
+
+  # ── dristi-monolith DB migration ───────────────────────────────────────────
+  # Runs all 25 sub-schema Flyway migrations then exits (restart: "no").
+  # dristi-app waits for this to complete successfully before starting.
+  dristi-app-db:
+    image: ${DRISTI_DB_IMAGE:-dristi-monolith-db:latest}
+    # Build locally if no pre-built image:
+    # build:
+    #   context: ../..
+    #   dockerfile: dristi-monolith/db/Dockerfile
+    container_name: dristi-app-db
+    restart: "no"
+    environment:
+      DB_URL:          jdbc:postgresql://postgres:5432/${DB_NAME:-dristi}
+      FLYWAY_USER:     ${DB_USER:-postgres}
+      FLYWAY_PASSWORD: ${DB_PASSWORD:-postgres}
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # ── dristi-monolith application ────────────────────────────────────────────
+  dristi-app:
+    # Option A: use a pre-built image (default)
+    image: ${DRISTI_IMAGE:-dristi-monolith:latest}
+
+    # Option B: build locally (comment out `image:` above and uncomment below)
+    # build:
+    #   context: ../..                        # repo root
+    #   dockerfile: dristi-monolith/Dockerfile
+    #   args:
+    #     WORK_DIR: dristi-monolith
+
+    container_name: dristi-app
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      redpanda:
+        condition: service_healthy
+    ports:
+      - "${APP_PORT:-8080}:8080"
+
+    environment:
+      # ── JVM ───────────────────────────────────────────────────────────────
+      JAVA_OPTS: ${JAVA_OPTS:--Xms512m -Xmx1g}
+
+      # ── Spring active profiles ────────────────────────────────────────────
+      # "local" profile is excluded here; the compose file sets individual vars
+      # instead. Override SPRING_PROFILES_ACTIVE to add extra profiles.
+      SPRING_PROFILES_ACTIVE: >-
+        shared,transformer,cases,locksvc,order,bank,notification,
+        templateconfiguration,advocate,abdiary,epost,calculator,
+        inportalsurvey,bailbond,digitalizeddocuments,advocateoffice,
+        esign,ctc,treasury,application,hearing,task,taskmanagement,
+        evidence,casemanagement,analytics,ordermanagement,summons,njdg,
+        scheduler,hearingmanagement,icops
+
+      # ── Database ──────────────────────────────────────────────────────────
+      SPRING_DATASOURCE_WRITER_URL:              jdbc:postgresql://postgres:5432/${DB_NAME:-dristi}
+      SPRING_DATASOURCE_WRITER_USERNAME:         ${DB_USER:-postgres}
+      SPRING_DATASOURCE_WRITER_PASSWORD:         ${DB_PASSWORD:-postgres}
+      SPRING_DATASOURCE_WRITER_DRIVER_CLASS_NAME: org.postgresql.Driver
+      SPRING_DATASOURCE_READER_URL:              jdbc:postgresql://postgres:5432/${DB_NAME:-dristi}
+      SPRING_DATASOURCE_READER_USERNAME:         ${DB_USER:-postgres}
+      SPRING_DATASOURCE_READER_PASSWORD:         ${DB_PASSWORD:-postgres}
+      SPRING_DATASOURCE_READER_DRIVER_CLASS_NAME: org.postgresql.Driver
+
+      # ── Flyway ────────────────────────────────────────────────────────────
+      SPRING_FLYWAY_ENABLED:  "true"
+      SPRING_FLYWAY_URL:      jdbc:postgresql://postgres:5432/${DB_NAME:-dristi}
+      SPRING_FLYWAY_USER:     ${DB_USER:-postgres}
+      SPRING_FLYWAY_PASSWORD: ${DB_PASSWORD:-postgres}
+
+      # ── Kafka / Redpanda ──────────────────────────────────────────────────
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: redpanda:29092
+
+      # ── Redis ─────────────────────────────────────────────────────────────
+      SPRING_REDIS_HOST:    redis
+      SPRING_REDIS_PORT:    "6379"
+      SPRING_REDIS_TIMEOUT: "10"
+
+      # ── eGov / DIGIT platform hosts ───────────────────────────────────────
+      EGOV_USER_HOST:             ${EGOV_USER_HOST}
+      EGOV_USER_CONTEXT_PATH:     ${EGOV_USER_CONTEXT_PATH:-/user/users}
+      EGOV_USER_CREATE_PATH:      ${EGOV_USER_CREATE_PATH:=/_createnovalidate}
+      EGOV_USER_SEARCH_PATH:      ${EGOV_USER_SEARCH_PATH:-/user/v1/_search}
+      EGOV_USER_UPDATE_PATH:      ${EGOV_USER_UPDATE_PATH:-/_updatenovalidate}
+
+      EGOV_MDMS_HOST:             ${EGOV_MDMS_HOST}
+      EGOV_MDMS_SEARCH_ENDPOINT:  ${EGOV_MDMS_SEARCH_ENDPOINT:-/egov-mdms-service/v1/_search}
+      EGOV_MDMS_V2_SEARCH_ENDPOINT: ${EGOV_MDMS_V2_SEARCH_ENDPOINT:-/egov-mdms-service/v2/_search}
+
+      EGOV_IDGEN_HOST:            ${EGOV_IDGEN_HOST}
+      EGOV_IDGEN_PATH:            ${EGOV_IDGEN_PATH:-/egov-idgen/id/_generate}
+
+      EGOV_INDIVIDUAL_HOST:       ${EGOV_INDIVIDUAL_HOST}
+      EGOV_INDIVIDUAL_SEARCH_PATH: ${EGOV_INDIVIDUAL_SEARCH_PATH:-individual/v1/_search}
+
+      EGOV_FILESTORE_HOST:        ${EGOV_FILESTORE_HOST}
+      EGOV_FILESTORE_PATH:        ${EGOV_FILESTORE_PATH:-/filestore/v1/files}
+
+      EGOV_WORKFLOW_HOST:         ${EGOV_WORKFLOW_HOST}
+      EGOV_WORKFLOW_TRANSITION_PATH: ${EGOV_WORKFLOW_TRANSITION_PATH:-/egov-workflow-v2/egov-wf/process/_transition}
+      EGOV_WORKFLOW_BUSINESSSERVICE_SEARCH_PATH: ${EGOV_WORKFLOW_BUSINESSSERVICE_SEARCH_PATH:-/egov-workflow-v2/egov-wf/businessservice/_search}
+
+      EGOV_HRMS_HOST:             ${EGOV_HRMS_HOST}
+      EGOV_HRMS_SEARCH_ENDPOINT:  ${EGOV_HRMS_SEARCH_ENDPOINT:-/egov-hrms/employees/_search}
+
+      EGOV_URL_SHORTNER_HOST:     ${EGOV_URL_SHORTNER_HOST}
+      EGOV_URL_SHORTNER_ENDPOINT: ${EGOV_URL_SHORTNER_ENDPOINT:-/egov-url-shortening/shortener}
+
+      # ── Encryption service ────────────────────────────────────────────────
+      EGOV_ENC_HOST:              ${EGOV_ENC_HOST}
+      EGOV_ENC_ENCRYPT_ENDPOINT:  ${EGOV_ENC_ENCRYPT_ENDPOINT:-/egov-enc-service/crypto/v1/_encrypt}
+      EGOV_ENC_DECRYPT_ENDPOINT:  ${EGOV_ENC_DECRYPT_ENDPOINT:-/egov-enc-service/crypto/v1/_decrypt}
+
+      # ── State / tenant ────────────────────────────────────────────────────
+      STATE_LEVEL_TENANT_ID:      ${STATE_LEVEL_TENANT_ID:-pb}
+      EGOV_COURT_ID:              ${EGOV_COURT_ID:-KLKM52}
+
+      # ── Billing / payment ─────────────────────────────────────────────────
+      EGOV_BILLING_HOST:          ${EGOV_BILLING_HOST}
+      EGOV_DEMAND_CREATE_ENDPOINT: ${EGOV_DEMAND_CREATE_ENDPOINT:-/billing-service/demand/_create}
+
+      # ── Lock service ──────────────────────────────────────────────────────
+      PUCAR_LOCK_DURATION:        ${PUCAR_LOCK_DURATION:-1200000}
+      PUCAR_LOCK_HOST:            http://dristi-app:8080/
+      PUCAR_LOCK_SEARCH_ENDPOINT: /lock-svc/v1/_get
+
+      # ── OpenTelemetry (disable for local) ─────────────────────────────────
+      OTEL_TRACES_EXPORTER:   none
+      OTEL_METRICS_EXPORTER:  none
+      OTEL_LOGS_EXPORTER:     none
+
+      # ── Logging ───────────────────────────────────────────────────────────
+      LOGGING_LEVEL_ROOT:          ${LOGGING_LEVEL_ROOT:-INFO}
+      LOGGING_LEVEL_ORG_PUCAR:     ${LOGGING_LEVEL_ORG_PUCAR:-DEBUG}
+
+volumes:
+  postgres-data:
+  redpanda-data:
