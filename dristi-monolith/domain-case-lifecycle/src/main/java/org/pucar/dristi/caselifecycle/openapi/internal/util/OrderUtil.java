@@ -2,7 +2,7 @@ package org.pucar.dristi.caselifecycle.openapi.internal.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.pucar.dristi.caselifecycle.order.OrderApi;
+import org.pucar.dristi.common.order.OrderApi;
 import org.pucar.dristi.caselifecycle.openapi.internal.web.models.OrderListResponse;
 import org.pucar.dristi.common.contract.openapi.OrderSearchRequest;
 import org.springframework.stereotype.Component;

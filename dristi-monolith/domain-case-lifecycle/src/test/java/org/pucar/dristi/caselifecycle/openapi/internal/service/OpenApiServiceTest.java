@@ -60,6 +60,9 @@ public class OpenApiServiceTest {
     @Mock
     private ResponseInfoFactory responseInfoFactory;
 
+    @Mock
+    private org.pucar.dristi.common.hearing.HearingApi hearingApi;
+
     private static final String TENANT_ID = "tenant-1";
 
     @BeforeEach
@@ -82,16 +85,12 @@ public class OpenApiServiceTest {
         when(configuration.getCaseServiceHost()).thenReturn("http://test-host");
         when(configuration.getCaseServiceSearchByCnrNumberEndpoint()).thenReturn("/search");
         when(configuration.getJudgeName()).thenReturn("Test Judge");
-        when(configuration.getHearingServiceHost()).thenReturn("http://hearing-host");
-        when(configuration.getHearingSearchEndpoint()).thenReturn("/search");
 
         when(serviceRequestRepository.fetchResult(any(StringBuilder.class), any(OpenApiCaseSummaryRequest.class)))
                 .thenReturn(mockCaseSummaryResponse);
 
         when(objectMapper.convertValue(any(), eq(CaseSummaryResponse.class)))
                 .thenReturn(mockCaseSummaryResponse);
-        when(objectMapper.convertValue(any(), eq(HearingListResponse.class)))
-                .thenReturn(new HearingListResponse());
 
         // Act
         CaseSummaryResponse response = openApiService.getCaseByCnrNumber(tenantId, cnrNumber);
@@ -168,16 +167,12 @@ public class OpenApiServiceTest {
         when(configuration.getCaseServiceHost()).thenReturn("http://test-host");
         when(configuration.getCaseServiceSearchByCaseNumberEndpoint()).thenReturn("/search");
         when(configuration.getJudgeName()).thenReturn("Test Judge");
-        when(configuration.getHearingServiceHost()).thenReturn("http://hearing-host");
-        when(configuration.getHearingSearchEndpoint()).thenReturn("/search");
 
         when(serviceRequestRepository.fetchResult(any(StringBuilder.class), any(OpenApiCaseSummaryRequest.class)))
                 .thenReturn(mockCaseSummaryResponse);
 
         when(objectMapper.convertValue(any(), eq(CaseSummaryResponse.class)))
                 .thenReturn(mockCaseSummaryResponse);
-        when(objectMapper.convertValue(any(), eq(HearingListResponse.class)))
-                .thenReturn(new HearingListResponse());
 
         // Act
         CaseSummaryResponse response = openApiService.getCaseByCaseNumber(tenantId, year, caseType, caseNumber);
@@ -195,21 +190,14 @@ public class OpenApiServiceTest {
         // Arrange
         String filingNumber = "TEST-FILING-001";
 
-        Hearing scheduledHearing = new Hearing();
-        scheduledHearing.setStatus("Scheduled");
-        scheduledHearing.setStartTime(1672531200L); // Example timestamp
+        org.pucar.dristi.common.contract.hearing.Hearing scheduledHearing =
+                org.pucar.dristi.common.contract.hearing.Hearing.builder()
+                        .status("Scheduled")
+                        .startTime(1672531200L) // Example timestamp
+                        .build();
 
-        HearingListResponse hearingListResponse = new HearingListResponse();
-        hearingListResponse.setHearingList(List.of(scheduledHearing));
-
-        when(configuration.getHearingServiceHost()).thenReturn("http://hearing-host");
-        when(configuration.getHearingSearchEndpoint()).thenReturn("/search");
-
-        when(serviceRequestRepository.fetchResult(any(StringBuilder.class), any(HearingSearchRequest.class)))
-                .thenReturn(hearingListResponse);
-
-        when(objectMapper.convertValue(any(), eq(HearingListResponse.class)))
-                .thenReturn(hearingListResponse);
+        when(hearingApi.search(any(org.pucar.dristi.common.contract.hearing.HearingSearchRequest.class)))
+                .thenReturn(List.of(scheduledHearing));
 
         // Act
         Long nextHearingDate = openApiService.enrichNextHearingDate(filingNumber);
@@ -218,7 +206,7 @@ public class OpenApiServiceTest {
         assertEquals(1672531200L, nextHearingDate);
 
         // Verify interactions
-        verify(serviceRequestRepository).fetchResult(any(StringBuilder.class), any(HearingSearchRequest.class));
+        verify(hearingApi).search(any(org.pucar.dristi.common.contract.hearing.HearingSearchRequest.class));
     }
 
     @Test
@@ -226,25 +214,16 @@ public class OpenApiServiceTest {
         // Arrange
         String filingNumber = "TEST-FILING-001";
 
-        Hearing hearing1 = new Hearing();
-        hearing1.setStatus("Scheduled");
-        hearing1.setStartTime(1672531200L);
+        org.pucar.dristi.common.contract.hearing.Hearing hearing1 =
+                org.pucar.dristi.common.contract.hearing.Hearing.builder()
+                        .status("Scheduled").startTime(1672531200L).build();
 
-        Hearing hearing2 = new Hearing();
-        hearing2.setStatus("Scheduled");
-        hearing2.setStartTime(1672617600L);
+        org.pucar.dristi.common.contract.hearing.Hearing hearing2 =
+                org.pucar.dristi.common.contract.hearing.Hearing.builder()
+                        .status("Scheduled").startTime(1672617600L).build();
 
-        HearingListResponse hearingListResponse = new HearingListResponse();
-        hearingListResponse.setHearingList(List.of(hearing1, hearing2));
-
-        when(configuration.getHearingServiceHost()).thenReturn("http://hearing-host");
-        when(configuration.getHearingSearchEndpoint()).thenReturn("/search");
-
-        when(serviceRequestRepository.fetchResult(any(StringBuilder.class), any(HearingSearchRequest.class)))
-                .thenReturn(hearingListResponse);
-
-        when(objectMapper.convertValue(any(), eq(HearingListResponse.class)))
-                .thenReturn(hearingListResponse);
+        when(hearingApi.search(any(org.pucar.dristi.common.contract.hearing.HearingSearchRequest.class)))
+                .thenReturn(List.of(hearing1, hearing2));
 
         // Act & Assert
         assertThrows(RuntimeException.class, () -> {
@@ -257,17 +236,8 @@ public class OpenApiServiceTest {
         // Arrange
         String filingNumber = "TEST-FILING-001";
 
-        HearingListResponse hearingListResponse = new HearingListResponse();
-        hearingListResponse.setHearingList(new ArrayList<>());
-
-        when(configuration.getHearingServiceHost()).thenReturn("http://hearing-host");
-        when(configuration.getHearingSearchEndpoint()).thenReturn("/search");
-
-        when(serviceRequestRepository.fetchResult(any(StringBuilder.class), any(HearingSearchRequest.class)))
-                .thenReturn(hearingListResponse);
-
-        when(objectMapper.convertValue(any(), eq(HearingListResponse.class)))
-                .thenReturn(hearingListResponse);
+        when(hearingApi.search(any(org.pucar.dristi.common.contract.hearing.HearingSearchRequest.class)))
+                .thenReturn(new ArrayList<>());
 
         // Act
         Long nextHearingDate = openApiService.enrichNextHearingDate(filingNumber);
@@ -276,7 +246,7 @@ public class OpenApiServiceTest {
         assertNull(nextHearingDate);
 
         // Verify interactions
-        verify(serviceRequestRepository).fetchResult(any(StringBuilder.class), any(HearingSearchRequest.class));
+        verify(hearingApi).search(any(org.pucar.dristi.common.contract.hearing.HearingSearchRequest.class));
     }
 
     @Test

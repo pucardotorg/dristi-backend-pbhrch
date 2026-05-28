@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.model.CustomException;
-import org.pucar.dristi.caselifecycle.digitalizeddocuments.DigitalizeddocumentsApi;
+import org.pucar.dristi.caselifecycle.digitalizeddocuments.DigitalizedDocumentsApi;
 import org.pucar.dristi.caselifecycle.openapi.internal.config.Configuration;
 import org.pucar.dristi.caselifecycle.openapi.internal.web.models.digital_document.DigitalizedDocument;
 import org.pucar.dristi.caselifecycle.openapi.internal.web.models.digital_document.DigitalizedDocumentRequest;
@@ -26,11 +26,11 @@ public class DigitalizedDocumentUtil {
     private final Configuration configuration;
     private final RestTemplate restTemplate;
     private final ObjectMapper mapper;
-    private final DigitalizeddocumentsApi digitalizeddocumentsApi;
+    private final DigitalizedDocumentsApi digitalizeddocumentsApi;
 
     @Autowired
     public DigitalizedDocumentUtil(Configuration configuration, RestTemplate restTemplate, ObjectMapper mapper,
-                                   DigitalizeddocumentsApi digitalizeddocumentsApi) {
+                                   DigitalizedDocumentsApi digitalizeddocumentsApi) {
         this.configuration = configuration;
         this.restTemplate = restTemplate;
         this.mapper = mapper;

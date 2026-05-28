@@ -85,7 +85,9 @@ public class OpenApiService {
 
     private final IndividualUtil individualUtil;
 
-    public OpenApiService(Configuration configuration, ServiceRequestRepository serviceRequestRepository, ObjectMapper objectMapper, DateUtil dateUtil, InboxUtil inboxUtil, AdvocateUtil advocateUtil, ResponseInfoFactory responseInfoFactory, HrmsUtil hrmsUtil, BailUtil bailUtil, ESignUtil esignUtil, FileStoreUtil fileStoreUtil, UserService userService, OrderUtil orderUtil, CaseUtil caseUtil, PendingTaskUtil pendingTaskUtil, IndividualUtil individualUtil) {
+    private final org.pucar.dristi.common.hearing.HearingApi hearingApi;
+
+    public OpenApiService(Configuration configuration, ServiceRequestRepository serviceRequestRepository, ObjectMapper objectMapper, DateUtil dateUtil, InboxUtil inboxUtil, AdvocateUtil advocateUtil, ResponseInfoFactory responseInfoFactory, HrmsUtil hrmsUtil, BailUtil bailUtil, ESignUtil esignUtil, FileStoreUtil fileStoreUtil, UserService userService, OrderUtil orderUtil, CaseUtil caseUtil, PendingTaskUtil pendingTaskUtil, IndividualUtil individualUtil, org.pucar.dristi.common.hearing.HearingApi hearingApi) {
         this.configuration = configuration;
         this.serviceRequestRepository = serviceRequestRepository;
         this.objectMapper = objectMapper;
@@ -102,6 +104,7 @@ public class OpenApiService {
         this.caseUtil = caseUtil;
         this.pendingTaskUtil = pendingTaskUtil;
         this.individualUtil = individualUtil;
+        this.hearingApi = hearingApi;
     }
 
     public CaseSummaryResponse getCaseByCnrNumber(String tenantId, String cnrNumber) {
@@ -176,13 +179,13 @@ public class OpenApiService {
     }
 
     public Long enrichNextHearingDate(String filingNumber) {
-        StringBuilder uri = new StringBuilder(configuration.getHearingServiceHost()).append(configuration.getHearingSearchEndpoint());
-        HearingCriteria criteria = HearingCriteria.builder().filingNumber(filingNumber).build();
-        HearingSearchRequest request = HearingSearchRequest.builder().criteria(criteria).build();
-        Object response = serviceRequestRepository.fetchResult(uri, request);
-        List<Hearing> hearingList = objectMapper.convertValue(response, HearingListResponse.class).getHearingList();
+        org.pucar.dristi.common.contract.hearing.HearingCriteria criteria =
+                org.pucar.dristi.common.contract.hearing.HearingCriteria.builder().filingNumber(filingNumber).build();
+        org.pucar.dristi.common.contract.hearing.HearingSearchRequest request =
+                org.pucar.dristi.common.contract.hearing.HearingSearchRequest.builder().criteria(criteria).build();
+        List<org.pucar.dristi.common.contract.hearing.Hearing> hearingList = hearingApi.search(request);
         if (hearingList != null && !hearingList.isEmpty()) {
-            List<Hearing> hearings = hearingList.stream()
+            List<org.pucar.dristi.common.contract.hearing.Hearing> hearings = hearingList.stream()
                     .filter(hearing -> hearing.getStatus() != null && hearing.getStatus().equalsIgnoreCase(HEARING_SCHEDULED_STATUS)).toList();
             if (!hearings.isEmpty()) {
                 if (hearings.size() == 1) {

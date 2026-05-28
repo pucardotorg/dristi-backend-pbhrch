@@ -3,19 +3,15 @@ package org.pucar.dristi.caselifecycle.openapi.internal.util;
 import static org.pucar.dristi.caselifecycle.openapi.internal.config.ServiceConstants.ERROR_WHILE_FETCHING_FROM_ADVOCATE;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
 import org.egov.tracer.model.CustomException;
-import org.pucar.dristi.caselifecycle.openapi.internal.config.Configuration;
 import org.pucar.dristi.common.contract.openapi.Advocate;
-import org.pucar.dristi.common.contract.openapi.AdvocateListResponse;
 import org.pucar.dristi.common.contract.openapi.AdvocateSearchCriteria;
-import org.pucar.dristi.common.contract.openapi.AdvocateSearchRequest;
+import org.pucar.dristi.identityaccess.advocate.AdvocateApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -25,44 +21,30 @@ import lombok.extern.slf4j.Slf4j;
 @Component("openapiAdvocateUtil")
 public class AdvocateUtil {
 
-    private RestTemplate restTemplate;
-
     private ObjectMapper mapper;
 
-    private Configuration configs;
+    private final AdvocateApi advocateApi;
 
 
     @Autowired
-    public AdvocateUtil(RestTemplate restTemplate, ObjectMapper mapper, Configuration configs) {
-        this.restTemplate = restTemplate;
+    public AdvocateUtil(ObjectMapper mapper, AdvocateApi advocateApi) {
         this.mapper = mapper;
-        this.configs = configs;
+        this.advocateApi = advocateApi;
     }
 
     public List<Advocate> fetchAdvocates(AdvocateSearchCriteria advocateSearchCriteria) {
-        StringBuilder uri = new StringBuilder();
-        uri.append(configs.getAdvocateHost()).append(configs.getAdvocatePath());
-
-        AdvocateSearchRequest advocateSearchRequest = new AdvocateSearchRequest();
-
-        List<AdvocateSearchCriteria> criteriaList = new ArrayList<>();
-        criteriaList.add(advocateSearchCriteria);
-        advocateSearchRequest.setCriteria(criteriaList);
-        advocateSearchRequest.setRequestInfo(RequestInfo.builder().userInfo(User.builder().build()).build());
-
-        Object response;
-        AdvocateListResponse advocateResponse;
         try {
-            response = restTemplate.postForObject(uri.toString(), advocateSearchRequest, Map.class);
-            advocateResponse = mapper.convertValue(response, AdvocateListResponse.class);
-            log.info("Advocate response :: {}", advocateResponse);
+            RequestInfo requestInfo = RequestInfo.builder().userInfo(User.builder().build()).build();
+            List<org.pucar.dristi.common.contract.advocate.Advocate> advocates =
+                    advocateApi.searchAdvocatesByBarRegistrationNumber(requestInfo,
+                            advocateSearchCriteria.getBarRegistrationNumber());
+            return advocates.stream()
+                    .map(advocate -> mapper.convertValue(advocate, Advocate.class))
+                    .toList();
         } catch (Exception e) {
             log.error(ERROR_WHILE_FETCHING_FROM_ADVOCATE, e);
             throw new CustomException(ERROR_WHILE_FETCHING_FROM_ADVOCATE, e.getMessage());
         }
-
-        return advocateResponse.getAdvocates().get(0).getResponseList().stream().filter(Advocate::getIsActive).toList();
-
     }
 
     public List<Advocate> fetchAdvocatesByBarRegistrationNumber(String barRegistrationNumber) {

@@ -1,5 +1,7 @@
 package org.pucar.dristi.caselifecycle.openapi.internal.service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
@@ -24,6 +26,7 @@ public class UserService {
     private final Configuration configuration;
     private final ServiceRequestRepository requestRepository;
     private final MultiStateInstanceUtil multiStateInstanceUtil;
+    private final ObjectMapper objectMapper;
 
 
     public String internalMicroserviceRoleUuid = null;
@@ -32,10 +35,11 @@ public class UserService {
     public static final String TENANT_ID_MDC_STRING = "TENANTID";
 
     @Autowired
-    public UserService(Configuration configuration, ServiceRequestRepository requestRepository, MultiStateInstanceUtil multiStateInstanceUtil) {
+    public UserService(Configuration configuration, ServiceRequestRepository requestRepository, MultiStateInstanceUtil multiStateInstanceUtil, ObjectMapper objectMapper) {
         this.configuration = configuration;
         this.requestRepository = requestRepository;
         this.multiStateInstanceUtil = multiStateInstanceUtil;
+        this.objectMapper = objectMapper;
     }
 
 
@@ -58,7 +62,8 @@ public class UserService {
                 createInternalMicroserviceUser(requestInfo);
             } else {
                 internalMicroserviceRoleUuid = (String) users.get(0).get("uuid");
-                internalMicroserviceRoles = (List<Role>) users.get(0).get("roles");
+                internalMicroserviceRoles = objectMapper.convertValue(users.get(0).get("roles"),
+                        new TypeReference<List<Role>>() {});
             }
         } catch (Exception e) {
             throw new CustomException("EG_USER_SEARCH_ERROR", "Service returned null while fetching user");
@@ -87,7 +92,8 @@ public class UserService {
             LinkedHashMap<String, Object> responseMap = (LinkedHashMap<String, Object>) requestRepository.fetchResult(uri, userCreateRequest);
             List<LinkedHashMap<String, Object>> users = (List<LinkedHashMap<String, Object>>) responseMap.get("user");
             internalMicroserviceRoleUuid = (String) users.get(0).get("uuid");
-            internalMicroserviceRoles = (List<Role>) users.get(0).get("roles");
+            internalMicroserviceRoles = objectMapper.convertValue(users.get(0).get("roles"),
+                    new TypeReference<List<Role>>() {});
         } catch (Exception e) {
             throw new CustomException("EG_USER_CREATE_ERROR", "Service threw error while creating user");
         }
