@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.models.AuditDetails;
 import org.egov.tracer.model.CustomException;
 import org.postgresql.util.PGobject;
+import org.pucar.dristi.web.models.Address;
 import org.pucar.dristi.web.models.POAHolder;
 import org.pucar.dristi.web.models.PoaParty;
 import org.pucar.dristi.web.models.v2.PoaPartyV2;
@@ -45,6 +46,13 @@ public class PoaRowMapper implements ResultSetExtractor<Map<UUID, List<POAHolder
                         .caseId(rs.getString("case_id"))
                         .poaType(rs.getString("poa_type"))
                         .name(rs.getString("name"))
+                        .firstName(rs.getString("first_name"))
+                        .middleName(rs.getString("middle_name"))
+                        .lastName(rs.getString("last_name"))
+                        .fullName(rs.getString("full_name"))
+                        .mobileNumber(rs.getString("mobile_number"))
+                        .age(rs.getString("age"))
+                        .address(getObjectFromJson(rs.getString("address"), Address.class))
                         .representingLitigants(getObjectListFromJson(rs.getString("representing_litigants")))
                         .hasSigned(rs.getBoolean("hasSigned"))
                         .auditDetails(auditdetails)
@@ -83,6 +91,17 @@ public class PoaRowMapper implements ResultSetExtractor<Map<UUID, List<POAHolder
                     .collect(Collectors.toList());
         } catch (Exception e) {
             throw new CustomException("Failed to convert JSON to List<PoaParty>: {}" , e.getMessage());
+        }
+    }
+
+    private <T> T getObjectFromJson(String json, Class<T> clazz) {
+        if (json == null || json.trim().isEmpty()) {
+            return null;
+        }
+        try {
+            return objectMapper.readValue(json, clazz);
+        } catch (Exception e) {
+            throw new CustomException("ROW_MAPPER_EXCEPTION", "Failed to convert JSON to " + clazz.getSimpleName() + ": " + e.getMessage());
         }
     }
 }

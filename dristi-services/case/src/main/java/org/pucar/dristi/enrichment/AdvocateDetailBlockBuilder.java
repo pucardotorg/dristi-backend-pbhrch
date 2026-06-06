@@ -19,10 +19,6 @@ import java.util.stream.Collectors;
 
 import static org.pucar.dristi.config.ServiceConstants.*;
 
-/**
- * Centralized builder to populate AdvocateDetailBlock for a CourtCase.
- * Can be reused by v1 and v2 search flows.
- */
 @Slf4j
 @Component
 public class AdvocateDetailBlockBuilder {
@@ -33,9 +29,6 @@ public class AdvocateDetailBlockBuilder {
         this.objectMapper = objectMapper;
     }
 
-    /**
-     * Build and set AdvocateDetailBlock on the provided courtCase. Safe to call with null fields.
-     */
     public void buildAndSet(CourtCase courtCase) {
         if (courtCase == null) return;
 
@@ -48,7 +41,6 @@ public class AdvocateDetailBlockBuilder {
                 int idx = 0;
                 for (Party litigant : courtCase.getLitigants()) {
                     if (litigant == null) continue;
-                    // Build a block for every complainant (primary or additional)
                     if (litigant.getPartyType() != null && litigant.getPartyType().toLowerCase().startsWith("complainant")) {
                         Complainant complainant = Complainant.builder()
                                 .index(idx++)
@@ -60,28 +52,18 @@ public class AdvocateDetailBlockBuilder {
                                 .isPartyInPerson(litigant.isPartyInPerson())
                                 .documents(litigant.getDocuments() != null ? new java.util.ArrayList<>(litigant.getDocuments()) : null)
                                 .additionalDetails(litigant.getAdditionalDetails())
-                                .firstName(null)
-                                .middleName(null)
-                                .lastName(null)
-                                .mobileNumber(null)
-                                .fullName(null)
+                                .firstName(litigant.getFirstName())
+                                .middleName(litigant.getMiddleName())
+                                .lastName(litigant.getLastName())
+                                .mobileNumber(
+                                        String.valueOf(Optional.ofNullable(litigant.getMobileNumber())
+                                                .filter(list -> !list.isEmpty())
+                                                .map(list -> list.get(0))
+                                                .orElse(null))
+                                )
+                                .fullName(litigant.getFullName())
                                 .build();
 
-                        try {
-                            if (litigant.getAdditionalDetails() != null) {
-                                JsonNode litNode = objectMapper.convertValue(litigant.getAdditionalDetails(), JsonNode.class);
-                                if (litNode.has("firstName")) complainant.setFirstName(litNode.get("firstName").asText());
-                                if (litNode.has("middleName")) complainant.setMiddleName(litNode.get("middleName").asText());
-                                if (litNode.has("lastName")) complainant.setLastName(litNode.get("lastName").asText());
-                                if (litNode.has("mobileNumber")) complainant.setMobileNumber(litNode.get("mobileNumber").asText());
-                                // if additionalDetails contains a display/full name, prefer that
-                                if (litNode.has("fullName")) complainant.setFullName(litNode.get("fullName").asText());
-                            }
-                        } catch (Exception e) {
-                            log.trace("Could not parse additionalDetails for litigant: {}", e.getMessage());
-                        }
-
-                        // Derive fullName if not set explicitly
                         if (complainant.getFullName() == null) {
                             StringBuilder nameBuilder = new StringBuilder();
                             if (complainant.getFirstName() != null && !complainant.getFirstName().isBlank()) nameBuilder.append(complainant.getFirstName());
@@ -98,7 +80,6 @@ public class AdvocateDetailBlockBuilder {
 
             List<Document> vakalatnama = getVakalatnamaDocumentsForLitigant(courtCase, litigant);
 
-            // Identify PIP affidavit documents only by documentType
             List<Document> pipAffidavit = caseDocuments.stream()
                 .filter(d -> d != null
                     && d.getDocumentType() != null
@@ -110,7 +91,6 @@ public class AdvocateDetailBlockBuilder {
                 .pipAffidavit(pipAffidavit)
                 .build();
 
-                        // Build advocates list by finding representatives who represent this litigant (match by individualId)
                         List<Advocate> advocates = new ArrayList<>();
                         if (courtCase.getRepresentatives() != null && litigant.getIndividualId() != null) {
                             for (AdvocateMapping rep : courtCase.getRepresentatives()) {
@@ -128,7 +108,6 @@ public class AdvocateDetailBlockBuilder {
 
                                 Advocate adv = Advocate.builder().build();
 
-                                // Prefer joined Advocate (from DB) when available
                                 try {
                                     if (rep.getAdvocate() != null) {
                                         Advocate joined = rep.getAdvocate();
@@ -147,7 +126,6 @@ public class AdvocateDetailBlockBuilder {
                                     }
                                 } catch (Exception ignored) { }
 
-                                // Fallback to representative.additionalDetails
                                 try {
                                     if ((adv.getFirstName() == null || adv.getFirstName().isBlank() || adv.getAdvocateUuid() == null) && rep.getAdditionalDetails() != null) {
                                         JsonNode repNode = objectMapper.convertValue(rep.getAdditionalDetails(), JsonNode.class);
@@ -165,37 +143,6 @@ public class AdvocateDetailBlockBuilder {
                                     }
                                 } catch (Exception ignored) { }
 
-                                // Also try to read name/details from case-level additionalDetails (advocateDetails formdata) as last resort
-                                try {
-                                    if ((adv.getFirstName() == null || adv.getFirstName().isBlank()) && courtCase.getAdditionalDetails() != null) {
-                                        JsonNode root = objectMapper.convertValue(courtCase.getAdditionalDetails(), JsonNode.class);
-                                        if (root.has("advocateDetails")) {
-                                            JsonNode formdata = root.path("advocateDetails").path("formdata");
-                                            if (formdata.isArray()) {
-                                                for (JsonNode item : formdata) {
-                                                    JsonNode data = item.path("data").path("multipleAdvocatesAndPip");
-                                                    if (data.isObject()) {
-                                                        JsonNode arr = data.path("multipleAdvocateNameDetails");
-                                                        if (arr.isArray()) {
-                                                            for (JsonNode n : arr) {
-                                                                JsonNode nameDetails = n.path("advocateNameDetails");
-                                                                JsonNode bar = n.path("advocateBarRegNumberWithName");
-                                                                if (bar.has("advocateId") && adv.getIndividualId() != null && adv.getIndividualId().equalsIgnoreCase(bar.path("individualId").asText())) {
-                                                                    if (nameDetails.has("firstName")) adv.setFirstName(nameDetails.get("firstName").asText());
-                                                                    if (nameDetails.has("middleName")) adv.setMiddleName(nameDetails.get("middleName").asText());
-                                                                    if (nameDetails.has("lastName")) adv.setLastName(nameDetails.get("lastName").asText());
-                                                                    if (nameDetails.has("advocateMobileNumber")) adv.setMobileNumber(nameDetails.get("advocateMobileNumber").asText());
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                } catch (Exception ignored) { }
-
-                                // copy rep documents if any
                                 if (rep.getDocuments() != null) adv.setDocuments(new ArrayList<>(rep.getDocuments()));
 
                                 advocates.add(adv);

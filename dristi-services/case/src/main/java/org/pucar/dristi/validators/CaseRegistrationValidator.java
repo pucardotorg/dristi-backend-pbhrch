@@ -501,7 +501,7 @@ public class CaseRegistrationValidator {
 
     private List<String> createMasterDetails() {
         List<String> masterList = new ArrayList<>();
-        masterList.add("ComplainantType");
+        masterList.add("LitigantType");
         masterList.add("CaseCategory");
         masterList.add("PaymentMode");
         masterList.add("ResolutionMechanism");

@@ -2,6 +2,7 @@ package org.pucar.dristi.web.models;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,7 +29,6 @@ public class POAHolder {
     private String tenantId;
 
     @JsonProperty("caseId")
-    @NotNull
     private String caseId;
 
     @JsonProperty("individualId")
@@ -38,8 +38,30 @@ public class POAHolder {
     @NotNull
     private String poaType;
 
+    @JsonProperty("firstName")
+    private String firstName;
+
+    @JsonProperty("middleName")
+    private String middleName;
+
+    @JsonProperty("lastName")
+    private String lastName;
+
+    @JsonProperty("fullName")
+    private String fullName;
+
+    @JsonProperty("mobileNumber")
+    private String mobileNumber;
+
+    @JsonProperty("age")
+    private String age;
+
     @JsonProperty("name")
     private String name;
+
+    @JsonProperty("address")
+    @Valid
+    private Address address;
 
     @JsonProperty("isActive")
     @NotNull
@@ -60,5 +82,5 @@ public class POAHolder {
     @JsonProperty("representingLitigants")
     @NotNull
     @NotEmpty(message = "representing litigants should not be empty")
-    private List<PoaParty> representingLitigants   ;  // store this as json b , create new class
+    private List<PoaParty> representingLitigants;
 }

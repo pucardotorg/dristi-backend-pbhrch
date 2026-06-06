@@ -133,7 +133,7 @@ public class CaseRegistrationValidatorTest {
         mdmsRes.put("case", new HashMap<>());
 
         List<String> masterList = new ArrayList<>();
-        masterList.add("ComplainantType");
+        masterList.add("LitigantType");
         masterList.add("CaseCategory");
         masterList.add("PaymentMode");
         masterList.add("ResolutionMechanism");
@@ -273,7 +273,7 @@ public class CaseRegistrationValidatorTest {
         Map<String, Map<String, JSONArray>> mdmsRes = new HashMap<>();
         mdmsRes.put("case", new HashMap<>());
         List<String> masterList = new ArrayList<>();
-        masterList.add("ComplainantType");
+        masterList.add("LitigantType");
         masterList.add("CaseCategory");
         masterList.add("PaymentMode");
         masterList.add("ResolutionMechanism");
@@ -321,7 +321,7 @@ public class CaseRegistrationValidatorTest {
         Map<String, Map<String, JSONArray>> mdmsRes = new HashMap<>();
         mdmsRes.put("case", new HashMap<>());
         List<String> masterList = new ArrayList<>();
-        masterList.add("ComplainantType");
+        masterList.add("LitigantType");
         masterList.add("CaseCategory");
         masterList.add("PaymentMode");
         masterList.add("ResolutionMechanism");
@@ -414,7 +414,7 @@ public class CaseRegistrationValidatorTest {
         Map<String, Map<String, JSONArray>> mdmsRes = new HashMap<>();
         mdmsRes.put("case", new HashMap<>());
         List<String> masterList = new ArrayList<>();
-        masterList.add("ComplainantType");
+        masterList.add("LitigantType");
         masterList.add("CaseCategory");
         masterList.add("PaymentMode");
         masterList.add("ResolutionMechanism");

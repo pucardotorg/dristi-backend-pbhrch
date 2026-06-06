@@ -21,6 +21,7 @@ public class LitigantRowMapperV2 implements ResultSetExtractor<Map<UUID, List<Li
                 UUID id = UUID.fromString(rs.getString("case_id"));
 
                 LitigantV2 litigantV2 = LitigantV2.builder()
+                        .id(UUID.fromString(rs.getString("id")))
                         .individualId(rs.getString("individualid"))
                         .partyType(rs.getString("partytype"))
                       //  .isPartyInPerson(rs.getBoolean("isresponserequired"))

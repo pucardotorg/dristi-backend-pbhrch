@@ -14,6 +14,9 @@ import java.util.List;
 @Builder
 public class POAHolderV2 {
 
+    @JsonProperty("id")
+    private String id;
+
     @JsonProperty("individualId")
     private String individualId;
 
