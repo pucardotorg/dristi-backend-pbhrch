@@ -31,6 +31,15 @@ public interface AdvocateApi {
     List<Advocate> searchAdvocatesByIndividualId(RequestInfo requestInfo, String individualId);
 
     /**
+     * Returns active advocates whose {@code barRegistrationNumber} matches the
+     * given value.
+     *
+     * @param requestInfo           eGov request envelope carrying caller identity
+     * @param barRegistrationNumber advocate bar registration number
+     */
+    List<Advocate> searchAdvocatesByBarRegistrationNumber(RequestInfo requestInfo, String barRegistrationNumber);
+
+    /**
      * Returns {@code true} if any active advocate exists with the given registration ID.
      *
      * @param requestInfo eGov request envelope carrying caller identity

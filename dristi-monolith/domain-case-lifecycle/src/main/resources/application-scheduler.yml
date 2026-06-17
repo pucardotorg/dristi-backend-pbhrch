@@ -117,9 +117,6 @@ egov:
     store:
       save:
         endpoint: /filestore/v1/files
-  advocate:
-    host: http://localhost:8087
-    path: /advocate/v1/_search
   individual:
     host: http://localhost:8083/
     path: individual/v1/_create

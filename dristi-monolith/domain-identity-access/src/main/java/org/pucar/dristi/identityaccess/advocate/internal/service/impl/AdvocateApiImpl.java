@@ -39,6 +39,11 @@ public class AdvocateApiImpl implements AdvocateApi {
     }
 
     @Override
+    public List<Advocate> searchAdvocatesByBarRegistrationNumber(RequestInfo requestInfo, String barRegistrationNumber) {
+        return search(requestInfo, AdvocateSearchCriteria.builder().barRegistrationNumber(barRegistrationNumber).build());
+    }
+
+    @Override
     public boolean advocateExists(RequestInfo requestInfo, String advocateId) {
         return !searchAdvocatesById(requestInfo, advocateId).isEmpty();
     }

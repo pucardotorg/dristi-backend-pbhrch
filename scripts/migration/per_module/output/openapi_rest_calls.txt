@@ -1,0 +1,8 @@
+dristi-monolith/domain-case-lifecycle/src/main/java/org/pucar/dristi/caselifecycle/openapi/internal/util/ESignUtil.java  uses ['ESignHost']
+dristi-monolith/domain-case-lifecycle/src/main/java/org/pucar/dristi/caselifecycle/openapi/internal/util/AdvocateUtil.java  uses ['AdvocateHost', 'AdvocatePath']
+dristi-monolith/domain-case-lifecycle/src/main/java/org/pucar/dristi/caselifecycle/openapi/internal/util/PendingTaskUtil.java  uses ['PendingTaskSearchPath']
+dristi-monolith/domain-case-lifecycle/src/main/java/org/pucar/dristi/caselifecycle/openapi/internal/util/BailUtil.java  uses ['BailServiceHost']
+dristi-monolith/domain-case-lifecycle/src/main/java/org/pucar/dristi/caselifecycle/openapi/internal/util/CaseUtil.java  uses ['CaseHost', 'CaseSearchPath']
+dristi-monolith/domain-case-lifecycle/src/main/java/org/pucar/dristi/caselifecycle/openapi/internal/service/PaymentService.java  uses ['EtreasuryHost', 'PaymentCalculatorHost']
+dristi-monolith/domain-case-lifecycle/src/main/java/org/pucar/dristi/caselifecycle/openapi/internal/service/TaskManagementService.java  uses ['TaskManagementHost']
+dristi-monolith/domain-case-lifecycle/src/main/java/org/pucar/dristi/caselifecycle/openapi/internal/service/LockService.java  uses ['LockHost']

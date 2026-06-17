@@ -78,7 +78,12 @@ SET court_id = 'KLKM52';
 UPDATE dristi_diaryentries
 SET court_id = 'KLKM52';
 
-UPDATE eg_wf_processinstance_v2 SET businessid = REPLACE(businessid, 'JUDGE_ID', 'KLKM52') WHERE businessid LIKE 'JUDGE_ID%' AND businessservice='case-a-diary';
+DO $$
+BEGIN
+    IF EXISTS (SELECT FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'eg_wf_processinstance_v2') THEN
+        UPDATE eg_wf_processinstance_v2 SET businessid = REPLACE(businessid, 'JUDGE_ID', 'KLKM52') WHERE businessid LIKE 'JUDGE_ID%' AND businessservice='case-a-diary';
+    END IF;
+END $$;
 
 
 DROP INDEX IF EXISTS idx_dristi_casediary_type_judge;

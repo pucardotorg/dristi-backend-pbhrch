@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.Map;
 import java.util.Objects;
 
-@Service
+@Service("analyticsEventListener")
 @Slf4j
 public class EventListener implements MessageListener<String, String> {
 
