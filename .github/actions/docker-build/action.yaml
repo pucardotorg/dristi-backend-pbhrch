@@ -25,6 +25,23 @@ inputs:
   esign_public_key:
     description: Public key for e-sign service.
     required: false
+  esign_private_key_path:
+    description: Destination path (relative to repo root) where the private key file is written before the Docker build.
+    required: false
+    default: "integration-services/e-sign-svc/src/main/resources/privateKey.pem"
+  esign_public_key_path:
+    description: Destination path (relative to repo root) where the public key file is written before the Docker build.
+    required: false
+    default: "integration-services/e-sign-svc/src/main/resources/publicKey.cer"
+  db_dockerfile_path:
+    description: |
+      Path to the Dockerfile used to build the service-db image, relative to the
+      repo root. When provided, the build runs from the repo root using this
+      Dockerfile (required for monolith-style DBs whose Dockerfile references
+      files from multiple source directories). When omitted, the build falls
+      back to the legacy pattern: context = db_source_path, Dockerfile auto-detected.
+    required: false
+    default: ""
 
 outputs:
   image_tag:
@@ -97,13 +114,17 @@ runs:
         echo "image_tag=${{ env.VERSION }}-${{ env.commit_hash }}" >> $GITHUB_OUTPUT
 
     - name: Set encryption keys based on branch or tag
-      if: inputs.service_name == 'e-sign-svc'
+      if: inputs.service_name == 'e-sign-svc' || inputs.service_name == 'dristi-monolith'
       shell: bash
       run: |
-          echo "${{ inputs.esign_private_key }}" > integration-services/e-sign-svc/src/main/resources/privateKey.pem
-          echo "${{ inputs.esign_public_key }}" > integration-services/e-sign-svc/src/main/resources/publicKey.cer
-          cat integration-services/e-sign-svc/src/main/resources/privateKey.pem
-          cat integration-services/e-sign-svc/src/main/resources/publicKey.cer
+          PRIVATE_KEY_PATH="${{ inputs.esign_private_key_path }}"
+          PUBLIC_KEY_PATH="${{ inputs.esign_public_key_path }}"
+          mkdir -p "$(dirname "$PRIVATE_KEY_PATH")"
+          mkdir -p "$(dirname "$PUBLIC_KEY_PATH")"
+          echo "${{ inputs.esign_private_key }}" > "$PRIVATE_KEY_PATH"
+          echo "${{ inputs.esign_public_key }}" > "$PUBLIC_KEY_PATH"
+          echo "Wrote private key to: $PRIVATE_KEY_PATH"
+          echo "Wrote public key to : $PUBLIC_KEY_PATH"
 
     - name: Build and Push Docker Image
       shell: bash
@@ -118,6 +139,18 @@ runs:
       if: env.db_source_path != ''
       shell: bash
       run: |
-        docker build -t ${{ inputs.docker_registry }}/${{ inputs.docker_user }}/${{ inputs.service_name }}-db:${{ steps.export-image-tag.outputs.image_tag }} . 
-        docker push ${{ inputs.docker_registry }}/${{ inputs.docker_user }}/${{ inputs.service_name }}-db:${{ steps.export-image-tag.outputs.image_tag }}
-      working-directory: ${{ env.db_source_path }}
+        DB_DOCKERFILE="${{ inputs.db_dockerfile_path }}"
+        IMAGE_TAG="${{ steps.export-image-tag.outputs.image_tag }}"
+        IMAGE="${{ inputs.docker_registry }}/${{ inputs.docker_user }}/${{ inputs.service_name }}-db:${IMAGE_TAG}"
+
+        if [[ -n "$DB_DOCKERFILE" ]]; then
+          # Monolith path: Dockerfile copies from multiple modules → needs repo root as context
+          echo "Building DB image from repo root using Dockerfile: $DB_DOCKERFILE"
+          docker build -f "$DB_DOCKERFILE" -t "$IMAGE" .
+        else
+          # Legacy microservice path: Dockerfile + migrations are all inside db_source_path
+          echo "Building DB image from working directory: ${{ env.db_source_path }}"
+          docker build -t "$IMAGE" "${{ env.db_source_path }}"
+        fi
+
+        docker push "$IMAGE"
